@@ -22,7 +22,7 @@
     library('umap')
 
     ## 1.3. Load 'Spectre' package
-    if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
+    #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
     library("Spectre")
 
     ## 1.4. Set working directory
@@ -83,71 +83,36 @@
 
 ### Perform FlowSOM clustering
 
+    #Spectre::run.flowsom()
 
 
-## Downsample data in preparation for dimensionality reduction
+### Downsample data in preparation for dimensionality reduction
 
+    ## Run subsample
     Spectre::subsample(x = cell.dat,
                        method = "per.sample",
                        samp.col = "FileName",
                        targets = c(rep(100, 12)),
                        seed = 42)
 
-    Spectre::subsample(x = cell.dat,
-                       method = "random",
-                       samp.col = "FileName",
-                       targets = c(100),
-                       seed = 42)
-
-    dim(subsample.res)
-
+    ## Create 'cell.dat.sub'
     cell.dat.sub <- subsample.res
     rm(subsample.res)
 
 
 
-
 ### 3. Perform UMAP
 
+    ## Check column names
     as.matrix(names(cell.dat.sub))
 
-    #x <- as.data.frame(cell.dat.sub)
-    use.cols <- c(5,6,8,9)
+    ## Run UMAP
+    Spectre::run.umap(x = cell.dat.sub,
+                  use.cols = c(5,6,8,9,11,12,13,17:19,21:30,32),
+                  umap.seed = 42)
 
-    #Spectre::umap(x = cell.dat,
-    #              use.cols = c(5,6,8,9,11,12,13,17:19,21:30,32),
-    #              umap.seed = 42)
+    ## Merge UMAP results with data
+    cell.dat.sub <- cbind(cell.dat.sub, umap.res)
 
-
-
-    #umap.to.plot <- cbind(cell.dat, umap.res)
-
-    xdat <- cell.dat.sub
-    xdat <- iris
-    use.cols <- c(1:4)
-
-    umap.seed <- 42
-
-    xdat <- xdat[c(1:4)]
-
-    custom.config <- umap.defaults
-    custom.config$random_state <- umap.seed #umap.seed
-    res <- umap(d = xdat[use.cols],
-                config = custom.config)
-
-    umap.res <- res$layout
-    head(umap.res)
-
-    umap.res <- as.data.frame(umap.res)
-    head(umap.res)
-
-    names(umap.res)[names(umap.res) == "V1"] <- paste0("UMAP", "_", umap.seed, "_", "X")
-    names(umap.res)[names(umap.res) == "V2"] <- paste0("UMAP", "_", umap.seed, "_", "Y")
-
-    head(umap.res)
-
-
-    cell.dat.sub <- cbind(iris, umap.res)
-    #plot.dat$umap
-
-    head(cell.dat.sub)
+    ## Plot UMAP results
+    plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
