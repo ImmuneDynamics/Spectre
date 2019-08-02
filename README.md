@@ -1,9 +1,6 @@
 # Spectre
 A computational toolkit for the analysis of high-dimensional single-cell cytometry data
 
-### Internal USYD version
-This is the private (USYD internal) repository for the development of the 'Spectre' packages
-
 ### About
 The Spectre package is designed to allow for data analaysis workflows that simplify and streamline data manipulation and annotation, population identification (clustering, classificaiton), and dimensionality reduction (tSNE, UMAP) etc in high-dimensional cytometry data.
 
