@@ -1,0 +1,17 @@
+Package: Spectre
+Type: Package
+Title: A Toolbox for the Analysis of High-Dimensional Cytometry and Single-Cell Data
+Version: 0.1.0
+Author: Thomas Ashhurst, Felix Marsh-Wakefield, Givanna Putri
+Maintainer: Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT Licence
+Encoding: UTF-8
+LazyData: true
+Imports:
+    dplyr,
+    data.table,
+    devtools
+Suggests:
+    rstudioapi
