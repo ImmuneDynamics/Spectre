@@ -11,6 +11,8 @@
         if(!require('rstudioapi')) {install.packages('rstudioapi')}
         if(!require('devtools')) {install.packages('devtools')}
 
+
+
         if(!require('flowViz')) {source("https://bioconductor.org/biocLite.R")
           biocLite('flowViz')}
         if(!require('flowCore')) {source("https://bioconductor.org/biocLite.R")
