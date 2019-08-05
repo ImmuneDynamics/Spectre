@@ -207,7 +207,6 @@
                          title = "MFI",
                          colours = "spectral",
                          dot.size = 1)
-
     p
 
     head(cell.dat)
