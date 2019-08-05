@@ -1,41 +1,64 @@
 ##### Performing UMAP on cytometry data using the Spectre package #####
-# Thomas Myles Ashhurst
-# 2019-08-02
-# https://sydneycytometry.org.au/spectre
-
+    # Thomas Myles Ashhurst
+    # 2019-08-02
+    # https://sydneycytometry.org.au/spectre
 
 ### 1. Install packages, load packages, and set workin directory
 
     ## 1.1. Install packages
-    #if(!require('Spectre')) {install.packages('Spectre')}
-    if(!require('plyr')) {install.packages('plyr')}
-    if(!require('data.table')) {install.packages('data.table')}
-    if(!require('rstudioapi')) {install.packages('rstudioapi')}
-    if(!require('devtools')) {install.packages('devtools')}
-    if(!require('umap')) {install.packages('umap')}
+        if(!require('plyr')) {install.packages('plyr')}
+        if(!require('data.table')) {install.packages('data.table')}
+        if(!require('rstudioapi')) {install.packages('rstudioapi')}
+        if(!require('devtools')) {install.packages('devtools')}
+
+        if(!require('flowViz')) {source("https://bioconductor.org/biocLite.R")
+          biocLite('flowViz')}
+        if(!require('flowCore')) {source("https://bioconductor.org/biocLite.R")
+          biocLite('flowCore')}
+        if(!require('Biobase')) {source("https://bioconductor.org/biocLite.R")
+          biocLite('Biobase')}
+
+        if(!require('FlowSOM')) {source("https://bioconductor.org/biocLite.R") # for running FlowSOM ### POSSIBLY INSTALL FROM GITHUB
+          biocLite('FlowSOM')}
+        if(!require('Rtsne')) {install.packages("Rtsne")} # for running tSNE
+        if(!require('umap')) {install.packages('umap')}
+
+        if (!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
+        if (!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
+        if (!require("ggthemes")){install.packages("ggthemes")} # for plot themes
+        if (!require("scales")){install.packages("scales")} # for re-scaling if necessary
+        if (!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
 
     ## 1.2. Load packages
-    library('plyr')
-    library('data.table')
-    library('rstudioapi')
-    library('devtools')
-    library('umap')
+        library('plyr')
+        library('data.table')
+        library('rstudioapi')
+        library('devtools')
 
-    library(ggplot2)
-    library(scales)
-    library('colorRamps')
-    library('ggthemes')
-    library(RColorBrewer)
+        library('flowViz')
+        library('flowCore')
+        library('Biobase')
+
+        library('FlowSOM')
+        library('Rtsne')
+        library('umap')
+
+        library('ggplot2')
+        library('scales')
+        library('colorRamps')
+        library('ggthemes')
+        library('RColorBrewer')
 
     ## 1.3. Load 'Spectre' package
-    #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
-    library("Spectre")
+
+        #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
+        library("Spectre")
 
     ## 1.4. Set working directory
-    PrimaryDirectory <- "/Users/Tom/Downloads/CAPX-2.5/Demo dataset/"
-    setwd(PrimaryDirectory)
+        PrimaryDirectory <- "/Users/Tom/Downloads/CAPX-2.5/Demo dataset/"
+        setwd(PrimaryDirectory)
 
-    list.files(PrimaryDirectory, ".csv")
+        list.files(PrimaryDirectory, ".csv")
 
 ### 2. Read and prepare data
 
@@ -68,43 +91,93 @@
 
         Spectre::add.groups(x = data.list, grp.names = group.names, grp.nums = group.nums)
 
-
         head(data.list)
         head(data.list[[7]])
 
     ## Merge samples
-    Spectre::merge.files(x = data.list)
+        Spectre::merge.files(x = data.list)
+        head(cell.dat)
 
-    head(cell.dat)
+        # Look for any NAs
 
-    # Look for any NAs
+        # Cleanup (not necessary, but recommended)
+            rm(data.list)
+            rm(name.table)
+            rm(ncol.check)
+            rm(nrow.check)
+            #rm(group.names)
+            #rm(group.nums)
 
-    # Cleanup (not necessary, but recommended)
-        #rm(data.list)
-        #rm(group.names)
-        #rm(group.nums)
-        #rm(name.table)
-        #rm(ncol.check)
-        #rm(nrow.check)
+    dim(cell.dat)
+
+    cell.dat.large <- rbind(cell.dat, cell.dat)
+    cell.dat.large <- rbind(cell.dat.large, cell.dat) # x8 or so
+    cell.dat <- cell.dat.large
+
+
+    ## Define clustering columns
+
+        ## Save column names
+        ColumnNames <- unname(colnames(cell.dat)) # assign reporter and marker names (column names) to 'ColumnNames'
+        as.matrix(ColumnNames) # view the column 'number' for each parameter
+
+        ## Define columns for clustering
+        ClusteringColNos <- c(5,6,8,9,11:13,17:19,21:29,32)
+        ClusteringColNos
+
+        ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to include the markers corresponding to the column numbers 11, 23, 10
+
+        ##
+        ClusteringCols  # check that the column names that appear are the ones you want to analyse
+        ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
+
+        head(cell.dat)
 
 ### 3. Perform FlowSOM clustering
 
-    #Spectre::run.flowsom()
+    ## FlowSOM
+    Spectre::run.flowsom(x = cell.dat,
+                         meta.k = 40,
+                         clustering.cols = ClusteringCols,
+                         clust.seed = 42,
+                         meta.seed = 42,
+                         clust.name = "FlowSOM_cluster",
+                         meta.clust.name = "FlowSOM_metacluster")
+
+    ## Add results
+    cell.dat <- cbind(cell.dat, flowsom.res.original)
+    cell.dat <- cbind(cell.dat, flowsom.res.meta)
+
+    ## Check cell.dat
+    head(cell.dat)
+
+    ## Remove results
+    rm(flowsom.res.original)
+    rm(flowsom.res.meta)
+
+
+
+    ########################
+
+    # save cell.dat
+    # create sumtables
+    # save sumtables
+
 
 
 ### 4. Downsample data in preparation for dimensionality reduction
 
     ## Run subsample
-    Spectre::subsample(x = cell.dat,
-                       method = "per.sample",
-                       samp.col = "FileName",
-                       targets = c(rep(100, 12)),
-                       seed = 42)
+    #Spectre::subsample(x = cell.dat,
+    #                   method = "per.sample",
+    #                   samp.col = "FileName",
+    #                   targets = c(rep(500, 12)),
+    #                   seed = 42)
+    #
+    #cell.dat.sub <- subsample.res
+    #rm(subsample.res)
 
-    ## Create 'cell.dat.sub'
-    cell.dat.sub <- subsample.res
-    rm(subsample.res)
-
+    cell.dat.sub <- cell.dat.large
 
 
 ### 5. Perform UMAP
@@ -114,17 +187,17 @@
 
     ## Run UMAP
     Spectre::run.umap(x = cell.dat.sub,
-                  use.cols = c(5,6,8,9,11,12,13,17:19,21:30,32),
+                  use.cols = ClusteringCols,  #c(5,6,8,9,11,12,13,17:19,21:30,32),
                   umap.seed = 42)
 
     ## Merge UMAP results with data
     cell.dat.sub <- cbind(cell.dat.sub, umap.res)
 
-    ## Plot UMAP results
-    plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
-
 
 ### 6. Plot UMAP
+
+    ## Plot UMAP results
+    plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
 
     ## Plot single UMAP MFI plot
     p <- Spectre::colour.plot(d = cell.dat.sub,
@@ -133,9 +206,11 @@
                          col.axis = "BV605.Ly6C",
                          title = "MFI",
                          colours = "spectral",
-                         dot.size = 0.5)
+                         dot.size = 1)
 
     p
+
+    head(cell.dat)
 
     ## Plot single UMAP factor plot
     p <- Spectre::factor.plot(d = cell.dat.sub,
@@ -143,17 +218,24 @@
                               y.axis = "UMAP_42_Y",
                               col.axis = "FileName",
                               title = "Samples",
-                              dot.size = 0.2)
+                              dot.size = 1,
+                              add.labels = FALSE) # assumes numeric
 
     p
 
 
 
 
+    ## add option for centroid detection and labelling
+
+    ## copy the # codes for 'spectral' colours -- use that directly, avoid needing Rcolourbrewer etc
 
 
 
-###############
+
+
+
+##########################################################################################
 
 
 

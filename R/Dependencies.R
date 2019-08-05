@@ -11,4 +11,3 @@
     library('data.table')
     library('rstudioapi')
     library('devtools')
-
