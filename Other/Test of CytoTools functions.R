@@ -21,6 +21,12 @@
     library('devtools')
     library('umap')
 
+    library(ggplot2)
+    library(scales)
+    library('colorRamps')
+    library('ggthemes')
+    library(RColorBrewer)
+
     ## 1.3. Load 'Spectre' package
     #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
     library("Spectre")
@@ -81,12 +87,12 @@
         #rm(ncol.check)
         #rm(nrow.check)
 
-### Perform FlowSOM clustering
+### 3. Perform FlowSOM clustering
 
     #Spectre::run.flowsom()
 
 
-### Downsample data in preparation for dimensionality reduction
+### 4. Downsample data in preparation for dimensionality reduction
 
     ## Run subsample
     Spectre::subsample(x = cell.dat,
@@ -101,7 +107,7 @@
 
 
 
-### 3. Perform UMAP
+### 5. Perform UMAP
 
     ## Check column names
     as.matrix(names(cell.dat.sub))
@@ -116,3 +122,204 @@
 
     ## Plot UMAP results
     plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
+
+
+### 6. Plot UMAP
+
+    ## Plot single UMAP MFI plot
+    p <- Spectre::colour.plot(d = cell.dat.sub,
+                         x.axis = "UMAP_42_X",
+                         y.axis = "UMAP_42_Y",
+                         col.axis = "BV605.Ly6C",
+                         title = "MFI",
+                         colours = "spectral",
+                         dot.size = 0.5)
+
+    p
+
+    ## Plot single UMAP factor plot
+    p <- Spectre::factor.plot(d = cell.dat.sub,
+                              x.axis = "UMAP_42_X",
+                              y.axis = "UMAP_42_Y",
+                              col.axis = "FileName",
+                              title = "Samples",
+                              dot.size = 0.2)
+
+    p
+
+
+
+
+
+
+
+###############
+
+
+
+
+
+    test <- function(d){
+      ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = d[[col.axis]])) +
+        geom_point(size = point.size) +
+        scale_colour_gradientn(colours = colour.scheme(50),
+                               limits = c(quantile(d[[col.axis]], probs = c(min.threshold)), #0.03-01 seems to work well
+                                          quantile(d[[col.axis]], probs = c(max.threshold))), #0.97-995 seems to work well
+                               oob=squish) +
+        labs(colour = col.axis)+
+        xlab(x.axis)+
+        ylab(y.axis)+
+        ggtitle(plot.title) +
+        theme(
+          panel.background = element_rect(fill = "white", colour = "black", size = 0.5) # change 'colour' to black for informative axis
+          #axis.line=element_blank(),
+          #axis.text.x=element_blank(),
+          #axis.text.y=element_blank(),
+          #axis.ticks=element_blank(),
+          #axis.title.x=element_blank(),
+          #axis.title.y=element_blank(),
+          #panel.grid.major = element_blank(),
+          #panel.background=element_blank(),
+          #panel.border=element_blank(),
+          #panel.grid.minor=element_blank(),
+          #plot.background=element_blank(),
+          #legend.position = "right",
+          #legend.text=element_text(size=15), # large = 30 # small = 8
+          #legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+          #legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
+          #legend.title=element_blank()
+          #plot.title = element_text(color="Black", face="bold", size=15, hjust=0) # size 70 for large, # 18 for small
+        )
+      }
+
+
+    test(cell.dat.sub)
+
+
+
+
+    #######
+
+    jet <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+    #spectral.list <- list(color = colorRampPalette(brewer.pal(11,"Spectral"))(100))
+    spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
+    spectral.list <- rev(spectral.list)
+
+    spectral <- colorRampPalette(c(spectral.list))
+
+    YlOrRd.list <- rev(colorRampPalette(brewer.pal(9,"YlOrRd"))(100))
+    YltoRd.cols <- colorRampPalette(c(YlOrRd.list))
+
+    BuPu.list <- rev(colorRampPalette(brewer.pal(9,"BuPu"))(100))
+    BuPu.cols <- colorRampPalette(c(BuPu.list))
+
+
+    # Custom, from spectral, Red to Blue -->
+    custom <- colorRampPalette(rev(c("#7F0000", "#9E0142", "#D53E4F", "#F46D43", "#FDAE61", "#FEE08B",
+                                     "#FFFFBF",
+                                     "#E6F598",
+                                     "#ABDDA4", "#66C2A5", "#3288BD", "#5E4FA2", "#00007F",
+                                     "#170a45")))
+
+    colour.palette.list <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
+    colour.palette <- colorRampPalette(c(colour.palette.list))
+
+    fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
+    fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black")))
+    #fold.palette <- colorRampPalette(c(fold.palette.list))
+
+
+    colour.scheme <- jet
+    #colour.scheme <- spectral
+    #colour.scheme <- YltoRd.cols
+    #colour.scheme <- BuPu.cols
+    #colour.scheme <- custom
+    #colour.scheme <- colour.palette
+    #colour.scheme <- fold.palette
+
+
+    head(cell.dat.sub)
+    filenames <- unique(cell.dat.sub$FileName)
+
+
+    ## Plot, coloured by samples
+    ggplot(data = cell.dat.sub, aes(x = UMAP_42_X, y = UMAP_42_Y, colour = as.factor(cell.dat.sub$GroupName))) +
+      geom_point(size = 1)+ # 2 for large # 0.5 for small
+      #scale_colour_gradientn(colours = colour.scheme(50)) +
+      #scale_colour_manual(name = "FileName", values = c(colour.scheme(length(filenames)))) +
+      ggtitle("Samples") +
+      theme(
+        panel.background = element_rect(fill = "white", colour = "black", size = 0.5)#, # change 'colour' to black for informative axis
+        #axis.line=element_blank(),
+        #axis.text.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks=element_blank(),
+        #axis.title.x=element_blank(),
+        #axis.title.y=element_blank(),
+        #panel.grid.major = element_blank(),
+        #panel.background=element_blank(),
+        #panel.border=element_blank(),
+        #panel.grid.minor=element_blank(),
+        #plot.background=element_blank(),
+        #legend.position = "right",
+        #legend.text=element_text(size=15), # large = 30 # small = 8
+        #legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+        #legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
+        #legend.title=element_blank(),
+        #plot.title = element_text(color="Black", face="bold", size=15, hjust=0) # size 70 for large, # 18 for small
+      )
+
+
+
+
+    head(cell.dat.sub)
+
+    ## Plot, colour by MFI
+
+          d <- cell.dat.sub
+
+          x.axis <- "UMAP_42_X"
+          y.axis <- "UMAP_42_Y"
+          col.axis <- "BV711.SCA.1"
+
+          min.threshold <- 0.01 # 0.01
+          max.threshold <- 0.995 # 0.995 default
+
+          plot.title <- "MFI"
+          point.size <- 0.5 # 2 for large # 0.5 for small
+
+
+    ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = d[[col.axis]])) +
+      geom_point(size = point.size) +
+      scale_colour_gradientn(colours = colour.scheme(50),
+                             limits = c(quantile(d[[col.axis]], probs = c(min.threshold)), #0.03-01 seems to work well
+                                        quantile(d[[col.axis]], probs = c(max.threshold))), #0.97-995 seems to work well
+                             oob=squish) +
+      labs(colour = col.axis)+
+      xlab(x.axis)+
+      ylab(y.axis)+
+      ggtitle(plot.title) +
+      theme(
+        panel.background = element_rect(fill = "white", colour = "black", size = 0.5) # change 'colour' to black for informative axis
+        #axis.line=element_blank(),
+        #axis.text.x=element_blank(),
+        #axis.text.y=element_blank(),
+        #axis.ticks=element_blank(),
+        #axis.title.x=element_blank(),
+        #axis.title.y=element_blank(),
+        #panel.grid.major = element_blank(),
+        #panel.background=element_blank(),
+        #panel.border=element_blank(),
+        #panel.grid.minor=element_blank(),
+        #plot.background=element_blank(),
+        #legend.position = "right",
+        #legend.text=element_text(size=15), # large = 30 # small = 8
+        #legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+        #legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
+        #legend.title=element_blank()
+        #plot.title = element_text(color="Black", face="bold", size=15, hjust=0) # size 70 for large, # 18 for small
+      )
+
+
+
+
