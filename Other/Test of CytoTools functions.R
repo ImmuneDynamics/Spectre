@@ -1,238 +1,374 @@
-##### Performing UMAP on cytometry data using the Spectre package #####
-    # Thomas Myles Ashhurst
+##### Development of CAPX v3.0 using the 'Spectre' package #####
+
+    # Thomas Myles Ashhurst, Felix Marsh-Wakefield
     # 2019-08-02
     # https://sydneycytometry.org.au/spectre
 
-### 1. Install packages, load packages, and set workin directory
 
-    ## 1.1. Install packages
+#### 1. Install packages, load packages, and set working directory
+
+    ### 1.1. Load 'Spectre' package (using devtools)
+        if(!require('devtools')) {install.packages('devtools')}
+        library('devtools')
+
+        if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
+        library("Spectre")
+
+    ### 1.2. Install packages
+
+        ## Basic data manipulation
         if(!require('plyr')) {install.packages('plyr')}
         if(!require('data.table')) {install.packages('data.table')}
         if(!require('rstudioapi')) {install.packages('rstudioapi')}
-        if(!require('devtools')) {install.packages('devtools')}
 
+        ## To download packages from Bioconductor
+        if (!requireNamespace("BiocManager", quietly = TRUE))
+          install.packages("BiocManager")
 
+        ## Basic data manipulation
+        if(!require('flowCore')) {BiocManager::install('flowCore')}
+        if(!require('flowViz')) {BiocManager::install('flowViz')}
+        if(!require('Biobase')) {BiocManager::install('Biobase')}
 
-        if(!require('flowViz')) {source("https://bioconductor.org/biocLite.R")
-          biocLite('flowViz')}
-        if(!require('flowCore')) {source("https://bioconductor.org/biocLite.R")
-          biocLite('flowCore')}
-        if(!require('Biobase')) {source("https://bioconductor.org/biocLite.R")
-          biocLite('Biobase')}
-
-        if(!require('FlowSOM')) {source("https://bioconductor.org/biocLite.R") # for running FlowSOM ### POSSIBLY INSTALL FROM GITHUB
-          biocLite('FlowSOM')}
+        ## Clustering and dimensionality reduction
+        if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
         if(!require('Rtsne')) {install.packages("Rtsne")} # for running tSNE
         if(!require('umap')) {install.packages('umap')}
 
+        ## Plotting
         if (!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
         if (!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
         if (!require("ggthemes")){install.packages("ggthemes")} # for plot themes
         if (!require("scales")){install.packages("scales")} # for re-scaling if necessary
         if (!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
 
-    ## 1.2. Load packages
+    ### 1.3. Load packages from library
         library('plyr')
         library('data.table')
         library('rstudioapi')
-        library('devtools')
-
         library('flowViz')
         library('flowCore')
         library('Biobase')
-
         library('FlowSOM')
         library('Rtsne')
         library('umap')
-
         library('ggplot2')
         library('scales')
         library('colorRamps')
         library('ggthemes')
         library('RColorBrewer')
 
-    ## 1.3. Load 'Spectre' package
-
-        #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
-        library("Spectre")
-
     ## 1.4. Set working directory
-        PrimaryDirectory <- "/Users/Tom/Downloads/CAPX-2.5/Demo dataset/"
+
+        #PrimaryDirectory <- "/Users/thomasashhurst/Documents/Github/Public Github/Spectre/Other/Demo_dataset/"
+        #setwd(PrimaryDirectory)
+
+        ## Set working directory
+        dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+        setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
+        getwd()
+        PrimaryDirectory <- getwd()
+        PrimaryDirectory
+
+        ## Create output directory
+        dir.create("Output", showWarnings = FALSE)
+        setwd("Output")
+        OutputDirectory <- getwd()
         setwd(PrimaryDirectory)
 
+
+#### 2. Read and prepare data
+
+    ### Define an experiment name/serial number
+
+        exp.name <- "TAXXX_demo"
+
+    ### Read samples into workspace and review
+
+        ## List of CSV files in PrimaryDirectory
         list.files(PrimaryDirectory, ".csv")
 
-### 2. Read and prepare data
-
-    ## Read in samples
+        ## Read in samples
         Spectre::read.files(file.loc = PrimaryDirectory, file.type = ".csv", do.embed.file.names = TRUE)
 
-    ## Review sample properties
+        ## Review number of columns (features) and rows (cells) in each sample
         ncol.check
         nrow.check
 
+        ## Review column names and their subsequent values
         name.table
         head(data.list)
         head(data.list[[1]])
 
-    ## Add sample names/numbers
+    ### Add sample names/numbers
 
-        #CytoTools::file.annotate()
+        #CytoTools::annotate.files()
 
-    ## Add groups
+
+    ### Add group names
+
+        ## Review the column names
         as.matrix(names(data.list))
 
-            group.names = list()
-            group.nums = list()
+        ## Create empty lists
+        group.names = list()
+        group.nums = list()
 
-            group.names[[1]] <- "Mock"
-            group.names[[2]] <- "WNV"
+        ## Create group names
+        group.names[[1]] <- "Mock"
+        group.names[[2]] <- "WNV"
 
-            group.nums[[1]] <- c(1:6)
-            group.nums[[2]] <- c(7:12)
+        ## Specify which samples (by number) that belong to each group
+        group.nums[[1]] <- c(1:6)
+        group.nums[[2]] <- c(7:12)
 
+        ## Perform group name embedding and review
         Spectre::add.groups(x = data.list, grp.names = group.names, grp.nums = group.nums)
 
         head(data.list)
+        head(data.list[[1]])
         head(data.list[[7]])
 
-    ## Merge samples
+    ### Merge files
+
+        ## Merge files and review
         Spectre::merge.files(x = data.list)
         head(cell.dat)
 
-        # Look for any NAs
+        ## Look for any NAs
+        #
+        #
+        #
 
-        # Cleanup (not necessary, but recommended)
-            rm(data.list)
-            rm(name.table)
-            rm(ncol.check)
-            rm(nrow.check)
-            #rm(group.names)
-            #rm(group.nums)
-
-    dim(cell.dat)
-
-    cell.dat.large <- rbind(cell.dat, cell.dat)
-    cell.dat.large <- rbind(cell.dat.large, cell.dat) # x8 or so
-    cell.dat <- cell.dat.large
+        ## Cleanup (not necessary, but recommended)
+        rm(data.list)
+        rm(name.table)
+        rm(ncol.check)
+        rm(nrow.check)
+        #rm(group.names)
+        #rm(group.nums)
 
 
-    ## Define clustering columns
+    ################
+        #dim(cell.dat)
+        #cell.dat.large <- rbind(cell.dat, cell.dat)
+        #for(i in c(1:8)){
+        #  cell.dat.large <- rbind(cell.dat.large, cell.dat) # x8 or so
+        #}
+        #cell.dat <- cell.dat.large
+    ################
+
+
+    ### Define cellular and clustering columns
 
         ## Save column names
         ColumnNames <- unname(colnames(cell.dat)) # assign reporter and marker names (column names) to 'ColumnNames'
         as.matrix(ColumnNames) # view the column 'number' for each parameter
 
+        ## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
+        ValidCellularColsNos <- c(2:6,8,9,11,12,13,16:19,21:32)
+        ValidCellularCols <- ColumnNames[ValidCellularColsNos]
+
+        ValidCellularCols  # check that the column names that appear are the ones you want to analyse
+        ColumnNames[-ValidCellularColsNos] # Check which columns are being EXCLUDED!
+
         ## Define columns for clustering
         ClusteringColNos <- c(5,6,8,9,11:13,17:19,21:29,32)
-        ClusteringColNos
-
         ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to include the markers corresponding to the column numbers 11, 23, 10
 
-        ##
         ClusteringCols  # check that the column names that appear are the ones you want to analyse
         ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 
         head(cell.dat)
 
-### 3. Perform FlowSOM clustering
+#### 3. Perform clustering
 
-    ## FlowSOM
-    Spectre::run.flowsom(x = cell.dat,
-                         meta.k = 40,
-                         clustering.cols = ClusteringCols,
-                         clust.seed = 42,
-                         meta.seed = 42,
-                         clust.name = "FlowSOM_cluster",
-                         meta.clust.name = "FlowSOM_metacluster")
+    ### Run FlowSOM
+        Spectre::run.flowsom(x = cell.dat,
+                             meta.k = 40,
+                             clustering.cols = ClusteringCols,
+                             clust.seed = 42,
+                             meta.seed = 42,
+                             clust.name = "FlowSOM_cluster",
+                             meta.clust.name = "FlowSOM_metacluster")
 
-    ## Add results
-    cell.dat <- cbind(cell.dat, flowsom.res.original)
-    cell.dat <- cbind(cell.dat, flowsom.res.meta)
+        cell.dat <- cbind(cell.dat, flowsom.res.original)   # Add results to cell.dat
+        cell.dat <- cbind(cell.dat, flowsom.res.meta)       # Add results to cell.dat
+        head(cell.dat)                                      # Check cell.dat to ensure FlowSOM data correctly attached
 
-    ## Check cell.dat
-    head(cell.dat)
-
-    ## Remove results
-    rm(flowsom.res.original)
-    rm(flowsom.res.meta)
+        rm(flowsom.res.original)                            # Remove results from global environment
+        rm(flowsom.res.meta)                                # Remove results from global environment
 
 
+    ### Perform other clustering approaches if desired
 
-    ########################
+        #
+        #
+        #
 
-    # save cell.dat
-    # create sumtables
-    # save sumtables
+    ### Save cell.dat (including clustering results)
+        setwd(PrimaryDirectory)
+        setwd(OutputDirectory)
+        dir.create("Output-ClusteredData", showWarnings = FALSE)
+        setwd("Output-ClusteredData")
+        getwd()
+
+        head(cell.dat)
+
+        Spectre::write.files(x = cell.dat,
+                            file.name = exp.name,
+                            by.all = TRUE,
+                            by.sample = TRUE,
+                            sample.col = "FileName",
+                            by.group = TRUE,
+                            group.col = "GroupName",
+                            write.csv = TRUE,
+                            write.fcs = FALSE)
+
+        setwd(PrimaryDirectory)
+
+    ### Create and save sumtables
+
+        #Spectre::sumtables()
 
 
 
-### 4. Downsample data in preparation for dimensionality reduction
+#### 4. Downsample data in preparation for dimensionality reduction
 
     ## Run subsample
-    #Spectre::subsample(x = cell.dat,
-    #                   method = "per.sample",
-    #                   samp.col = "FileName",
-    #                   targets = c(rep(500, 12)),
-    #                   seed = 42)
-    #
-    #cell.dat.sub <- subsample.res
-    #rm(subsample.res)
+    Spectre::subsample(x = cell.dat,
+                       method = "per.sample", # or "random
+                       samp.col = "FileName",
+                       targets = c(rep(500, 12)),
+                       seed = 42)
 
-    cell.dat.sub <- cell.dat.large
+    cell.dat.sub <- subsample.res
+    rm(subsample.res)
+
+    ######################
+    #cell.dat.sub <- cell.dat.large
+    ######################
 
 
 ### 5. Perform UMAP
 
-    ## Check column names
-    as.matrix(names(cell.dat.sub))
+    ### Run UMAP
 
-    ## Run UMAP
-    Spectre::run.umap(x = cell.dat.sub,
-                  use.cols = ClusteringCols,  #c(5,6,8,9,11,12,13,17:19,21:30,32),
-                  umap.seed = 42)
+        ## Run UMAP
+        Spectre::run.umap(x = cell.dat.sub,
+                      use.cols = ClusteringCols,  #c(5,6,8,9,11,12,13,17:19,21:30,32),
+                      umap.seed = 42)
 
-    ## Merge UMAP results with data
-    cell.dat.sub <- cbind(cell.dat.sub, umap.res)
+        cell.dat.sub <- cbind(cell.dat.sub, umap.res) # Merge UMAP results with data
+
+        ## Plot UMAP results
+        plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
+
+    ### Run tSNE
+        #Spectre::run.tsne(x = cell.dat.sub,
+        #                  use.cols = ClusteringCols,  #c(5,6,8,9,11,12,13,17:19,21:30,32),
+        #                  umap.seed = 42)
+        #
+        #cell.dat.sub <- cbind(cell.dat.sub, tsne.res) # Merge UMAP results with data
+
+        ## Plot tSNE results
+        #plot(cell.dat.sub$tSNE_42_X, cell.dat.sub$tSNE_42_Y)
 
 
 ### 6. Plot UMAP
 
-    ## Plot UMAP results
-    plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
-
     ## Plot single UMAP MFI plot
-    p <- Spectre::colour.plot(d = cell.dat.sub,
-                         x.axis = "UMAP_42_X",
-                         y.axis = "UMAP_42_Y",
-                         col.axis = "BV605.Ly6C",
-                         title = "MFI",
-                         colours = "spectral",
-                         dot.size = 1)
-    p
+        p <- Spectre::colour.plot(d = cell.dat.sub,
+                             x.axis = "UMAP_42_X",
+                             y.axis = "UMAP_42_Y",
+                             col.axis = "BV605.Ly6C",
+                             title = "MFI",
+                             colours = "spectral",
+                             dot.size = 1)
+        p
 
-    head(cell.dat)
 
     ## Plot single UMAP factor plot
-    p <- Spectre::factor.plot(d = cell.dat.sub,
-                              x.axis = "UMAP_42_X",
-                              y.axis = "UMAP_42_Y",
-                              col.axis = "FileName",
-                              title = "Samples",
-                              dot.size = 1,
-                              add.labels = FALSE) # assumes numeric
+        p <- Spectre::factor.plot(d = cell.dat.sub,
+                                  x.axis = "UMAP_42_X",
+                                  y.axis = "UMAP_42_Y",
+                                  col.axis = "FlowSOM_metacluster",
+                                  title = "Cluster",
+                                  dot.size = 1,
+                                  add.labels = TRUE) # assumes numeric
 
-    p
+        p
 
-
-
-
-    ## add option for centroid detection and labelling
-
-    ## copy the # codes for 'spectral' colours -- use that directly, avoid needing Rcolourbrewer etc
+        ## -- add option for centroid detection and labelling
+        ## -- copy the # codes for 'spectral' colours -- use that directly, avoid needing Rcolourbrewer etc
 
 
+    ## Save subsampled data (includng tSNE/UMAP etc)
+        setwd(PrimaryDirectory)
+        setwd(OutputDirectory)
+        dir.create("Output-DimRedData", showWarnings = FALSE)
+        setwd("Output-DimRedData")
+        getwd()
 
+        head(cell.dat.sub)
+
+        Spectre::write.files(x = cell.dat.sub, file.name = exp.name,
+                             by.all = TRUE,
+                             by.sample = TRUE, sample.col = "FileName",
+                             by.group = TRUE, group.col = "GroupName",
+                             write.csv = TRUE, write.fcs = FALSE)
+
+        setwd(PrimaryDirectory)
+
+
+
+
+    ## Loop for colour.plots
+
+        plots <- names(cell.dat.sub)
+        # plots <- c("BV605.Ly6C", "PE.CD115")
+
+        setwd(PrimaryDirectory)
+        setwd(OutputDirectory)
+        dir.create("Output-ColourPlots")
+        setwd("Output-ColourPlots")
+
+        ## Plot all data
+        for(a in plots){
+          p <- Spectre::colour.plot(d = cell.dat.sub, x.axis = "UMAP_42_X", y.axis = "UMAP_42_Y",
+                                    col.axis = a, title = a, colours = "spectral", dot.size = 1)
+          ggsave(p, filename = paste0("All_samples_", a, ".png"), width = 9, height = 7)
+        }
+
+        ## Plot by sample
+        #for(i in unique(cell.dat.sub[["FileName"]])){
+        #  # subset
+        #}
+        ## Plot by group
+
+        setwd(PrimaryDirectory)
+
+
+    ## Loop for factor.plots
+
+        head(cell.dat.sub)
+        factors <- c("FlowSOM_metacluster")
+
+        setwd(OutputDirectory)
+
+        for(a in factors){
+          p <- Spectre::factor.plot(d = cell.dat.sub,
+                                    x.axis = "UMAP_42_X",
+                                    y.axis = "UMAP_42_Y",
+                                    col.axis = "FlowSOM_metacluster",
+                                    title = "Cluster",
+                                    dot.size = 1,
+                                    add.labels = TRUE) # assumes numeric
+
+          ggsave(p, filename = paste0("All_samples_", a, ".png"), width = 9, height = 7)
+        }
+
+        setwd(PrimaryDirectory)
 
 
 
