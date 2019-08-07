@@ -4,8 +4,8 @@
 make.sample.table <- function(x, # takes a single dataframe or datatable
                              sample.col.name, # Character, name of the column that specifies sample names # REQUIRED
 
-                             include.groups, # Logical, name of the column that specifies sample names
-                             group.col.name # Character, name of the column that specifies group names
+                             include.groups = FALSE, # Logical, name of the column that specifies sample names
+                             group.col.name = NULL # Character, name of the column that specifies group names
                              ){
 
 
