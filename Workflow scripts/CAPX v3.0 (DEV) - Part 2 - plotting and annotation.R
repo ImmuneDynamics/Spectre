@@ -1,68 +1,103 @@
-# plotting
+##########################################################################################################
+#### DRAFT Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
+#### Part 2 - Plotting, data exploration, cluster annotation
+##########################################################################################################
 
-    ### Load packages
-    library('Spectre')
+# Thomas Myles Ashhurst, Felix Marsh-Wakefield
+# 2019-08-02
+# Workflow: https://sydneycytometry.org.au/capx
+# Spectre R package: https://sydneycytometry.org.au/spectre
 
-    library('plyr')
-    library('data.table')
-    library('rstudioapi')
-    library('flowViz')
-    library('flowCore')
-    library('Biobase')
-    library('FlowSOM')
-    library('Rtsne')
-    library('umap')
-    library('ggplot2')
-    library('scales')
-    library('colorRamps')
-    library('ggthemes')
-    library('RColorBrewer')
-    library("gridExtra")
+##########################################################################################################
+#### 1. Install packages, load packages, and set working directory
+#########################################################################################################
 
-    library("gridExtra")
+      ### 1.1. Load 'Spectre' package (using devtools)
+          if(!require('devtools')) {install.packages('devtools')}
+          library('devtools')
 
-    ## In order for this to work, a) rstudioapi must be installed and b) the location of this .r script must be in your desired working directory
-    dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
-    setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
-    getwd()
-    PrimaryDirectory <- getwd()
-    PrimaryDirectory
+          #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
+          library("Spectre")
 
-    ## Use this to manually set the working directory
-    #setwd("/Users/Tom/Desktop/Experiment")                          # Set your working directory here (e.g. "/Users/Tom/Desktop/") -- press tab when selected after the '/' to see options
-    #getwd()                                                         # Check your working directory has changed correctly
-    #PrimaryDirectory <- getwd()                                     # Assign the working directory as 'PrimaryDirectory'
-    #PrimaryDirectory
+          # We recommend not to update packages that are dependencies of Spectre
 
-    list.files(path=PrimaryDirectory, pattern = ".csv")     # see a list of CSV files
+      ### 1.2. Install packages
+          if(!require('plyr')) {install.packages('plyr')}
+          if(!require('data.table')) {install.packages('data.table')}
+
+          if(!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
+          if(!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
+          if(!require("ggthemes")){install.packages("ggthemes")} # for plot themes
+          if(!require("scales")){install.packages("scales")} # for re-scaling if necessary
+          if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
+          if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
+
+      ### 1.3. Load packages from library
+          library('plyr')
+          library('data.table')
+
+          library('ggplot2')
+          library('scales')
+          library('colorRamps')
+          library('ggthemes')
+          library('RColorBrewer')
+          library("gridExtra")
+
+      ## 1.4. Set working directory
+
+          ## Set working directory
+          #dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+          #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
+          #getwd()
+          #PrimaryDirectory <- getwd()
+          #PrimaryDirectory
+
+          ## Can set manually using these lines, if desired
+          PrimaryDirectory <- "/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre/Workflow scripts/Output_CAPX/Output-ClusteredData/"
+          setwd(PrimaryDirectory)
+
+          ## Create output directory
+          dir.create("Output_CAPX_exploration", showWarnings = FALSE)
+          setwd("Output_CAPX_exploration")
+          OutputDirectory <- getwd()
+          setwd(PrimaryDirectory)
 
 
-    plot.dat <- as.data.frame(fread(file = "TA270.2.csv"))
+##########################################################################################################
+#### 2. Read in data
+#########################################################################################################
+
+    ## Read cell.dat
+    list.files(PrimaryDirectory, ".csv")
+    cell.dat <- fread("Demo_all_data.csv")
+    head(cell.dat)
 
 
     ## Define the sample and group column names
-    samp.col <- "SampleName"
-    grp.col <- "GroupName"
+    as.matrix(names(cell.dat))
 
-    ## Check to ensure the correct name has been specified above
+    samp.col <- "Sample"
+    grp.col <- "Group"
+
     plot.dat[[samp.col]]
     plot.dat[[grp.col]]
 
-    ## Make a sample table
-    make.sample.table(x = plot.dat,
-                      sample.col.name = samp.col,
-                      include.groups = TRUE,
-                      group.col.name = grp.col)
+    all.samples <- unique(plot.dat[[samp.col]])
+    all.groups <- unique(plot.dat[[grp.col]])
 
-    # Check results
-    all.sample.names
-    all.group.names
+    ## Others if necessary
+    batch.col <- "Batch"
+    plot.dat[[batch.col]]
 
-    sample.table
+    all.batches <- unique(plot.dat[[batch.col]])
 
 
+##########################################################################################################
+#### 3. Read in data
+#########################################################################################################
 
-    ###
+
+
 
 
 

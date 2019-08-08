@@ -1,6 +1,6 @@
 ##########################################################################################################
-#### Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
-#### DRAFT FOR VERSION 3
+#### DRAFT Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
+#### Part 1 - Clustering, dimensionality reduction, save files
 ##########################################################################################################
 
     # Thomas Myles Ashhurst, Felix Marsh-Wakefield
