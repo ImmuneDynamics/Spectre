@@ -3,10 +3,10 @@
 #### Part 2 - Plotting, data exploration, cluster annotation
 ##########################################################################################################
 
-# Thomas Myles Ashhurst, Felix Marsh-Wakefield
-# 2019-08-02
-# Workflow: https://sydneycytometry.org.au/capx
-# Spectre R package: https://sydneycytometry.org.au/spectre
+    # Thomas Myles Ashhurst, Felix Marsh-Wakefield
+    # 2019-08-02
+    # Workflow: https://sydneycytometry.org.au/capx
+    # Spectre R package: https://sydneycytometry.org.au/spectre
 
 ##########################################################################################################
 #### 1. Install packages, load packages, and set working directory
@@ -53,7 +53,7 @@
           #PrimaryDirectory
 
           ## Can set manually using these lines, if desired
-          PrimaryDirectory <- "/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre/Workflow scripts/Output_CAPX/Output-ClusteredData/"
+          PrimaryDirectory <- "/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre/Workflow scripts/Output_CAPX/Output-DimRedData/"
           setwd(PrimaryDirectory)
 
           ## Create output directory
@@ -69,31 +69,135 @@
 
     ## Read cell.dat
     list.files(PrimaryDirectory, ".csv")
-    cell.dat <- fread("Demo_all_data.csv")
-    head(cell.dat)
+    plot.dat <- fread("Demo_all_data.csv")
+    head(plot.dat)
 
+    ## Also read the full dataset (not subsampled) for reference
+    setwd(PrimaryDirectory)
+    setwd("../Output-ClusteredData/")
+    list.files(PrimaryDirectory, ".csv")
+
+    all.dat <- fread("Demo_all_data.csv")
+    head(all.dat)
+
+    setwd(PrimaryDirectory)
 
     ## Define the sample and group column names
     as.matrix(names(cell.dat))
 
     samp.col <- "Sample"
     grp.col <- "Group"
+    clust.col <- "FlowSOM_metacluster"
 
     plot.dat[[samp.col]]
     plot.dat[[grp.col]]
+    plot.dat[[clust.col]]
 
-    all.samples <- unique(plot.dat[[samp.col]])
-    all.groups <- unique(plot.dat[[grp.col]])
+    ## COMPARE cell.dat and cell.dat.sub -- anything missing??
 
-    ## Others if necessary
-    batch.col <- "Batch"
-    plot.dat[[batch.col]]
+            all.samples <- unique(plot.dat[[samp.col]])
+            all.groups <- unique(plot.dat[[grp.col]])
+            all.clusters <- unique(plot.dat[[clust.col]])
 
-    all.batches <- unique(plot.dat[[batch.col]])
+            ## Others if necessary
+            batch.col <- "Batch"
+            plot.dat[[batch.col]]
+
+            all.batches <- unique(plot.dat[[batch.col]])
 
 
 ##########################################################################################################
-#### 3. Read in data
+#### 3. Plotting
+#########################################################################################################
+
+    ### Plotting aligned colour plots -- CD45, CD117, Ly6C
+
+        as.matrix(names(plot.dat))
+
+        p1 <- Spectre::colour.plot(d = plot.dat, # plot.dat
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "AF700.CD45",
+                                   title = paste0("All samples", " - ", "CD45"),
+                                   colours = "spectral",
+                                   dot.size = 1,
+                                   align.xy.by = plot.data,
+                                   align.col.by = all.dat)
+
+        p2 <- Spectre::colour.plot(d = plot.dat, # plot.dat
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "BV605.Ly6C",
+                                   title = paste0("All samples", " - ", "Ly6C"),
+                                   colours = "spectral",
+                                   dot.size = 1,
+                                   align.xy.by = plot.dat,
+                                   align.col.by = all.dat)
+        p3 <- Spectre::colour.plot(d = plot.dat, # plot.dat
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "BB515.CD117",
+                                   title = paste0("All samples", " - ", "CD117"),
+                                   colours = "spectral",
+                                   dot.size = 1,
+                                   align.xy.by = plot.dat,
+                                   align.col.by = all.dat)
+
+        f1 <- Spectre::factor.plot(d = plot.dat, # plot.dat
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = clust.col,
+                                   title = paste0("All samples", " - ", clust.col),
+                                   dot.size = 1,
+                                   align.xy.by = plot.dat,
+                                   align.col.by = all.dat)
+
+        f2 <- Spectre::factor.plot(d = plot.dat, # plot.dat
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = samp.col,
+                                   title = paste0("All samples", " - ", samp.col),
+                                   dot.size = 1,
+                                   align.xy.by = plot.dat,
+                                   align.col.by = all.dat)
+
+        f3 <- Spectre::factor.plot(d = plot.dat, # plot.dat
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = grp.col,
+                                   title = paste0("All samples", " - ", grp.col),
+                                   dot.size = 1,
+                                   align.xy.by = plot.dat,
+                                   align.col.by = all.dat)
+
+
+
+        gp <- grid.arrange(grobs = list(p1, p2, p3, f1, f2, f3), ncol=3, nrow=2) #top = "Main Title"
+        ggsave(filename = "Grid.jpeg", plot = gp, path = PrimaryDirectory, width = 27, height = 14)
+
+        ## GRID FUNCTION
+
+
+
+
+
+
+##########################################################################################################
+#### 4. Annotate clusters
+#########################################################################################################
+
+
+
+
+##########################################################################################################
+#### 6. Sumtables
+#########################################################################################################
+
+
+
+
+##########################################################################################################
+#### 7. 'Positive expression' thresholds
 #########################################################################################################
 
 
@@ -103,11 +207,7 @@
 
 
 
-    # https://ggplot2.tidyverse.org/reference/lims.html
-    #ggplot(small, aes(mpg, wt, colour = factor(cyl))) +
-    #  geom_point() +
-    #  lims(colour = c("4", "6", "8"))
-    lims(colour = c("4", "6", "8"))
+
 
 
 

@@ -7,38 +7,39 @@ make.sumtable <- function(## Main entries
                            ##
                            sample.name, # Samples
                            group.name = NULL, # specify group name (if groups are present)
-                           clust.name, # Clusters/populations
+                           clust.col, # Clusters/populations
                            annot.col.nums = NULL, # Non-cellular markers
 
                            ## Frequencies
                            cells.per.tissue = NULL, # Calculate cell numbers per cluster/sample/tissue        # Turn OFF if you don't have any cell counts
 
                            ## Expression
-                           fun.type = "median", # Choose summary function for expression levels. Default = "mean". Can be "mean" or "median".
+                           fun.type = "median" # Choose summary function for expression levels. Default = "mean". Can be "mean" or "median".
 
                            ## Groups and fold-change
                            #do.foldchange = FALSE, # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
-                           ctrl.group = NULL)
+                           #ctrl.group = NULL
+                           )
 {
 
 ####################################################################################################################
 #### Test data
 ####################################################################################################################
 
-          #x = cell.dat
-          #type = "expression.per.sample"  # Can be: frequencies, expression.per.sample, expression.per.marker
-
-          #sample.col = "Sample"
-          #group.name = "Group" # specify group name (if groups are present)
-          #clust.col = "FlowSOM_metacluster"
-          #annot.col.nums = c(1,33:41) # specify all columns that represent annotations, and NOT CELLULAR PARAMETERS
-
-          #cells.per.tissue = c(rep(2.0e+07, 6), rep(1.8e+07, 6))
-
-          #fun.type = "median"
-
-          #do.foldchange = TRUE # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
-          #ctrl.group = "Mock"
+          # x = cell.dat
+          # type = "frequencies"  # Can be: frequencies, expression.per.sample, expression.per.marker
+          #
+          # sample.col = "Sample"
+          # group.name = "Group" # specify group name (if groups are present)
+          # clust.col = "FlowSOM_metacluster"
+          # annot.col.nums = c(1,33:39) # specify all columns that represent annotations, and NOT CELLULAR PARAMETERS
+          #
+          # cells.per.tissue = c(rep(2.0e+07, 6), rep(1.8e+07, 6))
+          #
+          # fun.type = "median"
+          #
+          # do.foldchange = TRUE # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
+          # ctrl.group = "Mock"
 
 ####################################################################################################################
 #### Setup
@@ -77,7 +78,7 @@ make.sumtable <- function(## Main entries
 
                   # subset data to cluster number/name, sample number/name, and other parameters that are helpful (e.g. group name, sample name, etc) -- can remove all marker columns (e.g. 141Nd-Ly6G)
                   data.pops <- data.cellnum[c(annot.col.nums, clust.col.num)]
-                  samp.name <- data.pops[samp.col]
+                  samp.name <- data.pops[sample.col]
 
                   # Split data into separate 'samples'  - specific sample name, all clusters
                   samp.list = list()
@@ -112,7 +113,7 @@ make.sumtable <- function(## Main entries
                       #group.label <- samp.list[[a]]$GroupName[1] # picks the group name from the first group of that sample
 
                       if(is.null(group.name) == FALSE){
-                        group.label <- samp.list[[a]][grp.col][1,1] # picks the group name from the first group of that sample
+                        group.label <- samp.list[[a]][group.name][1,1] # picks the group name from the first group of that sample
                         res <- data.frame(Cluster = i, NumCells = num.cells, Group = group.label) # added group label
                       }
 
@@ -124,7 +125,7 @@ make.sumtable <- function(## Main entries
                     }
 
                     new.sample.list[[a]] <- samp.res
-                    new.sample.list[[a]][samp.col] <- a
+                    new.sample.list[[a]][sample.col] <- a
                   }
 
                   merged.df <- rbindlist(new.sample.list) ## Concatenate into one large data frame -- what if they have a column conflict??
@@ -135,7 +136,7 @@ make.sumtable <- function(## Main entries
 
                   rownames(merged.df)
                   colnames(merged.df)
-                  merged.df[samp.col] # determine which column has the desired 'row names' -- might be first or second column, depending on whether group ID was added
+                  merged.df[sample.col] # determine which column has the desired 'row names' -- might be first or second column, depending on whether group ID was added
 
                   ## Save table
                   setwd(Starting.dir)
@@ -153,13 +154,13 @@ make.sumtable <- function(## Main entries
                   if(is.null(group.name) == FALSE){ # Using groups
                     labs <- prop.df[group.name]
                     labs[sample.col] <-  prop.df[sample.col]
-                    prop.df[samp.col] <- NULL
+                    prop.df[sample.col] <- NULL
                     prop.df[group.name] <- NULL
                   }
 
                   if(is.null(group.name) == TRUE){ # Not using groups
                     labs <-  prop.df[sample.col]
-                    prop.df[samp.col] <- NULL
+                    prop.df[sample.col] <- NULL
                   }
 
                   # create ROW totals (i.e. total cells per sample)
@@ -181,7 +182,7 @@ make.sumtable <- function(## Main entries
 
                   if(is.null(cells.per.tissue) == FALSE){
 
-                    check <- length(cell.counts) == length(unique(all.sample.names))
+                    check <- length(cells.per.tissue) == length(unique(all.sample.names))
                     if(check == FALSE){
                       print("Error: you do not have the same number of cell counts as samples, cell number calculations not performed")
                     }

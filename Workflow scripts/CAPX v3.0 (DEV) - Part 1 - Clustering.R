@@ -126,42 +126,44 @@
         #### READ IN SAMPLE TABLE FOR ALLOCATIONS
         ##################################################################
 
-            # sample.table <- read.txt()
+            #
+        sample.table <- read.delim(file = "sample.table.txt")
 
-            # specify what column refers to what
-                sample.col
-                group.col
-                batch.col
+        file.col <- "Filename"
+        sample.col <- "Sample"
+        group.col <- "Group"
+        batch.col <- "Batch"
 
 
-                all.sample.names
-                all.group.names
-                all.batch.names
+        all.sample.names <- sample.table[sample.col]
+        all.group.names <- sample.table[group.col]
+        all.batch.names <- sample.table[batch.col]
+        cells.per.sample <- sample.table["Cells.per.sample"]
 
-                cells.per.sample
 
-                ### SPECIFY WHICH TERMS TO ADD TO ROWS OF EACH SAMPLE
-
-            # Filenames
-            # Samples
-            # Cells per file
-            # Cells per sample
-
-            # Groups
-            # Batches
+        all.file.names == unique(names(data.list))
 
             #### USE SOME KIND OF LOOP BASED ON WHATS IN THE TABLE -- ADD KEYWORDS/NUMS to the samples
 
                 # make lists from what's in the table
 
-                # for(i in all.sample.names){
-                #    data.list[[i"]][[sample.col]] <- NA # fills a new colum
+                for(i in c(1:length(all.file.names))){
+                  #i <- 1
+                    data.list[[i]][[sample.col]] <- NA # fills a new colum
+                    data.list[[i]][[sample.col]] <- all.sample.names[i,]
+
+                    data.list[[i]][[group.col]] <- NA # fills a new colum
+                    data.list[[i]][[group.col]] <- all.group.names[i,]
+
+                    data.list[[i]][[batch.col]] <- NA # fills a new colum
+                    data.list[[i]][[batch.col]] <- all.batch.names[i,]
+                }
 
 
-                #}
+        head(data.list[[1]])
+        head(data.list[[6]])
+        head(data.list[[12]])
 
-
-            #### THEN CREATE cells per FILE
 
 
     ### Merge files
@@ -179,9 +181,6 @@
         ## Cleanup (not necessary, but recommended)
         rm(data.list, data.start, name.table, ncol.check, nrow.check, all.file.names, all.file.nums)
 
-        rm(sample.names, sample.assign)
-        rm(group.names, group.assign)
-        rm(batch, batch.assign)
 
     ################
         #dim(cell.dat)
@@ -198,38 +197,6 @@
 #### Define data and sample variables for analysis
 ##########################################################################################################
 
-    ### Define sample and group names
-
-        ## Define the sample and group column names
-        names(cell.dat)
-
-        samp.col <- "Sample"
-        grp.col <- "Group"
-        batch.col <- "Batch"
-
-        ## Check to ensure the correct name has been specified above
-        cell.dat[[samp.col]]
-        cell.dat[[grp.col]]
-        cell.dat[[batch.col]]
-
-
-
-
-        ## Make a sample table
-        make.sample.table(x = cell.dat,
-                          sample.col.name = samp.col,
-                          include.groups = FALSE,
-                          group.col.name = grp.col,
-                          include.batch = TRUE,
-                          batch.col.name = batch.col
-                          )
-
-        # Check results
-        all.sample.names
-        all.group.names
-        all.batch.names
-
-        sample.table
 
     ### Data subsampling?
 
@@ -314,7 +281,7 @@
         ## RUn subsampling
         Spectre::subsample(x = cell.dat,
                            method = "per.sample", # or "random
-                           samp.col = samp.col,
+                           samp.col = sample.col,
                            targets = c(rep(100,12)),
                            seed = 42)
 
@@ -365,8 +332,6 @@
                              colours = "spectral",
                              dot.size = 1)
         p1
-
-        ggsave(filename = "p1.jpeg", plot = p1, path = OutputDirectory, width = 9, height = 7)
 
 
     ### Plot single UMAP factor plot -- clusters
@@ -442,31 +407,34 @@
                                type = "frequencies",
                                sample.name = "Sample",
                                group.name = "Group",
-                               clust.name = "FlowSOM_metacluster",
-                               annot.col = c(1,33:41),
-                               cells.per.tissue = c(rep(2e+07, 6), rep(1.8e+07, 6)),
+                               clust.col = "FlowSOM_metacluster",
+                               annot.col.nums = c(1,33:39),
+                               cells.per.tissue = c(rep(2e+07, 6), rep(1.8e+07, 6))
                                #do.foldchange = TRUE # not active yet
-                               ctrl.group = "Mock")
+                               #ctrl.group = "Mock"
+                               )
 
         Spectre::make.sumtable(x = cell.dat,
                                type = "expression.per.sample",
                                sample.name = "Sample",
                                group.name = "Group",
-                               clust.name = "FlowSOM_metacluster",
-                               annot.col = c(1,33:41),
-                               fun.type = "median",
+                               clust.col = "FlowSOM_metacluster",
+                               annot.col.nums = c(1,33:39),
+                               fun.type = "median"
                                #do.foldchange = TRUE # not active yet
-                               ctrl.group = "Mock")
+                               #ctrl.group = "Mock"
+                               )
 
         Spectre::make.sumtable(x = cell.dat,
                                type = "expression.per.marker",
                                sample.name = "Sample",
                                group.name = "Group",
-                               clust.name = "FlowSOM_metacluster",
-                               annot.col = c(1,33:41),
-                               fun.type = "median",
+                               clust.col = "FlowSOM_metacluster",
+                               annot.col.nums = c(1,33:39),
+                               fun.type = "median"
                                #do.foldchange = TRUE # not active yet
-                               ctrl.group = "Mock")
+                               #ctrl.group = "Mock"
+                               )
 
         ## didn't exclude V1? annot col maybe didn't work
         ## Also some 'clusters' keeping the 'CLUSTER' label
@@ -486,21 +454,21 @@
         Spectre::write.files(x = cell.dat,
                              file.prefix = exp.name, # required
                              write.csv = TRUE,
-                             write.fcs = TRUE)
+                             write.fcs = FALSE)
 
         ## Write 'by sample' data
         Spectre::write.files(x = cell.dat,
                              file.prefix = exp.name, # required
                              divide.by = "Sample",
                              write.csv = TRUE,
-                             write.fcs = TRUE)
+                             write.fcs = FALSE)
 
         ## Write 'by group' data
         Spectre::write.files(x = cell.dat,
                              file.prefix = exp.name, # required
                              divide.by = "Group",
                              write.csv = TRUE,
-                             write.fcs = TRUE)
+                             write.fcs = FALSE)
 
 
         setwd(PrimaryDirectory)
@@ -519,21 +487,57 @@
         Spectre::write.files(x = cell.dat.sub,
                              file.prefix = exp.name, # required
                              write.csv = TRUE,
-                             write.fcs = TRUE)
+                             write.fcs = FALSE) ##### FCS NOT WORK
 
         ## Write 'by sample' data
         Spectre::write.files(x = cell.dat.sub,
                              file.prefix = exp.name, # required
                              divide.by = "Sample",
                              write.csv = TRUE,
-                             write.fcs = TRUE)
+                             write.fcs = FALSE) ##### FCS NOT WORK
 
         ## Write 'by group' data
         Spectre::write.files(x = cell.dat.sub,
                              file.prefix = exp.name, # required
                              divide.by = "Group",
                              write.csv = TRUE,
-                             write.fcs = TRUE)
+                             write.fcs = FALSE) ##### FCS NOT WORK
 
         setwd(PrimaryDirectory)
-
+#
+#
+#
+#
+#
+#         ### Define sample and group names
+#
+#         ## Define the sample and group column names
+#         names(cell.dat)
+#
+#         samp.col <- "Sample"
+#         grp.col <- "Group"
+#         batch.col <- "Batch"
+#
+#         ## Check to ensure the correct name has been specified above
+#         cell.dat[[samp.col]]
+#         cell.dat[[grp.col]]
+#         cell.dat[[batch.col]]
+#
+#
+#
+#
+#         ## Make a sample table
+#         make.sample.table(x = cell.dat,
+#                           sample.col.name = samp.col,
+#                           include.groups = TRUE,
+#                           group.col.name = grp.col,
+#                           include.batch = TRUE,
+#                           batch.col.name = batch.col
+#         )
+#
+#         # Check results
+#         all.sample.names
+#         all.group.names
+#         all.batch.names
+#
+#         sample.table
