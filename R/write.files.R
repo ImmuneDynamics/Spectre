@@ -10,31 +10,33 @@ write.files <- function(x,      # data to save
 
   ####### TESTING
 
-    #x <- cell.dat.sub
-    #file.prefix = "Demo"
-
-    #divide.by = "Sample"
-
-    #write.csv = TRUE
-    #write.fcs = TRUE
+    # x <- cell.dat
+    # file.prefix = "Demo"
+    #
+    # divide.by = "Sample"
+    #
+    # write.csv = TRUE
+    # write.fcs = TRUE
 
 
   ### If writing FCS files, setup numeric only data frames
 
-      if(write.fcs == FALSE){
+      if(write.fcs == TRUE){
         ## Convert character entries into numeric -- so that it can be written as an FCS file
-        nums <- unlist(lapply(x, is.numeric))
-        char <- unlist(lapply(x, is.character))
-        w <- x[,char]
+            #nums <- unlist(lapply(x, is.numeric))
+            #char <- unlist(lapply(x, is.character))
+
+        w <- x[sapply(x, function(x) !is.numeric(x))] # select all character and factor columns
+        head(w)
 
         for(a in colnames(w)){w[[a]] <- as.numeric(factor(w[[a]]))}
+        head(w)
 
         x.for.fcs <- x
-        x.for.fcs[,char] <- w
+        x.for.fcs[sapply(x.for.fcs, function(x.for.fcs) !is.numeric(x.for.fcs))] <- w
 
-        ## Subset to numeric only (old approach)
-        #nums <- unlist(lapply(x, is.numeric))
-        #x <- x[ , nums]
+        head(x.for.fcs)
+        head(x)
       }
 
 

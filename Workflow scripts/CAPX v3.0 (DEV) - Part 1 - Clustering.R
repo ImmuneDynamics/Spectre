@@ -126,7 +126,7 @@
         #### READ IN SAMPLE TABLE FOR ALLOCATIONS
         ##################################################################
 
-            #
+
         sample.table <- read.delim(file = "sample.table.txt")
 
         file.col <- "Filename"
@@ -163,8 +163,6 @@
         head(data.list[[1]])
         head(data.list[[6]])
         head(data.list[[12]])
-
-
 
     ### Merge files
 
@@ -333,19 +331,29 @@
                              dot.size = 1)
         p1
 
-
     ### Plot single UMAP factor plot -- clusters
         names(cell.dat.sub)
 
-        p2 <- Spectre::factor.plot.labelled(d = cell.dat.sub,
-                                          x.axis = "UMAP_42_X",
-                                          y.axis = "UMAP_42_Y",
-                                          col.axis = "FlowSOM_metacluster",
-                                          title = paste0("All samples", " - ", "Clusters"),
-                                          dot.size = 1) # assumes numeric
+        p2 <- Spectre::factor.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "FlowSOM_metacluster",
+                                   title = paste0("All samples", " - ", "Clusters"),
+                                   dot.size = 1,
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat)
 
+        p2 # TRUE is fine, FALSE also returns 'NULL' when running this line IF using option for centroid.labels as FALSE
+
+        p2 <- Spectre::labelled.factor.plot(d = cell.dat.sub,
+                                            x.axis = "UMAP_42_X",
+                                            y.axis = "UMAP_42_Y",
+                                            col.axis = "FlowSOM_metacluster",
+                                            title = paste0("All samples", " - ", "Clusters"),
+                                            dot.size = 1,
+                                            align.xy.by = cell.dat.sub,
+                                            align.col.by = cell.dat)
         p2
-
 
 
     ### Plot single UMAP factor plot -- samples
@@ -454,21 +462,21 @@
         Spectre::write.files(x = cell.dat,
                              file.prefix = exp.name, # required
                              write.csv = TRUE,
-                             write.fcs = FALSE)
+                             write.fcs = TRUE)
 
         ## Write 'by sample' data
         Spectre::write.files(x = cell.dat,
                              file.prefix = exp.name, # required
                              divide.by = "Sample",
                              write.csv = TRUE,
-                             write.fcs = FALSE)
+                             write.fcs = TRUE)
 
         ## Write 'by group' data
         Spectre::write.files(x = cell.dat,
                              file.prefix = exp.name, # required
                              divide.by = "Group",
                              write.csv = TRUE,
-                             write.fcs = FALSE)
+                             write.fcs = TRUE)
 
 
         setwd(PrimaryDirectory)
@@ -485,23 +493,23 @@
 
         ## Write 'all' data
         Spectre::write.files(x = cell.dat.sub,
-                             file.prefix = exp.name, # required
+                             file.prefix = paste0("DimRed_", exp.name), # required
                              write.csv = TRUE,
-                             write.fcs = FALSE) ##### FCS NOT WORK
+                             write.fcs = TRUE) ##### FCS NOT WORK
 
         ## Write 'by sample' data
         Spectre::write.files(x = cell.dat.sub,
-                             file.prefix = exp.name, # required
+                             file.prefix = paste0("DimRed_", exp.name), # required
                              divide.by = "Sample",
                              write.csv = TRUE,
-                             write.fcs = FALSE) ##### FCS NOT WORK
+                             write.fcs = TRUE) ##### FCS NOT WORK
 
         ## Write 'by group' data
         Spectre::write.files(x = cell.dat.sub,
-                             file.prefix = exp.name, # required
+                             file.prefix = paste0("DimRed_", exp.name), # required
                              divide.by = "Group",
                              write.csv = TRUE,
-                             write.fcs = FALSE) ##### FCS NOT WORK
+                             write.fcs = TRUE) ##### FCS NOT WORK
 
         setwd(PrimaryDirectory)
 #
