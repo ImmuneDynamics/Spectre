@@ -1,4 +1,12 @@
-## factor.plot
+#' factor.plot - Create a factor plot
+#'
+#' This function allows you to plot cells on an XY plot, coloured by some factor (group, cluster, etc)
+#' factor.plot is a wrapper around the heatmap.2 function from gplots.
+#'
+#' @usage factor.plot(x, ...)
+#'
+#' @export
+
 
 factor.plot <- function(d,
                         x.axis, # "UMAP1"
@@ -7,7 +15,8 @@ factor.plot <- function(d,
                         title,
                         dot.size,
                         align.xy.by = NULL,
-                        align.col.by = NULL){
+                        align.col.by = NULL)
+{
 
     ## TESTING
               # d = cell.dat.sub
@@ -96,4 +105,4 @@ factor.plot <- function(d,
               )
 
 
- }
+}

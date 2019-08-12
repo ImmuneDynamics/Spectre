@@ -22,9 +22,6 @@
           # We recommend not to update packages that are dependencies of Spectre
 
       ### 1.2. Install packages
-          if(!require('plyr')) {install.packages('plyr')}
-          if(!require('data.table')) {install.packages('data.table')}
-
           if(!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
           if(!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
           if(!require("ggthemes")){install.packages("ggthemes")} # for plot themes
@@ -33,9 +30,6 @@
           if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
 
       ### 1.3. Load packages from library
-          library('plyr')
-          library('data.table')
-
           library('ggplot2')
           library('scales')
           library('colorRamps')
@@ -192,6 +186,68 @@
 
 
 ##########################################################################################################
+#### Heatmaps
+#########################################################################################################
+
+        ## Clusters vs samples -- number of  cells
+        setwd(PrimaryDirectory)
+        setwd("../Output-SumTables/Output_CellNums/")
+        list.files(pattern = ".csv")
+        A <- read.csv("SumTable_CellsPerTissue.csv")
+        head(A)
+
+        r.height <- 5.5
+
+        dev.off()
+        pdf("heatmap.pdf", width = (r.height * 3.268765), height = r.height)
+        make.heatmap(x = A,
+                     sample.col = "Sample",
+                     annot.cols = c(1:3),
+                     plot.title = "Cells per tissue",
+                     row.sep = 6,
+                     y.margin = 4,
+                     x.margin = 8)
+        dev.off()
+
+
+
+        ## Clusters vs markers -- MFI
+
+        ##
+        setwd(PrimaryDirectory)
+        setwd("../Output-SumTables/Output_MFI_per_sample/")
+
+        list.files(pattern = ".csv")
+        B <- read.csv("SumTable_MFI_cluster_x_marker-all_data.csv")
+        head(B)
+        as.matrix(names(B))
+
+        ###
+        r.height <- 8
+
+        dev.off()
+        pdf("heatmap2.pdf", width = (r.height*0.8888), height = r.height)
+        make.heatmap(x = B,
+                     sample.col = "FlowSOM_metacluster",
+                     annot.cols = c(1:2,4,8,11,15,16,21,32),
+                     plot.title = "All data - MFI",
+                     y.margin = 8,
+                     x.margin = 4)
+        dev.off()
+
+
+
+        ###
+        Spectre::make.pheatmap(x = B,
+                                sample.col = "FlowSOM_metacluster",
+                                annot.cols = c(1:2,4,8,11,15,16,21,32),
+                                plot.title = "All data - MFI",
+                                cell.size = 15
+                                )
+
+
+
+##########################################################################################################
 #### 4. Annotate clusters
 #########################################################################################################
 
@@ -199,11 +255,6 @@
 
 
 
-
-
-##########################################################################################################
-#### 6. Sumtables
-#########################################################################################################
 
 
 
@@ -215,6 +266,11 @@
 
 
 
+
+
+##########################################################################################################
+#### Make new sumtables
+#########################################################################################################
 
 
 

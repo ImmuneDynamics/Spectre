@@ -15,3 +15,4 @@ Imports:
     devtools
 Suggests:
     rstudioapi
+RoxygenNote: 6.1.1.9000

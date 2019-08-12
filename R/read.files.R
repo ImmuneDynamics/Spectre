@@ -1,17 +1,25 @@
-### read.files
+#' read.files - Function to read data from CSV or FCS files into a list
+#'
+#' This function allows you to read in sample files (.csv or .fcs) into a list called 'data.list'.
+#'
+#' @param file.loc What is the location of your files? Defaults to current working directory (getwd()).
+#' @param file.type What type of files do you want to read. Can be ".csv" or ".fcs". Defaults to ".csv".
+#' @param do.embed.file.names Do you want to embed each row (cell) of each file with the name name? Defaults to TRUE.
+#'
+#' @return a list (called data.list) of dataframes -- one file per dataframe.
+#'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
+#'
+#' @examples
+#' read.files()
+#'
+#' @export
 
-    #' Read files function
-    #'
-    #' This function allows you to read in sample files into a list
-    #' @param file.loc What is the location of your files? ?? efaults to TRUE ??
-    #' @keywords cats
-    #' @export
-    #' @examples
-    #' cat_function()
-
-    read.files <- function(file.loc,
-                           file.type,
-                           do.embed.file.names){
+    read.files <- function(file.loc = getwd(),
+                           file.type = ".csv",
+                           do.embed.file.names = TRUE){
 
         ## testing
             #file.loc <- getwd()

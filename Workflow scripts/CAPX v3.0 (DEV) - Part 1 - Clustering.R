@@ -110,6 +110,10 @@
         ## Import samples (read files into R from disk)
         Spectre::read.files(file.loc = PrimaryDirectory, file.type = ".csv", do.embed.file.names = TRUE)
 
+        #########################
+        ## Could just go ahead an merge here -- add annotations by filtering by 'Filename' column, rather than the name of the dataframe in 'data.list'
+        #########################
+
         ncol.check    # Review number of columns (features, markers) in each sample
         nrow.check    # Review number of rows (cells) in each sample
 
@@ -158,7 +162,6 @@
                     data.list[[i]][[batch.col]] <- NA # fills a new colum
                     data.list[[i]][[batch.col]] <- all.batch.names[i,]
                 }
-
 
         head(data.list[[1]])
         head(data.list[[6]])
@@ -273,10 +276,19 @@
 
     ### Subsampling
 
+        #########################
+            ## Add a feature -- for dim red, have a TRUE/FALSE per cell in a DimRedSelect column
+            ## Use this column to downsample for performing dim. red
+            ## Then attach the dim. red results to the corresponding rows
+            ## That way, it's just one dataset, with everything embedded
+            ## When plotting dim. red, a premise input would be 'does this data have a subset of cells that had dim. red performed'? -- defaults to FALSE, but can be specified by the user
+            ## When exporting samples to analysis in FlowJo or similar, then subset based on the TRUE/FALSE
+        #########################
+
         ## Review cells per sample
         sample.table
 
-        ## RUn subsampling
+        ## Run subsampling
         Spectre::subsample(x = cell.dat,
                            method = "per.sample", # or "random
                            samp.col = sample.col,
@@ -299,20 +311,24 @@
                           umap.seed = 42)
 
         cell.dat.sub <- cbind(cell.dat.sub, umap.res) # Merge UMAP results with data
-
         plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
 
 
     ### Run tSNE
 
-        #Spectre::run.tsne(x = cell.dat.sub,
+        # Spectre::run.tsne(x = cell.dat.sub,
         #                  use.cols = ClusteringCols,  #c(5,6,8,9,11,12,13,17:19,21:30,32),
         #                  umap.seed = 42)
         #
-        #cell.dat.sub <- cbind(cell.dat.sub, tsne.res) # Merge UMAP results with data
+        # cell.dat.sub <- cbind(cell.dat.sub, tsne.res) # Merge UMAP results with data
+        #
+        # ## Plot tSNE results
+        # plot(cell.dat.sub$tSNE_42_X, cell.dat.sub$tSNE_42_Y)
 
-        ## Plot tSNE results
-        #plot(cell.dat.sub$tSNE_42_X, cell.dat.sub$tSNE_42_Y)
+    ### Run Monocle
+
+        # Spectre::run.monocle(x = cell.dat.sub)
+
 
 
 ##########################################################################################################
@@ -399,7 +415,7 @@
 
 
 ##########################################################################################################
-#### Save summary statistics and data to disk
+#### Save summary statistics to disk
 ##########################################################################################################
 
     ### Create and save sumtables
@@ -448,9 +464,12 @@
         ## Also some 'clusters' keeping the 'CLUSTER' label
         ## Create a text file in each output folder -- explaining how to read the results
 
+##########################################################################################################
+#### Save data to disk
+##########################################################################################################
+
     ### Save data (cell.dat) including clustering results
 
-        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
         dir.create("Output-ClusteredData", showWarnings = FALSE)
         setwd("Output-ClusteredData")
@@ -483,7 +502,6 @@
 
     ### Save subsampled data (cell.dat.sub) includng tSNE/UMAP etc
 
-        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
         dir.create("Output-DimRedData", showWarnings = FALSE)
         setwd("Output-DimRedData")
@@ -512,6 +530,8 @@
                              write.fcs = TRUE) ##### FCS NOT WORK
 
         setwd(PrimaryDirectory)
+
+
 #
 #
 #
