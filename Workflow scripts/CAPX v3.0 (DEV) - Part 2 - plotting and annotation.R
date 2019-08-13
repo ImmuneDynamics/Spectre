@@ -1,7 +1,104 @@
+##########################################################################################################
+#### DRAFT Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
+#### Part 2 - Plotting, data exploration, cluster annotation
+##########################################################################################################
 
-        ##########################################################################################################
-        #### Basic plotting and data examination
-        ##########################################################################################################
+    # Thomas Myles Ashhurst, Felix Marsh-Wakefield
+    # 2019-08-02
+    # Workflow: https://sydneycytometry.org.au/capx
+    # Spectre R package: https://sydneycytometry.org.au/spectre
+
+##########################################################################################################
+#### 1. Install packages, load packages, and set working directory
+#########################################################################################################
+
+    ### 1.1. Load 'Spectre' package (using devtools)
+        if(!require('devtools')) {install.packages('devtools')}
+        library('devtools')
+
+        #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
+        library("Spectre")
+
+        # We recommend not to update packages that are dependencies of Spectre
+
+    ### 1.2. Install packages
+        if(!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
+        if(!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
+        if(!require("ggthemes")){install.packages("ggthemes")} # for plot themes
+        if(!require("scales")){install.packages("scales")} # for re-scaling if necessary
+        if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
+        if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
+
+        ## Plotting
+        if (!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
+        if (!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
+        if (!require("ggthemes")){install.packages("ggthemes")} # for plot themes
+        if (!require("scales")){install.packages("scales")} # for re-scaling if necessary
+        if (!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
+        if (!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
+
+    ### 1.3. Load packages from library
+        library('ggplot2')
+        library('scales')
+        library('colorRamps')
+        library('ggthemes')
+        library('RColorBrewer')
+        library("gridExtra")
+
+        library('ggplot2')
+        library('scales')
+        library('colorRamps')
+        library('ggthemes')
+        library('RColorBrewer')
+        library("gridExtra")
+
+    ## 1.4. Set working directory
+
+        ## Set working directory
+        dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+        setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
+        getwd()
+        PrimaryDirectory <- getwd()
+        PrimaryDirectory
+
+        # ## Can set manually using these lines, if desired
+        # PrimaryDirectory <- "/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre/Workflow scripts/Output_CAPX/Output-DimRedData/"
+        # setwd(PrimaryDirectory)
+
+        ## Create output directory
+        dir.create("Output_CAPX_exploration", showWarnings = FALSE)
+        setwd("Output_CAPX_exploration")
+        OutputDirectory <- getwd()
+        setwd(PrimaryDirectory)
+
+##########################################################################################################
+#### 2. Read in data for dot plots
+#########################################################################################################
+
+    ### Read in cell.dat
+
+        ## cell.dat
+        setwd("./Output_CAPX/Output-ClusteredData/")
+        cell.dat_Directory <- getwd()
+        list.files(cell.dat_Directory, ".csv")
+
+        cell.dat <- fread("Demo_all_data.csv")
+
+        setwd(PrimaryDirectory)
+
+        ## cell.dat.sub
+        setwd("./Output_CAPX/Output-DimRedData/")
+        cell.dat.sub_Directory <- getwd()
+        list.files(path = cell.dat.sub_Directory, ".csv")
+
+        cell.dat.sub <- fread("DimRed_Demo_all_data.csv")
+
+        setwd(PrimaryDirectory)
+
+
+##########################################################################################################
+#### Basic plotting and data examination
+##########################################################################################################
 
         ### Plot single UMAP MFI plot
         names(cell.dat.sub)
@@ -83,100 +180,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##########################################################################################################
-#### DRAFT Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
-#### Part 2 - Plotting, data exploration, cluster annotation
-##########################################################################################################
-
-    # Thomas Myles Ashhurst, Felix Marsh-Wakefield
-    # 2019-08-02
-    # Workflow: https://sydneycytometry.org.au/capx
-    # Spectre R package: https://sydneycytometry.org.au/spectre
-
-##########################################################################################################
-#### 1. Install packages, load packages, and set working directory
-#########################################################################################################
-
-      ### 1.1. Load 'Spectre' package (using devtools)
-          if(!require('devtools')) {install.packages('devtools')}
-          library('devtools')
-
-          #if(!require('sydneycytometry/spectre')) {install_github("sydneycytometry/spectre")}
-          library("Spectre")
-
-          # We recommend not to update packages that are dependencies of Spectre
-
-      ### 1.2. Install packages
-          if(!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
-          if(!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
-          if(!require("ggthemes")){install.packages("ggthemes")} # for plot themes
-          if(!require("scales")){install.packages("scales")} # for re-scaling if necessary
-          if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
-          if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
-
-          ## Plotting
-          if (!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
-          if (!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
-          if (!require("ggthemes")){install.packages("ggthemes")} # for plot themes
-          if (!require("scales")){install.packages("scales")} # for re-scaling if necessary
-          if (!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
-          if (!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
-
-
-      ### 1.3. Load packages from library
-          library('ggplot2')
-          library('scales')
-          library('colorRamps')
-          library('ggthemes')
-          library('RColorBrewer')
-          library("gridExtra")
-
-library('ggplot2')
-library('scales')
-library('colorRamps')
-library('ggthemes')
-library('RColorBrewer')
-library("gridExtra")
-
-
-      ## 1.4. Set working directory
-
-          ## Set working directory
-          #dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
-          #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
-          #getwd()
-          #PrimaryDirectory <- getwd()
-          #PrimaryDirectory
-
-          ## Can set manually using these lines, if desired
-          PrimaryDirectory <- "/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre/Workflow scripts/Output_CAPX/Output-DimRedData/"
-          setwd(PrimaryDirectory)
-
-          ## Create output directory
-          dir.create("Output_CAPX_exploration", showWarnings = FALSE)
-          setwd("Output_CAPX_exploration")
-          OutputDirectory <- getwd()
-          setwd(PrimaryDirectory)
 
 
 ##########################################################################################################
@@ -307,9 +310,41 @@ library("gridExtra")
                                    align.col.by = cell.dat)
 
 
+
+
+
 ##########################################################################################################
 #### Heatmaps
 #########################################################################################################
+
+        ### Read in sumtable data
+
+        ## cell freq.
+        setwd("./Output_CAPX/Output-SumTables/Output_CellNums/")
+        sum.tables.freq_Directory <- getwd()
+        list.files(sum.tables.freq_Directory, ".csv")
+        setwd(PrimaryDirectory)
+
+        ## MFI per marker
+        setwd("./Output_CAPX/Output-SumTables/Output_MFI_per_marker/")
+        sum.tables.permarker_Directory <- getwd()
+        list.files(sum.tables.permarker_Directory, ".csv")
+        setwd(PrimaryDirectory)
+
+        ## MFI per sample
+        setwd("./Output_CAPX/Output-SumTables/Output_MFI_per_sample/")
+        sum.tables.persample_Directory <- getwd()
+        list.files(sum.tables.persample_Directory, ".csv")
+        setwd(PrimaryDirectory)
+
+
+
+
+
+
+
+
+
 
         ## Clusters vs samples -- number of  cells
         setwd(PrimaryDirectory)

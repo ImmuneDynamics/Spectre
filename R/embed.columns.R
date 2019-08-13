@@ -13,6 +13,7 @@
 #' @export
 
 embed.columns <- function(x, # the list of dataframes (samples) where each dataframe will have the columns embedded
+                          type,
                           new.cols, # a table of filenames and new columns to add
                           file.col  # which column contains the reference filenames
                           )
@@ -21,53 +22,72 @@ embed.columns <- function(x, # the list of dataframes (samples) where each dataf
   ### Test data
 
       # x <- data.list
-      # new.cols <- sample.table[c(1:4)]
+      # type <- "list"
+      # new.cols <- meta.dat$sampleDetails[c(1:4)]
       # file.col <- "Filename"
 
-  ### Sorting out the columns
+  ##############################################
+  ### For lists
+  ##############################################
 
-      # Remove any '.fcs'
-      fls <- as.matrix(new.cols[file.col])
-      for(i in c(1:length(fls))){
-        test <- fls[i,]
-        test
-        test <- gsub(".fcs", "", test)
-        fls[i,] <- test
-      }
+    if(type == "list"){
+      ### Sorting out the columns
 
-      # Remove any '.csv'
-      fls <- as.matrix(new.cols[file.col])
-      for(i in c(1:length(fls))){
-        test <- fls[i,]
-        test
-        test <- gsub(".csv", "", test)
-        fls[i,] <- test
-      }
-      fls
-
-  ### Remove filename from 'new.cols'
-      new.cols <- new.cols[-(which( colnames(new.cols)==file.col ))]
-
-  ### Check filenames are consistent
-
-      checks <- fls == names(x)
-      all(checks)
-
-  ### Perform embedding
-
-      if(all(checks) == TRUE){ ## Embed metadata
-        for(i in c(1:length(names(x)))){
-          #i <- 1
-          for(a in names(new.cols)){
-            x[[i]][[a]] <- NA # fills a new colum
-            x[[i]][[a]] <- new.cols[i,a]
+          # Remove any '.fcs'
+          fls <- as.matrix(new.cols[file.col])
+          for(i in c(1:length(fls))){
+            test <- fls[i,]
+            test
+            test <- gsub(".fcs", "", test)
+            fls[i,] <- test
           }
-        }
-      }
 
-      if(all(checks) == FALSE){ ## Warning message
-        print("The list of file names in the list of samples, and the file names on your table to do not match. Unable to embed new columns"
-        )
-      }
+          # Remove any '.csv'
+          fls <- as.matrix(new.cols[file.col])
+          for(i in c(1:length(fls))){
+            test <- fls[i,]
+            test
+            test <- gsub(".csv", "", test)
+            fls[i,] <- test
+          }
+          fls
+
+      ### Remove filename from 'new.cols'
+          # new.cols <- new.cols[-(which( colnames(new.cols)==file.col ))]
+
+      ### Check filenames are consistent
+
+          checks <- fls == names(x)
+          all(checks)
+
+      ### Perform embedding
+
+          if(all(checks) == TRUE){ ## Embed metadata
+            for(i in c(1:length(names(x)))){
+              #i <- 1
+              for(a in names(new.cols)){
+                x[[i]][[a]] <- NA # fills a new colum
+                x[[i]][[a]] <- new.cols[i,a]
+              }
+            }
+            assign("data.list", x, envir = globalenv())
+          }
+
+          if(all(checks) == FALSE){ ## Warning message
+            print("The list of file names in the list of samples, and the file names on your table to do not match. Unable to embed new columns"
+            )
+          }
+    }
+
+  ##############################################
+  ### For single data.frames
+  ##############################################
+
+  if(type == "data.frame"){
+    print("Embedding columns into a single dataframe is not yet supported")
+  }
+
+
+
 
 }

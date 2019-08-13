@@ -80,14 +80,17 @@
 #### 2. Read and prepare data
 ##########################################################################################################
 
-    ### Create empty list for 'metadata'
+    ### Create some metadata
         meta.dat <- list()
 
-        ## Add components to metadata list
-        meta.dat[["expDetails"]] <- t(data.frame("ExpID" = "TAXXX",
-                                                  "ExpName" = "BM test",
-                                                  "ExpDate" = "2019-08-12",
-                                                  "ExpNote" = "Another attempt at analysis"))
+        list.files(PrimaryDirectory, ".txt")
+
+        meta.dat[["expDetails"]] <- read.delim(file = "experiment.details.txt")
+        meta.dat[["sampleDetails"]] <- read.delim(file = "sample.details.txt")
+
+        # ## Warning message:
+        # In read.table(file = file, header = header, sep = sep, quote = quote,  :
+        #                 incomplete final line found by readTableHeader on 'experiment.details.txt'
 
     ### Read SAMPLES (data) into workspace and review
 
@@ -110,20 +113,16 @@
 
     ### Read in sample METADATA (NOT REQUIRED FOR REST OF CAPX SCRIPT)
 
-        ## Read txt file
-        sample.table <- read.delim(file = "sample.table.txt")
-        meta.dat[["sample.details"]] <- sample.table
-
         ## Specify the column that contains filenames, and which columns of 'sample.table' you want to embed
-        sample.table
+        meta.dat$sampleDetails
+
+        to.embed <- meta.dat$sampleDetails[c(1:4)] ## INCLUDING FILENAME
         file.col <- "Filename"
-        to.embed <- names(sample.table[c(2:4)])
-        to.embed
 
-        ## Embed
-        embed.co
-
-
+        Spectre::embed.columns(x = data.list,
+                               type = "list", # list of dataframes or single merged data.frame
+                               new.cols = to.embed, # columns you want to add
+                               file.col = file.col) # the column that specifies filename
 
         ## Check embedding
         data.list[[6]]
@@ -141,21 +140,34 @@
         any(is.na(cell.dat))
 
     ### Cleanup (not necessary, but recommended)
-        rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums, fls)
+        rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums, file.col, to.embed)
         rm(name.table, sample.table)
-
-        ##
-        rm(a,file.col,i,test,to.embed)
 
 ##########################################################################################################
 #### Define data and sample variables for analysis
 ##########################################################################################################
 
-    ### Define cellular and clustering columns
+    ### Define key columns
+
+        as.matrix(names(cell.dat))
+
+        ## Define key columns that might be used or dividing data (samples, groups, batches, etc)
+        exp.name <- "TAXXX"
+
+        file.col <- "Filename"
+        sample.col <- "Sample"
+        group.col <- "Group"
+        batch.col <- "Batch"
+
+        ## Create a list of column names
         ColumnNames <- as.matrix(unname(colnames(cell.dat))) # assign reporter and marker names (column names) to 'ColumnNames'
+        ColumnNames
+
+    ### Define cellular and clustering columns
 
         ## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
         ColumnNames # view the column 'number' for each parameter
+
         ValidCellularColsNos <- c(5,6,8,9,11:13,16:19,21:30,32)
         ValidCellularCols <- ColumnNames[ValidCellularColsNos]
 
@@ -178,24 +190,14 @@
         meta.dat[["ClusteringCols"]] <- ClusteringCols
         rm(ClusteringColNos)
 
-    ## Specify experiment variables
+    ### Check
 
-        ## Review key data
         head(cell.dat)
-        dim(cell.dat)
-
         meta.dat
 
-        ### Define key columns that might be used or dividing data (samples, groups, batches, etc)
-        as.matrix(names(cell.dat))
+        # TEST IF THE KEY METADATA EXISTS
 
-        exp.name <- "Demo"
-        file.col <- "Filename"
-        sample.col <- "Sample"
-        group.col <- "Group"
-        batch.col <- "Batch"
-
-    ## Create a blank log dataframe in meta.data
+    ### Create a blank log dataframe in meta.data
         meta.dat[["analysis.log"]] <- data.frame("Function" = NA, "Parameter" = NA, "Value" = NA)
 
 ##########################################################################################################
@@ -226,20 +228,8 @@
 ##########################################################################################################
 
     ### Subsampling
+        meta.dat$sampleDetails
 
-        #########################
-            ## Add a feature -- for dim red, have a TRUE/FALSE per cell in a DimRedSelect column
-            ## Use this column to downsample for performing dim. red
-            ## Then attach the dim. red results to the corresponding rows
-            ## That way, it's just one dataset, with everything embedded
-            ## When plotting dim. red, a premise input would be 'does this data have a subset of cells that had dim. red performed'? -- defaults to FALSE, but can be specified by the user
-            ## When exporting samples to analysis in FlowJo or similar, then subset based on the TRUE/FALSE
-        #########################
-
-        ## Review cells per sample
-        meta.dat$sample.details
-
-        ## Run subsampling
         Spectre::subsample(x = cell.dat,
                            method = "per.sample", # or "random
                            samp.col = sample.col,
@@ -250,11 +240,6 @@
 
         nrow(cell.dat.sub)
         rm(subsample.res)
-
-        ######################
-        #cell.dat.sub <- cell.dat.large
-        ######################
-
 
     ### Run UMAP
         Spectre::run.umap(x = cell.dat.sub,
@@ -280,6 +265,18 @@
         # Spectre::run.monocle(x = cell.dat.sub)
 
 
+    ### Review results
+
+        p1 <- Spectre::colour.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "BV605.Ly6C",
+                                   title = paste0("All samples", " - ", "BV605.Ly6C"),
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat.sub
+                                   )
+        p1
+
 
 ##########################################################################################################
 #### Save summary statistics to disk
@@ -293,9 +290,7 @@
         getwd()
 
         as.matrix(names(cell.dat))
-
-        meta.dat
-        meta.dat$sample.details$Cells.per.sample
+        meta.dat$sampleDetails
 
         Spectre::make.sumtable(x = cell.dat,
                                type = "frequencies",
@@ -303,7 +298,7 @@
                                group.name = "Group",
                                clust.col = "FlowSOM_metacluster",
                                annot.col.nums = c(1,33:39),
-                               cells.per.tissue = meta.dat$sample.details$Cells.per.sample
+                               cells.per.tissue = meta.dat$sampleDetails$Cells.per.sample
                                #do.foldchange = TRUE # not active yet
                                #ctrl.group = "Mock"
                                )
@@ -354,20 +349,6 @@
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-        ## Write 'by sample' data
-        Spectre::write.files(x = cell.dat,
-                             file.prefix = exp.name, # required
-                             divide.by = "Sample",
-                             write.csv = TRUE,
-                             write.fcs = TRUE)
-
-        ## Write 'by group' data
-        Spectre::write.files(x = cell.dat,
-                             file.prefix = exp.name, # required
-                             divide.by = "Group",
-                             write.csv = TRUE,
-                             write.fcs = TRUE)
-
         setwd(PrimaryDirectory)
 
     ### Save subsampled data (cell.dat.sub) includng tSNE/UMAP etc
@@ -382,20 +363,6 @@
         ## Write 'all' data
         Spectre::write.files(x = cell.dat.sub,
                              file.prefix = paste0("DimRed_", exp.name), # required
-                             write.csv = TRUE,
-                             write.fcs = TRUE) ##### FCS NOT WORK
-
-        ## Write 'by sample' data
-        Spectre::write.files(x = cell.dat.sub,
-                             file.prefix = paste0("DimRed_", exp.name), # required
-                             divide.by = "Sample",
-                             write.csv = TRUE,
-                             write.fcs = TRUE) ##### FCS NOT WORK
-
-        ## Write 'by group' data
-        Spectre::write.files(x = cell.dat.sub,
-                             file.prefix = paste0("DimRed_", exp.name), # required
-                             divide.by = "Group",
                              write.csv = TRUE,
                              write.fcs = TRUE) ##### FCS NOT WORK
 
