@@ -12,10 +12,10 @@
 #'
 #' @export
 
-embed.columns(x, # the list of dataframes (samples) where each dataframe will have the columns embedded
-              new.cols, # a table of filenames and new columns to add
-              file.col  # which column contains the reference filenames
-              )
+embed.columns <- function(x, # the list of dataframes (samples) where each dataframe will have the columns embedded
+                          new.cols, # a table of filenames and new columns to add
+                          file.col  # which column contains the reference filenames
+                          )
 {
 
   ### Test data
