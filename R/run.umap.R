@@ -1,4 +1,6 @@
-# umap
+#' run.umap - ...
+#'
+#' @export
 
 run.umap <- function(x,
                  use.cols = c(1:4),

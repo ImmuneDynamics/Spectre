@@ -5,10 +5,10 @@
 #' @param d data.frame. Input sample. No default.
 #' @param x.axis Character. Column for X axis. No default.
 #' @param y.axis Character. Column for Y axis. No default.
+#' @param title Character. Title for the plot. No default.
 #' @param col.axis Character. Column for colour. No default.
 #' @param col.min.threshold Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.995.
 #' @param col.max.threshold Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.01.
-#' @param title Character. Title for the plot. No default.
 #' @param colours Character. Colour scheme to use. Can be "spectral" or "jet". Defaults to "spectral"
 #' @param dot.size Numeric. Size of the dots. Defaults to 1.
 #' @param align.xy.by data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.
@@ -31,9 +31,9 @@ colour.plot <- function(d,
                         x.axis, # "UMAP1"
                         y.axis, # "UMAP2"
                         col.axis, # "BV605.Ly6C"
+                        title,
                         col.min.threshold = 0.01,
                         col.max.threshold = 0.995,
-                        title,
                         colours = "spectral",
                         dot.size = 1,
                         align.xy.by = NULL, # choose a data frame to set absolute limits for X/Y/colour

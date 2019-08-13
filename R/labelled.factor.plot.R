@@ -1,4 +1,6 @@
-# labelled.factor.plot
+#' labelled.factor.plot - ...
+#'
+#' @export
 
 labelled.factor.plot <- function(d,
                                  x.axis, # "UMAP1"

@@ -1,4 +1,6 @@
-# Spectre::subsample
+#' subsample - ...
+#'
+#' @export
 
 subsample <- function(x,
                       method, # random, per.sample

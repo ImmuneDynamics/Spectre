@@ -1,3 +1,108 @@
+
+        ##########################################################################################################
+        #### Basic plotting and data examination
+        ##########################################################################################################
+
+        ### Plot single UMAP MFI plot
+        names(cell.dat.sub)
+
+        p1 <- Spectre::colour.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "BV605.Ly6C",
+                                   title = paste0("All samples", " - ", "BV605.Ly6C"),
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat.sub
+        )
+        p1
+
+        ### Plot single UMAP factor plot -- clusters
+        names(cell.dat.sub)
+
+        p2 <- Spectre::factor.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "FlowSOM_metacluster",
+                                   title = paste0("All samples", " - ", "Clusters"),
+                                   dot.size = 1,
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat)
+
+        p2 # TRUE is fine, FALSE also returns 'NULL' when running this line IF using option for centroid.labels as FALSE
+
+        p2 <- Spectre::labelled.factor.plot(d = cell.dat.sub,
+                                            x.axis = "UMAP_42_X",
+                                            y.axis = "UMAP_42_Y",
+                                            col.axis = "FlowSOM_metacluster",
+                                            title = paste0("All samples", " - ", "Clusters"),
+                                            dot.size = 1,
+                                            align.xy.by = cell.dat.sub,
+                                            align.col.by = cell.dat)
+        p2
+
+
+        ### Plot single UMAP factor plot -- samples
+        names(cell.dat.sub)
+
+        p3 <- Spectre::factor.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "Sample",
+                                   title = "Samples",
+                                   dot.size = 0.5) # assumes numeric
+
+        p3
+
+
+        ### Plot single UMAP factor plot -- groups
+        names(cell.dat.sub)
+
+        p4 <- Spectre::factor.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_42_X",
+                                   y.axis = "UMAP_42_Y",
+                                   col.axis = "Group",
+                                   title = "Groups",
+                                   dot.size = 0.5) # assumes numeric
+
+        p4
+
+        #ggsave(filename = "p1.jpeg", plot = p1, path = OutputDirectory, width = 9, height = 7)
+        #ggsave(filename = "p2.jpeg", plot = p2, path = OutputDirectory, width = 9, height = 7)
+        #ggsave(filename = "p3.jpeg", plot = p3, path = OutputDirectory, width = 9, height = 7)
+        #ggsave(filename = "p4.jpeg", plot = p4, path = OutputDirectory, width = 9, height = 7)
+
+        ### Create tiles and save
+
+        gp <- grid.arrange(grobs = list(p1, p2, p3, p4), ncol=2, nrow=2) #top = "Main Title"
+        gp
+
+        ggsave(filename = "Grid.jpeg", plot = gp, path = OutputDirectory, width = 18, height = 14)
+
+        ### --> FUNCTION WITH XMAX/MIN etc
+        ### --> seperate function for COL MAX/MIN etc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##########################################################################################################
 #### DRAFT Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
 #### Part 2 - Plotting, data exploration, cluster annotation
@@ -29,6 +134,15 @@
           if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
           if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
 
+          ## Plotting
+          if (!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
+          if (!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
+          if (!require("ggthemes")){install.packages("ggthemes")} # for plot themes
+          if (!require("scales")){install.packages("scales")} # for re-scaling if necessary
+          if (!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
+          if (!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
+
+
       ### 1.3. Load packages from library
           library('ggplot2')
           library('scales')
@@ -36,6 +150,14 @@
           library('ggthemes')
           library('RColorBrewer')
           library("gridExtra")
+
+library('ggplot2')
+library('scales')
+library('colorRamps')
+library('ggthemes')
+library('RColorBrewer')
+library("gridExtra")
+
 
       ## 1.4. Set working directory
 

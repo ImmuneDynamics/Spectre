@@ -1,9 +1,24 @@
-### merge.files
+#' file.merge - ...
+#'
+#' @usage file.merge(x, ...)
+#'
+#' @param x List of data frames
+#' @param remove.duplicates Do you want to remove duplicates?
+#'
+#' @return A combined dataframe.
+#'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://sydneycytometry.org.au/spectre}. Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
+#'
+#' @examples
+#' file.merge()
+#'
+#' @export
 
-merge.files <- function(x,
-                        remove.duplicates = TRUE
-){
+file.merge <- function(x,remove.duplicates = TRUE)
 
+{
   cell.dat <- plyr::rbind.fill(x)
 
   if(remove.duplicates == TRUE){
