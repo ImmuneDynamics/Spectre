@@ -5,8 +5,8 @@ make.sumtable <- function(## Main entries
                            type, # What kind of sumtables is being generated # Can be: frequencies, expression.per.sample, expression.per.marker
 
                            ##
-                           sample.name, # Samples
-                           group.name = NULL, # specify group name (if groups are present)
+                           sample.col, # Samples
+                           group.col = NULL, # specify group name (if groups are present)
                            clust.col, # Clusters/populations
                            annot.col.nums = NULL, # Non-cellular markers
 
@@ -48,7 +48,7 @@ make.sumtable <- function(## Main entries
         Starting.dir <- getwd()
 
         all.sample.names <- as.matrix(unique(x[sample.col]))
-        if(is.null(group.name) == FALSE){all.group.names <- as.matrix(unique(x[group.name]))}
+        if(is.null(group.col) == FALSE){all.group.names <- as.matrix(unique(x[group.col]))}
 
         clust.col.num <- which(colnames(x) == clust.col)
         annot.col.nums
@@ -112,12 +112,12 @@ make.sumtable <- function(## Main entries
                       num.cells <- sum(samp.list[[a]][clust.col] == i) # number of cells per cluster
                       #group.label <- samp.list[[a]]$GroupName[1] # picks the group name from the first group of that sample
 
-                      if(is.null(group.name) == FALSE){
-                        group.label <- samp.list[[a]][group.name][1,1] # picks the group name from the first group of that sample
+                      if(is.null(group.col) == FALSE){
+                        group.label <- samp.list[[a]][group.col][1,1] # picks the group name from the first group of that sample
                         res <- data.frame(Cluster = i, NumCells = num.cells, Group = group.label) # added group label
                       }
 
-                      if(is.null(group.name) == TRUE){
+                      if(is.null(group.col) == TRUE){
                         res <- data.frame(Cluster = i, NumCells = num.cells) # added group label
                       }
 
@@ -151,14 +151,14 @@ make.sumtable <- function(## Main entries
                   prop.df <- merged.df
 
                   # Save group and
-                  if(is.null(group.name) == FALSE){ # Using groups
-                    labs <- prop.df[group.name]
+                  if(is.null(group.col) == FALSE){ # Using groups
+                    labs <- prop.df[group.col]
                     labs[sample.col] <-  prop.df[sample.col]
                     prop.df[sample.col] <- NULL
-                    prop.df[group.name] <- NULL
+                    prop.df[group.col] <- NULL
                   }
 
-                  if(is.null(group.name) == TRUE){ # Not using groups
+                  if(is.null(group.col) == TRUE){ # Not using groups
                     labs <-  prop.df[sample.col]
                     prop.df[sample.col] <- NULL
                   }
@@ -192,10 +192,10 @@ make.sumtable <- function(## Main entries
 
                     cellsper <- sweep(per,MARGIN=1,cells.per.tissue,`*`)
 
-                    if(is.null(group.name) == FALSE){ # using groups
+                    if(is.null(group.col) == FALSE){ # using groups
                       sumtables.cellspertissue <- cbind(labs, cellsper)
                     }
-                    if(is.null(group.name) == TRUE){ # NOT using groups
+                    if(is.null(group.col) == TRUE){ # NOT using groups
                       sumtables.cellspertissue <- cbind(labs, cellsper)
                     }
 
@@ -246,11 +246,11 @@ make.sumtable <- function(## Main entries
             }
 
         ## 5.3 - LOOP TO REPEAT FOR EACH GROUP
-            if(is.null(group.name) == FALSE){
+            if(is.null(group.col) == FALSE){
               for(a in all.group.names){
                 temp <- x
 
-                data.subset <- subset(temp, temp[[group.name]] == a)
+                data.subset <- subset(temp, temp[[group.col]] == a)
                 data.subset <- data.subset[-c(annot.col.nums)]
                 colnames(data.subset)[which(names(data.subset) == clust.col)] <- "CLUSTER"
 
