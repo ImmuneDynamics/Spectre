@@ -9,7 +9,7 @@ make.sumtable(x, ...)
 \arguments{
 \item{x}{NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.}
 
-\item{sample.name}{NO DEFAULT.}
+\item{sample.col}{NO DEFAULT.}
 
 \item{clust.col}{NO DEFAULT.}
 

@@ -3,7 +3,7 @@
 #' @usage make.sumtable(x, ...)
 #'
 #' @param x NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.
-#' @param sample.name NO DEFAULT.
+#' @param sample.col NO DEFAULT.
 #' @param clust.col NO DEFAULT.
 #' @param annot.col.nums DEFAULTS TO NULL.
 #'
@@ -32,7 +32,7 @@ make.sumtable <- function(## Main entries
                            x, # data
 
                            ##
-                           sample.name, # Samples
+                           sample.col, # Samples
                            clust.col, # Clusters/populations
                            annot.col.nums = NULL, # Non-cellular markers
 
@@ -219,14 +219,14 @@ make.sumtable <- function(## Main entries
 
                       sumtables.percentages
 
-                      front <- sumtables.percentages[c(sample.name, group.name)]
+                      front <- sumtables.percentages[c(sample.col, group.name)]
 
                       ctrl.grp <- subset(sumtables.percentages, sumtables.percentages[group.name] == control.group)
                       ctrl.grp <- ctrl.grp[,unlist(lapply(ctrl.grp, is.numeric))]
 
                       ctrl.grp.means <- colMeans(ctrl.grp)
 
-                      #ctrl.grp.means <- colMeans(ctrl.grp[-c(sample.name, group.name)])
+                      #ctrl.grp.means <- colMeans(ctrl.grp[-c(sample.col, group.name)])
                       as.matrix(ctrl.grp.means)
 
                       ## As above, divide each 'cell' to the vector (by column...)
@@ -284,14 +284,14 @@ make.sumtable <- function(## Main entries
                           # average of the columns for rows with specific group name
                           sumtables.cellspertissue
 
-                          front <- sumtables.cellspertissue[c(sample.name, group.name)]
+                          front <- sumtables.cellspertissue[c(sample.col, group.name)]
 
                           ctrl.grp <- subset(sumtables.cellspertissue, sumtables.cellspertissue[group.name] == control.group)
                           ctrl.grp <- ctrl.grp[,unlist(lapply(ctrl.grp, is.numeric))]
 
                           ctrl.grp.means <- colMeans(ctrl.grp)
 
-                          #ctrl.grp.means <- colMeans(ctrl.grp[-c(sample.name, group.name)])
+                          #ctrl.grp.means <- colMeans(ctrl.grp[-c(sample.col, group.name)])
                           as.matrix(ctrl.grp.means)
 
                           ## As above, divide each 'cell' to the vector (by column...)
