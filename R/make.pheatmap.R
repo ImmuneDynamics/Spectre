@@ -72,12 +72,14 @@ make.pheatmap <- function(x,
                         #plot.height      = 8.26)
 {
 
-  ### TESTING
+  ### TESTING for FOLD-CHANGE
 
-        # library(gplots)
+        # library(pheatmap)
+        # library(RColorBrewer)
+        # setwd("/Users/Tom/Desktop")
         #
         # list.files(getwd(), ".csv")
-        # x <- read.csv("SumTable_CellsPerTissue_FoldChangeLog2.csv")
+        # x <- hmap.foldcell
         #
         # #x <- read.csv("SumTable_MFI_cluster_x_marker-all_data.csv")
         # sample.col <- "Sample"
@@ -111,6 +113,48 @@ make.pheatmap <- function(x,
         #
         # if(!require('pheatmap')) {install.packages('pheatmap')}
         # library(pheatmap)
+
+  ### TESTING for FOLD-CHANGE
+
+      # library(pheatmap)
+      # library(RColorBrewer)
+      # setwd("/Users/Tom/Desktop")
+      #
+      # list.files(getwd(), ".csv")
+      # x <- hmap.mfi
+      #
+      # #x <- read.csv("SumTable_MFI_cluster_x_marker-all_data.csv")
+      # sample.col <- "FlowSOM_metacluster"
+      # annot.cols <- c(1:2)
+      # plot.title <- "Test"
+      #
+      # transpose        = FALSE
+      # is.fold          = FALSE
+      # normalise        = TRUE
+      # dendrograms      = "both"
+      #
+      # n.row.groups     = 2
+      # n.col.groups     = 2
+      #
+      # fold.max.range    = 3
+      # fold.min.range    = -3
+      #
+      # y.margin = 8
+      # x.margin = 8
+      #
+      # cell.size        = 20
+      #
+      # row.sep          = c(6)
+      # col.sep          = c()
+      # standard.colours = "colour.palette"
+      # fold.colours     = "fold.palette"
+      # colour.scheme    = "group.palette"
+      #
+      # plot.width       = 11.69
+      # plot.height      = 8.26
+      #
+      # if(!require('pheatmap')) {install.packages('pheatmap')}
+      # library(pheatmap)
 
   ### Setup color scheme
 

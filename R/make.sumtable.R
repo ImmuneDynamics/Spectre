@@ -58,23 +58,24 @@ make.sumtable <- function(## Main entries
 #### Test data
 ####################################################################################################################
 
-          # x = cell.dat
-          #
-          # do.frequencies = TRUE
-          # do.exp.per.sample = TRUE
-          # do.exp.per.marker = TRUE
-          #
-          # sample.name = "Sample"
-          # group.name = "Group" # specify group name (if groups are present)
-          # clust.col = "FlowSOM_metacluster"
-          # annot.col.nums = c(1,33:39) # specify all columns that represent annotations, and NOT CELLULAR PARAMETERS
-          #
-          # cells.per.tissue = c(rep(2.0e+07, 6), rep(1.8e+07, 6))
-          #
-          # fun.type = "median"
-          #
-          # do.foldchange = TRUE # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
-          # control.group = "Mock"
+          setwd("/Users/Tom/Desktop/")
+          x = Spectre::demo.clustered
+
+          do.frequencies = TRUE
+          do.exp.per.sample = TRUE
+          do.exp.per.marker = TRUE
+
+          sample.col = "Sample"
+          group.col = "Group" # specify group name (if groups are present)
+          clust.col = "FlowSOM_metacluster"
+          annot.col.nums = c(1,33:39) # specify all columns that represent annotations, and NOT CELLULAR PARAMETERS
+
+          cells.per.tissue = c(rep(2.0e+07, 6), rep(1.8e+07, 6))
+
+          fun.type = "median"
+
+          do.foldchange = TRUE # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
+          control.group = "Mock"
 
 ####################################################################################################################
 #### Setup
@@ -82,10 +83,14 @@ make.sumtable <- function(## Main entries
 
         Starting.dir <- getwd()
 
+        sample.name <- sample.col
+        group.name <- group.col
+
         all.sample.names <- as.matrix(unique(x[sample.col]))
         if(is.null(group.name) == FALSE){all.group.names <- as.matrix(unique(x[group.name]))}
 
         clust.col.num <- which(colnames(x) == clust.col)
+        clust.col.num
         annot.col.nums
 
         # If cluster column is included in annotation column
@@ -477,9 +482,4 @@ make.sumtable <- function(## Main entries
 
 
 }
-
-
-
-
-
 
