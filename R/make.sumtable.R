@@ -1,24 +1,56 @@
-# make.sumtable
+#' make.sumtable
+#'
+#' @usage make.sumtable(x, ...)
+#'
+#' @param x NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.
+#' @param sample.name NO DEFAULT.
+#' @param clust.col NO DEFAULT.
+#' @param annot.col.nums DEFAULTS TO NULL.
+#'
+#' @param do.frequencies DEFAULTS TO TRUE.
+#' @param do.exp.per.sample DEFAULTS TO TRUE.
+#' @param do.exp.per.marker DEFAULTS TO TRUE.
+#'
+#' @param cells.per.tissue DEFAULTS TO NULL.
+#' @param fun.type DEFAULTS TO "median".
+#'
+#' @param do.foldchange DEFAULTS TO FALSE.
+#' @param group.name DEFAULTS TO NULL.
+#' @param control.group DEFAULTS TO NULL.
+#'
+#' @return ...
+#'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://sydneycytometry.org.au/spectre}.
+#'
+#' @examples make.sumtable()
+#'
+#' @export
 
 make.sumtable <- function(## Main entries
                            x, # data
-                           type, # What kind of sumtables is being generated # Can be: frequencies, expression.per.sample, expression.per.marker
 
                            ##
                            sample.name, # Samples
-                           group.name = NULL, # specify group name (if groups are present)
                            clust.col, # Clusters/populations
                            annot.col.nums = NULL, # Non-cellular markers
 
-                           ## Frequencies
+                           ##
+                           do.frequencies = TRUE,
+                           do.exp.per.sample = TRUE,
+                           do.exp.per.marker = TRUE,
+
+                           ##
                            cells.per.tissue = NULL, # Calculate cell numbers per cluster/sample/tissue        # Turn OFF if you don't have any cell counts
 
                            ## Expression
-                           fun.type = "median" # Choose summary function for expression levels. Default = "mean". Can be "mean" or "median".
+                           fun.type = "median", # Choose summary function for expression levels. Default = "mean". Can be "mean" or "median".
 
-                           ## Groups and fold-change
-                           #do.foldchange = FALSE, # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
-                           #ctrl.group = NULL
+                           ##
+                           do.foldchange = FALSE,
+                           group.name = NULL, # specify group name (if groups are present)
+                           control.group = NULL
                            )
 {
 
@@ -27,9 +59,12 @@ make.sumtable <- function(## Main entries
 ####################################################################################################################
 
           # x = cell.dat
-          # type = "frequencies"  # Can be: frequencies, expression.per.sample, expression.per.marker
           #
-          # sample.col = "Sample"
+          # do.frequencies = TRUE
+          # do.exp.per.sample = TRUE
+          # do.exp.per.marker = TRUE
+          #
+          # sample.name = "Sample"
           # group.name = "Group" # specify group name (if groups are present)
           # clust.col = "FlowSOM_metacluster"
           # annot.col.nums = c(1,33:39) # specify all columns that represent annotations, and NOT CELLULAR PARAMETERS
@@ -39,7 +74,7 @@ make.sumtable <- function(## Main entries
           # fun.type = "median"
           #
           # do.foldchange = TRUE # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
-          # ctrl.group = "Mock"
+          # control.group = "Mock"
 
 ####################################################################################################################
 #### Setup
@@ -66,7 +101,7 @@ make.sumtable <- function(## Main entries
 #### Frequencies
 ####################################################################################################################
 
-        if(type == "frequencies"){
+        if(do.frequencies == TRUE){
 
         ########################## Cells per file ##########################
 
@@ -177,6 +212,45 @@ make.sumtable <- function(## Main entries
                   setwd(Starting.dir)
                   write.csv(sumtables.percentages, "Output_CellNums/SumTable_CellProportions.csv")
 
+                  ###### FOLD ######
+
+                  if(do.foldchange == TRUE){
+                    if(is.null(group.name) == FALSE){
+
+                      sumtables.percentages
+
+                      front <- sumtables.percentages[c(sample.name, group.name)]
+
+                      ctrl.grp <- subset(sumtables.percentages, sumtables.percentages[group.name] == control.group)
+                      ctrl.grp <- ctrl.grp[,unlist(lapply(ctrl.grp, is.numeric))]
+
+                      ctrl.grp.means <- colMeans(ctrl.grp)
+
+                      #ctrl.grp.means <- colMeans(ctrl.grp[-c(sample.name, group.name)])
+                      as.matrix(ctrl.grp.means)
+
+                      ## As above, divide each 'cell' to the vector (by column...)
+                      fold.raw <- t(t(per) / ctrl.grp.means)
+                      fold.raw
+
+                      #sumtables.fold.raw <- cbind(merged.df[c(1:2)], fold.raw)
+                      sumtables.fold.raw <- cbind(front, fold.raw)
+                      sumtables.fold.raw
+
+                      setwd(Starting.dir)
+                      write.csv(sumtables.fold.raw, "Output_CellNums/SumTable_Proportions_FoldChangeRaw.csv")
+
+                      ## convert table to log2
+                      fold.log2 <- log(x = fold.raw, 2)
+
+                      sumtables.fold.log2 <- cbind(front, fold.log2)
+                      setwd(Starting.dir)
+                      write.csv(sumtables.fold.log2, "Output_CellNums/SumTable_Proportions_FoldChangeLog2.csv")
+
+                    }
+                  }
+
+
         ##################################### Cell counts #####################################
 
 
@@ -201,9 +275,46 @@ make.sumtable <- function(## Main entries
 
                     setwd(Starting.dir)
                     write.csv(sumtables.cellspertissue, "Output_CellNums/SumTable_CellsPerTissue.csv")
+
+                    ###### Calculate FOLD CHANGE (CELLS PER TISSUE) #####
+                    if(do.foldchange == TRUE){
+                      if(is.null(group.name) == FALSE){
+                        if(is.null(cells.per.tissue) == FALSE){
+
+                          # average of the columns for rows with specific group name
+                          sumtables.cellspertissue
+
+                          front <- sumtables.cellspertissue[c(sample.name, group.name)]
+
+                          ctrl.grp <- subset(sumtables.cellspertissue, sumtables.cellspertissue[group.name] == control.group)
+                          ctrl.grp <- ctrl.grp[,unlist(lapply(ctrl.grp, is.numeric))]
+
+                          ctrl.grp.means <- colMeans(ctrl.grp)
+
+                          #ctrl.grp.means <- colMeans(ctrl.grp[-c(sample.name, group.name)])
+                          as.matrix(ctrl.grp.means)
+
+                          ## As above, divide each 'cell' to the vector (by column...)
+                          fold.raw <- t(t(cellsper) / ctrl.grp.means)
+                          fold.raw
+
+                          #sumtables.fold.raw <- cbind(merged.df[c(1:2)], fold.raw)
+                          cellspertissue.fold.raw <- cbind(front, fold.raw)
+                          cellspertissue.fold.raw
+
+                          setwd(Starting.dir)
+                          write.csv(cellspertissue.fold.raw, "Output_CellNums/SumTable_CellsPerTissue_FoldChangeRaw.csv")
+
+                          ## convert table to log2
+                          cellspertissue.fold.log2 <- log(x = fold.raw, 2)
+                          cellspertissue.fold.log2.final <- cbind(front, cellspertissue.fold.log2)
+
+                          setwd(Starting.dir)
+                          write.csv(cellspertissue.fold.log2.final, "Output_CellNums/SumTable_CellsPerTissue_FoldChangeLog2.csv")
+                        }
+                      }
+                    }
                   }
-
-
         }
 
 
@@ -211,7 +322,7 @@ make.sumtable <- function(## Main entries
 #### MFI cluster x marker (per sample)
 ####################################################################################################################
 
-      if(type == "expression.per.sample"){
+      if(do.exp.per.sample == TRUE){
 
         setwd(Starting.dir)
         dir.create("Output_MFI_per_sample", showWarnings = FALSE)
@@ -263,11 +374,12 @@ make.sumtable <- function(## Main entries
 
       }
 
+
 ####################################################################################################################
 #### MFI cluster x sample (per marker)
 ####################################################################################################################
 
-      if(type == "expression.per.marker"){
+      if(do.exp.per.marker == TRUE){
 
         setwd(Starting.dir)
         dir.create("Output_MFI_per_marker", showWarnings = FALSE)
@@ -362,71 +474,6 @@ make.sumtable <- function(## Main entries
           write.csv(lst, paste0("Output_MFI_per_marker/SumTable_MFI_per_marker", "_", z, ".csv"))
         }
       }
-
-
-####################################################################################################################
-#### Fold-change
-####################################################################################################################
-
-
-        # ### 4.4 - Calculate FOLD CHANGE (PROPORTIONS)
-        #
-        # if(do.FOLDCHANGE == 1){
-        #   if(use.groups == 1){
-        #     sumtables.percentages
-        #
-        #     ctrl.grp <- subset(sumtables.percentages, Group == ctrls)
-        #     ctrl.grp
-        #
-        #     ctrl.grp.means <- colMeans(ctrl.grp[-c(1:2)])
-        #     as.matrix(ctrl.grp.means)
-        #
-        #     # As above, divide each 'cell' to the vector (by column...)
-        #     fold.raw <- t(t(per) / ctrl.grp.means)
-        #     fold.raw
-        #
-        #     sumtables.fold.raw <- cbind(merged.df[c(1:2)], fold.raw)
-        #     write.csv(sumtables.fold.raw, "Output_CellNum/SumTable_Proportions_FoldChangeRaw.csv")
-        #
-        #     # convert table to log2
-        #
-        #     fold.log2 <- log(x = fold.raw, 2)
-        #
-        #     sumtables.fold.log2 <- cbind(merged.df[c(1:2)], fold.log2)
-        #     write.csv(sumtables.fold.log2, "Output_CellNum/SumTable_Proportions_FoldChangeLog2.csv")
-        #   }
-        # }
-        #
-        #
-        # ### 4.5 - Calculate FOLD CHANGE (CELLS PER TISSUE)
-        #
-        # if(do.FOLDCHANGE == 1){
-        #   if(use.groups == 1){
-        #     if(do.CELLSPERTISSUE == 1){
-        #
-        #       # average of the columns for rows with specific group name
-        #       sumtables.cellspertissue
-        #
-        #       ctrl.grp <- subset(sumtables.cellspertissue, Group == ctrls)
-        #       ctrl.grp
-        #
-        #       ctrl.grp.means <- colMeans(ctrl.grp[-c(1:2)])
-        #       as.matrix(ctrl.grp.means)
-        #
-        #       # As above, divide each 'cell' to the vector (by column...)
-        #       fold.raw <- t(t(cellsper) / ctrl.grp.means)
-        #       fold.raw
-        #
-        #       sumtables.fold.raw <- cbind(merged.df[c(1:2)], fold.raw)
-        #       write.csv(sumtables.fold.raw, "Output_CellNum/SumTable_CellsPerTissue_FoldChangeRaw.csv")
-        #
-        #       # convert table to log2
-        #
-        #       fold.log2 <- log(x = fold.raw, 2)
-        #
-        #       sumtables.fold.log2 <- cbind(merged.df[c(1:2)], fold.log2)
-        #       write.csv(sumtables.fold.log2, "Output_CellNum/SumTable_CellsPerTissue_FoldChangeLog2.csv")
-        #     }
 
 
 }

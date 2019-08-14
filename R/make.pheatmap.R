@@ -17,8 +17,9 @@
 #' @param dendrograms Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none. Defaults to "both.
 #' @param n.row.groups Numeric.
 #' @param n.col.groups Numeric.
-#' @param row.sep Numeric.
-#' @param col.sep Numeric.
+#' @param row.sep Numeric. Only used if not clustering rows.
+#' @param col.sep Numeric. Only used if not clustering columns
+#' @param cell.size Numeric. Defaults to 15.
 #' @param y.margin Numeric.
 #' @param x.margin Numeric.
 #' @param standard.colours Character.
@@ -62,7 +63,7 @@ make.pheatmap <- function(x,
                          row.sep          = c(),
                          col.sep          = c(),
 
-                         cell.size        = 10,
+                         cell.size        = 15,
 
                          standard.colours = "colour.palette", # default and only current option
                          fold.colours     = "fold.palette",   # default and only current option
@@ -73,42 +74,43 @@ make.pheatmap <- function(x,
 
   ### TESTING
 
-  # library(gplots)
-  #
-  # setwd("/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre/Workflow scripts/Output_CAPX/Output-SumTables/Output_MFI_per_sample/")
-  #
-  # x <- read.csv("SumTable_MFI_cluster_x_marker-all_data.csv")
-  # sample.col <- "Sample"
-  # annot.cols <- c(1:2)
-  # plot.title <- "Test"
-  #
-  # transpose        = FALSE
-  # is.fold          = FALSE
-  # normalise        = TRUE
-  # dendrograms      = "both"
-  #
-  # n.row.groups     = 2
-  # n.col.groups     = 2
-  #
-  # fold.max.range    = 3
-  # fold.min.range    = -3
-  #
-  # y.margin = 8
-  # x.margin = 8
-  #
-  # cell.size        = 10
-  #
-  # row.sep          = c()
-  # col.sep          = c()
-  # standard.colours = "colour.palette"
-  # fold.colours     = "fold.palette"
-  # colour.scheme    = "group.palette"
-  #
-  # plot.width       = 11.69
-  # plot.height      = 8.26
-
-  if(!require('pheatmap')) {install.packages('pheatmap')}
-  library(pheatmap)
+        # library(gplots)
+        #
+        # list.files(getwd(), ".csv")
+        # x <- read.csv("SumTable_CellsPerTissue_FoldChangeLog2.csv")
+        #
+        # #x <- read.csv("SumTable_MFI_cluster_x_marker-all_data.csv")
+        # sample.col <- "Sample"
+        # annot.cols <- c(1:3)
+        # plot.title <- "Test"
+        #
+        # transpose        = FALSE
+        # is.fold          = TRUE
+        # normalise        = TRUE
+        # dendrograms      = "both"
+        #
+        # n.row.groups     = 2
+        # n.col.groups     = 2
+        #
+        # fold.max.range    = 3
+        # fold.min.range    = -3
+        #
+        # y.margin = 8
+        # x.margin = 8
+        #
+        # cell.size        = 20
+        #
+        # row.sep          = c(6)
+        # col.sep          = c()
+        # standard.colours = "colour.palette"
+        # fold.colours     = "fold.palette"
+        # colour.scheme    = "group.palette"
+        #
+        # plot.width       = 11.69
+        # plot.height      = 8.26
+        #
+        # if(!require('pheatmap')) {install.packages('pheatmap')}
+        # library(pheatmap)
 
   ### Setup color scheme
 
@@ -262,8 +264,7 @@ make.pheatmap <- function(x,
            gaps_col = col.sep,
 
            color = map.colour,
-           filename = "testPheatmap.png"
-  )
+           filename = "testPheatmap.png")
 
 
   print("A pheatmap has been saved to your working directory")

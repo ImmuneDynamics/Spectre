@@ -27,9 +27,11 @@ make.pheatmap(x, ...)
 
 \item{n.col.groups}{Numeric.}
 
-\item{row.sep}{Numeric.}
+\item{row.sep}{Numeric. Only used if not clustering rows.}
 
-\item{col.sep}{Numeric.}
+\item{col.sep}{Numeric. Only used if not clustering columns}
+
+\item{cell.size}{Numeric. Defaults to 15.}
 
 \item{standard.colours}{Character.}
 

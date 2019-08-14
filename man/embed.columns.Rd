@@ -6,8 +6,21 @@
 \usage{
 embed.columns(x, ...)
 }
+\arguments{
+\item{x}{NO DEFAULT. A list of dataframes (samples) that will recieve the new columns.}
+
+\item{type}{DEFAULTS TO "list". Can be "list", "data.frame" will be available in next release. Whether you wish to embed new values into dataframes as part of a list based on the name of the dataframes, or into a single dataframe based on values in another column.}
+
+\item{col.name}{NO DEFAULT. Character, desired name for the new column.}
+
+\item{match.to}{NO DEFAULT. A character vector that specifies which dataframe in the list is used for matching (e.g. "Sample 1", "Sample 2", "Sample 3", "Sample 4", etc).}
+
+\item{rmv.ext}{DEFAULTS TO TRUE. Logical, remove the ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.}
+
+\item{new.cils}{NO DEFAULT. A vector of new values to embed to each dataframe, matched to the corresponding value in 'match.to' (e.g. "Group 1", "Group 1", "Group 2", "Group 2", etc).}
+}
 \value{
-Embeds new columns into samples
+Embeds new columns into each row (cell) of dataframes in a list
 }
 \description{
 embed.columns
@@ -17,7 +30,7 @@ embed.columns()
 
 }
 \references{
-\url{https://sydneycytometry.org.au/spectre}. Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
+\url{https://sydneycytometry.org.au/spectre}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

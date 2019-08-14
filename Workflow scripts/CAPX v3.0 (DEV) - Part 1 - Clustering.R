@@ -116,16 +116,28 @@
         ## Specify the column that contains filenames, and which columns of 'sample.table' you want to embed
         meta.dat$sampleDetails
 
-        to.embed <- meta.dat$sampleDetails[c(1:4)] ## INCLUDING FILENAME
-        file.col <- "Filename"
+        # to.embed <- meta.dat$sampleDetails[c(1:4)] ## INCLUDING FILENAME
+        # file.col <- "Filename"
 
         Spectre::embed.columns(x = data.list,
-                               type = "list", # list of dataframes or single merged data.frame
-                               new.cols = to.embed, # columns you want to add
-                               file.col = file.col) # the column that specifies filename
+                               type = "list",
+                               match.to = meta.dat$sampleDetails[c(1)],
+                               new.cols = meta.dat$sampleDetails[c(2)],
+                               col.name = names(meta.dat$sampleDetails[c(2)]))
 
-        ## Check embedding
-        data.list[[6]]
+        Spectre::embed.columns(x = data.list,
+                               type = "list",
+                               match.to = meta.dat$sampleDetails[c(1)],
+                               new.cols = meta.dat$sampleDetails[c(3)],
+                               col.name = names(meta.dat$sampleDetails[c(3)]))
+
+        Spectre::embed.columns(x = data.list,
+                               type = "list",
+                               match.to = meta.dat$sampleDetails[c(1)],
+                               new.cols = meta.dat$sampleDetails[c(4)],
+                               col.name = names(meta.dat$sampleDetails[c(4)]))
+
+        head(data.list)
 
     ### Merge files
 
@@ -140,8 +152,7 @@
         any(is.na(cell.dat))
 
     ### Cleanup (not necessary, but recommended)
-        rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums, file.col, to.embed)
-        rm(name.table, sample.table)
+        rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums)
 
 ##########################################################################################################
 #### Define data and sample variables for analysis
@@ -152,7 +163,7 @@
         as.matrix(names(cell.dat))
 
         ## Define key columns that might be used or dividing data (samples, groups, batches, etc)
-        exp.name <- "TAXXX"
+        exp.name <- meta.dat[["expDetails"]]$Experiment.Number
 
         file.col <- "Filename"
         sample.col <- "Sample"
@@ -249,17 +260,8 @@
         cell.dat.sub <- cbind(cell.dat.sub, umap.res) # Merge UMAP results with data
         plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
 
-
     ### Run tSNE
-        # Spectre::run.tsne(x = cell.dat.sub,
-        #                  use.cols = ClusteringCols,  #c(5,6,8,9,11,12,13,17:19,21:30,32),
-        #                  umap.seed = 42)
-        #
-        # cell.dat.sub <- cbind(cell.dat.sub, tsne.res) # Merge UMAP results with data
-        #
-        # ## Plot tSNE results
-        # plot(cell.dat.sub$tSNE_42_X, cell.dat.sub$tSNE_42_Y)
-
+        # Spectre::run.tsne(x = cell.dat.sub)
 
     ### Run Monocle
         # Spectre::run.monocle(x = cell.dat.sub)
@@ -279,55 +281,79 @@
 
 
 ##########################################################################################################
-#### Save summary statistics to disk
+#### Print tSNE/UMAP plots to disk
 ##########################################################################################################
 
-    ### Create and save sumtables
-        setwd(PrimaryDirectory)
-        setwd(OutputDirectory)
-        dir.create("Output-SumTables", showWarnings = FALSE)
-        setwd("Output-SumTables")
-        getwd()
+    ## First for all data
 
-        as.matrix(names(cell.dat))
-        meta.dat$sampleDetails
+        # setwd(OutputDirectory)
+        # dir.create("UMAP plots - all")
+        # setwd("UMAP plots - all")
+        # getwd()
+        #
+        # as.matrix(names(cell.dat.sub))
+        #
+        # num.plots <- cell.dat.sub[,c(2:32)]
+        # factor.plots <- cell.dat.sub[,c(35:39)]
 
-        Spectre::make.sumtable(x = cell.dat,
-                               type = "frequencies",
-                               sample.name = "Sample",
-                               group.name = "Group",
-                               clust.col = "FlowSOM_metacluster",
-                               annot.col.nums = c(1,33:39),
-                               cells.per.tissue = meta.dat$sampleDetails$Cells.per.sample
-                               #do.foldchange = TRUE # not active yet
-                               #ctrl.group = "Mock"
-                               )
+        # numeric.dat <- unlist(lapply(cell.dat.sub, is.numeric))
+        # numeric.dat <- cell.dat.sub[, numeric.dat]
+        #
+        # factor.dat <- unlist(lapply(cell.dat.sub, is.factor))
+        # factor.dat <- cell.dat.sub[, factor.dat]
 
-        Spectre::make.sumtable(x = cell.dat,
-                               type = "expression.per.sample",
-                               sample.name = "Sample",
-                               group.name = "Group",
-                               clust.col = "FlowSOM_metacluster",
-                               annot.col.nums = c(1,33:39),
-                               fun.type = "median"
-                               #do.foldchange = TRUE # not active yet
-                               #ctrl.group = "Mock"
-                               )
+        # for(i in names(num.plots)){
+        #
+        #   p <-Spectre::colour.plot(d = cell.dat.sub,
+        #                        x.axis = "UMAP_42_X",
+        #                        y.axis = "UMAP_42_Y",
+        #                        col.axis = i,
+        #                        title = paste0("All samples", " - ", i),
+        #                        align.xy.by = cell.dat.sub,
+        #                        align.col.by = cell.dat.sub)
+        #
+        #   ggsave(filename = paste0("All_samples_", i, ".png"), plot = p, path = getwd(), width = 9, height = 7)
+        # }
+        #
+        # for(i in names(factor.plots)){
+        #
+        #   p <- Spectre::factor.plot(d = cell.dat.sub,
+        #                                      x.axis = "UMAP_42_X",
+        #                                      y.axis = "UMAP_42_Y",
+        #                                      col.axis = i,
+        #                                      title = paste0("All samples", " - ", i),
+        #                                      dot.size = 1,
+        #                                      align.xy.by = cell.dat.sub,
+        #                                      align.col.by = cell.dat.sub)
+        #
+        #   ggsave(filename = paste0("All_samples_", i, ".png"), plot = p, path = getwd(), width = 9, height = 7)
+        # }
 
-        Spectre::make.sumtable(x = cell.dat,
-                               type = "expression.per.marker",
-                               sample.name = "Sample",
-                               group.name = "Group",
-                               clust.col = "FlowSOM_metacluster",
-                               annot.col.nums = c(1,33:39),
-                               fun.type = "median"
-                               #do.foldchange = TRUE # not active yet
-                               #ctrl.group = "Mock"
-                               )
+    ## Then for samples
 
-        ## didn't exclude V1? annot col maybe didn't work
-        ## Also some 'clusters' keeping the 'CLUSTER' label
-        ## Create a text file in each output folder -- explaining how to read the results
+        # setwd(OutputDirectory)
+        # dir.create("UMAP plots - by sample")
+        # setwd("UMAP plots - by sample")
+        # getwd()
+        #
+        # for(a in cell.dat.sub[[group.col]])
+        #
+        # for(i in names(cell.dat.sub)){
+        #
+        #   p <-Spectre::colour.plot(d = cell.dat.sub,
+        #                            x.axis = "UMAP_42_X",
+        #                            y.axis = "UMAP_42_Y",
+        #                            col.axis = i,
+        #                            title = paste0("All samples", " - ", i),
+        #                            align.xy.by = cell.dat.sub,
+        #                            align.col.by = cell.dat.sub)
+        #
+        #   ggsave(filename = paste0("All_samples_", i, ".png"), plot = p, path = getwd(), width = 9, height = 7)
+        # }
+
+
+    ## Then for groups
+
 
 ##########################################################################################################
 #### Save data to disk
@@ -342,11 +368,22 @@
 
         head(cell.dat)
 
-
         ## Write 'all' data
         Spectre::write.files(x = cell.dat,
-                             file.prefix = exp.name, # required
+                             file.prefix= paste0("Clustered", exp.name), # required
                              write.csv = TRUE,
+                             write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat,
+                             divide.by = "Group", ## Will add the terms as a prefix
+                             file.prefix= paste0("Clustered", exp.name), # required
+                             write.csv = FALSE,
+                             write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat,
+                             divide.by = "Sample",
+                             file.prefix= paste0("Clustered", exp.name), # required
+                             write.csv = FALSE,
                              write.fcs = TRUE)
 
         setwd(PrimaryDirectory)
@@ -364,9 +401,116 @@
         Spectre::write.files(x = cell.dat.sub,
                              file.prefix = paste0("DimRed_", exp.name), # required
                              write.csv = TRUE,
-                             write.fcs = TRUE) ##### FCS NOT WORK
+                             write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat,
+                             divide.by = "Group", ## Will add the terms as a prefix
+                             file.prefix= paste0("DimRed_", exp.name), # required
+                             write.csv = FALSE,
+                             write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat,
+                             divide.by = "Sample",
+                             file.prefix= paste0("DimRed_", exp.name), # required
+                             write.csv = FALSE,
+                             write.fcs = TRUE)
 
         setwd(PrimaryDirectory)
+
+
+##########################################################################################################
+#### Save summary statistics to disk
+##########################################################################################################
+
+    ### Create and save sumtables
+        setwd(PrimaryDirectory)
+        setwd(OutputDirectory)
+        dir.create("Output-SumTables", showWarnings = FALSE)
+        setwd("Output-SumTables")
+        getwd()
+
+        dir.create("TEST")
+        setwd("TEST")
+        getwd()
+
+        as.matrix(names(cell.dat))
+        meta.dat$sampleDetails
+
+        Spectre::make.sumtable(x = cell.dat,
+                               sample.name = "Sample",
+                               clust.col = "FlowSOM_metacluster",
+                               annot.col.nums = c(1,33:39),
+
+                               do.frequencies = TRUE,
+                               do.exp.per.marker = TRUE,
+                               do.exp.per.sample = TRUE,
+
+                               cells.per.tissue = meta.dat$sampleDetails$Cells.per.sample, ## MODIFY TO DO MATCHING
+                               fun.type = "median",
+
+                               do.foldchange = TRUE,
+                               group.name = "Group",
+                               control.group = "Mock"
+                              )
+
+        #setwd(PrimaryDirectory)
+
+
+        setwd("Output_CellNums/")
+        list.files(getwd(), ".csv")
+
+        x <- read.csv("SumTable_CellsPerTissue_FoldChangeLog2.csv", check.names = FALSE)
+        x
+
+        make.pheatmap(x = x,
+                      sample.col = "Sample",
+                      annot.cols = c(1:3),
+                      plot.title = "Cells per cluster - fold change (log 2)",
+                      is.fold = FALSE,
+                      cell.size = 15,
+                      row.sep = 6)
+
+        ##
+
+        # Spectre::make.sumtable(x = cell.dat,
+        #                        type = "frequencies",
+        #                        sample.name = "Sample",
+        #                        group.name = "Group",
+        #                        clust.col = "FlowSOM_metacluster",
+        #                        annot.col.nums = c(1,33:39),
+        #                        cells.per.tissue = meta.dat$sampleDetails$Cells.per.sample
+        #                        #do.foldchange = TRUE # not active yet
+        #                        #ctrl.group = "Mock"
+        # )
+        #
+        #
+        # Spectre::make.sumtable(x = cell.dat,
+        #                        type = "expression.per.sample",
+        #                        sample.name = "Sample",
+        #                        group.name = "Group",
+        #                        clust.col = "FlowSOM_metacluster",
+        #                        annot.col.nums = c(1,33:39),
+        #                        fun.type = "median"
+        #                        #do.foldchange = TRUE # not active yet
+        #                        #ctrl.group = "Mock"
+        #                        )
+        #
+        # Spectre::make.sumtable(x = cell.dat,
+        #                        type = "expression.per.marker",
+        #                        sample.name = "Sample",
+        #                        group.name = "Group",
+        #                        clust.col = "FlowSOM_metacluster",
+        #                        annot.col.nums = c(1,33:39),
+        #                        fun.type = "median"
+        #                        #do.foldchange = TRUE # not active yet
+        #                        #ctrl.group = "Mock"
+        #                        )
+
+        ## didn't exclude V1? annot col maybe didn't work
+        ## Also some 'clusters' keeping the 'CLUSTER' label
+        ## Create a text file in each output folder -- explaining how to read the results
+
+
 
 
 #
