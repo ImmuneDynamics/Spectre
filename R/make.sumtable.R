@@ -49,7 +49,7 @@ make.sumtable <- function(## Main entries
 
                            ##
                            do.foldchange = FALSE,
-                           group.name = NULL, # specify group name (if groups are present)
+                           group.col = NULL, # specify group name (if groups are present)
                            control.group = NULL
                            )
 {
