@@ -6,6 +6,7 @@
 #' @usage make.pheatmap(x, ...)
 #'
 #' @param x data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
+#' @param file.name Character. What do you want to call the file?
 #' @param sample.col Character. Specify the name of the column that indicates samples. No default.
 #' @param annot.cols Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.
 #' @param plot.title Character.
@@ -43,16 +44,20 @@
 #
 
 make.pheatmap <- function(x,
+                          file.name, # including extension (.png)
+                          plot.title,
                          sample.col,
-                         annot.cols,
-                         plot.title,
+
+                         annot.cols   = NULL,
+                         rmv.cols     = NULL,
+
                          ## save.to       = getwd(), # specify where to save the heatmap
 
                          transpose        = FALSE,
 
                          is.fold          = FALSE,
-                         #fold.max.range    = 3,
-                         #fold.min.range    = -3,
+                         fold.max.range    = 3,
+                         fold.min.range    = -3,
 
                          normalise        = TRUE,
 
@@ -72,60 +77,23 @@ make.pheatmap <- function(x,
                         #plot.height      = 8.26)
 {
 
-  ### TESTING for FOLD-CHANGE
+  ### TESTING for normal
 
-        # library(pheatmap)
-        # library(RColorBrewer)
-        # setwd("/Users/Tom/Desktop")
-        #
-        # list.files(getwd(), ".csv")
-        # x <- hmap.foldcell
-        #
-        # #x <- read.csv("SumTable_MFI_cluster_x_marker-all_data.csv")
-        # sample.col <- "Sample"
-        # annot.cols <- c(1:3)
-        # plot.title <- "Test"
-        #
-        # transpose        = FALSE
-        # is.fold          = TRUE
-        # normalise        = TRUE
-        # dendrograms      = "both"
-        #
-        # n.row.groups     = 2
-        # n.col.groups     = 2
-        #
-        # fold.max.range    = 3
-        # fold.min.range    = -3
-        #
-        # y.margin = 8
-        # x.margin = 8
-        #
-        # cell.size        = 20
-        #
-        # row.sep          = c(6)
-        # col.sep          = c()
-        # standard.colours = "colour.palette"
-        # fold.colours     = "fold.palette"
-        # colour.scheme    = "group.palette"
-        #
-        # plot.width       = 11.69
-        # plot.height      = 8.26
-        #
-        # if(!require('pheatmap')) {install.packages('pheatmap')}
-        # library(pheatmap)
 
   ### TESTING for FOLD-CHANGE
 
       # library(pheatmap)
       # library(RColorBrewer)
+      #
       # setwd("/Users/Tom/Desktop")
       #
-      # list.files(getwd(), ".csv")
-      # x <- hmap.mfi
+      # x <- hmap.foldcell
       #
-      # #x <- read.csv("SumTable_MFI_cluster_x_marker-all_data.csv")
-      # sample.col <- "FlowSOM_metacluster"
-      # annot.cols <- c(1:2)
+      # sample.col <- "Sample"
+      # file.name <- "test.png"
+      # annot.cols <- c(3)
+      # rmv.cols <- c(1,2)
+      #
       # plot.title <- "Test"
       #
       # transpose        = FALSE
@@ -174,8 +142,19 @@ make.pheatmap <- function(x,
   rownames(heatmap.data) <- t(x[sample.col])
   heatmap.data
 
-  heatmap.data <- heatmap.data[-c(annot.cols)] # remove columns
-  heatmap.data
+  if(is.null(annot.cols) == FALSE){
+    annot <- heatmap.data[annot.cols]
+    heatmap.data <- heatmap.data[-c(annot.cols, rmv.cols)] # remove columns
+    heatmap.data
+  }
+
+  if(is.null(annot.cols) == TRUE){
+    annot <- NULL
+    heatmap.data <- heatmap.data[-c(rmv.cols)] # remove columns
+    heatmap.data
+  }
+
+
 
   ### 2.2 - Transpose (ONLY IF REQUIRED) -- the longest set (clusters or parameters) on x-axis -- by default MARKERS are columns, CLUSTERS are rows -- transpose to flip these defaults
   if(transpose == TRUE){
@@ -307,8 +286,10 @@ make.pheatmap <- function(x,
            gaps_row = row.sep,
            gaps_col = col.sep,
 
+           annotation_row = annot,
+
            color = map.colour,
-           filename = "testPheatmap.png")
+           filename = file.name)
 
 
   print("A pheatmap has been saved to your working directory")

@@ -363,37 +363,31 @@
     ### Save data (cell.dat) including clustering results
 
         setwd(OutputDirectory)
-        dir.create("Output-ClusteredData", showWarnings = FALSE)
-        setwd("Output-ClusteredData")
-        getwd()
-
         head(cell.dat)
 
         ## Write 'all' data
         Spectre::write.files(x = cell.dat,
-                             file.prefix= paste0("Clustered", exp.name), # required
+                             file.prefix= paste0("Clustered_", exp.name), # required
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-        Spectre::write.files(x = cell.dat,
-                             divide.by = "Group", ## Will add the terms as a prefix
-                             file.prefix= paste0("Clustered", exp.name), # required
-                             write.csv = FALSE,
-                             write.fcs = TRUE)
-
-        Spectre::write.files(x = cell.dat,
-                             divide.by = "Sample",
-                             file.prefix= paste0("Clustered", exp.name), # required
-                             write.csv = FALSE,
-                             write.fcs = TRUE)
+        # Spectre::write.files(x = cell.dat,
+        #                      divide.by = "Group", ## Will add the terms as a prefix
+        #                      file.prefix= paste0("Clustered", exp.name), # required
+        #                      write.csv = FALSE,
+        #                      write.fcs = TRUE)
+        #
+        # Spectre::write.files(x = cell.dat,
+        #                      divide.by = "Sample",
+        #                      file.prefix= paste0("Clustered", exp.name), # required
+        #                      write.csv = FALSE,
+        #                      write.fcs = TRUE)
 
         setwd(PrimaryDirectory)
 
     ### Save subsampled data (cell.dat.sub) includng tSNE/UMAP etc
 
         setwd(OutputDirectory)
-        dir.create("Output-DimRedData", showWarnings = FALSE)
-        setwd("Output-DimRedData")
         getwd()
 
         head(cell.dat.sub)
@@ -404,17 +398,17 @@
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-        Spectre::write.files(x = cell.dat,
-                             divide.by = "Group", ## Will add the terms as a prefix
-                             file.prefix= paste0("DimRed_", exp.name), # required
-                             write.csv = FALSE,
-                             write.fcs = TRUE)
-
-        Spectre::write.files(x = cell.dat,
-                             divide.by = "Sample",
-                             file.prefix= paste0("DimRed_", exp.name), # required
-                             write.csv = FALSE,
-                             write.fcs = TRUE)
+        # Spectre::write.files(x = cell.dat,
+        #                      divide.by = "Group", ## Will add the terms as a prefix
+        #                      file.prefix= paste0("DimRed_", exp.name), # required
+        #                      write.csv = FALSE,
+        #                      write.fcs = TRUE)
+        #
+        # Spectre::write.files(x = cell.dat,
+        #                      divide.by = "Sample",
+        #                      file.prefix= paste0("DimRed_", exp.name), # required
+        #                      write.csv = FALSE,
+        #                      write.fcs = TRUE)
 
         setwd(PrimaryDirectory)
 
@@ -430,15 +424,11 @@
         setwd("Output-SumTables")
         getwd()
 
-        dir.create("TEST")
-        setwd("TEST")
-        getwd()
-
         as.matrix(names(cell.dat))
         meta.dat$sampleDetails
 
         Spectre::make.sumtable(x = cell.dat,
-                               sample.name = "Sample",
+                               sample.col = "Sample",
                                clust.col = "FlowSOM_metacluster",
                                annot.col.nums = c(1,33:39),
 
@@ -454,22 +444,22 @@
                                control.group = "Mock"
                               )
 
-        #setwd(PrimaryDirectory)
+        setwd(PrimaryDirectory)
 
 
-        setwd("Output_CellNums/")
-        list.files(getwd(), ".csv")
 
-        x <- read.csv("SumTable_CellsPerTissue_FoldChangeLog2.csv", check.names = FALSE)
-        x
 
-        make.pheatmap(x = x,
-                      sample.col = "Sample",
-                      annot.cols = c(1:3),
-                      plot.title = "Cells per cluster - fold change (log 2)",
-                      is.fold = FALSE,
-                      cell.size = 15,
-                      row.sep = 6)
+
+
+##########################################################################################################
+##########################################################################################################
+##########################################################################################################
+
+
+
+
+
+
 
         ##
 

@@ -1,4 +1,8 @@
-# write.files
+#' write.files - Write .csv or .fcs files
+#'
+#' @usage write.files(x, ...)
+#'
+#' @export
 
 write.files <- function(x,      # data to save
                         file.prefix,

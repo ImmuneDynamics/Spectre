@@ -9,6 +9,8 @@ make.pheatmap(x, ...)
 \arguments{
 \item{x}{data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.}
 
+\item{file.name}{Character. What do you want to call the file?}
+
 \item{sample.col}{Character. Specify the name of the column that indicates samples. No default.}
 
 \item{annot.cols}{Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.}
@@ -18,6 +20,10 @@ make.pheatmap(x, ...)
 \item{transpose}{Logical. Do you want to transpose the heatmap. Defaults to FALSE.}
 
 \item{is.fold}{Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap. Defaults to FALSE.}
+
+\item{fold.max.range}{Numeric. For fold-change heatmaps, what is the maxium colour value that should be plotted. Defaults to 3.}
+
+\item{fold.min.range}{Numeric. For fold-change heatmaps, what is the minimum colour value that should be plotted. Defaults to -3.}
 
 \item{normalise}{Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values. Defaults to TRUE.}
 
@@ -38,10 +44,6 @@ make.pheatmap(x, ...)
 \item{fold.colours}{Character.}
 
 \item{colour.scheme}{Character.}
-
-\item{fold.max.range}{Numeric. For fold-change heatmaps, what is the maxium colour value that should be plotted. Defaults to 3.}
-
-\item{fold.min.range}{Numeric. For fold-change heatmaps, what is the minimum colour value that should be plotted. Defaults to -3.}
 
 \item{y.margin}{Numeric.}
 
