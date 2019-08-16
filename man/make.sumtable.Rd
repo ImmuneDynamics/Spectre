@@ -27,7 +27,7 @@ make.sumtable(x, ...)
 
 \item{do.foldchange}{DEFAULTS TO FALSE.}
 
-\item{group.name}{DEFAULTS TO NULL.}
+\item{group.col}{DEFAULTS TO NULL.}
 
 \item{control.group}{DEFAULTS TO NULL.}
 }

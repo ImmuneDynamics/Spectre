@@ -15,7 +15,7 @@
 #' @param fun.type DEFAULTS TO "median".
 #'
 #' @param do.foldchange DEFAULTS TO FALSE.
-#' @param group.name DEFAULTS TO NULL.
+#' @param group.col DEFAULTS TO NULL.
 #' @param control.group DEFAULTS TO NULL.
 #'
 #' @return ...
@@ -28,8 +28,7 @@
 #'
 #' @export
 
-make.sumtable <- function(## Main entries
-                           x, # data
+make.sumtable <- function(x, # data
 
                            ##
                            sample.col, # Samples
@@ -53,6 +52,7 @@ make.sumtable <- function(## Main entries
                            control.group = NULL
                            )
 {
+
 
 ####################################################################################################################
 #### Test data

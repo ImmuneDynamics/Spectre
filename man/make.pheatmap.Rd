@@ -11,11 +11,11 @@ make.pheatmap(x, ...)
 
 \item{file.name}{Character. What do you want to call the file?}
 
+\item{plot.title}{Character.}
+
 \item{sample.col}{Character. Specify the name of the column that indicates samples. No default.}
 
 \item{annot.cols}{Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.}
-
-\item{plot.title}{Character.}
 
 \item{transpose}{Logical. Do you want to transpose the heatmap. Defaults to FALSE.}
 
