@@ -58,24 +58,24 @@ make.sumtable <- function(## Main entries
 #### Test data
 ####################################################################################################################
 
-          setwd("/Users/Tom/Desktop/")
-          x = Spectre::demo.clustered
-
-          do.frequencies = TRUE
-          do.exp.per.sample = TRUE
-          do.exp.per.marker = TRUE
-
-          sample.col = "Sample"
-          group.col = "Group" # specify group name (if groups are present)
-          clust.col = "FlowSOM_metacluster"
-          annot.col.nums = c(1,33:39) # specify all columns that represent annotations, and NOT CELLULAR PARAMETERS
-
-          cells.per.tissue = c(rep(2.0e+07, 6), rep(1.8e+07, 6))
-
-          fun.type = "median"
-
-          do.foldchange = TRUE # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
-          control.group = "Mock"
+          # setwd("/Users/Tom/Desktop/")
+          # x = Spectre::demo.clustered
+          #
+          # do.frequencies = TRUE
+          # do.exp.per.sample = TRUE
+          # do.exp.per.marker = TRUE
+          #
+          # sample.col = "Sample"
+          # group.col = "Group" # specify group name (if groups are present)
+          # clust.col = "FlowSOM_metacluster"
+          # annot.col.nums = c(1,33:39) # specify all columns that represent annotations, and NOT CELLULAR PARAMETERS
+          #
+          # cells.per.tissue = c(rep(2.0e+07, 6), rep(1.8e+07, 6))
+          #
+          # fun.type = "median"
+          #
+          # do.foldchange = TRUE # Calculate cell number/proportion changes as fold-change         # Turn OFF if you don't have group keywords
+          # control.group = "Mock"
 
 ####################################################################################################################
 #### Setup
