@@ -1,4 +1,16 @@
-# write.files
+#' write.files - Write .csv or .fcs files
+#'
+#' @usage write.files(x, ...)
+#'
+#' @param x Dataframe. No default.
+#' @param file.prefix Character prefix to add before filename.
+#' @param divide.by Character. Do you want to write the whole dataset (use NULL) or split it by sample/group/cluster etc (etner the name of the column to divide by, e.g. "SampleName"). Default NULL. .
+#' @param write.csv Logical. TRUE to write CSV files, FALSE to not. Defaults to TRUE.
+#' @param write.fcs Logical. TRUE to write FCS files, FALSE to not. Defaults to FALSE
+#'
+#' This function writes CSV files from your data using fwrite. Can also write FCS files.
+#'
+#' @export
 
 write.files <- function(x,      # data to save
                         file.prefix,

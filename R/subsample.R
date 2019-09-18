@@ -1,4 +1,16 @@
-# Spectre::subsample
+#' subsample - ...
+#'
+#' @usage subsample(x, ...)
+#'
+#' @param x. Input dataframe with cells (rows) vs markers (columns). No default.
+#' @param method. Character. Can be 'random' or 'per.sample. No default
+#' @param samp.col Character. Name of the column that reflects sample names.
+#' @param targets List of downsample targets (if random, then absolute target; if per.sample, then targets per sample). No default.
+#' @param seed Numeric. Seed for reproducibility. No default.
+#'
+#' This function facilitates downsampling of a dataframe.
+#'
+#' @export
 
 subsample <- function(x,
                       method, # random, per.sample
