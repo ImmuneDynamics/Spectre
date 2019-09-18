@@ -11,8 +11,8 @@
 #' @export
 
 run.umap <- function(x,
-                 use.cols = c(1:4),
-                 umap.seed = 42
+                 use.cols,
+                 umap.seed
                  ){
   #x <- iris
   #umap.seed <- 42
