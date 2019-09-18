@@ -1,5 +1,16 @@
 # Spectre
-A computational toolkit for the analysis of high-dimensional single-cell cytometry data. Currently, this is a development version only -- no stable releases available yet.
+A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
+
+### How to use
+You can install the package in R by using the following lines:
+```     if(!require('devtools')) {install.packages('devtools')}
+        library('devtools')
+
+        if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+        library("Spectre")
+```
+
+Alteranatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
 
 ### About
 The Spectre package is designed to allow for data analaysis workflows that simplify and streamline data manipulation and annotation, population identification (clustering, classificaiton), and dimensionality reduction (tSNE, UMAP) etc in high-dimensional cytometry data.
