@@ -2,12 +2,18 @@
 A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
 
 ### How to use
-You can install the package in R by using the following lines:
-```     if(!require('devtools')) {install.packages('devtools')}
-        library('devtools')
+In R, install and load the 'devtools' library.
 
-        if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
-        library("Spectre")
+```     
+if(!require('devtools')) {install.packages('devtools')}
+library('devtools')
+```
+
+Subsequently, use the 'install_github' function to install and load the Spectre package.
+
+```
+if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+library("Spectre")
 ```
 
 Alteranatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
