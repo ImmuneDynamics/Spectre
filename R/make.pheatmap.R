@@ -6,10 +6,11 @@
 #' @usage make.pheatmap(x, ...)
 #'
 #' @param x data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
-#' @param file.name Character. What do you want to call the file?
-#' @param sample.col Character. Specify the name of the column that indicates samples. No default.
-#' @param annot.cols Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.
+#' @param file.name Character. What do you want to call the file, including the extension.
 #' @param plot.title Character.
+#' @param sample.col Character. Specify the name of the column that indicates samples. No default.
+#'
+#' @param annot.cols Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.
 #' @param transpose Logical. Do you want to transpose the heatmap. Defaults to FALSE.
 #' @param is.fold Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap. Defaults to FALSE.
 #' @param fold.max.range Numeric. For fold-change heatmaps, what is the maxium colour value that should be plotted. Defaults to 3.
@@ -38,46 +39,71 @@
 #'
 #' @export
 
-# to add
-# extra margins for column and row names
-# calculation -- recommended W and H based on how man rows and columns there are -- to keep each heatmap cell a square
-#
-
 make.pheatmap <- function(x,
-                          file.name, # including extension (.png)
+                          file.name,
                           plot.title,
-                         sample.col,
+                          sample.col,
 
-                         annot.cols   = NULL,
-                         rmv.cols     = NULL,
+                          annot.cols = NULL,
+                          rmv.cols = NULL,
 
-                         ## save.to       = getwd(), # specify where to save the heatmap
+                          transpose = FALSE,
+                          normalise = TRUE,
 
-                         transpose        = FALSE,
+                          is.fold          = FALSE,
+                          fold.max.range    = 3,
+                          fold.min.range    = -3,
 
-                         is.fold          = FALSE,
-                         fold.max.range    = 3,
-                         fold.min.range    = -3,
+                          dendrograms      = "both",
+                          n.row.groups     = 2,
+                          n.col.groups     = 2,
 
-                         normalise        = TRUE,
+                          row.sep          = c(),
+                          col.sep          = c(),
+                          cell.size        = 15,
 
-                         dendrograms      = "both",
-                         n.row.groups     = 2,   # choose number of row groupings (by default, rows are samples, unless do.transpose = 1). Must be >1.
-                         n.col.groups     = 2,   # choose number of column groupings (by default, columns are populations, unless do.transpose = 1). Must be >1.
+                          standard.colours = "colour.palette",
+                          fold.colours     = "fold.palette",
+                          colour.scheme    = "group.palette")
 
-                         row.sep          = c(),
-                         col.sep          = c(),
-
-                         cell.size        = 15,
-
-                         standard.colours = "colour.palette", # default and only current option
-                         fold.colours     = "fold.palette",   # default and only current option
-                         colour.scheme    = "group.palette")  # default and only current option
                         #plot.width       = 11.69,    # Default = 11.69 inches, target for A4 landscape. # Default = 8.26 inches, target for A4 landscape.
                         #plot.height      = 8.26)
 {
 
-  ### TESTING for normal
+  ### TESTING for normal (MFI cluster vs marker)
+
+     # library(pheatmap)
+     # library(RColorBrewer)
+     #
+     #  setwd("/Users/Tom/Desktop")
+     #
+     #  x <- hmap.mfi
+     #
+     #  file.name <- "test.png"
+     #  plot.title <- "Test plot"
+     #  sample.col <- "FlowSOM_metacluster"
+     #
+     #  annot.cols = 2
+     #  rmv.cols = 1
+     #
+     #  transpose = FALSE
+     #  normalise = TRUE
+     #
+     #  is.fold          = FALSE
+     #  fold.max.range    = 3
+     #  fold.min.range    = -3
+     #
+     #  dendrograms      = "both"
+     #  n.row.groups     = 2
+     #  n.col.groups     = 2
+     #
+     #  row.sep          = c()
+     #  col.sep          = c()
+     #  cell.size        = 15
+     #
+     #  standard.colours = "colour.palette"
+     #  fold.colours     = "fold.palette"
+     #  colour.scheme    = "group.palette"
 
 
   ### TESTING for FOLD-CHANGE
@@ -88,16 +114,20 @@ make.pheatmap <- function(x,
       # setwd("/Users/Tom/Desktop")
       #
       # x <- hmap.foldcell
+      # x$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2)
+      #
+      # as.matrix(names(x))
       #
       # sample.col <- "Sample"
       # file.name <- "test.png"
-      # annot.cols <- c(3)
+      #
+      # annot.cols <- c(3,44)
       # rmv.cols <- c(1,2)
       #
       # plot.title <- "Test"
       #
       # transpose        = FALSE
-      # is.fold          = FALSE
+      # is.fold          = TRUE
       # normalise        = TRUE
       # dendrograms      = "both"
       #
@@ -110,7 +140,7 @@ make.pheatmap <- function(x,
       # y.margin = 8
       # x.margin = 8
       #
-      # cell.size        = 20
+      # cell.size        = 15
       #
       # row.sep          = c(6)
       # col.sep          = c()
@@ -120,179 +150,179 @@ make.pheatmap <- function(x,
       #
       # plot.width       = 11.69
       # plot.height      = 8.26
-      #
-      # if(!require('pheatmap')) {install.packages('pheatmap')}
-      # library(pheatmap)
+
 
   ### Setup color scheme
 
-  ## Standard colour options
-  colour.palette <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
+      ## Standard colour options
+      colour.palette <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
 
-  ## Fold-change colour options
-  fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
+      ## Fold-change colour options
+      fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
 
-  ## Grouping colour options
-  group.palette <- (colorRampPalette(brewer.pal(11, "Spectral")))
-  white.palette <- colorRampPalette(c("white"))
+      ## Grouping colour options
+        # group.palette <- (colorRampPalette(brewer.pal(11, "Spectral")))
+        # white.palette <- colorRampPalette(c("white"))
 
-  ### 2.1 - Embed cluster or population name as row name
+  ### Embed cluster or population name as row name
 
-  heatmap.data <- x
-  rownames(heatmap.data) <- t(x[sample.col])
-  heatmap.data
+      heatmap.data <- x
+      rownames(heatmap.data) <- t(x[sample.col])
+      heatmap.data
 
-  if(is.null(annot.cols) == FALSE){
-    annot <- heatmap.data[annot.cols]
-    heatmap.data <- heatmap.data[-c(annot.cols, rmv.cols)] # remove columns
-    heatmap.data
-  }
+      if(is.null(annot.cols) == FALSE){
+        annot <- heatmap.data[annot.cols]
+        heatmap.data <- heatmap.data[-c(annot.cols, rmv.cols)] # remove columns
+        heatmap.data
+      }
 
-  if(is.null(annot.cols) == TRUE){
-    annot <- NULL
-    heatmap.data <- heatmap.data[-c(rmv.cols)] # remove columns
-    heatmap.data
-  }
+      if(is.null(annot.cols) == TRUE){
+        annot <- NULL
+        heatmap.data <- heatmap.data[-c(rmv.cols)] # remove columns
+        heatmap.data
+      }
 
+  ### Transpose (ONLY IF REQUIRED) -- the longest set (clusters or parameters) on x-axis -- by default MARKERS are columns, CLUSTERS are rows -- transpose to flip these defaults
+      if(transpose == TRUE){
+        heatmap.data.t <- as.data.frame(t(heatmap.data))
+        heatmap.data <- heatmap.data.t
+      }
 
+  ### NORMALISE BY COLUMN (i.e. each column/parameter has a max of 1 and a minimum of 0) # This is optional, but allows for better comparison between markers
+      if(normalise == TRUE){
+        if(is.fold == FALSE){
+          row.nam <- row.names(heatmap.data)
 
-  ### 2.2 - Transpose (ONLY IF REQUIRED) -- the longest set (clusters or parameters) on x-axis -- by default MARKERS are columns, CLUSTERS are rows -- transpose to flip these defaults
-  if(transpose == TRUE){
-    heatmap.data.t <- as.data.frame(t(heatmap.data))
-    heatmap.data <- heatmap.data.t
-  }
+          norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
+          heatmap.data.norm <- as.data.frame(lapply(heatmap.data, norm.fun)) # by default, removes the names of each row
+          max(heatmap.data.norm)
+          max(heatmap.data.norm[,5])
+          heatmap.data.norm <- as.matrix(heatmap.data.norm)
+          heatmap.data <- heatmap.data.norm
+          rownames(heatmap.data) <- row.nam # add row names back
+        }
+      }
 
-  ### 2.3 - NORMALISE BY COLUMN (i.e. each column/parameter has a max of 1 and a minimum of 0) # This is optional, but allows for better comparison between markers
-  if(normalise == TRUE){
-    if(is.fold == FALSE){
-      row.nam <- row.names(heatmap.data)
+      # convert to matrix
+      heatmap.data <- as.matrix(heatmap.data)
 
-      norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
-      heatmap.data.norm <- as.data.frame(lapply(heatmap.data, norm.fun)) # by default, removes the names of each row
-      max(heatmap.data.norm)
-      max(heatmap.data.norm[,5])
-      heatmap.data.norm <- as.matrix(heatmap.data.norm)
-      heatmap.data <- heatmap.data.norm
-      rownames(heatmap.data) <- row.nam # add row names back
-    }
-  }
+  ### Set up clustering
 
-  # convert to matrix
-  heatmap.data <- as.matrix(heatmap.data)
+      if(dendrograms == "none"){
+        row.clustering    <- FALSE
+        col.clustering    <- FALSE
+      }
 
-  ### 2.4 - Set up clustering
+      if(dendrograms != "none"){
 
-  if(dendrograms == "none"){
-    row.clustering    <- FALSE
-    col.clustering    <- FALSE
-  }
+        # set the custom distance and clustering functions, per your example
+        hclustfunc <- function(x) hclust(x, method="complete")
+        distfunc <- function(x) dist(x, method="euclidean")
 
-  if(dendrograms != "none"){
+        # perform clustering on rows and columns
+        if(dendrograms == "both"){
+          row.clustering    <- TRUE
+          col.clustering    <- TRUE
 
-    # set the custom distance and clustering functions, per your example
-    hclustfunc <- function(x) hclust(x, method="complete")
-    distfunc <- function(x) dist(x, method="euclidean")
+          # cl.row <- hclustfunc(distfunc(heatmap.data))
+          # cl.col <- hclustfunc(distfunc(t(heatmap.data)))
 
-    # perform clustering on rows and columns
-    if(dendrograms == "both"){
-      row.clustering    <- TRUE
-      col.clustering    <- TRUE
+          # nrow(heatmap.data)# work out no cols and rows
+          # ncol(heatmap.data)
 
-      cl.row <- hclustfunc(distfunc(heatmap.data))
-      cl.col <- hclustfunc(distfunc(t(heatmap.data)))
+          # gr.row <- cutree(cl.row, n.row.groups) # extract cluster assignments; i.e. k=8 (rows) k=5 (columns)
+          # gr.col <- cutree(cl.col, n.col.groups)
 
-      nrow(heatmap.data)# work out no cols and rows
-      ncol(heatmap.data)
+          # col1 <- group.palette(n.row.groups)
+          # col2 <- group.palette(n.col.groups)
+        }
 
-      gr.row <- cutree(cl.row, n.row.groups) # extract cluster assignments; i.e. k=8 (rows) k=5 (columns)
-      gr.col <- cutree(cl.col, n.col.groups)
+        if(dendrograms == "column"){
+          row.clustering    <- FALSE
+          col.clustering    <- TRUE
 
-      col1 <- group.palette(n.row.groups)
-      col2 <- group.palette(n.col.groups)
-    }
+          # cl.row <- hclustfunc(distfunc(heatmap.data))
+          # cl.col <- hclustfunc(distfunc(t(heatmap.data)))
 
-    if(dendrograms == "column"){
-      row.clustering    <- FALSE
-      col.clustering    <- TRUE
+          # nrow(heatmap.data)# work out no cols and rows
+          # ncol(heatmap.data)
 
-      cl.row <- hclustfunc(distfunc(heatmap.data))
-      cl.col <- hclustfunc(distfunc(t(heatmap.data)))
+          # gr.row <- cutree(cl.row, n.row.groups) # extract cluster assignments; i.e. k=8 (rows) k=5 (columns)
+          # gr.col <- cutree(cl.col, n.col.groups)
 
-      nrow(heatmap.data)# work out no cols and rows
-      ncol(heatmap.data)
+          # col1 <- white.palette(n.row.groups)
+          # col2 <- group.palette(n.col.groups)
+        }
 
-      gr.row <- cutree(cl.row, n.row.groups) # extract cluster assignments; i.e. k=8 (rows) k=5 (columns)
-      gr.col <- cutree(cl.col, n.col.groups)
+        if(dendrograms == "row"){
+          row.clustering    <- TRUE
+          col.clustering    <- FALSE
 
-      col1 <- white.palette(n.row.groups)
-      col2 <- group.palette(n.col.groups)
-    }
+          # cl.row <- hclustfunc(distfunc(heatmap.data))
+          # cl.col <- hclustfunc(distfunc(t(heatmap.data)))
 
-    if(dendrograms == "row"){
-      row.clustering    <- TRUE
-      col.clustering    <- FALSE
+          # nrow(heatmap.data)# work out no cols and rows
+          # ncol(heatmap.data)
 
-      cl.row <- hclustfunc(distfunc(heatmap.data))
-      cl.col <- hclustfunc(distfunc(t(heatmap.data)))
+          # gr.row <- cutree(cl.row, n.row.groups) # extract cluster assignments; i.e. k=8 (rows) k=5 (columns)
+          # gr.col <- cutree(cl.col, n.col.groups)
 
-      nrow(heatmap.data)# work out no cols and rows
-      ncol(heatmap.data)
+          # col1 <- group.palette(n.row.groups)
+          # col2 <- white.palette(n.col.groups)
+        }
+      }
 
-      gr.row <- cutree(cl.row, n.row.groups) # extract cluster assignments; i.e. k=8 (rows) k=5 (columns)
-      gr.col <- cutree(cl.col, n.col.groups)
+  ### Set up fold-change or normal preferences
 
-      col1 <- group.palette(n.row.groups)
-      col2 <- white.palette(n.col.groups)
-    }
-  }
+      if(is.fold == TRUE){
+        map.colour <- fold.palette(31)
+        sym.key <- FALSE # TRUE need if NOT creating own breaks
+        sym.breaks <- TRUE
+        my.breaks <- seq(fold.min.range, fold.max.range, length.out = 32)
+      }
 
-  ### 2.6 - Set up fold-change or normal preferences
+      if(is.fold == FALSE){
+        map.colour <- colour.palette
+        sym.key <- FALSE
+        sym.breaks <- FALSE
+        heatmap.data
 
-  if(is.fold == TRUE){
-    map.colour <- fold.palette(31)
-    sym.key <- FALSE # TRUE need if NOT creating own breaks
-    sym.breaks <- TRUE
-    my.breaks <- seq(fold.min.range, fold.max.range, length.out = 32)
-  }
+        my.max <- function(x) ifelse( !all(is.na(x)), max(x, na.rm=T), NA)
+        my.min <- function(x) ifelse( !all(is.na(x)), min(x, na.rm=T), NA)
 
-  if(is.fold == FALSE){
-    map.colour <- colour.palette
-    sym.key <- FALSE
-    sym.breaks <- FALSE
-    my.breaks <- seq(min(heatmap.data), max(heatmap.data), length.out = 32)
-  }
+        my.breaks <- seq(my.min(heatmap.data), my.max(heatmap.data), length.out = 32)
+      }
 
-  scale.set <- "none" # Can be: "none", "both", "row", "column"
+      scale.set <- "none" # Can be: "none", "both", "row", "column"
 
-  #if(is.fold == TRUE){a <- "(fold-change)"}
-  #if(is.fold == FALSE){a <- ""}
+      #if(is.fold == TRUE){a <- "(fold-change)"}
+      #if(is.fold == FALSE){a <- ""}
 
-  #title.text <- paste0(plot.title, a, ".pdf")
-  title.text <- plot.title
+      #title.text <- paste0(plot.title, a, ".pdf")
+      title.text <- plot.title
 
-  ### 2.7 - Plot heatmap and dendrograms
+  ### Plot heatmap and dendrograms
 
-  pheatmap(mat = as.matrix(heatmap.data),
-           main = title.text,
+      pheatmap(mat = as.matrix(heatmap.data),
+               main = title.text,
 
-           cellwidth = cell.size,
-           cellheight = cell.size,
+               cellwidth = cell.size,
+               cellheight = cell.size,
 
-           cluster_rows = row.clustering,
-           cluster_cols = col.clustering,
-           #scale = "column",
+               cluster_rows = row.clustering,
+               cluster_cols = col.clustering,
+               #scale = "column",
 
-           breaks = my.breaks,
-           gaps_row = row.sep,
-           gaps_col = col.sep,
+               breaks = my.breaks,
+               gaps_row = row.sep,
+               gaps_col = col.sep,
 
-           annotation_row = annot,
+               annotation_row = annot,
 
-           color = map.colour,
-           filename = file.name)
+               color = map.colour,
+               filename = file.name)
 
-
-  print("A pheatmap has been saved to your working directory")
+      print("A pheatmap has been saved to your working directory")
 
 }
 

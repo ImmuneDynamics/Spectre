@@ -1,4 +1,18 @@
-#' labelled.factor.plot - ...
+#' labelled.factor.plot - Create a factor plot
+#'
+#' @usage labelled.factor.plot(x, ...)
+#'
+#' @param d data.frame. Input sample. No default.
+#' @param a.axis Character. Column for X axis. No default.
+#' @param y.axis Character. Column for Y axis. No default.
+#' @param col.axis Character. Column for colour. No default.
+#' @param title Character. Title for the plot. No default.
+#' @param dot.size Numeric. Size of the dots. Defaults to 1.
+#' @param align.xy.by data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.
+#' @param align.col.by data.frame. Sample to use to determine minimum and maximum colour values. No default.
+#'
+#' This function allows you to plot cells on an XY plot, coloured by some factor (group, cluster, etc) with labels included.
+#' factor.plot is a wrapper around the heatmap.2 function from gplots.
 #'
 #' @export
 

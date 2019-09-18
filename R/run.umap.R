@@ -1,5 +1,13 @@
 #' run.umap - ...
 #'
+#' @usage run.umap(x, ...)
+#'
+#' @param x data.frame. No default.
+#' @param use.cols Vector of numbers, reflecting the columns to use for clustering. No default.
+#' @param umap.seed Numeric. Seed value for reproducibility. No default.
+#'
+#'This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.
+#'
 #' @export
 
 run.umap <- function(x,

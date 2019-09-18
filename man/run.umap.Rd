@@ -4,7 +4,16 @@
 \alias{run.umap}
 \title{run.umap - ...}
 \usage{
-run.umap(x, use.cols = c(1:4), umap.seed = 42)
+run.umap(x, ...)
+}
+\arguments{
+\item{x}{data.frame. No default.}
+
+\item{use.cols}{Vector of numbers, reflecting the columns to use for clustering. No default.}
+
+\item{umap.seed}{Numeric. Seed value for reproducibility. No default.
+
+This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.}
 }
 \description{
 run.umap - ...

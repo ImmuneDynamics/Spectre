@@ -5,8 +5,8 @@
 #' @param d data.frame. Input sample. No default.
 #' @param x.axis Character. Column for X axis. No default.
 #' @param y.axis Character. Column for Y axis. No default.
-#' @param title Character. Title for the plot. No default.
 #' @param col.axis Character. Column for colour. No default.
+#' @param title Character. Title for the plot. No default.
 #' @param col.min.threshold Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.995.
 #' @param col.max.threshold Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.01.
 #' @param colours Character. Colour scheme to use. Can be "spectral" or "jet". Defaults to "spectral"

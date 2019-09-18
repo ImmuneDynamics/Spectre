@@ -6,6 +6,19 @@
 \usage{
 write.files(x, ...)
 }
+\arguments{
+\item{x}{Dataframe. No default.}
+
+\item{file.prefix}{Character prefix to add before filename.}
+
+\item{divide.by}{Character. Do you want to write the whole dataset (use NULL) or split it by sample/group/cluster etc (etner the name of the column to divide by, e.g. "SampleName"). Default NULL. .}
+
+\item{write.csv}{Logical. TRUE to write CSV files, FALSE to not. Defaults to TRUE.}
+
+\item{write.fcs}{Logical. TRUE to write FCS files, FALSE to not. Defaults to FALSE
+
+This function writes CSV files from your data using fwrite. Can also write FCS files.}
+}
 \description{
 write.files - Write .csv or .fcs files
 }

@@ -1,5 +1,17 @@
 #' run.flowsom - ...
 #'
+#' @usage run.flowsom(x, ...)
+#'
+#' @param x data.frame. Input sample. No default.
+#' @param meta.k Numeric. Number of clusters to create. No default.
+#' @param clustering.cols Vector of column names to use for clustering. No default.
+#' @param clust.seed Numeric. Clustering seed for reproducibility. No default.
+#' @param meta.seed Numeric. Metaclustering seed for reproducibility. No default.
+#' @param clust.name Character. Name of the resulting 'cluster' parameter. Defaults to "FlowSOM_cluster".
+#' @param meta.clust.name Character. Name of the resulting 'metacluster' parameter. Defaults to "FlowSOM_metacluster".
+#'
+#' This function runs FlowSOM on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns
+#'
 #' @export
 
 run.flowsom <- function(x,
@@ -7,8 +19,8 @@ run.flowsom <- function(x,
                         clustering.cols, # names of columns to cluster
                         clust.seed,
                         meta.seed,
-                        clust.name,
-                        meta.clust.name){
+                        clust.name = "FlowSOM_cluster",
+                        meta.clust.name = "FlowSOM_metacluster"){
 
   #### TEST VALUES
       #x <- cell.dat

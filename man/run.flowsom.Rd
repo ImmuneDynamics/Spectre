@@ -4,8 +4,24 @@
 \alias{run.flowsom}
 \title{run.flowsom - ...}
 \usage{
-run.flowsom(x, meta.k, clustering.cols, clust.seed, meta.seed, clust.name,
-  meta.clust.name)
+run.flowsom(x, ...)
+}
+\arguments{
+\item{x}{data.frame. Input sample. No default.}
+
+\item{meta.k}{Numeric. Number of clusters to create. No default.}
+
+\item{clustering.cols}{Vector of column names to use for clustering. No default.}
+
+\item{clust.seed}{Numeric. Clustering seed for reproducibility. No default.}
+
+\item{meta.seed}{Numeric. Metaclustering seed for reproducibility. No default.}
+
+\item{clust.name}{Character. Name of the resulting 'cluster' parameter. Defaults to "FlowSOM_cluster".}
+
+\item{meta.clust.name}{Character. Name of the resulting 'metacluster' parameter. Defaults to "FlowSOM_metacluster".
+
+This function runs FlowSOM on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns}
 }
 \description{
 run.flowsom - ...
