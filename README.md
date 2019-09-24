@@ -19,7 +19,7 @@ if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
 library("Spectre")
 ```
 
-Alteranatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
+Alternatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
 
 ### Protocols and vignettes
 Protocols, usage instructions, and vignettes are available from https://wiki.centenary.org.au/display/SPECTRE.
