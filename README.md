@@ -1,6 +1,11 @@
 # Spectre
 A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
 
+<p align="right">
+  <img src="https://wiki.centenary.org.au/download/attachments/146080606/Screen%20Shot%202019-10-24%20at%202.15.21%20pm.png?version=1&modificationDate=1571915313607&api=v2" width="350" title="hover text">
+  <img src="https://wiki.centenary.org.au/download/attachments/146080606/Screen%20Shot%202019-10-24%20at%202.15.21%20pm.png?version=1&modificationDate=1571915313607&api=v2" width="350" alt="accessibility text">
+</p>
+
 ![alt text](https://wiki.centenary.org.au/download/attachments/146080606/Screen%20Shot%202019-10-24%20at%202.15.21%20pm.png?version=1&modificationDate=1571915313607&api=v2)
 
 ### About
