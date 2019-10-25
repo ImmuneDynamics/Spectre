@@ -1,6 +1,8 @@
 # Spectre
 A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
 
+![alt text](https://wiki.centenary.org.au/download/attachments/146080606/Screen%20Shot%202019-10-24%20at%202.15.21%20pm.png?version=1&modificationDate=1571915313607&api=v2)
+
 ### About
 The Spectre package is designed to allow for data analaysis workflows that simplify and streamline data manipulation and annotation, population identification (clustering, classificaiton), and dimensionality reduction (tSNE, UMAP) etc in high-dimensional cytometry data. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists.
 
