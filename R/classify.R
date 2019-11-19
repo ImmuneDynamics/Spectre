@@ -19,22 +19,22 @@
 #'
 #' @export
 
+# MY OWN NOTE:
+# Let's start with KNN for now.
+# We need a dataframe for training data (we will split it into 10 fold stratified cross validation)
+# Need the dataframe to classify.
+
 classify <- function(x,
                      type,
                      num.neighbours = 1,
                      training,
                      training.label,
                      new.label){
+}
 
-  ##
-
-    #Add blank labels column to target dataset
-
-
-  ##
-
-  ##
-
-
+# MY OWN NOTE:
+# Need method to just train and validate classifier
+train.classifier <- function(training.data, training.label, num.neighbours) {
+  
 }
 
