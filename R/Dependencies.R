@@ -7,11 +7,11 @@
     if(!require('rstudioapi')) {install.packages('rstudioapi')}
     #if(!require('rtsne')) {install.packages('rtsne')}
 
-    install.packages('rtsne')
+    install.packages('Rtsne')
 
     ### Load packages
     library('plyr')
     library('data.table')
     library('tidyr')
     library('rstudioapi')
-    library('rtsne')
+    library('Rtsne')
