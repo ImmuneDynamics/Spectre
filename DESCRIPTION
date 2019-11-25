@@ -12,7 +12,9 @@ LazyData: true
 Imports:
     dplyr,
     data.table,
-    devtools
+    devtools,
+    Rtsne
 Suggests:
     rstudioapi
+Remotes: github::jkrijthe/Rtsne
 RoxygenNote: 6.1.1.9000
