@@ -163,11 +163,6 @@
 
             ### --> can use rbindlist from data.table instead of the plyr option
 
-x <- as.data.table(cell.dat)
-
-x[Group == "Mock"]
-x[Group, Mock]
-
         str(cell.dat)
         head(cell.dat)
         dim(cell.dat)
