@@ -40,6 +40,11 @@
 
         ## Clustering and dimensionality reduction
         if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+          # 1.15.1 of FlowSOM (Github?) doesn't work
+          # 1.12.0 of FlowSOM (BioConductor) does
+          # 1.14.1 of FlowSOM (BioConcductor) ... doesn't work
+
+
         if(!require('Rtsne')) {install.packages("Rtsne")} # for running tSNE
         if(!require('umap')) {install.packages('umap')}
 
@@ -50,9 +55,6 @@
         if(!require("scales")){install.packages("scales")} # for re-scaling if necessary
         if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
         if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
-
-
-
 
     ### 1.3. Load packages from library
         library('plyr')
