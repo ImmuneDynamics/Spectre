@@ -40,11 +40,6 @@
 
         ## Clustering and dimensionality reduction
         if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
-          # 1.15.1 of FlowSOM (Github?) doesn't work
-          # 1.12.0 of FlowSOM (BioConductor) does
-          # 1.14.1 of FlowSOM (BioConcductor) ... doesn't work
-
-
         if(!require('Rtsne')) {install.packages("Rtsne")} # for running tSNE
         if(!require('umap')) {install.packages('umap')}
 
