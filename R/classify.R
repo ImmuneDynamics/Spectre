@@ -1,28 +1,18 @@
-#' classify
+#' train.classifier - ...
 #'
-#' @usage classify(x, ...)
+#' @usage train.classifier(x, ...)
 #'
-#' @param x NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) that is the data to be classified.
-#' @param type DEFAULTS to KNN. Specify the type of classifier to be used. Can be KNN (k-nearest neighbour).
+#' @param data NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) that is the data to be classified.
+#' @param classifier.col NO DEFAULT to KNN. Name of the column in the training data to be used as the training labels
+#' @param label.col NO DEFAULT. Name of the new column that contains classification labels.
 #' @param num.neighbours DEFAULTS to 1. When using a k-nearest neighbour classifier, then this parameter specifies the number of nearest neighbours.
 #' @param training NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) that is the data to be use as training.
-#' @param training.label NO DEFAULT. Name of the column in the training data to be used as the training labels
-#' @param new.label NO DEFAULT. Name of the new column that contains classification labels.
+#' 
+#' Train a classifier and return the accuracy of the classifier.
 #'
-#' @return ...
-#'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#'
-#' @references \url{https://sydneycytometry.org.au/spectre}.
-#'
-#' @examples classify()
+#' @return The accuracy of the classifier
 #'
 #' @export
-
-# MY OWN NOTE:
-# Let's start with KNN for now.
-# We need a dataframe for training data (we will split it into 10 fold stratified cross validation)
-# Need the dataframe to classify.
 
 train.classifier <- function(data, 
                      classifier.col,
@@ -55,6 +45,20 @@ train.classifier <- function(data,
   return(accuracy(tab))
 }
 
+#' run.classifier - ...
+#'
+#' @usage run.classifier(x, ...)
+#'
+#' @param training.data NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) that is the data to be used to train classifer.
+#' @param training.label NO DEFAULT to KNN. Name of the column in the training data to be used as the training labels.
+#' @param unlabelled.data NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) that is the data classified.
+#' @param num.neighbours DEFAULTS to 1. When using a k-nearest neighbour classifier, then this parameter specifies the number of nearest neighbours.
+#' 
+#' Train and run the classifier.
+#'
+#' @return The predicted label for the unlabelled data.
+#'
+#' @export
 run.classifier <- function(training.data, 
                            training.label,
                            unlabelled.data,
