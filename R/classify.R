@@ -24,7 +24,7 @@
 # We need a dataframe for training data (we will split it into 10 fold stratified cross validation)
 # Need the dataframe to classify.
 
-classify <- function(data, 
+train.classifier <- function(data, 
                      classifier.col,
                      label.col,
                      num.neighbours = 1){
@@ -52,7 +52,27 @@ classify <- function(data,
   
   accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
   
-  print(accuracy(tab))
+  return(accuracy(tab))
+}
+
+run.classifier <- function(training.data, 
+                           training.label,
+                           unlabelled.data,
+                           num.neighbours = 1){
+  
+  # min max normalisation function
+  nor <-function(x) { (x -min(x))/(max(x)-min(x))   }
+  
+  # normalised training and unlabelled data together
+  all.data <- rbind(training.data, unlabelled.data)
+  all.data.norm <- as.data.frame(lapply(all.data, nor))
+  
+  train.data.norm <- all.data.norm[c(1:nrow(training.data)),]
+  start.test.data <- nrow(training.data) + 1
+  
+  test.data.norm <- all.data.norm[c(start.test.data:nrow(all.data.norm)),]
+  
+  pr <- knn(train.data.norm, test.data.norm, cl=training.label,k=num.neighbours)
   
   return(pr)
 }
