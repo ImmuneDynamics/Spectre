@@ -14,6 +14,80 @@
 #'
 #' @export
 
+run.flowsom <- function(data,
+                        xdim = 10,
+                        ydim = 10,
+                        meta.clust = 20,
+                        
+                        clust.seed = 42,
+                        meta.seed = 42,
+                        
+                        clustering.cols,
+                        clust.name = "FlowSOM_cluster",
+                        meta.clust.name = "FlowSOM_metacluster"){
+  
+  ## Test data
+  
+      as.matrix(names(demo.start))
+  
+      data <- demo.start
+      xdim <- 10
+      ydim <- 10
+      meta.clust <- 20
+      clust.seed <- 42
+      meta.seed <- 42
+      clustering.cols <- c(5,6,8,13,17,18,29,21,23,26)
+      clust.name <- "FlowSOM_cluster",
+      meta.clust.name <- "FlowSOM_metacluster")
+  
+  ## Data conversion from dataframe or datatable into flowFrame
+      metadata <- data.frame(name=dimnames(x)[[2]], desc=paste('column',dimnames(x)[[2]],'from dataset'))
+      x.ff <- new("flowFrame",
+                  exprs=as.matrix(x), # in order to create a flow frame, data needs to be read as matrix
+                  parameters=AnnotatedDataFrame(metadata))
+      
+      head(exprs(x.ff))
+      x_FlowSOM <- x.ff
+  
+  ## Run FlowSOM
+      fSOM <- FlowSOM(fileName,
+                      ## Input options:
+                      #compensate = TRUE, 
+                      #transform = TRUE, 
+                      #toTransform=c(8:18),
+                      #scale = TRUE,
+                      ## SOM options:
+                      colsToUse = c(9,12,14:18),# can be column numbers or characters
+                      xdim = 7, # 
+                      ydim = 7,
+                      # Metaclustering options:
+                      nClus = 10)
+  
+  
+  
+  ## Save output
+  
+  
+}                        
+                        
+                        
+                        
+                        
+                        
+                        meta.k,
+                        clustering.cols, # names of columns to cluster
+                        clust.seed,
+                        meta.seed,
+                        clust.name = "FlowSOM_cluster",
+                        meta.clust.name = "FlowSOM_metacluster"){
+  
+  
+
+
+
+
+
+
 run.flowsom <- function(x,
                         meta.k,
                         clustering.cols, # names of columns to cluster
@@ -133,7 +207,3 @@ run.flowsom <- function(x,
   assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
 
 }
-
-
-
-
