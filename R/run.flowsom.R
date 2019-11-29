@@ -3,44 +3,48 @@
 #' @usage run.flowsom(x, ...)
 #'
 #' @param x data.frame. Input sample. No default.
-#' @param meta.k Numeric. Number of clusters to create. No default.
-#' @param clustering.cols Vector of column names to use for clustering. No default.
-#' @param clust.seed Numeric. Clustering seed for reproducibility. No default.
-#' @param meta.seed Numeric. Metaclustering seed for reproducibility. No default.
-#' @param clust.name Character. Name of the resulting 'cluster' parameter. Defaults to "FlowSOM_cluster".
-#' @param meta.clust.name Character. Name of the resulting 'metacluster' parameter. Defaults to "FlowSOM_metacluster".
+#' @param clustering.cols Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended, as No default.
+#' @param meta.k Numeric. Number of clusters to create. DEFAULT = 20.
+#' @param xdim Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.
+#' @param ydim Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.
+#' @param clust.seed Numeric. Clustering seed for reproducibility. DEFAULT = 42
+#' @param meta.seed Numeric. Metaclustering seed for reproducibility. DEFAULT = 42.
+#' @param clust.name Character. Name of the resulting 'cluster' parameter. DEFAULT = "FlowSOM_cluster".
+#' @param meta.clust.name Character. Name of the resulting 'metacluster' parameter. DEFAULT = "FlowSOM_metacluster".
 #'
 #' This function runs FlowSOM on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns
 #'
 #' @export
 
 run.flowsom <- function(x,
-                        xdim,
-                        ydim,
-                        meta.k,
                         clustering.cols, # names of columns to cluster
-                        clust.seed,
-                        meta.seed,
+                        meta.k = 20,
+                        xdim = 10,
+                        ydim = 10,
+                        clust.seed = 42,
+                        meta.seed = 42,
                         clust.name = "FlowSOM_cluster",
                         meta.clust.name = "FlowSOM_metacluster"){
 
   #### TEST VALUES
-      x <- demo.start
-      xdim <- 15
-      ydim <- 15
-      meta.k <- 40
-      
-          ## 
-            ColumnNames <- as.matrix(unname(colnames(x))) # assign reporter and marker names (column names) to 'ColumnNames'
-            ColumnNames
-            ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
-            ClusteringCols <- ColumnNames[ClusteringColNos] 
-      
-      clustering.cols <- ClusteringCols
-      clust.seed <- 42
-      meta.seed <- 42
-      clust.name <- "FlowSOM_cluster"
-      meta.clust.name <- "FlowSOM_metacluster"
+      # x <- demo.start
+      #
+      # ##
+      # ColumnNames <- as.matrix(unname(colnames(x))) # assign reporter and marker names (column names) to 'ColumnNames'
+      # ColumnNames
+      # ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
+      # ClusteringCols <- ColumnNames[ClusteringColNos]
+      #
+      # clustering.cols <- ClusteringCols
+      #
+      # xdim <- 10
+      # ydim <- 10
+      # meta.k <- 40
+      #
+      # clust.seed <- 42
+      # meta.seed <- 42
+      # clust.name <- "FlowSOM_cluster"
+      # meta.clust.name <- "FlowSOM_metacluster"
 
   ##
       #head(x)
@@ -48,10 +52,10 @@ run.flowsom <- function(x,
 
   ## Remove non-numeric
       head(x)
-      nums <- unlist(lapply(x, is.numeric))  
+      nums <- unlist(lapply(x, is.numeric))
       x <- x[ , nums]
       x[clustering.cols]
-      
+
   ## Create FCS file metadata - column names with descriptions
   metadata <- data.frame(name=dimnames(x)[[2]], desc=paste('column',dimnames(x)[[2]],'from dataset'))
 
@@ -79,12 +83,12 @@ run.flowsom <- function(x,
 
   ## run FlowSOM (initial steps prior to meta-clustering)
   FlowSOM_out <- FlowSOM::ReadInput(x_FlowSOM, transform = FALSE, scale = FALSE)
-  
-  FlowSOM_out <- FlowSOM::BuildSOM(FlowSOM_out, 
-                                   colsToUse = FlowSOM_cols)#, 
-                                   #xdim = xdim,
-                                   #ydim = ydim)
-  
+
+  FlowSOM_out <- FlowSOM::BuildSOM(FlowSOM_out,
+                                   colsToUse = FlowSOM_cols,
+                                   xdim = xdim,
+                                   ydim = ydim)
+
   FlowSOM_out <- FlowSOM::BuildMST(FlowSOM_out)
 
   ### some warnings will be returned because of the 'SampleName' and 'GroupName' entries

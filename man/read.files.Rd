@@ -4,8 +4,7 @@
 \alias{read.files}
 \title{read.files - Function to read data from CSV or FCS files into a list}
 \usage{
-read.files(file.loc = getwd(), file.type = ".csv",
-  do.embed.file.names = TRUE)
+read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
 }
 \arguments{
 \item{file.loc}{What is the location of your files? Defaults to current working directory (getwd()).}
