@@ -24,17 +24,36 @@
 # We need a dataframe for training data (we will split it into 10 fold stratified cross validation)
 # Need the dataframe to classify.
 
-classify <- function(x,
-                     type,
-                     num.neighbours = 1,
-                     training,
-                     training.label,
-                     new.label){
-}
-
-# MY OWN NOTE:
-# Need method to just train and validate classifier
-train.classifier <- function(training.data, training.label, num.neighbours) {
+classify <- function(data, 
+                     classifier.col,
+                     label.col,
+                     num.neighbours = 1){
   
+  # split data into training and testing. TODO: convet to 10 fold cross validation
+  ran <- sample(1:nrow(data), 0.9 * nrow(data)) 
+  
+  train.data <- data[ran, classifier.col]
+  train.label <- data[ran, label.col]
+  
+  test.data <- data[-ran, classifier.col]
+  test.label <- data[-ran, label.col]
+  
+  # min max normalisation function
+  nor <-function(x) { (x -min(x))/(max(x)-min(x))   }
+  
+  train.data.norm <- as.data.frame(lapply(train.data[,], nor))
+  test.data.norm <- as.data.frame(lapply(test.data[,], nor))
+  
+  pr <- knn(train.data.norm, test.data.norm, cl=train.label,k=num.neighbours)
+  
+  tab <- table(pr,test.label)
+  
+  ##this function divides the correct predictions by total number of predictions that tell us how accurate teh model is.
+  
+  accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
+  
+  print(accuracy(tab))
+  
+  return(pr)
 }
 
