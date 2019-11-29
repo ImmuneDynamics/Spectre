@@ -9,17 +9,21 @@ run.flowsom(x, ...)
 \arguments{
 \item{x}{data.frame. Input sample. No default.}
 
-\item{meta.k}{Numeric. Number of clusters to create. No default.}
+\item{clustering.cols}{Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended, as No default.}
 
-\item{clustering.cols}{Vector of column names to use for clustering. No default.}
+\item{meta.k}{Numeric. Number of clusters to create. DEFAULT = 20.}
 
-\item{clust.seed}{Numeric. Clustering seed for reproducibility. No default.}
+\item{xdim}{Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.}
 
-\item{meta.seed}{Numeric. Metaclustering seed for reproducibility. No default.}
+\item{ydim}{Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.}
 
-\item{clust.name}{Character. Name of the resulting 'cluster' parameter. Defaults to "FlowSOM_cluster".}
+\item{clust.seed}{Numeric. Clustering seed for reproducibility. DEFAULT = 42}
 
-\item{meta.clust.name}{Character. Name of the resulting 'metacluster' parameter. Defaults to "FlowSOM_metacluster".
+\item{meta.seed}{Numeric. Metaclustering seed for reproducibility. DEFAULT = 42.}
+
+\item{clust.name}{Character. Name of the resulting 'cluster' parameter. DEFAULT = "FlowSOM_cluster".}
+
+\item{meta.clust.name}{Character. Name of the resulting 'metacluster' parameter. DEFAULT = "FlowSOM_metacluster".
 
 This function runs FlowSOM on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns}
 }

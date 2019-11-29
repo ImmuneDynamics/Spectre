@@ -16,6 +16,25 @@ Subsequently, use the 'install_github' function to install and load the Spectre 
 
 ```
 if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+```
+
+You will see the following returned:
+```
+Downloading GitHub repo sydneycytometry/spectre@master
+These packages have more recent versions available.
+Which would you like to update?
+
+ 1: All                                 
+ 2: CRAN packages only                  
+ 3: None                                
+ 4: data.table (1.12.0 -> 1.12.2) [CRAN]
+ ... etc
+ ```
+ 
+We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages.
+
+If the package is sucessfully installed, you can load the library using:
+```
 library("Spectre")
 ```
 
