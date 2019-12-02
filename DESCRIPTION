@@ -10,15 +10,19 @@ License: MIT Licence
 Encoding: UTF-8
 LazyData: true
 Imports:
+    devtools,
     dplyr,
     data.table,
     tidyr,
-    devtools
+    rstudioapi,
     Rtsne,
     umap,
     ggplot2,
     ggthemes,
     scales
+    
 Suggests:
-    rstudioapi
+    colorRamps,
+    RColorBrewer
+
 RoxygenNote: 7.0.0
