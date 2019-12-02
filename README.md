@@ -10,7 +10,7 @@ Core developers of the Spectre package are Thomas Ashhurst, Felix Marsh-Wakefiel
 ### Protocols and vignettes
 Basic usage instructions, and vignettes are available from https://wiki.centenary.org.au/display/SPECTRE. More comprehensive protocols can be found by signing up to the Sydney Cytometry 'extranet': https://sydneycytometry.org.au/wiki-launch.
 
-### How to use
+### Installing Spectre
 In R, install and load the 'devtools' library.
 
 ```     
@@ -45,6 +45,8 @@ library("Spectre")
 ```
 
 Alternatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
+
+Once installed, usage instructions and vignettes can be found here: https://wiki.centenary.org.au/display/SPECTRE
 
 ### Acknowledgements
 The Spectre package was constructed on the basis of the CAPX workflow in R (https://sydneycytometry.org.au/capx). Along with the various R packages used within Spectre, we would like to acknowledge the Seurat and cytofkit R packages from providing inspiration for elements of the package design.
