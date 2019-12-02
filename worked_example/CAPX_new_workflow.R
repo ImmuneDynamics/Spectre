@@ -4,7 +4,7 @@
 ##########################################################################################################
 
     # Thomas Myles Ashhurst, Felix Marsh-Wakefield
-    # 2019-08-02
+    # 2019-12-02
     # Workflow: https://sydneycytometry.org.au/capx
     # Spectre R package: https://sydneycytometry.org.au/spectre
 
@@ -18,8 +18,6 @@
 
         if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
         library("Spectre")
-
-        # We recommend not to update packages that are dependencies of Spectre
 
     ### 1.2. Install packages
 
@@ -95,18 +93,6 @@
 #### 2. Read and prepare data
 ##########################################################################################################
 
-    ### Create some metadata
-        meta.dat <- list()
-
-        list.files(PrimaryDirectory, ".txt")
-
-        meta.dat[["expDetails"]] <- read.delim(file = "experiment.details.txt")
-        meta.dat[["sampleDetails"]] <- read.delim(file = "sample.details.txt")
-
-        # ## Warning message:
-        # In read.table(file = file, header = header, sep = sep, quote = quote,  :
-        #                 incomplete final line found by readTableHeader on 'experiment.details.txt'
-
     ### Read SAMPLES (data) into workspace and review
 
         ## List of CSV files in PrimaryDirectory ## ADD A PRE-PROCESSING SCRIPT BEFORE THIS ONE -- FILE MERGE etc             ## HERE WE WANT ONE FILE PER SAMPLE
@@ -128,13 +114,8 @@
         ## Save starting data
         data.start <- data.list
 
-    ### Read in sample METADATA (NOT REQUIRED FOR REST OF CAPX SCRIPT)
-
-        ## Specify the column that contains filenames, and which columns of 'sample.table' you want to embed
-        meta.dat$sampleDetails
-
-        # to.embed <- meta.dat$sampleDetails[c(1:4)] ## INCLUDING FILENAME
-        # file.col <- "Filename"
+    ### Read sample metadata and embed in sample data
+        meta.dat <- read.delim(file = "sample.details.txt")
 
         Spectre::embed.columns(x = data.list,
                                type = "list",
@@ -268,8 +249,8 @@
                            seed = 42)
 
         cell.dat.sub <- subsample.res
-
         nrow(cell.dat.sub)
+
         rm(subsample.res)
 
     ### Run UMAP
@@ -280,24 +261,15 @@
         cell.dat.sub <- cbind(cell.dat.sub, umap.res) # Merge UMAP results with data
         plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
 
-    ### Run tSNE
-        # Spectre::run.tsne(x = cell.dat.sub)
-
-    ### Run Monocle
-        # Spectre::run.monocle(x = cell.dat.sub)
-
-
     ### Review results
-
-        p1 <- Spectre::colour.plot(d = cell.dat.sub,
-                                   x.axis = "UMAP_42_X",
-                                   y.axis = "UMAP_42_Y",
-                                   col.axis = "BV605.Ly6C",
-                                   title = paste0("All samples", " - ", "BV605.Ly6C"),
-                                   align.xy.by = cell.dat.sub,
-                                   align.col.by = cell.dat.sub
-                                   )
-        p1
+        Spectre::colour.plot(d = cell.dat.sub,
+                             x.axis = "UMAP_42_X",
+                             y.axis = "UMAP_42_Y",
+                             col.axis = "BV605.Ly6C",
+                             title = paste0("All samples", " - ", "BV605.Ly6C"),
+                             align.xy.by = cell.dat.sub,
+                             align.col.by = cell.dat.sub
+                             )
 
 
 ##########################################################################################################
