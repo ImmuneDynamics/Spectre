@@ -12,7 +12,13 @@ LazyData: true
 Imports:
     dplyr,
     data.table,
+    tidyr,
     devtools
+    Rtsne,
+    umap,
+    ggplot2,
+    ggthemes,
+    scales
 Suggests:
     rstudioapi
 RoxygenNote: 7.0.0
