@@ -1,4 +1,4 @@
-# Spectre
+# Spectre (v0.2.0)
 A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
 
 ### About
