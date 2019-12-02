@@ -3,7 +3,7 @@
 #### Part 1 - Clustering, dimensionality reduction, save files
 ##########################################################################################################
 
-    # Thomas Myles Ashhurst, Felix Marsh-Wakefield
+    # Thomas Myles Ashhurst, Felix Marsh-Wakefield, Givanna Putri
     # 2019-12-02
     # Workflow: https://sydneycytometry.org.au/capx
     # Spectre R package: https://sydneycytometry.org.au/spectre
@@ -19,13 +19,7 @@
         if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
         library("Spectre")
 
-    ### 1.2. Install packages
-
-        ## Basic data manipulation
-        if(!require('plyr')) {install.packages('plyr')}
-        if(!require('data.table')) {install.packages('data.table')}
-        if(!require('tidyr')) {install.packages('tidyr')}
-        if(!require('rstudioapi')) {install.packages('rstudioapi')}
+    ### 1.2. Install other packages
 
         ## Required to download packages from Bioconductor
         if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -38,14 +32,9 @@
 
         ## Clustering and dimensionality reduction
         if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
-        if(!require('Rtsne')) {install.packages("Rtsne")} # for running tSNE
-        if(!require('umap')) {install.packages('umap')}
 
         ## Plotting and graphing
-        if(!require("ggplot2")){install.packages("ggplot2")} # for plotting tSNE graphs
         if(!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
-        if(!require("ggthemes")){install.packages("ggthemes")} # for plot themes
-        if(!require("scales")){install.packages("scales")} # for re-scaling if necessary
         if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
         if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
 
@@ -70,7 +59,7 @@
         library('RColorBrewer')
         library("gridExtra")
 
-    ## 1.4. Set working directory
+    ### 1.4. Set working directory
 
         ## Set working directory
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
