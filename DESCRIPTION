@@ -20,9 +20,7 @@ Imports:
     ggplot2,
     ggthemes,
     scales
-    
 Suggests:
     colorRamps,
     RColorBrewer
-
 RoxygenNote: 7.0.0
