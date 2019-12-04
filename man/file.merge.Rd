@@ -7,12 +7,12 @@
 file.merge(x, ...)
 }
 \arguments{
-\item{x}{List of data frames}
+\item{x}{List of data frames or data tables}
 
 \item{remove.duplicates}{Do you want to remove duplicates?}
 }
 \value{
-A combined dataframe.
+A combined data.table
 }
 \description{
 file.merge - ...
@@ -22,7 +22,7 @@ file.merge()
 
 }
 \references{
-\url{https://sydneycytometry.org.au/spectre}. Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
+\url{https://sydneycytometry.org.au/spectre}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

@@ -16,27 +16,25 @@
         if(!require('devtools')) {install.packages('devtools')}
         library('devtools')
 
+        # Master version
         if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+
+        # Development version
+        devtools::install_github(repo = "sydneycytometry/spectre", ref = 'development')
+
         library("Spectre")
 
     ### 1.2. Install other packages
 
-        ## Required to download packages from Bioconductor
+        ## Install BiocManager to download packages from Bioconductor
         if (!requireNamespace("BiocManager", quietly = TRUE))
           install.packages("BiocManager")
 
-        ## Basic data manipulation
+        ## Download additional BioConductor packages
         if(!require('flowCore')) {BiocManager::install('flowCore')}
         if(!require('Biobase')) {BiocManager::install('Biobase')}
         if(!require('flowViz')) {BiocManager::install('flowViz')}
-
-        ## Clustering and dimensionality reduction
         if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
-
-            ## Plotting and graphing
-            if(!require("colorRamps")){install.packages("colorRamps")} # for colour scheme management
-            if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
-            if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
 
     ### 1.3. Load packages from library
         library('plyr')
@@ -70,12 +68,6 @@
         getwd()
         PrimaryDirectory <- getwd()
         PrimaryDirectory
-
-
-        # setwd("../../Spectre - workflow scripts/")
-        # getwd()
-        # PrimaryDirectory <- getwd()
-        # PrimaryDirectory
 
         ## Can set manually using these lines, if desired
             #PrimaryDirectory <- "/Users/thomasashhurst/Documents/Github/Public Github/Spectre/Other/Demo_dataset/"
@@ -265,7 +257,7 @@
                              title = paste0("All samples", " - ", "BV605.Ly6C"),
                              align.xy.by = cell.dat.sub,
                              align.col.by = cell.dat.sub,
-                             colours = "inferno"
+                             colours = "magma"
                              )
 
 
@@ -277,6 +269,8 @@
 
         setwd(OutputDirectory)
         head(cell.dat)
+
+        setwd("/Users/Tom/Desktop")
 
         ## Write 'all' data
         Spectre::write.files(x = cell.dat,

@@ -10,6 +10,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     devtools,
+    plyr,
     dplyr,
     data.table,
     tidyr,
@@ -20,6 +21,7 @@ Imports:
     ggthemes,
     scales,
     colorRamps,
-    RColorBrewer
+    RColorBrewer,
+    gridExtra
 Suggests:
 RoxygenNote: 7.0.1
