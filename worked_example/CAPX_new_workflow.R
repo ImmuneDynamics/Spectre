@@ -51,9 +51,6 @@
         if(!require("RColorBrewer")){install.packages("RColorBrewer")} # for re-scaling if necessary
         if(!require("gridExtra")){install.packages("gridExtra")} # for re-scaling if necessary
 
-
-
-
     ### 1.3. Load packages from library
         library('plyr')
         library('data.table')
@@ -165,11 +162,6 @@
         Spectre::file.merge(x = data.list)
 
             ### --> can use rbindlist from data.table instead of the plyr option
-
-x <- as.data.table(cell.dat)
-
-x[Group == "Mock"]
-x[Group, Mock]
 
         str(cell.dat)
         head(cell.dat)
