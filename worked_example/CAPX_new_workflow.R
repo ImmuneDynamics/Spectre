@@ -17,10 +17,10 @@
         library('devtools')
 
         # Master version
-        if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+          #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
 
         # Development version
-        devtools::install_github(repo = "sydneycytometry/spectre", ref = 'development')
+          devtools::install_github(repo = "sydneycytometry/spectre", ref = 'development')
 
         library("Spectre")
 
@@ -60,10 +60,10 @@
     ### 1.4. Set working directory
 
         ## Set working directory
-        dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
-        setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
+        #dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+        #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
 
-        # setwd("/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre - workflow scripts/")
+        setwd("/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre - workflow scripts/")
 
         getwd()
         PrimaryDirectory <- getwd()
@@ -133,8 +133,6 @@
         ## Merge files and review
         Spectre::file.merge(x = data.list)
 
-            ### --> can use rbindlist from data.table instead of the plyr option
-
         str(cell.dat)
         head(cell.dat)
         dim(cell.dat)
@@ -187,7 +185,7 @@
         ClusteringCols  # check that the column names that appear are the ones you want to analyse
         ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 
-    ### Check
+    ### Checks
 
         head(cell.dat)
         CellularCols
@@ -218,25 +216,39 @@
 
     ### Perform other clustering approaches if desired
 
+
+        ##### TEST EMBEDDING
+        Spectre::embed.columns(x = cell.dat,
+                               type = "data.frame",
+                               base.name = "FlowSOM_metacluster",
+                               col.name = "PopName",
+                               match.to = c(1:40),
+                               new.cols = c(rep("PMN", 20), rep("Tcell", 20)))
+
+          cell.dat <- cbind(cell.dat, embed.res)
+          cell.dat
+          rm(embed.res)
+        ####################
+
+
 ##########################################################################################################
 #### Perform downsampling and dimensionality reduction
 ##########################################################################################################
 
     ### Subsampling
-        # meta.dat
-        #
-        # as.matrix(unique(cell.dat["Sample"]))
-        #
-        # Spectre::subsample(x = cell.dat,
-        #                    method = "per.sample", # or "random
-        #                    samp.col = sample.col,
-        #                    targets = c(rep(100,12)),
-        #                    seed = 42)
-        #
-        # cell.dat.sub <- subsample.res
-        # nrow(cell.dat.sub)
-        #
-        # rm(subsample.res)
+        meta.dat
+        as.matrix(unique(cell.dat[["Sample"]]))
+
+        Spectre::subsample(x = cell.dat,
+                           method = "per.sample", # or "random
+                           samp.col = sample.col,
+                           targets = c(rep(100,12)),
+                           seed = 42)
+
+        cell.dat.sub <- subsample.res
+        nrow(cell.dat.sub)
+
+        rm(subsample.res)
 
     ### Run UMAP
 
