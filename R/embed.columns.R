@@ -123,7 +123,8 @@ embed.columns <- function(x, # the list of dataframes (samples) where each dataf
         for(i in (cols[,1])){
           x[[col.name]][x[[base.name]] == i] <- as.vector(cols[i,2])
         }
-          embed.res <- x[[col.name]]
+          embed.res <- as.data.frame(x[[col.name]])
+          names(embed.res) <- col.name
       }
 
       if(chk == TRUE){

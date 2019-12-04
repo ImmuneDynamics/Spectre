@@ -218,6 +218,7 @@
 
 
         ##### TEST EMBEDDING
+
         Spectre::embed.columns(x = cell.dat,
                                type = "data.frame",
                                base.name = "FlowSOM_metacluster",
@@ -225,9 +226,9 @@
                                match.to = c(1:40),
                                new.cols = c(rep("PMN", 20), rep("Tcell", 20)))
 
-          cell.dat <- cbind(cell.dat, embed.res)
-          cell.dat
-          rm(embed.res)
+        cell.dat <- cbind(cell.dat, embed.res)
+        cell.dat
+        rm(embed.res)
         ####################
 
 
