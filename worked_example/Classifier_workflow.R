@@ -41,8 +41,8 @@ PrimaryDirectory <- getwd()
 PrimaryDirectory
 
 ## Can set manually using these lines, if desired
-#PrimaryDirectory <- "/Users/thomasashhurst/Documents/Github/Public Github/Spectre/Other/Demo_dataset/"
-#setwd(PrimaryDirectory)
+PrimaryDirectory <- "/Users/givanna/Documents/phd/code/SpectreRunScript"
+setwd(PrimaryDirectory)
 
 ## Create output directory
 dir.create("Output_Classifier", showWarnings = FALSE)
@@ -115,6 +115,9 @@ Spectre::file.merge(x = data.list)
 ## Save as training data
 unlabelled.data <- cell.dat
 
+##########################################################################################################
+#### 3. Define data and sample variables for analysis
+##########################################################################################################
 
 ## Define key columns that might be used or dividing data (samples, groups, batches, etc)
 
@@ -138,29 +141,37 @@ ValidCellularCols  # check that the column names that appear are the ones you wa
 
 ## Define the column that identify the population a cell belong to (i.e. Neutrophils, B cells)
 ## Note this column must NOT be numeric!
-CellNameColNos <- c(39)
+CellNameColNos <- 39
 CellNameCol <- ColumnNames[CellNameColNos]
 
 CellNameCol
 
+##########################################################################################################
+#### 4. Train Classifier
+##########################################################################################################
+
 ## Split the cellular markers columns and the identity of each cell into separate dataframe and vector 
-train.data.features <- train.data[, ValidCellularCols]
+train.data.features <- subset(train.data, select = ValidCellularCols)
 # the label must be character label.
-train.data.label <- as.character(train.data[, CellNameCol])
+train.data.label <- as.character(train.data[[CellNameColNos]])
 
 # train classifier using various number of neighbours
-knn.stats <- train.classifier(train.data = train.data.features, label = train.data.label)
+knn.stats <- Spectre::train.knn.classifier(train.data = train.data.features, label = train.data.label)
 knn.stats
 
-## Now we use the classifier to predict the cell type of new data
-unlabelled.data.features <- unlabelled.data[, ValidCellularCols]
+##########################################################################################################
+#### 5. Run classifier
+##########################################################################################################
 
-predicted.label <- run.classifier(train.data = train.data.features,
+## Now we use the classifier to predict the cell type of new data
+unlabelled.data.features <- subset(unlabelled.data, select = ValidCellularCols)
+
+predicted.label <- Spectre::run.knn.classifier(train.data = train.data.features,
                train.label = train.data.label,
                unlabelled.data = unlabelled.data.features,
                num.neighbours = 1)
 
-unlabelled.data['Population'] <- predicted.label
+unlabelled.data <- cbind(unlabelled.data, Population=predicted.label)
 
 # Save data
 setwd(OutputDirectory)
