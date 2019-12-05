@@ -1,0 +1,10 @@
+<input>
+    <file>
+        <timepoint>0</timepoint>
+        <filename>/Users/givanna/Documents/phd/code/Spectre/worked_example/data_files/synthetic_d0.csv.gz</filename>
+    </file>
+    <file>
+        <timepoint>1</timepoint>
+        <filename>/Users/givanna/Documents/phd/code/Spectre/worked_example/data_files/synthetic_d1.csv.gz</filename>
+    </file>
+</input>
