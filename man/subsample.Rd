@@ -9,7 +9,7 @@ subsample(x, ...)
 \arguments{
 \item{samp.col}{Character. Name of the column that reflects sample names.}
 
-\item{targets}{List of downsample targets (if random, then absolute target; if per.sample, then targets per sample). No default.}
+\item{targets}{List of downsample targets (if random, then absolute target; if per.sample, then targets per sample, must be in the same order as the unique sample names appear in the data frame or data table). No default.}
 
 \item{seed}{Numeric. Seed for reproducibility. No default.
 
