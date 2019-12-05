@@ -15,7 +15,7 @@
 if(!require('devtools')) {install.packages('devtools')}
 library('devtools')
 
-if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+if(!require('Spectre')) {install_github("sydneycytometry/spectre", ref = "adding_classifier")}
 library("Spectre")
 
 ### 1.2. Install packages
@@ -49,9 +49,6 @@ dir.create("Output_Classifier", showWarnings = FALSE)
 setwd("Output_Classifier")
 OutputDirectory <- getwd()
 setwd(PrimaryDirectory)
-
-# remove once done
-source('../R/classify.R')
 
 ##########################################################################################################
 #### 2. Read and prepare data
