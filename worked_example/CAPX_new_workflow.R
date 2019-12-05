@@ -237,19 +237,19 @@
 ##########################################################################################################
 
     ### Subsampling
-        meta.dat
-        as.matrix(unique(cell.dat[["Sample"]]))
-
-        Spectre::subsample(x = cell.dat,
-                           method = "per.sample", # or "random
-                           samp.col = sample.col,
-                           targets = c(rep(100,12)),
-                           seed = 42)
-
-        cell.dat.sub <- subsample.res
-        nrow(cell.dat.sub)
-
-        rm(subsample.res)
+        # meta.dat
+        # as.matrix(unique(cell.dat[["Sample"]]))
+        #
+        # Spectre::subsample(x = cell.dat,
+        #                    method = "per.sample", # or "random
+        #                    samp.col = sample.col,
+        #                    targets = c(rep(100,12)),
+        #                    seed = 42)
+        #
+        # cell.dat.sub <- subsample.res
+        # nrow(cell.dat.sub)
+        #
+        # rm(subsample.res)
 
     ### Run UMAP
 
