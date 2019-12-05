@@ -7,9 +7,9 @@
 #' @param y.axis Character. Column for Y axis. No default.
 #' @param col.axis Character. Column for colour. No default.
 #' @param title Character. Title for the plot. No default.
-#' @param col.min.threshold Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.995.
-#' @param col.max.threshold Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.01.
-#' @param colours Character. Colour scheme to use. Can be "spectral" or "jet". Defaults to "spectral"
+#' @param col.min.threshold Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.01.
+#' @param col.max.threshold Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.995.
+#' @param colours Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno". Defaults to "spectral".
 #' @param dot.size Numeric. Size of the dots. Defaults to 1.
 #' @param align.xy.by data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.
 #' @param align.col.by data.frame. Sample to use to determine minimum and maximum colour values. No default.
@@ -78,20 +78,34 @@ colour.plot <- function(d,
       # colourMax = 600
       # colourMin = 0
 
-
   ## Colour setup
+
+      # Jet
       if(colours == "jet"){
-        jet <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-        colour.scheme <- jet
+        colour.scheme <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
       }
 
+      # Spectral
       if(colours == "spectral"){
         spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
         spectral.list <- rev(spectral.list)
-        spectral <- colorRampPalette(c(spectral.list))
-        colour.scheme <- spectral
+        colour.scheme <- colorRampPalette(c(spectral.list))
       }
 
+      # Viridis
+      if(colours == "viridis"){
+        colour.scheme <- colorRampPalette(c(viridis_pal(option = "viridis")(50)))
+      }
+
+      # Inferno
+      if(colours == "inferno"){
+        colour.scheme <- colorRampPalette(c(viridis_pal(option = "inferno")(50)))
+      }
+
+      #Magma
+      if(colours == "magma"){
+        colour.scheme <- colorRampPalette(c(viridis_pal(option = "magma")(50)))
+      }
 
   ## Define limits
 
