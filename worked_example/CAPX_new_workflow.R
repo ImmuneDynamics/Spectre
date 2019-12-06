@@ -97,7 +97,7 @@
         data.start <- data.list
 
     ### Read sample metadata and embed in sample data
-        meta.dat <- read.delim(file = "sample.details.txt")
+        meta.dat <- read.delim(file = "metadata/sample.details.txt")
 
         Spectre::embed.columns(x = data.list,
                                type = "list",
@@ -282,7 +282,6 @@
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-
         setwd(PrimaryDirectory)
 
 ##########################################################################################################
@@ -323,39 +322,50 @@
 #### Print tSNE/UMAP plots to disk
 ##########################################################################################################
 
+    setwd(PrimaryDirectory)
+    setwd(OutputDirectory)
+    dir.create("Output-ColourPlots")
+    setwd("Output-ColourPlots")
+
+    ### Grid plot
+    setwd(OutputDirectory)
+    setwd("Output-ColourPlots")
+
     ### Some multi plots
-
-        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
+        setwd("Output-ColourPlots")
 
-        names(demo.umap)
+        ## multi.plot leads to the working directory changing to desktop for some reason.
+        # multi.plot(d = cell.dat.sub,
+        #            type = "factor",
+        #            x.axis = "UMAP_42_X",
+        #            y.axis = "UMAP_42_Y",
+        #            plot.by = "Sample",
+        #            align.xy.by = cell.dat.sub,
+        #            align.col.by = cell.dat.sub,
+        #            colour = NULL,
+        #            figure.title = "By sample",
+        #            dot.size = 1
+        #            ) # add 'path' argument, which is used by ggsave # add format argument
 
-        multi.plot(d = demo.umap,
-                   type = "factor",
-                   x.axis = "UMAP_42_X",
-                   y.axis = "UMAP_42_Y",
-                   plot.by = "Sample",
-                   align.xy.by = demo.umap,
-                   align.col.by = demo.umap,
-                   colour = NULL,
-                   figure.title = "By sample",
-                   dot.size = 1
-                   ) # add 'path' argument, which is used by ggsave # add format argument
-
+        getwd()
 
     ### Loop for cellular markers etc
-
-        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
-        dir.create("Output-ColourPlots")
         setwd("Output-ColourPlots")
 
         plots <- CellularCols
 
         ## Plot for all data
             for(a in plots){
-              p <- Spectre::colour.plot(d = cell.dat.sub, x.axis = "UMAP_42_X", y.axis = "UMAP_42_Y",
-                                        col.axis = a, title = a, colours = "spectral", dot.size = 1)
+              p <- Spectre::colour.plot(d = cell.dat.sub,
+                                        x.axis = "UMAP_42_X",
+                                        y.axis = "UMAP_42_Y",
+                                        col.axis = a,
+                                        title = a,
+                                        colours = "magma",
+                                        dot.size = 1)
+
               ggsave(p, filename = paste0("All_samples_", a, ".png"), width = 9, height = 7)
             }
 
@@ -370,23 +380,27 @@
 
     ### Loop for clusters etc
 
+        setwd(OutputDirectory)
+        setwd("Output-ColourPlots")
+
         head(cell.dat.sub)
         factors <- c("FlowSOM_metacluster")
-        setwd(OutputDirectory)
 
         ## Plot for all data
             for(a in factors){
-              p <- Spectre::factor.plot(d = cell.dat.sub,
+              p <- Spectre::labelled.factor.plot(d = cell.dat.sub,
                                         x.axis = "UMAP_42_X",
                                         y.axis = "UMAP_42_Y",
                                         col.axis = "FlowSOM_metacluster",
                                         title = "Cluster",
-                                        dot.size = 1,
-                                        add.labels = TRUE) # assumes numeric
+                                        dot.size = 1) # assumes numeric
 
               ggsave(p, filename = paste0("All_samples_", a, ".png"), width = 9, height = 7)
             }
 
         setwd(PrimaryDirectory)
 
-    ### Loop for samples/groups/batches etc
+        ## Plot divided by groups
+
+
+        ## Plot divided by samples
