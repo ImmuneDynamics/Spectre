@@ -217,7 +217,7 @@
         Spectre::subsample(x = cell.dat,
                            method = "per.sample", # or "random
                            samp.col = sample.col,
-                           targets = c(rep(1000,12)),
+                           targets = c(rep(500,12)),
                            seed = 42)
 
         cell.dat.sub <- subsample.res
@@ -257,17 +257,31 @@
         head(cell.dat)
         head(cell.dat.sub)
 
-        ## Write 'all' data
+        ## Write 'large' dataset
         Spectre::write.files(x = cell.dat,
                              file.prefix= paste0("Clustered_", exp.name), # required
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-        ## Write 'subsample' data
+        Spectre::write.files(x = cell.dat,
+                             file.prefix= paste0("Clustered_", exp.name), # required
+                             divide.by = "Sample",
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
+
+        ## Write 'subsample' dataset
         Spectre::write.files(x = cell.dat.sub,
                              file.prefix = paste0("DimRed_", exp.name), # required
                              write.csv = TRUE,
                              write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat.sub,
+                             file.prefix = paste0("DimRed_", exp.name), # required
+                             divide.by = "Sample",
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
 
         setwd(PrimaryDirectory)
 
@@ -327,8 +341,6 @@
                    figure.title = "By sample",
                    dot.size = 1
                    ) # add 'path' argument, which is used by ggsave # add format argument
-
-
 
 
     ### Loop for cellular markers etc
