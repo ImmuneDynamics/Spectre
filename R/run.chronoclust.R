@@ -8,7 +8,7 @@
 #' 
 #' 
 #' This function run a time-series clustering and cluster tracking algorithm Chronoclust.
-#' ChronoClust was originally written in Python. It'll be run using Reticulate.
+#' ChronoClust was originally written in Python 3. It'll be run using Reticulate.
 #' Only anaconda/miniconda virtual environment is supported by this function. This environment need to be setup before running the function.
 #' Please visit the various guide in the following link to install anaconda/miniconda and setup an environment:
 #' https://docs.conda.io/projects/conda/en/latest/user-guide/index.html
@@ -16,6 +16,8 @@
 #' You can either install them separately after setting up your anaconda environment 
 #' or just simply import them from the prepared environment script provided in our github repository (worked_example/Chronoclust_workflow)
 #' 
+#' Please make sure that your environment is running Python 3 (preferably 3.7).
+#' ChronoClust is not supported for Python 2.
 #' 
 #' @export
 
