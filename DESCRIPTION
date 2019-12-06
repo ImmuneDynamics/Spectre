@@ -24,4 +24,4 @@ Imports:
     RColorBrewer,
     gridExtra
 Suggests:
-RoxygenNote: 7.0.1
+RoxygenNote: 7.0.2

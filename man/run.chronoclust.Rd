@@ -13,15 +13,17 @@ run.chronoclust(x, ...)
 
 \item{output.dir.location}{NO DEFAULT. The directory for Chronoclust to write its result to.}
 
-\item{virtualenv.name}{DEFAULTS to r-chronoclust. The name of the virtual environment to run Chronoclust on.}
+\item{conda.env.name}{NO DEFAULT. The conda virtual environment name where Chronoclust wil run.
 
-\item{create.virtualenv}{DEFAULTS to TRUE. Whether to create the virtual environment to run Chronoclust on.}
-
-\item{delete.virtualenv}{DEFAULTS to TRUE. Whether to delete the virtual environment to run Chronoclust on after it finishes.
 
 This function run a time-series clustering and cluster tracking algorithm Chronoclust.
-Chronoclust is originally written in python. Hence it requires Reticulate to run.
-Reticulate executes Chronoclust on a virtual environment.}
+ChronoClust was originally written in Python. It'll be run using Reticulate.
+Only anaconda/miniconda virtual environment is supported by this function. This environment need to be setup before running the function.
+Please visit the various guide in the following link to install anaconda/miniconda and setup an environment:
+https://docs.conda.io/projects/conda/en/latest/user-guide/index.html
+ChronoClust requires the following python package to run: numpy, pandas, scikit-learn, tqdm, numba.
+You can either install them separately after setting up your anaconda environment 
+or just simply import them from the prepared environment script provided in our github repository (worked_example/Chronoclust_workflow)}
 }
 \description{
 run.chronoclust - ...

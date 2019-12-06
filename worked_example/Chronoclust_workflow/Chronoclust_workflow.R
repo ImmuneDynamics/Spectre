@@ -44,9 +44,15 @@ out.dir <- "Output_chronoclust"
 ##########################################################################################################
 #### 3. Run Chronoclust
 ##########################################################################################################
+
+# assuming you have setup a conda environment, specify what's the environment name is
+conda.env.name <- "chronoclust-public"
+
 Spectre::run.chronoclust(config.xml.file.location = config.xml.location,
-                         input.xml.file.location = input.xml.location,
-                         output.dir.location = out.dir)
+                input.xml.file.location = input.xml.location,
+                output.dir.location = out.dir,
+                conda.env.name = conda.env.name    
+                )
 
 
 
