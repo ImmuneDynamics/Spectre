@@ -22,7 +22,7 @@ write.files <- function(x,      # data to save
 
   ####### TESTING
 
-    # x <- cell.dat
+    # x <- demo.clustered
     # file.prefix = "Demo"
     #
     # divide.by = "Sample"
@@ -96,9 +96,10 @@ write.files <- function(x,      # data to save
           for(a in divide.list){
             data_subset <- subset(x, x[[divide.by]] == a)
             dim(data_subset)
-            ifelse(exists("file.prefix"),
-                   fwrite(x = data_subset, file = paste0(file.prefix, "_", divide.by, "_", a, ".csv")),
-                   fwrite(x = data_subset, file = paste0(divide.by, "_", a, ".csv")))
+
+            if(isTRUE(exists("file.prefix"))){fwrite(x = data_subset, file = paste0(file.prefix, "_", divide.by, "_", a, ".csv"))}
+            if(isFALSE(exists("file.prefix"))){fwrite(x = data_subset, file = paste0(divide.by, "_", a, ".csv"))}
+
           }
         }
 
@@ -130,9 +131,9 @@ write.files <- function(x,      # data to save
             data_subset.ff <- new("flowFrame", exprs=as.matrix(data_subset), parameters=AnnotatedDataFrame(metadata))
 
             ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
-            ifelse(exists("file.prefix"),
-                   write.FCS(data_subset.ff,  paste0(file.prefix, "_", divide.by, "_", divide.list[[a]], ".fcs")),
-                   write.FCS(data_subset.ff,  paste0(divide.by, "_", divide.list[[a]], ".fcs")))
+            if(isTRUE(exists("file.prefix"))){write.FCS(data_subset.ff,  paste0(file.prefix, "_", divide.by, "_", divide.list[[a]], ".fcs"))}
+            if(isFALSE(exists("file.prefix"))){write.FCS(data_subset.ff,  paste0(divide.by, "_", divide.list[[a]], ".fcs"))}
+
             }
         }
     }
