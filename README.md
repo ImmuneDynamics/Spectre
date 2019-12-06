@@ -1,6 +1,10 @@
 # Spectre
 A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
 
+<img src="https://wiki.centenary.org.au/display/SPECTRE/Spectre+R+package+-+Home+Page?preview=/146080606/151787435/image2019-12-6_12-31-12.png"
+     alt="Spectre icon"
+     style="float: left; margin-right: 10px;" />
+
 ### Current version
 `v0.2.0`
 
