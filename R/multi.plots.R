@@ -54,7 +54,7 @@ multi.plot <- function(d,
           
           for(i in c(1:length(to.plot))){
             to.plot[i]
-            plots[[i]] <- factor.plot(d = subset(d, d[[plot.by]] == to.plot[i]),
+            plots[[i]] <- factor.plot(d = subset(d, d[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                              x.axis = x.axis,
                              y.axis = y.axis, 
                              col.axis = plot.by,

@@ -16,12 +16,7 @@
         if(!require('devtools')) {install.packages('devtools')}
         library('devtools')
 
-        # Master version
-          #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
-
-        # Development version
-          devtools::install_github(repo = "sydneycytometry/spectre", ref = 'development')
-
+        if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
         library("Spectre")
 
     ### 1.2. Install other packages
@@ -60,17 +55,14 @@
     ### 1.4. Set working directory
 
         ## Set working directory
-        #dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
-        #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
-
-        setwd("/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre - workflow scripts/")
-
+        dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+        setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
         getwd()
         PrimaryDirectory <- getwd()
         PrimaryDirectory
 
         ## Can set manually using these lines, if desired
-            #PrimaryDirectory <- "/Users/thomasashhurst/Documents/Github/Public Github/Spectre/Other/Demo_dataset/"
+            #PrimaryDirectory <- "/Users/Tom/Desktop/TAXXX"
             #setwd(PrimaryDirectory)
 
         ## Create output directory
@@ -214,46 +206,26 @@
         rm(flowsom.res.original)                            # Remove results from global environment
         rm(flowsom.res.meta)                                # Remove results from global environment
 
-    ### Perform other clustering approaches if desired
-
-
-        ##### TEST EMBEDDING
-
-        Spectre::embed.columns(x = cell.dat,
-                               type = "data.frame",
-                               base.name = "FlowSOM_metacluster",
-                               col.name = "PopName",
-                               match.to = c(1:40),
-                               new.cols = c(rep("PMN", 20), rep("Tcell", 20)))
-
-        cell.dat <- cbind(cell.dat, embed.res)
-        cell.dat
-        rm(embed.res)
-        ####################
-
-
-##########################################################################################################
+#########################################################################################################
 #### Perform downsampling and dimensionality reduction
 ##########################################################################################################
 
     ### Subsampling
-        # meta.dat
-        # as.matrix(unique(cell.dat[["Sample"]]))
-        #
-        # Spectre::subsample(x = cell.dat,
-        #                    method = "per.sample", # or "random
-        #                    samp.col = sample.col,
-        #                    targets = c(rep(100,12)),
-        #                    seed = 42)
-        #
-        # cell.dat.sub <- subsample.res
-        # nrow(cell.dat.sub)
-        #
-        # rm(subsample.res)
+        meta.dat
+        as.matrix(unique(cell.dat[["Sample"]]))
+
+        Spectre::subsample(x = cell.dat,
+                           method = "per.sample", # or "random
+                           samp.col = sample.col,
+                           targets = c(rep(1000,12)),
+                           seed = 42)
+
+        cell.dat.sub <- subsample.res
+        nrow(cell.dat.sub)
+
+        rm(subsample.res)
 
     ### Run UMAP
-
-        cell.dat.sub <- cell.dat
 
         Spectre::run.umap(x = cell.dat.sub,
                           use.cols = ClusteringCols,
@@ -280,10 +252,10 @@
 
     ### Save data (cell.dat) including clustering results
 
+        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
         head(cell.dat)
-
-        setwd("/Users/Tom/Desktop")
+        head(cell.dat.sub)
 
         ## Write 'all' data
         Spectre::write.files(x = cell.dat,
@@ -337,6 +309,28 @@
 #### Print tSNE/UMAP plots to disk
 ##########################################################################################################
 
+    ### Some multi plots
+
+        setwd(PrimaryDirectory)
+        setwd(OutputDirectory)
+
+        names(demo.umap)
+
+        multi.plot(d = demo.umap,
+                   type = "factor",
+                   x.axis = "UMAP_42_X",
+                   y.axis = "UMAP_42_Y",
+                   plot.by = "Sample",
+                   align.xy.by = demo.umap,
+                   align.col.by = demo.umap,
+                   colour = NULL,
+                   figure.title = "By sample",
+                   dot.size = 1
+                   ) # add 'path' argument, which is used by ggsave # add format argument
+
+
+
+
     ### Loop for cellular markers etc
 
         setwd(PrimaryDirectory)
@@ -384,5 +378,3 @@
         setwd(PrimaryDirectory)
 
     ### Loop for samples/groups/batches etc
-
-

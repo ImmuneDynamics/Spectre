@@ -56,7 +56,7 @@ write.files <- function(x,      # data to save
 
     if(is.null(divide.by) == TRUE){
       ## Write CSV (using fwrite)
-      if(write.csv == TRUE){fwrite(x = x, file = paste0(file.prefix, "_all_data.csv"))}
+      if(write.csv == TRUE){fwrite(x = x, file = paste0(file.prefix, ".csv"))}
 
       ## Write FCS
       if(write.fcs == TRUE){
@@ -77,7 +77,7 @@ write.files <- function(x,      # data to save
         x.ff <- new("flowFrame", exprs=as.matrix(x.for.fcs), parameters=AnnotatedDataFrame(metadata))
 
         ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
-        new_file_name_fcs <- paste0(file.prefix, "_all_data.fcs")
+        new_file_name_fcs <- paste0(file.prefix, ".fcs")
         write.FCS(x.ff, new_file_name_fcs)
       }
     }
@@ -96,7 +96,9 @@ write.files <- function(x,      # data to save
           for(a in divide.list){
             data_subset <- subset(x, x[[divide.by]] == a)
             dim(data_subset)
-            fwrite(x = data_subset, file = paste0(file.prefix, "_", divide.by, "_", a, ".csv"))
+            ifelse(exists("file.prefix"),
+                   fwrite(x = data_subset, file = paste0(file.prefix, "_", divide.by, "_", a, ".csv")),
+                   fwrite(x = data_subset, file = paste0(divide.by, "_", a, ".csv")))
           }
         }
 
@@ -128,7 +130,9 @@ write.files <- function(x,      # data to save
             data_subset.ff <- new("flowFrame", exprs=as.matrix(data_subset), parameters=AnnotatedDataFrame(metadata))
 
             ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
-            write.FCS(data_subset.ff,  paste0(file.prefix, "_", divide.by, "_", divide.list[[a]], ".fcs"))
+            ifelse(exists("file.prefix"),
+                   write.FCS(data_subset.ff,  paste0(file.prefix, "_", divide.by, "_", divide.list[[a]], ".fcs")),
+                   write.FCS(data_subset.ff,  paste0(divide.by, "_", divide.list[[a]], ".fcs")))
             }
         }
     }
