@@ -24,7 +24,8 @@ run.flowsom <- function(x,
                         clust.seed = 42,
                         meta.seed = 42,
                         clust.name = "FlowSOM_cluster",
-                        meta.clust.name = "FlowSOM_metacluster"){
+                        meta.clust.name = "FlowSOM_metacluster")
+{
 
   #### TEST VALUES
       # x <- demo.start
@@ -159,7 +160,4 @@ run.flowsom <- function(x,
   assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
 
 }
-
-
-
 

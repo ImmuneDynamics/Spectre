@@ -16,7 +16,7 @@
         if(!require('devtools')) {install.packages('devtools')}
         library('devtools')
 
-        if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+        #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
         library("Spectre")
 
     ### 1.2. Install other packages
@@ -191,6 +191,8 @@
 
     ### Run FlowSOM
         Spectre::run.flowsom(x = cell.dat,
+                             xdim = 10,
+                             ydim = 10,
                              meta.k = 40,
                              clustering.cols = ClusteringCols,
                              clust.seed = 42,
