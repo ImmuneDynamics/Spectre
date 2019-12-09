@@ -306,16 +306,33 @@
                                annot.col.nums = c(1,33:39),
 
                                do.frequencies = TRUE,
+                               cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
+
                                do.exp.per.marker = TRUE,
                                do.exp.per.sample = TRUE,
-
-                               cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
                                fun.type = "median",
 
                                do.foldchange = TRUE,
                                group.col = "Group",
                                control.group = "Mock"
-                              )
+                               )
+
+        # Spectre::make.sumtable(x = cell.dat,
+        #                        sample.col = "Sample",
+        #                        clust.col = "FlowSOM_metacluster",
+        #                        annot.col.nums = c(1,33:39),
+        #
+        #                        do.frequencies = TRUE,
+        #                        do.exp.per.marker = TRUE,
+        #                        do.exp.per.sample = TRUE,
+        #
+        #                        cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
+        #                        fun.type = "median",
+        #
+        #                        do.foldchange = TRUE,
+        #                        group.col = "Group",
+        #                        control.group = "Mock"
+        #                       )
 
         setwd(PrimaryDirectory)
 

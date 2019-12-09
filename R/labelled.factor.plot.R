@@ -6,7 +6,7 @@
 #' @param a.axis Character. Column for X axis. No default.
 #' @param y.axis Character. Column for Y axis. No default.
 #' @param col.axis Character. Column for colour. No default.
-#' @param title Character. Title for the plot. No default.
+#' @param title Character. Title for the plot. Defaults to the name of the colour axis.
 #' @param dot.size Numeric. Size of the dots. Defaults to 1.
 #' @param align.xy.by data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.
 #' @param align.col.by data.frame. Sample to use to determine minimum and maximum colour values. No default.
@@ -20,8 +20,8 @@ labelled.factor.plot <- function(d,
                                  x.axis, # "UMAP1"
                                  y.axis, # "UMAP2"
                                  col.axis, # "BV605.Ly6C"
-                                 title,
-                                 dot.size,
+                                 title = col.axis,
+                                 dot.size = 1,
                                  align.xy.by = NULL,
                                  align.col.by = NULL){
   ## TESTING

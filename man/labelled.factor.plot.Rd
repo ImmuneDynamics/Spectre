@@ -13,7 +13,7 @@ labelled.factor.plot(x, ...)
 
 \item{col.axis}{Character. Column for colour. No default.}
 
-\item{title}{Character. Title for the plot. No default.}
+\item{title}{Character. Title for the plot. Defaults to the name of the colour axis.}
 
 \item{dot.size}{Numeric. Size of the dots. Defaults to 1.}
 

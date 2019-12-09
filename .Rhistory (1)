@@ -1,0 +1,512 @@
+my.breaks <- seq(fold.min.range, fold.max.range, length.out = 32)
+}
+if(is.fold == FALSE){
+map.colour <- colour.palette
+sym.key <- FALSE
+sym.breaks <- FALSE
+heatmap.data
+my.max <- function(x) ifelse( !all(is.na(x)), max(x, na.rm=T), NA)
+my.min <- function(x) ifelse( !all(is.na(x)), min(x, na.rm=T), NA)
+my.breaks <- seq(my.min(heatmap.data), my.max(heatmap.data), length.out = 32)
+}
+scale.set <- "none" # Can be: "none", "both", "row", "column"
+#if(is.fold == TRUE){a <- "(fold-change)"}
+#if(is.fold == FALSE){a <- ""}
+#title.text <- paste0(plot.title, a, ".pdf")
+title.text <- plot.title
+### Plot heatmap and dendrograms
+pheatmap(mat = as.matrix(heatmap.data),
+main = title.text,
+cellwidth = cell.size,
+cellheight = cell.size,
+cluster_rows = row.clustering,
+cluster_cols = col.clustering,
+#scale = "column",
+breaks = my.breaks,
+gaps_row = row.sep,
+gaps_col = col.sep,
+annotation_row = annot,
+color = map.colour,
+filename = file.name)
+print("A pheatmap has been saved to your working directory")
+cell.dat
+demo.dat
+cell.dat.demo
+demo.clustered
+demo.clustered[sample(nrow(demo.clustered), 1000), ]
+demo.clustered$DimRed <- NA
+demo.clustered$DimRed <- NULL
+cell.dat <- demo.clustered
+cell.dat$DimRed <- NA
+head(cell.dat)
+demo.clustered[sample(nrow(demo.clustered), 1000), ]
+cell.dat[sample(nrow(cell.dat), 1000), ]
+cell.dat[sample(nrow(cell.dat), 1000), ][DimRed]
+cell.dat[sample(nrow(cell.dat), 1000), ][cell.dat$DimRed]
+cell.dat[sample(nrow(cell.dat), 1000), ]
+cell.dat$DimRed[sample(nrow(cell.dat), 1000), ]
+cell.dat[sample(nrow(cell.dat), 1000), DimRed]
+cell.dat[sample(nrow(cell.dat), 1000), cell.dat$DimRed]
+cell.dat[sample(nrow(cell.dat), 1000), "DimRed"]
+cell.dat[sample(nrow(cell.dat), 1000), "DimRed"] <- TRUE
+cell.dat
+cell.dat[sample(nrow(cell.dat), 1000), "DimRed"]
+cell.dat[cell.dat$DimRed == True]
+cell.dat[cell.dat$DimRed == TRUE]
+cell.dat[cell.dat$DimRed == TRUE,]
+cell.dat[cell.dat$DimRed == TRUE, ]
+cell.dat
+cell.dat <- demo.clustered
+cell.dat$DimRed <- NA
+head(cell.dat)
+cell.dat[sample(nrow(cell.dat), 1000), "DimRed"] <- TRUE
+cell.dat
+cell.dat[cell.dat$DimRed == TRUE,]
+cell.dat
+subset(cell.dat, cell.dat$DimRed == TRUE)
+dim(subset(cell.dat, cell.dat$DimRed == TRUE))
+## Subset
+subset(cell.dat, cell.dat$DimRed == TRUE)
+use.cols
+names(cell.dat)
+as.matrix(names(cell.dat))
+Spectre::run.umap(x = subset(cell.dat, cell.dat$DimRed == TRUE),
+use.cols = c(5,11,13,17,18,19,21,22,23,24,25,28,32),
+umap.seed = )
+## UMAP
+library(umap)
+as.matrix(names(cell.dat))
+Spectre::run.umap(x = subset(cell.dat, cell.dat$DimRed == TRUE),
+use.cols = c(5,11,13,17,18,19,21,22,23,24,25,28,32),
+umap.seed = )
+umap.res
+subset(cell.dat, cell.dat$DimRed == TRUE) <- cbind(subset(cell.dat, cell.dat$DimRed == TRUE), umap.res)
+cbind(subset(cell.dat, cell.dat$DimRed == TRUE), umap.res)
+cell.dat
+plot(umap.res[1], umap.res[2])
+umap.res[1]
+plot(x = umap.res[1], y = umap.res[2])
+umap.res[2]
+plot(x = umap.res)
+cell.dat <- demo.clustered
+## Add a 'DimRed' selection column
+cell.dat$DimRed <- NA
+head(cell.dat)
+## Choose the number of rows to select, and add 'TRUE' to those rows
+cell.dat[sample(nrow(cell.dat), 10000), "DimRed"] <- TRUE
+cell.dat
+## Subset cell.dat to rows where DimRed == TRUE --> use this for selecting the data to run UMAP on
+subset(cell.dat, cell.dat$DimRed == TRUE)
+dim(subset(cell.dat, cell.dat$DimRed == TRUE))
+## UMAP
+library(umap)
+as.matrix(names(cell.dat))
+Spectre::run.umap(x = subset(cell.dat, cell.dat$DimRed == TRUE),
+use.cols = c(5,11,13,17,18,19,21,22,23,24,25,28,32),
+umap.seed = )
+plot(x = umap.res)
+plot(x = umap.res)
+cbind(subset(cell.dat, cell.dat$DimRed == TRUE), umap.res)
+cell.dat
+cell.dat
+umap.res
+names(umap.res)
+names(umap.res[1])
+cell.dat[names(umap.res[1])] <- NA
+cell.dat[names(umap.res[1])] <- NA
+cell.dat[names(umap.res[2])] <- NA
+cbind(subset(cell.dat, cell.dat$DimRed == TRUE), umap.res)
+cell.dat
+temp <- subset(cell.dat, cell.dat$DimRed == TRUE)
+cbind(temp, umap.res)
+temp
+umap.res
+temp
+cell.dat <- demo.clustered
+## Add a 'DimRed' selection column
+cell.dat$DimRed <- NA
+head(cell.dat)
+## Choose the number of rows to select, and add 'TRUE' to those rows
+cell.dat[sample(nrow(cell.dat), 10000), "DimRed"] <- TRUE
+cell.dat
+## Subset cell.dat to rows where DimRed == TRUE --> use this for selecting the data to run UMAP on
+subset(cell.dat, cell.dat$DimRed == TRUE)
+dim(subset(cell.dat, cell.dat$DimRed == TRUE))
+temp <- subset(cell.dat, cell.dat$DimRed == TRUE)
+## UMAP
+library(umap)
+as.matrix(names(cell.dat))
+Spectre::run.umap(x = temp,
+use.cols = c(5,11,13,17,18,19,21,22,23,24,25,28,32),
+umap.seed = 42)
+plot(x = umap.res)
+cell.dat[names(umap.res[1])] <- NA
+cell.dat[names(umap.res[2])] <- NA
+cbind(temp, umap.res)
+temp
+temp <- cbind(temp, umap.res)
+temp
+subset(cell.dat, cell.dat$DimRed == TRUE) <- temp
+subset(cell.dat, cell.dat$DimRed == TRUE)
+cell.dat[DimRed]
+cell.dat["DimRed"]
+cell.dat["DimRed", TRUE]
+cell.dat["DimRed" == TRUE]
+cell.dat["DimRed", "DimRed" == TRUE]
+cell.dat
+cell.dat <- demo.clustered
+## Add a 'DimRed' selection column
+cell.dat$DimRed <- NA
+head(cell.dat)
+## Choose the number of rows to select, and add 'TRUE' to those rows
+cell.dat[sample(nrow(cell.dat), 10000), "DimRed"] <- TRUE
+cell.dat
+## Subset cell.dat to rows where DimRed == TRUE --> use this for selecting the data to run UMAP on
+subset(cell.dat, cell.dat$DimRed == TRUE)
+dim(subset(cell.dat, cell.dat$DimRed == TRUE))
+temp <- subset(cell.dat, cell.dat$DimRed == TRUE)
+merge(cell.dat, temp[, c("DimRed", "UMAP_42_X")], by="DimRed")
+temp
+[, c("DimRed", "UMAP_42_X")]
+merge(cell.dat, temp[, c("UMAP_42_X")], by="DimRed")
+length(temo)
+length(temp)
+nrow(temp)
+t <- c(rep(TRUE, 40))
+t
+t <- c(rep(TRUE, nrow(temp)))
+t
+cbind(t, temp)
+cbind(t, umap.res)
+y <- cbind(t, umap.res)
+colnames(t)
+t
+colnames(t[1])
+colnames(t[1]) <- "DimRed"
+names(t[1]) <- "DimRed"
+t
+names(t[1])
+names(t)
+names(t) <- "DimRed"
+t
+t <- c(rep(TRUE, nrow(temp)))
+t
+names(t[1]) <- "DimRed"
+t
+colnames(y)
+colnames(y[1])
+colnames(y[1]) <- "RimRed"
+y
+colnames(y)[1]
+colnames(y)[1] <- "RimRed"
+y
+colnames(y)[1] <- "DimRed"
+y
+merge(cell.dat, y[, c("DimRed", "UMAP_42_X")], by="DimRed")
+cell.dat
+newtable <- merge(cell.dat,y, by  = "DimRed")
+library(flowStats)
+library(flowCore)
+library(flowViz)
+library(Biobase)
+data(ITN)
+dat <- transform(ITN, "CD4"=asinh(CD4), "CD3"=asinh(CD3), "CD8"=asinh(CD8))
+lg <- lymphGate(dat, channels=c("CD3", "SSC"),
+preselection="CD4",scale=1.5)
+dat <- Subset(dat, lg$n2gate)
+datr <- gaussNorm(dat, "CD8")$flowset
+if(require(flowViz)){
+d1 <- densityplot(~CD8, dat, main="original", filter=curv1Filter("CD8"))
+d2 <- densityplot(~CD8, datr, main="normalized", filter=curv1Filter("CD8"))
+plot(d1, split=c(1,1,2,1))
+plot(d2, split=c(2,1,2,1), newpage=FALSE)
+}
+library(Spectre)
+demo.start
+head(demo.start)
+head(demo.clustered)
+head(demo.umap)
+head(hmap.mfi)
+head(hmap.fold)
+head(hmap.foldcell)
+as.matrix(names(demo.umap))
+Spectre::colour.plot(x = demo.umap, x.axis  = "BV605.Ly6C", y.axis = "BUV395.CD11b", col.axis = "FlowSOM_metacluster", title = "Title")
+Spectre::colour.plot(d = demo.umap, x.axis  = "BV605.Ly6C", y.axis = "BUV395.CD11b", col.axis = "FlowSOM_metacluster", title = "Title")
+library(ggplot2)
+library(RColorBrewer)
+Spectre::colour.plot(d = demo.umap, x.axis  = "BV605.Ly6C", y.axis = "BUV395.CD11b", col.axis = "FlowSOM_metacluster", title = "Title")
+library(scales)
+Spectre::colour.plot(d = demo.umap, x.axis  = "BV605.Ly6C", y.axis = "BUV395.CD11b", col.axis = "FlowSOM_metacluster", title = "Title")
+Spectre::factor.plot(d = demo.umap,
+x.axis  = "BV605.Ly6C",
+y.axis = "BUV395.CD11b",
+col.axis = "FlowSOM_metacluster",
+title = "Title")
+Spectre::factor.plot(d = demo.umap,
+x.axis  = "BV605.Ly6C",
+y.axis = "BUV395.CD11b",
+col.axis = "FlowSOM_metacluster",
+title = "Title", dot.size = 1)
+Spectre::factor.plot(d = demo.umap,
+x.axis  = "BV605.Ly6C",
+y.axis = "BUV395.CD11b",
+col.axis = "FlowSOM_metacluster",
+title = "Title",
+dot.size = 1,
+align.xy.by = demo.clustered,
+align.col.by = demo.clustered
+)
+Spectre::labelled.factor.plot(d = demo.umap,
+x.axis  = "BV605.Ly6C",
+y.axis = "BUV395.CD11b",
+col.axis = "FlowSOM_metacluster",
+title = "Title",
+dot.size = 1,
+align.xy.by = demo.clustered,
+align.col.by = demo.clustered)
+Spectre::labelled.factor.plot(d = demo.umap,
+x.axis  = "UMAP_X_42",
+y.axis = "UMAP_Y_42",
+col.axis = "FlowSOM_metacluster",
+title = "Title",
+dot.size = 1,
+align.xy.by = demo.clustered,
+align.col.by = demo.clustered)
+demo.umap
+Spectre::labelled.factor.plot(d = demo.umap,
+x.axis  = "UMAP_42_X",
+y.axis = "UMAP_42_Y",
+col.axis = "FlowSOM_metacluster",
+title = "Title",
+dot.size = 1,
+align.xy.by = demo.clustered,
+align.col.by = demo.clustered)
+demo.umap
+Spectre::labelled.factor.plot(d = demo.umap,
+x.axis  = "UMAP_42_X",
+y.axis = "UMAP_42_Y",
+col.axis = "FlowSOM_metacluster",
+title = "Title",
+dot.size = 1,
+align.xy.by = demo.umap,
+align.col.by = demo.clustered)
+library(flowStats)
+library(flowCore)
+library(flowViz)
+library(Biobase)
+data(ITN)
+dat <- transform(ITN, "CD4"=asinh(CD4), "CD3"=asinh(CD3), "CD8"=asinh(CD8))
+lg <- lymphGate(dat, channels=c("CD3", "SSC"),
+preselection="CD4",scale=1.5)
+dat <- Subset(dat, lg$n2gate)
+datr <- gaussNorm(dat, "CD8")$flowset
+if(require(flowViz)){
+d1 <- densityplot(~CD8, dat, main="original", filter=curv1Filter("CD8"))
+d2 <- densityplot(~CD8, datr, main="normalized", filter=curv1Filter("CD8"))
+plot(d1, split=c(1,1,2,1))
+plot(d2, split=c(2,1,2,1), newpage=FALSE)
+}
+### 1.1. Load 'Spectre' package (using devtools)
+if(!require('devtools')) {install.packages('devtools')}
+library('devtools')
+# if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+library("Spectre")
+## Basic data manipulation
+if(!require('plyr')) {install.packages('plyr')}
+if(!require('data.table')) {install.packages('data.table')}
+if(!require('tidyr')) {install.packages('tidyr')}
+if(!require('rstudioapi')) {install.packages('rstudioapi')}
+## Required to download packages from Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+## Basic data manipulation
+if(!require('flowCore')) {BiocManager::install('flowCore')}
+if(!require('Biobase')) {BiocManager::install('Biobase')}
+if(!require('flowViz')) {BiocManager::install('flowViz')}
+## Clustering and dimensionality reduction
+if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+if(!require('Rtsne')) {install.packages("Rtsne")} # for running tSNE
+if(!require('umap')) {install.packages('umap')}
+### 1.3. Load packages from library
+library('plyr')
+library('data.table')
+library('tidyr') # for spread
+library('rstudioapi')
+library('flowCore')
+library('Biobase')
+library('flowViz')
+library('FlowSOM')
+library('Rtsne')
+library('umap')
+## Set working directory
+dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
+getwd()
+PrimaryDirectory <- getwd()
+PrimaryDirectory
+## Create output directory
+dir.create("Output_CAPX", showWarnings = FALSE)
+setwd("Output_CAPX")
+OutputDirectory <- getwd()
+setwd(PrimaryDirectory)
+### Create some metadata
+meta.dat <- list()
+list.files(PrimaryDirectory, ".txt")
+meta.dat[["expDetails"]] <- read.delim(file = "experiment.details.txt")
+meta.dat[["sampleDetails"]] <- read.delim(file = "sample.details.txt")
+meta.dat
+meta.dat[["sampleDetails"]] <- read.delim(file = "sample.details.txt")
+## List of CSV files in PrimaryDirectory ## ADD A PRE-PROCESSING SCRIPT BEFORE THIS ONE -- FILE MERGE etc             ## HERE WE WANT ONE FILE PER SAMPLE
+list.files(PrimaryDirectory, ".csv")
+Spectre::read.files(file.loc = PrimaryDirectory,
+file.type = ".csv",
+do.embed.file.names = TRUE)
+ncol.check    # Review number of columns (features, markers) in each sample
+nrow.check    # Review number of rows (cells) in each sample
+name.table    # Review column names and their subsequent values
+## Check data
+head(data.list)
+head(data.list[[1]])
+## Save starting data
+data.start <- data.list
+## Specify the column that contains filenames, and which columns of 'sample.table' you want to embed
+meta.dat$sampleDetails
+Spectre::embed.columns(x = data.list,
+type = "list",
+match.to = meta.dat$sampleDetails[c(1)],
+new.cols = meta.dat$sampleDetails[c(2)],
+col.name = names(meta.dat$sampleDetails[c(2)]))
+data.list
+Spectre::embed.columns(x = data.list,
+type = "list",
+match.to = meta.dat$sampleDetails[c(1)],
+new.cols = meta.dat$sampleDetails[c(3)],
+col.name = names(meta.dat$sampleDetails[c(3)]))
+Spectre::embed.columns(x = data.list,
+type = "list",
+match.to = meta.dat$sampleDetails[c(1)],
+new.cols = meta.dat$sampleDetails[c(4)],
+col.name = names(meta.dat$sampleDetails[c(4)]))
+head(data.list)
+## Merge files and review
+Spectre::file.merge(x = data.list)
+head(cell.dat)
+dim(cell.dat)
+as.matrix(unique(cell.dat[["Sample"]]))
+## Are there any NAs present in cell.dat? Yes if 'TRUE', no if 'FALSE'
+any(is.na(cell.dat))
+### Cleanup (not necessary, but recommended)
+rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums)
+as.matrix(names(cell.dat))
+## Define key columns that might be used or dividing data (samples, groups, batches, etc)
+exp.name <- meta.dat[["expDetails"]]$Experiment.Number
+file.col <- "Filename"
+sample.col <- "Sample"
+group.col <- "Group"
+batch.col <- "Batch"
+## Create a list of column names
+ColumnNames <- as.matrix(unname(colnames(cell.dat))) # assign reporter and marker names (column names) to 'ColumnNames'
+ColumnNames
+## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
+ColumnNames # view the column 'number' for each parameter
+ValidCellularColsNos <- c(5,6,8,9,11:13,16:19,21:30,32)
+ValidCellularCols <- ColumnNames[ValidCellularColsNos]
+ValidCellularCols  # check that the column names that appear are the ones you want to analyse
+ColumnNames[-ValidCellularColsNos] # Check which columns are being EXCLUDED!
+meta.dat[["ValidCellularCols"]] <- ValidCellularCols
+rm(ValidCellularColsNos)
+## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
+ColumnNames
+ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
+ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to include the markers corresponding to the column numbers 11, 23, 10
+ClusteringCols  # check that the column names that appear are the ones you want to analyse
+ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
+meta.dat[["ClusteringCols"]] <- ClusteringCols
+rm(ClusteringColNos)
+head(cell.dat)
+meta.dat
+### Create a blank log dataframe in meta.data
+meta.dat[["analysis.log"]] <- data.frame("Function" = NA, "Parameter" = NA, "Value" = NA)
+install.packages("PAC")
+library("PAC")
+sampleIDs<-c("Basal", "BCR", "IL7")
+sampleIDs<-c("Basal", "BCR", "IL7")
+samplePass(sampleIDs, dim_subset=NULL, hyperrectangles=35, num_PACSupop=25, num_networkEdge=25, max.iter=50)
+sampleIDs
+samplePass(sampleIDs,
+dim_subset=NULL,
+hyperrectangles=35,
+num_PACSupop=25,
+num_networkEdge=25,
+max.iter=50)
+load("/Users/Tom/Downloads/PAC/vignettes/Basal.Rdata")
+samplePass(sampleIDs,
+dim_subset=NULL,
+hyperrectangles=35,
+num_PACSupop=25,
+num_networkEdge=25,
+max.iter=50)
+sampleIDs<-c("Basal")
+samplePass(sampleIDs,
+dim_subset=NULL,
+hyperrectangles=35,
+num_PACSupop=25,
+num_networkEdge=25,
+max.iter=50)
+getwd()
+setwd("/Library/Frameworks/R.framework/Resources/library/PAC/doc/")
+sampleIDs<-c("Basal", "BCR", "IL7")
+samplePass(sampleIDs,
+dim_subset=NULL,
+hyperrectangles=35,
+num_PACSupop=25,
+num_networkEdge=25,
+max.iter=50)
+setwd("/Users/Tom/Downloads/PAC/vignettes/")
+sampleIDs<-c("Basal", "BCR", "IL7")
+samplePass(sampleIDs,
+dim_subset=NULL,
+hyperrectangles=35,
+num_PACSupop=25,
+num_networkEdge=25,
+max.iter=50)
+View(Basal)
+getwd()
+#setwd("/Library/Frameworks/R.framework/Resources/library/PAC/doc/")
+setwd("/Users/Tom/Downloads/PAC/vignettes/")
+sampleIDs<-c("Basal", "BCR", "IL7")
+#Partition, cluster into desired number of subpopulations, and output subpopulation mutual information networks
+samplePass(sampleIDs,
+dim_subset=NULL,
+hyperrectangles=35,
+num_PACSupop=25,
+num_networkEdge=25,
+max.iter=50)
+load("/Users/Tom/Downloads/PAC/vignettes/Basal_data_agg.Rdata")
+View(data_agg)
+load("/Users/Tom/Downloads/PAC/vignettes/Basal_dataMatrix.Rdata")
+View(inputMatrix_withSampleName)
+load("/Users/Tom/Downloads/PAC/vignettes/BCR_data_agg.Rdata")
+View(data_agg)
+clades_network_only<-MAN(sampleIDs,
+num_PACSupop=25,
+smallSubpopCutoff=100,
+k_clades=5)
+clades_network_only
+# Refine the PAC labels with multiple alignments of networks representative labels for clades
+refineSubpopulationLabels(sampleIDs,dim_subset=NULL, clades_network_only, expressionGroupClamp=5)
+View(clades_network_only)
+#Draw clade/representative mutual information networks
+getRepresentativeNetworks(sampleIDs, dim_subset=NULL, SubpopSizeFilter=200, num_networkEdge=25)
+#Obtain annotations of subpopulations
+aggregateMatrix_withAnnotation<-annotateClades(sampleIDs, topHubs=4)
+head(aggregateMatrix_withAnnotation)
+library(Spectre)
+library(roxygen2)
+document()
+library(devtools)
+document()
+document()
+document()
+library(Spectre)
+?install_github
