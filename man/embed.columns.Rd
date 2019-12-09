@@ -9,7 +9,9 @@ embed.columns(x, ...)
 \arguments{
 \item{x}{NO DEFAULT. A list of dataframes (samples) that will recieve the new columns.}
 
-\item{type}{DEFAULTS TO "list". Can be "list", "data.frame" will be available in next release. Whether you wish to embed new values into dataframes as part of a list based on the name of the dataframes, or into a single dataframe based on values in another column.}
+\item{type}{DEFAULTS TO "data.frame". Can be "data.frame" or "list". Whether you wish to embed new values into a single dataframe based on values in another column, or dataframes as part of a list based on the name of the dataframes.}
+
+\item{base.name}{NO DEFAULT. The column containing values that new values will be matched to. Only required when embedding into a single data frame -- when embedding into a list of dataframes, matching is done based on the name of each dataframe.}
 
 \item{col.name}{NO DEFAULT. Character, desired name for the new column.}
 
@@ -20,7 +22,7 @@ embed.columns(x, ...)
 \item{new.cils}{NO DEFAULT. A vector of new values to embed to each dataframe, matched to the corresponding value in 'match.to' (e.g. "Group 1", "Group 1", "Group 2", "Group 2", etc).}
 }
 \value{
-Embeds new columns into each row (cell) of dataframes in a list
+For type = "data.frame", returns a vector of the new row values (called embed.res), that can be attached to the starting dataset using cbind. For type = "list", embeds new columns into each row (cell) of dataframes in a list called 'data.list'.
 }
 \description{
 embed.columns
