@@ -98,6 +98,7 @@ multi.plot <- function(d,
           if(length(plots) > 4){
             num.cols <- 4
             num.rows <- length(plots)/4
+            num.rows <- ceiling(num.rows)
           }
 
           gp <- grid.arrange(grobs = plots,

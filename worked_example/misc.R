@@ -13,6 +13,8 @@ PrimaryDirectory
 #PrimaryDirectory <- "/Users/thomasashhurst/Documents/Github/Public Github/Spectre/Other/Demo_dataset/"
 
 
+library(devtools)
+library(roxygen2)
 
 
 
