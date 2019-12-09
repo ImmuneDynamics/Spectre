@@ -24,7 +24,8 @@ multi.plot <- function(d,
                        align.col.by, # alignment for colours
                        colour,
                        figure.title,
-                       dot.size
+                       dot.size,
+                       path = getwd()
                        )
 {
 
@@ -43,6 +44,7 @@ multi.plot <- function(d,
       # colour = "magma"
       # figure.title = "By sample"
       # dot.size = 1
+      # path = getwd()
 
   ### Create each plot
 
@@ -113,7 +115,7 @@ multi.plot <- function(d,
 
           ggsave(filename = paste0(figure.title, ".png"),
                  plot = gp,
-                 path = getwd(),
+                 path = path,
                  width = wdth,
                  height = hght)
 

@@ -336,17 +336,17 @@
         setwd("Output-ColourPlots")
 
         ## multi.plot leads to the working directory changing to desktop for some reason.
-        # multi.plot(d = cell.dat.sub,
-        #            type = "factor",
-        #            x.axis = "UMAP_42_X",
-        #            y.axis = "UMAP_42_Y",
-        #            plot.by = "Sample",
-        #            align.xy.by = cell.dat.sub,
-        #            align.col.by = cell.dat.sub,
-        #            colour = NULL,
-        #            figure.title = "By sample",
-        #            dot.size = 1
-        #            ) # add 'path' argument, which is used by ggsave # add format argument
+        multi.plot(d = cell.dat.sub,
+                   type = "factor",
+                   x.axis = "UMAP_42_X",
+                   y.axis = "UMAP_42_Y",
+                   plot.by = "Sample",
+                   align.xy.by = cell.dat.sub,
+                   align.col.by = cell.dat.sub,
+                   colour = NULL,
+                   figure.title = "By sample",
+                   dot.size = 1
+                   ) # add 'path' argument, which is used by ggsave # add format argument
 
         getwd()
 
