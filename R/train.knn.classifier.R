@@ -16,6 +16,7 @@
 #' For each number of neighbour, the accuracy of the classifier will be computed.
 #' Data will be normalised to range between 0 and 1 before used in training the classifier.
 #' The normalisation method used is MinMaxScaling method.
+#' NOTE: the larger the training data, the longer it takes to train the classifier. Hence please be mindful of the training data size.
 #'
 #' @return The performance of the classifier on different number of neighbours as well as some description on how the training was performed
 #' i.e. what sampling process is used (how the data is split for training and testing),
