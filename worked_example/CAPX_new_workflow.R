@@ -17,6 +17,7 @@
         library('devtools')
 
         #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+        install_github("sydneycytometry/spectre", ref = 'development')
         library("Spectre")
 
     ### 1.2. Install other packages
@@ -247,6 +248,38 @@
                              colours = "magma"
                              )
 
+    ### multi.plot - one plot per sample
+        setwd(OutputDirectory)
+
+        multi.plot(d = cell.dat.sub,
+                   type = "factor",
+                   x.axis = "UMAP_42_X",
+                   y.axis = "UMAP_42_Y",
+                   plot.by = "Sample",
+                   align.xy.by = cell.dat.sub,
+                   align.col.by = cell.dat.sub,
+                   colour = NULL,
+                   figure.title = "By sample",
+                   dot.size = 1
+                   )
+
+    ### multi.plot - one plot per marker
+        setwd(OutputDirectory)
+
+        multi.plot(d = cell.dat.sub,
+                   type = "factor",
+                   x.axis = "UMAP_42_X",
+                   y.axis = "UMAP_42_Y",
+                   plot.by = "Sample",
+                   align.xy.by = cell.dat.sub,
+                   align.col.by = cell.dat.sub,
+                   colour = NULL,
+                   figure.title = "By sample",
+                   dot.size = 1
+                    )
+
+
+
 
 ##########################################################################################################
 #### Save data to disk
@@ -346,32 +379,9 @@
     dir.create("Output-ColourPlots")
     setwd("Output-ColourPlots")
 
-    ### Grid plot
+    ### Loop for cellular markers etc
     setwd(OutputDirectory)
     setwd("Output-ColourPlots")
-
-    ### Some multi plots
-        setwd(OutputDirectory)
-        setwd("Output-ColourPlots")
-
-        ## multi.plot leads to the working directory changing to desktop for some reason.
-        multi.plot(d = cell.dat.sub,
-                   type = "factor",
-                   x.axis = "UMAP_42_X",
-                   y.axis = "UMAP_42_Y",
-                   plot.by = "Sample",
-                   align.xy.by = cell.dat.sub,
-                   align.col.by = cell.dat.sub,
-                   colour = NULL,
-                   figure.title = "By sample",
-                   dot.size = 1
-                   ) # add 'path' argument, which is used by ggsave # add format argument
-
-        getwd()
-
-    ### Loop for cellular markers etc
-        setwd(OutputDirectory)
-        setwd("Output-ColourPlots")
 
         plots <- CellularCols
 
