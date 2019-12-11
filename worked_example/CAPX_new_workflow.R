@@ -16,12 +16,7 @@
         if(!require('devtools')) {install.packages('devtools')}
         library('devtools')
 
-        # Master version
-          #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
-
-        # Development version
-          devtools::install_github(repo = "sydneycytometry/spectre", ref = 'development')
-
+        #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
         library("Spectre")
 
     ### 1.2. Install other packages
@@ -60,17 +55,14 @@
     ### 1.4. Set working directory
 
         ## Set working directory
-        #dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
-        #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
-
-        setwd("/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre - workflow scripts/")
-
+        dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+        setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
         getwd()
         PrimaryDirectory <- getwd()
         PrimaryDirectory
 
         ## Can set manually using these lines, if desired
-            #PrimaryDirectory <- "/Users/thomasashhurst/Documents/Github/Public Github/Spectre/Other/Demo_dataset/"
+            #PrimaryDirectory <- "/Users/Tom/Desktop/TAXXX"
             #setwd(PrimaryDirectory)
 
         ## Create output directory
@@ -105,7 +97,7 @@
         data.start <- data.list
 
     ### Read sample metadata and embed in sample data
-        meta.dat <- read.delim(file = "sample.details.txt")
+        meta.dat <- read.delim(file = "metadata/sample.details.txt")
 
         Spectre::embed.columns(x = data.list,
                                type = "list",
@@ -199,6 +191,8 @@
 
     ### Run FlowSOM
         Spectre::run.flowsom(x = cell.dat,
+                             xdim = 10,
+                             ydim = 10,
                              meta.k = 40,
                              clustering.cols = ClusteringCols,
                              clust.seed = 42,
@@ -214,46 +208,26 @@
         rm(flowsom.res.original)                            # Remove results from global environment
         rm(flowsom.res.meta)                                # Remove results from global environment
 
-    ### Perform other clustering approaches if desired
-
-
-        ##### TEST EMBEDDING
-
-        Spectre::embed.columns(x = cell.dat,
-                               type = "data.frame",
-                               base.name = "FlowSOM_metacluster",
-                               col.name = "PopName",
-                               match.to = c(1:40),
-                               new.cols = c(rep("PMN", 20), rep("Tcell", 20)))
-
-        cell.dat <- cbind(cell.dat, embed.res)
-        cell.dat
-        rm(embed.res)
-        ####################
-
-
-##########################################################################################################
+#########################################################################################################
 #### Perform downsampling and dimensionality reduction
 ##########################################################################################################
 
     ### Subsampling
-        # meta.dat
-        # as.matrix(unique(cell.dat[["Sample"]]))
-        #
-        # Spectre::subsample(x = cell.dat,
-        #                    method = "per.sample", # or "random
-        #                    samp.col = sample.col,
-        #                    targets = c(rep(100,12)),
-        #                    seed = 42)
-        #
-        # cell.dat.sub <- subsample.res
-        # nrow(cell.dat.sub)
-        #
-        # rm(subsample.res)
+        meta.dat
+        as.matrix(unique(cell.dat[["Sample"]]))
+
+        Spectre::subsample(x = cell.dat,
+                           method = "per.sample", # or "random
+                           samp.col = sample.col,
+                           targets = c(rep(500,12)),
+                           seed = 42)
+
+        cell.dat.sub <- subsample.res
+        nrow(cell.dat.sub)
+
+        rm(subsample.res)
 
     ### Run UMAP
-
-        cell.dat.sub <- cell.dat
 
         Spectre::run.umap(x = cell.dat.sub,
                           use.cols = ClusteringCols,
@@ -280,20 +254,33 @@
 
     ### Save data (cell.dat) including clustering results
 
+        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
         head(cell.dat)
+        head(cell.dat.sub)
 
-        setwd("/Users/Tom/Desktop")
-
-        ## Write 'all' data
+        ## Write 'large' dataset
         Spectre::write.files(x = cell.dat,
                              file.prefix= paste0("Clustered_", exp.name), # required
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-        ## Write 'subsample' data
+        Spectre::write.files(x = cell.dat,
+                             file.prefix= paste0("Clustered_", exp.name), # required
+                             divide.by = "Sample",
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
+
+        ## Write 'subsample' dataset
         Spectre::write.files(x = cell.dat.sub,
                              file.prefix = paste0("DimRed_", exp.name), # required
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat.sub,
+                             file.prefix = paste0("DimRed_", exp.name), # required
+                             divide.by = "Sample",
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
@@ -319,16 +306,33 @@
                                annot.col.nums = c(1,33:39),
 
                                do.frequencies = TRUE,
+                               cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
+
                                do.exp.per.marker = TRUE,
                                do.exp.per.sample = TRUE,
-
-                               cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
                                fun.type = "median",
 
                                do.foldchange = TRUE,
                                group.col = "Group",
                                control.group = "Mock"
-                              )
+                               )
+
+        # Spectre::make.sumtable(x = cell.dat,
+        #                        sample.col = "Sample",
+        #                        clust.col = "FlowSOM_metacluster",
+        #                        annot.col.nums = c(1,33:39),
+        #
+        #                        do.frequencies = TRUE,
+        #                        do.exp.per.marker = TRUE,
+        #                        do.exp.per.sample = TRUE,
+        #
+        #                        cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
+        #                        fun.type = "median",
+        #
+        #                        do.foldchange = TRUE,
+        #                        group.col = "Group",
+        #                        control.group = "Mock"
+        #                       )
 
         setwd(PrimaryDirectory)
 
@@ -337,19 +341,50 @@
 #### Print tSNE/UMAP plots to disk
 ##########################################################################################################
 
-    ### Loop for cellular markers etc
+    setwd(PrimaryDirectory)
+    setwd(OutputDirectory)
+    dir.create("Output-ColourPlots")
+    setwd("Output-ColourPlots")
 
-        setwd(PrimaryDirectory)
+    ### Grid plot
+    setwd(OutputDirectory)
+    setwd("Output-ColourPlots")
+
+    ### Some multi plots
         setwd(OutputDirectory)
-        dir.create("Output-ColourPlots")
+        setwd("Output-ColourPlots")
+
+        ## multi.plot leads to the working directory changing to desktop for some reason.
+        multi.plot(d = cell.dat.sub,
+                   type = "factor",
+                   x.axis = "UMAP_42_X",
+                   y.axis = "UMAP_42_Y",
+                   plot.by = "Sample",
+                   align.xy.by = cell.dat.sub,
+                   align.col.by = cell.dat.sub,
+                   colour = NULL,
+                   figure.title = "By sample",
+                   dot.size = 1
+                   ) # add 'path' argument, which is used by ggsave # add format argument
+
+        getwd()
+
+    ### Loop for cellular markers etc
+        setwd(OutputDirectory)
         setwd("Output-ColourPlots")
 
         plots <- CellularCols
 
         ## Plot for all data
             for(a in plots){
-              p <- Spectre::colour.plot(d = cell.dat.sub, x.axis = "UMAP_42_X", y.axis = "UMAP_42_Y",
-                                        col.axis = a, title = a, colours = "spectral", dot.size = 1)
+              p <- Spectre::colour.plot(d = cell.dat.sub,
+                                        x.axis = "UMAP_42_X",
+                                        y.axis = "UMAP_42_Y",
+                                        col.axis = a,
+                                        title = a,
+                                        colours = "magma",
+                                        dot.size = 1)
+
               ggsave(p, filename = paste0("All_samples_", a, ".png"), width = 9, height = 7)
             }
 
@@ -364,25 +399,27 @@
 
     ### Loop for clusters etc
 
+        setwd(OutputDirectory)
+        setwd("Output-ColourPlots")
+
         head(cell.dat.sub)
         factors <- c("FlowSOM_metacluster")
-        setwd(OutputDirectory)
 
         ## Plot for all data
             for(a in factors){
-              p <- Spectre::factor.plot(d = cell.dat.sub,
+              p <- Spectre::labelled.factor.plot(d = cell.dat.sub,
                                         x.axis = "UMAP_42_X",
                                         y.axis = "UMAP_42_Y",
                                         col.axis = "FlowSOM_metacluster",
                                         title = "Cluster",
-                                        dot.size = 1,
-                                        add.labels = TRUE) # assumes numeric
+                                        dot.size = 1) # assumes numeric
 
               ggsave(p, filename = paste0("All_samples_", a, ".png"), width = 9, height = 7)
             }
 
         setwd(PrimaryDirectory)
 
-    ### Loop for samples/groups/batches etc
+        ## Plot divided by groups
 
 
+        ## Plot divided by samples

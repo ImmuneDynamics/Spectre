@@ -31,7 +31,7 @@ colour.plot <- function(d,
                         x.axis, # "UMAP1"
                         y.axis, # "UMAP2"
                         col.axis, # "BV605.Ly6C"
-                        title,
+                        title = col.axis,
                         col.min.threshold = 0.01,
                         col.max.threshold = 0.995,
                         colours = "spectral",

@@ -20,8 +20,8 @@ factor.plot <- function(d,
                         x.axis, # "UMAP1"
                         y.axis, # "UMAP2"
                         col.axis, # "BV605.Ly6C"
-                        title,
-                        dot.size,
+                        title = col.axis,
+                        dot.size = 1,
                         align.xy.by = NULL,
                         align.col.by = NULL)
 {

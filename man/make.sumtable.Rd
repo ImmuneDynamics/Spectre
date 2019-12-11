@@ -17,11 +17,11 @@ make.sumtable(x, ...)
 
 \item{do.frequencies}{DEFAULTS TO TRUE.}
 
+\item{cells.per.tissue}{DEFAULTS TO NULL.}
+
 \item{do.exp.per.sample}{DEFAULTS TO TRUE.}
 
 \item{do.exp.per.marker}{DEFAULTS TO TRUE.}
-
-\item{cells.per.tissue}{DEFAULTS TO NULL.}
 
 \item{fun.type}{DEFAULTS TO "median".}
 

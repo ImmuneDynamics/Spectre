@@ -5,14 +5,13 @@
 #' @param x NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.
 #' @param sample.col NO DEFAULT.
 #' @param clust.col NO DEFAULT.
-#'
 #' @param annot.col.nums DEFAULTS TO NULL.
 #'
 #' @param do.frequencies DEFAULTS TO TRUE.
+#' @param cells.per.tissue DEFAULTS TO NULL.
+#'
 #' @param do.exp.per.sample DEFAULTS TO TRUE.
 #' @param do.exp.per.marker DEFAULTS TO TRUE.
-#'
-#' @param cells.per.tissue DEFAULTS TO NULL.
 #' @param fun.type DEFAULTS TO "median".
 #'
 #' @param do.foldchange DEFAULTS TO FALSE.
@@ -36,18 +35,16 @@ make.sumtable <- function(x, # data
                            clust.col, # Clusters/populations
                            annot.col.nums = NULL, # Non-cellular markers
 
-                           ##
+                           ## Cell frequencies and counts/tissue
                            do.frequencies = TRUE,
-                           do.exp.per.sample = TRUE,
-                           do.exp.per.marker = TRUE,
-
-                           ##
                            cells.per.tissue = NULL, # Calculate cell numbers per cluster/sample/tissue        # Turn OFF if you don't have any cell counts
 
-                           ## Expression
+                           ## Expression (MFI)
+                           do.exp.per.sample = TRUE,
+                           do.exp.per.marker = TRUE,
                            fun.type = "median", # Choose summary function for expression levels. Default = "mean". Can be "mean" or "median".
 
-                           ##
+                           ## Fold changes
                            do.foldchange = FALSE,
                            group.col = NULL, # specify group name (if groups are present)
                            control.group = NULL
@@ -90,6 +87,9 @@ make.sumtable <- function(x, # data
         ## Double up of terms just to be sure
         sample.name <- sample.col
         group.name <- group.col
+
+        ## Ensure input data is in data.table format
+        x <- as.data.frame(x)
 
         ## All sample and all group names
         all.sample.names <- as.matrix(unique(x[sample.col]))
