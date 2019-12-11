@@ -138,7 +138,7 @@
         rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums)
 
 ##########################################################################################################
-#### Define data and sample variables for analysis
+#### 3. Define data and sample variables for analysis
 ##########################################################################################################
 
     ### Define key columns
@@ -187,7 +187,7 @@
 
 
 ##########################################################################################################
-#### Perform clustering
+#### 4. Perform clustering
 ##########################################################################################################
 
     ### Run FlowSOM
@@ -210,7 +210,7 @@
         rm(flowsom.res.meta)                                # Remove results from global environment
 
 #########################################################################################################
-#### Perform downsampling and dimensionality reduction
+#### 5. Perform downsampling and dimensionality reduction
 ##########################################################################################################
 
     ### Subsampling
@@ -248,41 +248,54 @@
                              colours = "magma"
                              )
 
-    ### multi.plot - one plot per sample
+    ### Generate some multi.plots
         setwd(OutputDirectory)
 
+        ## Plot by 'Sample', coloured by 'Group'
         multi.plot(d = cell.dat.sub,
                    type = "factor",
                    x.axis = "UMAP_42_X",
                    y.axis = "UMAP_42_Y",
-                   plot.by = "Sample",
+                   col.axis = group.col,
+                   plot.by = sample.col,
                    align.xy.by = cell.dat.sub,
                    align.col.by = cell.dat.sub,
-                   colour = NULL,
-                   figure.title = "By sample",
-                   dot.size = 1
+                   dot.size = 3
                    )
 
-    ### multi.plot - one plot per marker
-        setwd(OutputDirectory)
+        ## Plot by 'Sample', coloured by 'SCA-1' levels
+        for(i in CellularCols){
+            multi.plot(d = cell.dat.sub,
+                       type = "colour",
+                       x.axis = "UMAP_42_X",
+                       y.axis = "UMAP_42_Y",
+                       col.axis = i,
+                       colour = "magma",
+                       plot.by = sample.col,
+                       figure.title = i,
+                       align.xy.by = cell.dat.sub,
+                       align.col.by = cell.dat.sub,
+                       dot.size = 3
+                       )
+            }
 
-        multi.plot(d = cell.dat.sub,
-                   type = "factor",
-                   x.axis = "UMAP_42_X",
-                   y.axis = "UMAP_42_Y",
-                   plot.by = "Sample",
-                   align.xy.by = cell.dat.sub,
-                   align.col.by = cell.dat.sub,
-                   colour = NULL,
-                   figure.title = "By sample",
-                   dot.size = 1
-                    )
+        ## Plot the whole dataset, one plot per marker
+        multi.marker.plot(d = cell.dat.sub,
+                          x.axis = "UMAP_42_X",
+                          y.axis = "UMAP_42_Y",
+                          plot.by = c(CellularCols),
+                          align.xy.by = cell.dat.sub,
+                          align.col.by = cell.dat.sub,
+                          colours = "magma",
+                          figure.title = "Markers",
+                          dot.size = 3)
 
+        ## Loop to plot by sample/group, one plot per marker
 
 
 
 ##########################################################################################################
-#### Save data to disk
+#### 6. Save data to disk
 ##########################################################################################################
 
     ### Save data (cell.dat) including clustering results
@@ -320,7 +333,7 @@
         setwd(PrimaryDirectory)
 
 ##########################################################################################################
-#### Save summary statistics to disk
+#### 7. Save summary statistics to disk
 ##########################################################################################################
 
     ### Create and save sumtables
@@ -350,28 +363,11 @@
                                control.group = "Mock"
                                )
 
-        # Spectre::make.sumtable(x = cell.dat,
-        #                        sample.col = "Sample",
-        #                        clust.col = "FlowSOM_metacluster",
-        #                        annot.col.nums = c(1,33:39),
-        #
-        #                        do.frequencies = TRUE,
-        #                        do.exp.per.marker = TRUE,
-        #                        do.exp.per.sample = TRUE,
-        #
-        #                        cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
-        #                        fun.type = "median",
-        #
-        #                        do.foldchange = TRUE,
-        #                        group.col = "Group",
-        #                        control.group = "Mock"
-        #                       )
-
         setwd(PrimaryDirectory)
 
 
 ##########################################################################################################
-#### Print tSNE/UMAP plots to disk
+#### 8. Print tSNE/UMAP plots to disk
 ##########################################################################################################
 
     setwd(PrimaryDirectory)

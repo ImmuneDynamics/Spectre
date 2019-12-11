@@ -37,7 +37,7 @@ multi.plot <- function(d,
                        align.col.by, # alignment for colours
 
                        colours = 'spectral',
-                       figure.title = paste0("By ", plot.by, " - ", col.axis),
+                       figure.title = paste0(col.axis, " by ", plot.by),
                        dot.size = 1,
                        col.min.threshold = 0.01,
                        col.max.threshold = 0.995,
