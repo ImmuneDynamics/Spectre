@@ -52,7 +52,3 @@ run.pca <- function(x,
   
 }
 
-
-
-run.pca(iris, c(1:4))
-
