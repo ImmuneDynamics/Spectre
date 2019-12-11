@@ -22,6 +22,8 @@ Imports:
     scales,
     colorRamps,
     RColorBrewer,
-    gridExtra
+    gridExtra,
+    caret,
+    class
 Suggests:
 RoxygenNote: 7.0.2
