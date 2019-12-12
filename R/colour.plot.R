@@ -78,9 +78,22 @@ colour.plot <- function(d,
       # colourMax = 600
       # colourMin = 0
 
-  ## Colour setup
+  ## Check that necessary packages are installed
+    if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required by not installed')
+    if(!is.element('scales', installed.packages()[,1])) stop('scales is required by not installed')
+    if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required by not installed')
+    if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required by not installed')
+    if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required by not installed')
 
-      # Jet
+  ## Require packages
+    require(ggplot2)
+    require(scales)
+    require(colorRamps)
+    require(ggthemes)
+    require(RColorBrewer)
+
+  ## Colour setup
+        # Jet
       if(colours == "jet"){
         colour.scheme <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
       }
