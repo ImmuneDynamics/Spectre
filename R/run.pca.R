@@ -10,7 +10,7 @@
 #' @param component.loading Option to create plots for each component. Requires scree.plot = TRUE. Default = TRUE.
 #' @param marker.contribution Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE. Default = TRUE.
 #' @param loading.plot Option to create scree plots. Will save generated loading plot. Default = TRUE.
-#' @param individual.samples Option to run above plots on a per sample basis. Default = FALSE.
+#' @param individual.samples Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included. Default = FALSE.
 #' @param sample.code Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".Default = "FileName"
 #' @param top.tally Number of top markers that contributed to PCA across each sample. Used for "individual.samples". Defalut = 10.
 #' @param path Location to save plots. Default = getwd() (working directory)
