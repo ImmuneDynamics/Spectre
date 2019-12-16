@@ -32,6 +32,12 @@ library("reticulate")
 ##########################################################################################################
 
 setwd("/Users/givanna/Documents/phd/code/Spectre/worked_example/Chronoclust_workflow")
+
+## Set working directory
+    dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+    setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
+    getwd()
+
 # specify the location of the xml file containing the dataset for each time point
 input.xml.location <- "config_files/input.xml"
 
@@ -46,13 +52,13 @@ out.dir <- "Output_chronoclust"
 ##########################################################################################################
 
 # assuming you have setup a conda environment, specify what's the environment name is
-conda.env.name <- "chronoclust-public"
+conda.env.name <- "chronoclust-public" # note, 'anaconda' (https://www.anaconda.com/distribution/#download-section) needs to be installed for the conda environment to work
 
 Spectre::run.chronoclust(config.xml.file.location = config.xml.location,
-                input.xml.file.location = input.xml.location,
-                output.dir.location = out.dir,
-                conda.env.name = conda.env.name    
-                )
+                         input.xml.file.location = input.xml.location,
+                         output.dir.location = out.dir,
+                         conda.env.name = conda.env.name
+                         )
 
 
 
