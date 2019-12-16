@@ -56,11 +56,8 @@
     ### 1.4. Set working directory
 
         ## Set working directory
-        #dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
-        #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
-
-        setwd("/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre - workflow scripts/")
-
+        dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
+        setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
         getwd()
         PrimaryDirectory <- getwd()
         PrimaryDirectory
