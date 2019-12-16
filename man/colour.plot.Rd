@@ -17,11 +17,11 @@ See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vign
 
 \item{title}{Character. Title for the plot. No default.}
 
-\item{col.min.threshold}{Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.995.}
+\item{col.min.threshold}{Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.01.}
 
-\item{col.max.threshold}{Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.01.}
+\item{col.max.threshold}{Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.995.}
 
-\item{colours}{Character. Colour scheme to use. Can be "spectral" or "jet". Defaults to "spectral"}
+\item{colours}{Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno". Defaults to "spectral".}
 
 \item{dot.size}{Numeric. Size of the dots. Defaults to 1.}
 

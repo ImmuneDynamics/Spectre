@@ -11,13 +11,17 @@
 #' @export
 
 run.umap <- function(x,
-                 use.cols,
-                 umap.seed
-                 ){
-  #x <- iris
-  #umap.seed <- 42
-  #use.cols <- c(1:4)
+                     use.cols,
+                     umap.seed
+                     )
+{
 
+  ### Test data
+      # x <- iris
+      # umap.seed <- 42
+      # use.cols <- c(1:4)
+
+  ###
   custom.config <- umap.defaults
   custom.config$random_state <- umap.seed
 
@@ -34,5 +38,4 @@ run.umap <- function(x,
   names(umap.res)[names(umap.res) == "V2"] <- paste0("UMAP", "_", umap.seed, "_", "Y")
 
   assign("umap.res", umap.res, envir = globalenv())
-
 }

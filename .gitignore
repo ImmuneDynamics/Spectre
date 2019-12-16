@@ -1,2 +1,6 @@
-.*
-.DS_Store
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+Spectre.Rproj
+**/.DS_Store
