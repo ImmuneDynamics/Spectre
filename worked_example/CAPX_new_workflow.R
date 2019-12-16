@@ -16,8 +16,8 @@
         if(!require('devtools')) {install.packages('devtools')}
         library('devtools')
 
-        #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
-        install_github("sydneycytometry/spectre", ref = 'development')
+        install_github("sydneycytometry/spectre")
+        #install_github("sydneycytometry/spectre", ref = 'development') # option to install the development verison if required
         library("Spectre")
 
     ### 1.2. Install other packages
