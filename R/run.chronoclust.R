@@ -5,6 +5,7 @@
 #' @param input.xml.file.location NO DEFAULT. Location of xml file describing the location of the dataset (for each timepoint) for Chronoclust to operate on.
 #' @param output.dir.location NO DEFAULT. The directory for Chronoclust to write its result to.
 #' @param conda.env.name NO DEFAULT. The conda virtual environment name where Chronoclust wil run.
+#' @param conda.env.location DEFAULT NULL. Specify where anaconda is installed. If nothing is given, then reticulate will look at where it's normally installed /Users/<yourname>/anaconda
 #' 
 #' 
 #' This function run a time-series clustering and cluster tracking algorithm Chronoclust.
@@ -24,9 +25,15 @@
 run.chronoclust <- function(config.xml.file.location,
                             input.xml.file.location,
                             output.dir.location,
-                            conda.env.name) {
+                            conda.env.name
+                            conda.env.location=NULL) {
   # activate the conda env
-  use_condaenv(conda.env.name)
+  if (is.null(conda.env.location)) {
+    use_condaenv(conda.env.name)
+  } else {
+    use_condaenv(conda.env.name, conda=conda.env.location)  
+  }
+  
   
   # Setup Chronoclust
   chronoclust <- import("chronoclust")  # Import Chronoclust API
