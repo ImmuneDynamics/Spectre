@@ -54,11 +54,17 @@ out.dir <- "Output_chronoclust"
 # assuming you have setup a conda environment, specify what's the environment name is
 conda.env.name <- "chronoclust-public" # note, 'anaconda' (https://www.anaconda.com/distribution/#download-section) needs to be installed for the conda environment to work
 
+# location where anaconda is installed in your computer. Read more below.
+conda.env.location <- NULL
+# OPTIONAL: conda is normally installed under /Users/<yourname>/anaconda3, but it can also be installed
+# elsewhere such as /opt/anaconda3/bin/conda.
+# Hence if you encounter error such as "Have you installed conda?", then it's likely that your conda is not
+# installed at the default location. Thus you need to find where it's installed and specify it
+conda.env.location <- '/opt/anaconda3/bin/conda'
+
 Spectre::run.chronoclust(config.xml.file.location = config.xml.location,
-                         input.xml.file.location = input.xml.location,
-                         output.dir.location = out.dir,
-                         conda.env.name = conda.env.name
-                         )
-
-
-
+                input.xml.file.location = input.xml.location,
+                output.dir.location = out.dir,
+                conda.env.name = conda.env.name,
+                conda.env.location = conda.env.location
+                )
