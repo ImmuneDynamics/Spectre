@@ -78,7 +78,7 @@
 
     ### Read SAMPLES (data) into workspace and review
 
-        ## List of CSV files in PrimaryDirectory ## ADD A PRE-PROCESSING SCRIPT BEFORE THIS ONE -- FILE MERGE etc             ## HERE WE WANT ONE FILE PER SAMPLE
+        ## List of CSV files in PrimaryDirectory # HERE WE WANT ONE FILE PER SAMPLE
         list.files(PrimaryDirectory, ".csv")
 
         ## Import samples (read files into R from disk)
@@ -86,11 +86,11 @@
                             file.type = ".csv",
                             do.embed.file.names = TRUE)
 
+        ## Some checks
         ncol.check    # Review number of columns (features, markers) in each sample
         nrow.check    # Review number of rows (cells) in each sample
         name.table    # Review column names and their subsequent values
 
-        ## Check data
         head(data.list)
         head(data.list[[1]])
 
