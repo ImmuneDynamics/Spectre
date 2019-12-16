@@ -19,7 +19,8 @@ library('devtools')
 #if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
 
 # Other branch version. "adding_chronoclust" is the branch name.
-devtools::install_github(repo = "sydneycytometry/spectre", ref = 'adding_chronoclust')
+  #devtools::install_github(repo = "sydneycytometry/spectre", ref = 'adding_chronoclust')
+  devtools::install_github(repo = "sydneycytometry/spectre", ref = 'development')
 
 library("Spectre")
 
