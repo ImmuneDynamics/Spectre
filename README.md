@@ -7,8 +7,8 @@ A computational toolkit for analysis of high-dimensional single-cell cytometry d
 ### About
 Core developers of the Spectre package are Thomas Ashhurst, Felix Marsh-Wakefield, and Givanna Putri. The Spectre package is designed to allow for data analaysis workflows that simplify and streamline data manipulation and annotation, population identification (clustering, classificaiton), and dimensionality reduction (tSNE, UMAP) etc in high-dimensional cytometry data. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. 
 
-***Citation***
-*If you use Spectre or the CAPX workflows in your work, please consider citing Ashhurst, T. M., et al (2019). Mass Cytometry: Methods and Protocols (pages 159-192). To continue providing open-source analysis tools such as Spectre, we have to be able to prove that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.*
+***Citation:***
+* If you use Spectre or the CAPX workflows in your work, please consider citing Ashhurst, T. M., et al (2019). Mass Cytometry: Methods and Protocols (pages 159-192). To continue providing open-source analysis tools such as Spectre, we have to be able to prove that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.*
 
 ### Protocols and vignettes
 Basic usage instructions, and vignettes are available from https://wiki.centenary.org.au/display/SPECTRE. More comprehensive protocols can be found by signing up to the Sydney Cytometry 'extranet': https://sydneycytometry.org.au/wiki-launch.
