@@ -349,7 +349,7 @@
                                annot.col.nums = c(1,33:39),
 
                                do.frequencies = TRUE,
-                               cells.per.tissue = meta.dat$Cells.per.sample, ## MODIFY TO DO MATCHING
+                               cells.per.tissue = meta.dat$Cells.per.sample, ## CHECK THE ORDER OF OCCURANCE OF THE unique entries in the sample.col COLUMN -- the order or cell counts in the vector MUST be the same
 
                                do.exp.per.marker = TRUE,
                                do.exp.per.sample = TRUE,

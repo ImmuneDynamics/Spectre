@@ -14,7 +14,7 @@
 run.umap <- function(x,
                      use.cols,
                      umap.seed = 42,
-                     suffix = NULL suffix = "test"
+                     suffix = NULL
                      )
 {
 
