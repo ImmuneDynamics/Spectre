@@ -28,10 +28,10 @@ multi.marker.plot <- function(d,
                                y.axis, # Y axis for all plots
 
                                plot.by, # Column -- where each unique value is plotted separately (i.e. plot by sample, etc)
-                               
+
                                align.xy.by, # alignment for X and Y
                                align.col.by, # alignment for colours
-                               
+
                                colours = 'spectral',
                                figure.title = 'Marker expression',
                                dot.size = 1,
@@ -42,9 +42,9 @@ multi.marker.plot <- function(d,
                                plot.height = 7
                               )
 {
-  
+
   ### Test data
-  
+
   # library(Spectre)
   # library('plyr')
   # library('data.table')
@@ -63,16 +63,16 @@ multi.marker.plot <- function(d,
   #
   # setwd("/Users/Tom/Desktop")
   # getwd()
-  
+
   # d <- demo.umap
   # x.axis <- "UMAP_42_X"
   # y.axis <- "UMAP_42_Y"
-  # 
+  #
   # plot.by <- c("AF700.CD45", "APCCy7.CD48", "BV605.Ly6C", "DL800.SA.Bio.Ly6G")
-  # 
+  #
   # align.xy.by <- demo.umap
   # align.col.by <- demo.umap
-  # 
+  #
   # colours = 'spectral'
   # figure.title = 'Marker expression'
   # dot.size = 1
@@ -81,7 +81,7 @@ multi.marker.plot <- function(d,
   # path = getwd()
   # plot.width = 9
   # plot.height = 7
-  
+
   ### Create each plot
   plots <- list()
   to.plot <- plot.by
@@ -100,26 +100,26 @@ multi.marker.plot <- function(d,
                                 col.max.threshold = col.max.threshold,
                                 dot.size = dot.size)
     }
-  
-  
+
+
   ### Arrange plots in grd
-  
+
   if(length(plots) < 4){
     num.cols <- length(plots)
     num.rows <- 1
   }
-  
+
   if(length(plots) == 4){
     num.cols <- 4
     num.rows <- 1
   }
-  
+
   if(length(plots) > 4){
     num.cols <- 4
     num.rows <- length(plots)/4
     num.rows <- ceiling(num.rows)
   }
-  
+
   gp <- grid.arrange(grobs = plots,
                      ncol = num.cols,
                      nrow = num.rows,
@@ -127,29 +127,30 @@ multi.marker.plot <- function(d,
                      #top = textGrob(figure.title,gp=gpar(fontsize=20,font=3)),
   )
   #top = figure.title) #top = "Main Title" -- need to fix size issues
-  
+
   ### Save to disk
-  
+
   # width = 9 per graph (4 graphs across max, so 4 cols max)
   wdth <- num.cols*plot.width
-  
+
   # height = 7 per graph
   hght <- num.rows*plot.height
-  
+
   ggsave(filename = paste0(figure.title, ".png"),
          plot = gp,
          path = path,
          width = wdth,
-         height = hght)
-  
+         height = hght,
+         limitsize = FALSE)
+
   ### Message
-  
+
   if(exists(x = "gp")){
     print(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
   }
-  
+
   if(exists(x = "gp") == FALSE){
     print(paste0("Grid image was not created successfully"))
   }
-  
+
 }

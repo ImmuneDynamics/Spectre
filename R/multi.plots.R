@@ -187,7 +187,8 @@ multi.plot <- function(d,
                  plot = gp,
                  path = path,
                  width = wdth,
-                 height = hght)
+                 height = hght,
+                 limitsize = FALSE)
 
   ### Message
 
