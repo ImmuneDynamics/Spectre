@@ -7,11 +7,13 @@
 run.umap(x, ...)
 }
 \arguments{
-\item{x}{data.frame. No default.}
+\item{x}{NO DEFAULT. Input data.table or data.frame.}
 
-\item{use.cols}{Vector of numbers, reflecting the columns to use for clustering. No default.}
+\item{use.cols}{NO DEFAULT. Vector of column names or numbers for clustering.}
 
-\item{umap.seed}{Numeric. Seed value for reproducibility. No default.
+\item{umap.seed}{DEFAULT = 42. Numeric. Seed value for reproducibility.}
+
+\item{suffix}{DEFAULT = blank.
 
 This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.}
 }
