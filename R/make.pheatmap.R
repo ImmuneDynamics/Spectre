@@ -151,7 +151,6 @@ make.pheatmap <- function(x,
       # plot.width       = 11.69
       # plot.height      = 8.26
 
-
   ### Setup color scheme
 
       ## Standard colour options
@@ -168,6 +167,8 @@ make.pheatmap <- function(x,
 
       heatmap.data <- x
       rownames(heatmap.data) <- t(x[sample.col])
+      heatmap.data
+
       heatmap.data
 
       if(is.null(annot.cols) == FALSE){

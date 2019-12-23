@@ -2,6 +2,7 @@
 
 export(classify)
 export(colour.plot)
+export(convert.to.fold)
 export(embed.columns)
 export(factor.plot)
 export(file.merge)
