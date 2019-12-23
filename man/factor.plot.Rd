@@ -13,6 +13,8 @@ factor.plot(x, ...)
 
 \item{col.axis}{Character. Column for colour. No default.}
 
+\item{bubble.lab}{Character. Column for bubble labels. Defaults to NULL.}
+
 \item{title}{Character. Title for the plot. No default.}
 
 \item{dot.size}{Numeric. Size of the dots. Defaults to 1.}
