@@ -6,6 +6,7 @@
 #' @param a.axis Character. Column for X axis. No default.
 #' @param y.axis Character. Column for Y axis. No default.
 #' @param col.axis Character. Column for colour. No default.
+#' @param bubble.lab Character. Column for bubble labels. Defaults to NULL.
 #' @param title Character. Title for the plot. No default.
 #' @param dot.size Numeric. Size of the dots. Defaults to 1.
 #' @param align.xy.by data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.
@@ -19,7 +20,8 @@
 factor.plot <- function(d,
                         x.axis, # "UMAP1"
                         y.axis, # "UMAP2"
-                        col.axis, # "BV605.Ly6C"
+                        col.axis, # "FlowSOM_metacluster"
+                        bubble.lab = NULL,
                         title = col.axis,
                         dot.size = 1,
                         align.xy.by = NULL,
@@ -27,14 +29,15 @@ factor.plot <- function(d,
 {
 
     ## TESTING
-              # d = cell.dat.sub
+              # d = demo.umap
               # x.axis = "UMAP_42_X"
               # y.axis = "UMAP_42_Y"
               # col.axis = "FlowSOM_metacluster"
+              # bubble.lab = "FlowSOM_metacluster" # bubble.lab = NULL
               # title = "Cluster"
               # dot.size = 0.5
-              # align.xy.by = cell.dat.sub
-              # align.col.by = cell.dat
+              # align.xy.by = demo.umap
+              # align.col.by = demo.umap
 
     ## might have to add the colour limits to each possible value of flowsom from main dataset
 
@@ -80,7 +83,7 @@ factor.plot <- function(d,
               colRange <- as.character(colRange)
             }
 
-        print(ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = as.factor(d[[col.axis]]))) +
+        p <- ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = as.factor(d[[col.axis]]))) +
                 geom_point(size = dot.size)+ # 2 for large # 0.5 for small
                 #scale_colour_gradientn(colours = colour.scheme(50)) +
                 #scale_colour_manual(name = "FileName", values = c(colour.scheme(length(filenames)))) +
@@ -90,8 +93,13 @@ factor.plot <- function(d,
                 ylab(y.axis)+
                 xlim(Xmin, Xmax) +
                 ylim(Ymin, Ymax) +
-                lims(colour = colRange) +
-                theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
+                lims(colour = colRange)
+
+                if(is.null(bubble.lab) == FALSE){
+                  p <- p+ geom_mark_hull(aes(label = as.factor(d[[bubble.lab]]), fill = as.factor(d[[bubble.lab]])), show.legend = FALSE)
+                }
+
+                p <- p+ theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
                       #axis.line=element_blank(),
                       #axis.text.x=element_blank(),
                       #axis.text.y=element_blank(),
@@ -110,7 +118,7 @@ factor.plot <- function(d,
                       legend.title=element_blank(),
                       plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
                 )
-              )
 
+                print(p)
 
 }

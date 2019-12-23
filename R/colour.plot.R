@@ -6,6 +6,7 @@
 #' @param x.axis Character. Column for X axis. No default.
 #' @param y.axis Character. Column for Y axis. No default.
 #' @param col.axis Character. Column for colour. No default.
+#' @param bubble.lab Character. Column for bubble labels. Defaults to NULL.
 #' @param title Character. Title for the plot. No default.
 #' @param col.min.threshold Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.01.
 #' @param col.max.threshold Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.995.
@@ -31,6 +32,7 @@ colour.plot <- function(d,
                         x.axis, # "UMAP1"
                         y.axis, # "UMAP2"
                         col.axis, # "BV605.Ly6C"
+                        bubble.lab = NULL,
                         title = col.axis,
                         col.min.threshold = 0.01,
                         col.max.threshold = 0.995,
@@ -58,39 +60,46 @@ colour.plot <- function(d,
   ## -- copy the # codes for 'spectral' colours -- use that directly, avoid needing Rcolourbrewer etc
 
   ## TESTING
-      # d <- plot.dat
+      # d <- demo.umap
       # x.axis = "UMAP_42_X"
       # y.axis = "UMAP_42_Y"
       # col.axis = "BV605.Ly6C"
+      # bubble.lab = "FlowSOM_metacluster"
       # col.min.threshold = 0.01
       # col.max.threshold = 1.0
       # title = paste0("All samples", " - ", "BV605.Ly6C")
       # colours = "spectral"
       # dot.size = 1
       #
-      # align.xy.by = plot.dat
-      # align.col.by = plot.dat
-      #
-      # xMax = 5
-      # xMin = -5
-      # yMax = 5
-      # yMin = -5
-      # colourMax = 600
-      # colourMin = 0
+      # align.xy.by = demo.umap
+      # align.col.by = demo.umap
+
+      # # xMax = 5
+      # # xMin = -5
+      # # yMax = 5
+      # # yMin = -5
+      # # colourMax = 600
+      # # colourMin = 0
 
   ## Check that necessary packages are installed
+    if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required by not installed')
     if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required by not installed')
     if(!is.element('scales', installed.packages()[,1])) stop('scales is required by not installed')
     if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required by not installed')
     if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required by not installed')
     if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required by not installed')
+    if(!is.element('ggforce', installed.packages()[,1])) stop('ggforce is required by not installed')
+    if(!is.element('concaveman', installed.packages()[,1])) stop('concaveman is required by not installed')
 
   ## Require packages
+    require(Spectre)
     require(ggplot2)
     require(scales)
     require(colorRamps)
     require(ggthemes)
     require(RColorBrewer)
+    require(ggforce)
+    require(concaveman)
 
   ## Colour setup
         # Jet
@@ -158,7 +167,7 @@ colour.plot <- function(d,
 
 
   ## Generate and show coloured plot
-  print(ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = d[[col.axis]])) +
+  p <- ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = d[[col.axis]])) +
     geom_point(size = dot.size) +
 
     #scale_colour_gradientn(colours = c("Black", colour.scheme(50)),
@@ -180,8 +189,13 @@ colour.plot <- function(d,
     ylim(Ymin, Ymax) +
 
     xlab(x.axis)+
-    ylab(y.axis)+
-      theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
+    ylab(y.axis)
+
+    if(is.null(bubble.lab) == FALSE){
+      p <- p+ geom_mark_hull(aes(label = as.factor(d[[bubble.lab]]), fill = as.factor(d[[bubble.lab]])), show.legend = FALSE)
+      }
+
+      p <- p+ theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
       #axis.line=element_blank(),
       #axis.text.x=element_blank(),
       #axis.text.y=element_blank(),
@@ -200,6 +214,7 @@ colour.plot <- function(d,
       legend.title=element_blank(),
       plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
       )
-  )
+
+      print(p)
 
 }

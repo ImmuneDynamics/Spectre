@@ -15,6 +15,8 @@ See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vign
 
 \item{col.axis}{Character. Column for colour. No default.}
 
+\item{bubble.lab}{Character. Column for bubble labels. Defaults to NULL.}
+
 \item{title}{Character. Title for the plot. No default.}
 
 \item{col.min.threshold}{Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.01.}
