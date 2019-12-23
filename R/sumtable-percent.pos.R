@@ -15,8 +15,23 @@ sumtable.percent.pos <- function(x,
     # library(data.table)
     # 
     # x <- as.data.table(demo.clustered)
+
+    # Spectre::embed.columns(x = x, 
+    #                        type = "data.frame",
+    #                        base.name = "FlowSOM_metacluster",
+    #                        col.name = "PopName",
+    #                        match.to = c(1:40),
+    #                        new.cols = c(rep("Pop1", 10),
+    #                                     rep("Pop2", 10),
+    #                                     rep("Pop3", 10),
+    #                                     rep("Pop4", 10))
+    #                        )
+    # 
+    # x <- cbind(x, embed.res)
+    # x
+  
     # sample.name <- "Sample"
-    # cluster.name <- "FlowSOM_metacluster",
+    # cluster.name <- "PopName"
     # Markers <- c("BV711.SCA.1", "APC.BrdU", "PECy7.CD80")
     # Cutoff <- c(500, 700, 600)
     
@@ -44,7 +59,7 @@ sumtable.percent.pos <- function(x,
     active.marker.cutoff
     
     df <- data.frame(matrix(ncol = (1 + length(clusters)), nrow = 0))
-    colnames(df) <- c("Sample", clusters)
+    colnames(df) <- c("Sample", as.vector(clusters))
     df
     
     for(a in samples){ ## EACH ROW IS A SAMPLE
