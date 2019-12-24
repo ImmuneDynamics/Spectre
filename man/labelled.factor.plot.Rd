@@ -19,7 +19,11 @@ labelled.factor.plot(x, ...)
 
 \item{align.xy.by}{data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.}
 
-\item{align.col.by}{data.frame. Sample to use to determine minimum and maximum colour values. No default.
+\item{align.col.by}{data.frame. Sample to use to determine minimum and maximum colour values. No default.}
+
+\item{nudge_x}{DEFAULTS to 0.5. X-nudge distance for labels.}
+
+\item{nudge_y}{DEFAULTS to 0.5. X-nudge distance for labels.
 
 This function allows you to plot cells on an XY plot, coloured by some factor (group, cluster, etc) with labels included.
 factor.plot is a wrapper around the heatmap.2 function from gplots.}

@@ -10,6 +10,8 @@
 #' @param dot.size Numeric. Size of the dots. Defaults to 1.
 #' @param align.xy.by data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.
 #' @param align.col.by data.frame. Sample to use to determine minimum and maximum colour values. No default.
+#' @param nudge_x DEFAULTS to 0.5. X-nudge distance for labels.
+#' @param nudge_y DEFAULTS to 0.5. X-nudge distance for labels.
 #'
 #' This function allows you to plot cells on an XY plot, coloured by some factor (group, cluster, etc) with labels included.
 #' factor.plot is a wrapper around the heatmap.2 function from gplots.
@@ -23,7 +25,9 @@ labelled.factor.plot <- function(d,
                                  title = col.axis,
                                  dot.size = 1,
                                  align.xy.by = NULL,
-                                 align.col.by = NULL){
+                                 align.col.by = NULL,
+                                 nudge_x = 0.5,
+                                 nudge_y = 0.5){
   ## TESTING
       # d = demo.umap
       # x.axis = "UMAP_42_X"
@@ -138,7 +142,8 @@ labelled.factor.plot <- function(d,
 
             geom_label(data = centroidsDf,
                        hjust = 0,
-                       nudge_x = 0.7,
+                       nudge_x = nudge_x,
+                       nudge_y = nudge_y,
                        aes(x = centroidX, y = centroidY, label=centroidCol, alpha = 0.5),
                        col = "black",
                        fontface = "bold") +
