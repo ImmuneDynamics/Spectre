@@ -25,14 +25,14 @@ labelled.factor.plot <- function(d,
                                  align.xy.by = NULL,
                                  align.col.by = NULL){
   ## TESTING
-      # d = cell.dat.sub
+      # d = demo.umap
       # x.axis = "UMAP_42_X"
       # y.axis = "UMAP_42_Y"
-      # col.axis = "FlowSOM_metacluster"
+      # col.axis = "FlowSOM_metacluster" # col.axis = "Sample"
       # title = "Cluster"
       # dot.size = 0.5
-      # align.xy.by = cell.dat.sub
-      # align.col.by = cell.dat
+      # align.xy.by = demo.umap
+      # align.col.by = demo.umap
 
 
   ## X, Y, col lims
@@ -81,10 +81,23 @@ labelled.factor.plot <- function(d,
 
 
   ## Prep centroid coordinates
-    centroidsDf <- data.frame(
-      centroidX = tapply(d[[x.axis]], d[[col.axis]], median), # median
-      centroidY = tapply(d[[y.axis]], d[[col.axis]], median),
-      centroidCol = tapply(d[[col.axis]], d[[col.axis]], median))
+
+
+    if(is.numeric(d[[col.axis]])){
+      centroidsDf <- data.frame(
+        centroidX = tapply(d[[x.axis]], d[[col.axis]], median), # median
+        centroidY = tapply(d[[y.axis]], d[[col.axis]], median),
+        centroidCol = tapply(d[[col.axis]], d[[col.axis]], median))
+    }
+
+    if(!is.numeric(d[[col.axis]])){
+      labels <- sort(unique(d[[col.axis]]))
+
+      centroidsDf <- data.frame(
+        centroidX = tapply(d[[x.axis]], d[[col.axis]], median), # median
+        centroidY = tapply(d[[y.axis]], d[[col.axis]], median),
+        centroidCol = labels)
+    }
 
     print(ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = as.factor(d[[col.axis]]))) +
             geom_point(size = dot.size)+ # 2 for large # 0.5 for small
