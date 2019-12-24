@@ -29,6 +29,9 @@ labelled.factor.plot <- function(d,
                                  nudge_x = 0.5,
                                  nudge_y = 0.5){
   ## TESTING
+      # install.packages('ggrepel')
+      # library('ggrepel')
+      #
       # d = demo.umap
       # x.axis = "UMAP_42_X"
       # y.axis = "UMAP_42_Y"
@@ -114,6 +117,7 @@ labelled.factor.plot <- function(d,
             xlim(Xmin, Xmax) +
             ylim(Ymin, Ymax) +
             lims(colour = colRange) +
+
             theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
                   #axis.line=element_blank(),
                   #axis.text.x=element_blank(),

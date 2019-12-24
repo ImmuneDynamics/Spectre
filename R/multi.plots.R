@@ -4,7 +4,7 @@
 #' @param x.axis NO DEFAULT. X axis
 #' @param y.axis NO DEFAULT. Y axis
 #' @param col.axis NO DEFAULT. Colour axis
-#' @param type NO DEFAULT. Specify whether col.axis is continious ('colour', for markers) or a factor ('factor', for clusters, sample, groups etc).
+#' @param type NO DEFAULT. Specify whether col.axis is continious ('colour', for markers) or a factor ('factor', for clusters, sample, groups etc), or 'labelled.factor'.
 #'
 #' @param plot.by NO DEFAULT. Name of the FACTORS that the plots will be divided by (e.g. Sample, Group, Batch etc).
 #' @param align.xy.by NO DEFAULT. Align X and Y to a dataset
@@ -29,7 +29,7 @@ multi.plot <- function(d,
                        x.axis, # X axis for all plots
                        y.axis, # Y axis for all plots
                        col.axis,
-                       type, # colour, factor
+                       type, # colour, factor, labelled.factor
 
                        plot.by, # Column -- where each unique value is plotted separately (i.e. plot by sample, etc)
 
@@ -129,6 +129,23 @@ multi.plot <- function(d,
                                     dot.size = dot.size)
         }
       }
+
+
+      ## For type = 'labelled.factor'
+      if(type == 'labelled.factor'){
+        for(i in c(1:length(to.plot))){
+          to.plot[i]
+          plots[[i]] <- labelled.factor.plot(d = subset(d, d[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+                                            x.axis = x.axis,
+                                            y.axis = y.axis,
+                                            col.axis = col.axis,
+                                            title = to.plot[i],
+                                            align.xy.by = d,
+                                            align.col.by = d,
+                                            dot.size = dot.size)
+        }
+      }
+
 
       ## For type = 'colour'
       if(type == 'colour'){

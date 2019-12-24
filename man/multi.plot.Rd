@@ -15,7 +15,7 @@ multi.plot(x, ...)
 
 \item{col.axis}{NO DEFAULT. Colour axis}
 
-\item{type}{NO DEFAULT. Specify whether col.axis is continious ('colour', for markers) or a factor ('factor', for clusters, sample, groups etc).}
+\item{type}{NO DEFAULT. Specify whether col.axis is continious ('colour', for markers) or a factor ('factor', for clusters, sample, groups etc), or 'labelled.factor'.}
 
 \item{plot.by}{NO DEFAULT. Name of the FACTORS that the plots will be divided by (e.g. Sample, Group, Batch etc).}
 
