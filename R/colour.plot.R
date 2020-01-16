@@ -88,8 +88,8 @@ colour.plot <- function(d,
     if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required by not installed')
     if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required by not installed')
     if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required by not installed')
-    if(!is.element('ggforce', installed.packages()[,1])) stop('ggforce is required by not installed')
-    if(!is.element('concaveman', installed.packages()[,1])) stop('concaveman is required by not installed')
+    #if(!is.element('ggforce', installed.packages()[,1])) stop('ggforce is required by not installed')
+    #if(!is.element('concaveman', installed.packages()[,1])) stop('concaveman is required by not installed')
 
   ## Require packages
     require(Spectre)
@@ -98,8 +98,8 @@ colour.plot <- function(d,
     require(colorRamps)
     require(ggthemes)
     require(RColorBrewer)
-    require(ggforce)
-    require(concaveman)
+    #require(ggforce)
+    #require(concaveman)
 
   ## Colour setup
         # Jet
