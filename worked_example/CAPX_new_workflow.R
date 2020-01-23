@@ -13,14 +13,15 @@
 ##########################################################################################################
 
     ### 1.1. Load 'Spectre' package (using devtools) and the dependencies that Spectre requires
+
+        ## Install devtolls
         if(!require('devtools')) {install.packages('devtools')}
         library('devtools')
 
+        ## Install Spectre
         #install_github("sydneycytometry/spectre")
         install_github("sydneycytometry/spectre", ref = 'development') # option to install the development verison if required
         library("Spectre")
-
-    ### 1.2. Install BioConductor packages
 
         ## Install BiocManager to download packages from Bioconductor
         if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -32,7 +33,7 @@
         if(!require('flowViz')) {BiocManager::install('flowViz')}
         if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
 
-    ### 1.3. Load packages
+    ### 1.2. Load packages
 
         library(Spectre)
         Spectre::check.packages() # --> change so that message at the end is "All required packages have been successfully installed"
@@ -40,7 +41,7 @@
 
         session_info()
 
-    ### 1.4. Set number of threads for data.table functions
+    ### 1.3. Set number of threads for data.table functions
 
         getDTthreads()
 
@@ -186,11 +187,7 @@
                              xdim = 10,
                              ydim = 10,
                              meta.k = 40,
-                             clustering.cols = ClusteringCols,
-                             clust.seed = 42,
-                             meta.seed = 42,
-                             clust.name = "FlowSOM_cluster",
-                             meta.clust.name = "FlowSOM_metacluster")
+                             clustering.cols = ClusteringCols)
 
         cell.dat <- cbind(cell.dat, flowsom.res.original)   # Add results to cell.dat
         cell.dat <- cbind(cell.dat, flowsom.res.meta)       # Add results to cell.dat
