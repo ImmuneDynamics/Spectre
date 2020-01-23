@@ -12,7 +12,7 @@
 #### 1. Install packages, load packages, and set working directory
 ##########################################################################################################
 
-    ### 1.1. Load 'Spectre' package (using devtools)
+    ### 1.1. Load 'Spectre' package (using devtools) and the dependencies that Spectre requires
         if(!require('devtools')) {install.packages('devtools')}
         library('devtools')
 
@@ -20,7 +20,7 @@
         install_github("sydneycytometry/spectre", ref = 'development') # option to install the development verison if required
         library("Spectre")
 
-    ### 1.2. Install other packages
+    ### 1.2. Install BioConductor packages
 
         ## Install BiocManager to download packages from Bioconductor
         if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -32,26 +32,17 @@
         if(!require('flowViz')) {BiocManager::install('flowViz')}
         if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
 
-    ### 1.3. Load packages from library
-        library('plyr')
-        library('data.table')
-        library('tidyr') # for spread
-        library('rstudioapi')
+    ### 1.3. Load packages
 
-        library('flowCore')
-        library('Biobase')
-        library('flowViz')
+        library(Spectre)
+        Spectre::check.packages() # --> change so that message at the end is "All required packages have been successfully installed"
+        Spectre::load.packages() # --> change so that message at the end is "All required packages have been successfully loaded"
 
-        library('FlowSOM')
-        library('Rtsne')
-        library('umap')
+        session_info()
 
-        library('ggplot2')
-        library('scales')
-        library('colorRamps')
-        library('ggthemes')
-        library('RColorBrewer')
-        library("gridExtra")
+    ### 1.4. Set number of threads for data.table functions
+
+        getDTthreads()
 
     ### 1.4. Set working directory
 

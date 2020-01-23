@@ -1,9 +1,9 @@
 #' load.packages
 #'
 #' This function allows you to load all of the common use packages dependencies for Spectre.
-#' 
+#'
 #' @return loads all the common use package libraries.
-#' 
+#'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}
@@ -32,4 +32,10 @@ load.packages <- function()
   require('RColorBrewer')
   require('gridExtra')
   require('caret')
+
+  require('flowCore')
+  require('Biobase')
+  require('flowViz')
+  require('FlowSOM')
+
   }
