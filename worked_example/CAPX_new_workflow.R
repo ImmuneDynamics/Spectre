@@ -126,7 +126,7 @@
         any(is.na(cell.dat))
 
         ## Cleanup (not necessary, but recommended)
-        rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums)
+          #rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums)
 
 ##########################################################################################################
 #### 3. Define data and sample variables for analysis
@@ -226,12 +226,12 @@
                           umap.seed = 42)
 
         cell.dat.sub <- cbind(cell.dat.sub, umap.res) # Merge UMAP results with data
-        plot(cell.dat.sub$UMAP_42_X, cell.dat.sub$UMAP_42_Y)
+        plot(cell.dat.sub$UMAP_X, cell.dat.sub$UMAP_Y)
 
     ### Review results
         Spectre::colour.plot(d = cell.dat.sub,
-                             x.axis = "UMAP_42_X",
-                             y.axis = "UMAP_42_Y",
+                             x.axis = "UMAP_X",
+                             y.axis = "UMAP_Y",
                              col.axis = "BV605.Ly6C",
                              title = paste0("All samples", " - ", "BV605.Ly6C"),
                              align.xy.by = cell.dat.sub,
@@ -245,8 +245,8 @@
         ## Plot by 'Sample', coloured by 'Group'
         multi.plot(d = cell.dat.sub,
                    type = "factor",
-                   x.axis = "UMAP_42_X",
-                   y.axis = "UMAP_42_Y",
+                   x.axis = "UMAP_X",
+                   y.axis = "UMAP_Y",
                    col.axis = group.col,
                    plot.by = sample.col,
                    align.xy.by = cell.dat.sub,
@@ -256,8 +256,8 @@
 
         ## Plot the whole dataset, one plot per marker in one image
         multi.marker.plot(d = cell.dat.sub,
-                          x.axis = "UMAP_42_X",
-                          y.axis = "UMAP_42_Y",
+                          x.axis = "UMAP_X",
+                          y.axis = "UMAP_Y",
                           plot.by = c(CellularCols),
                           align.xy.by = cell.dat.sub,
                           align.col.by = cell.dat.sub,
@@ -269,8 +269,8 @@
         for(i in CellularCols){
             multi.plot(d = cell.dat.sub,
                        type = "colour",
-                       x.axis = "UMAP_42_X",
-                       y.axis = "UMAP_42_Y",
+                       x.axis = "UMAP_X",
+                       y.axis = "UMAP_Y",
                        col.axis = i,
                        colour = "magma",
                        plot.by = sample.col,
