@@ -2,6 +2,8 @@
 ##### Spectre basic tutorial #####################################################################
 ##################################################################################################
 
+### A full set of instructions for this basic tutorial is available at https://wiki.centenary.org.au/x/5ysMCQ.
+
 ### 1. Install and load packages
 
     library(Spectre)
@@ -11,7 +13,7 @@
 
 ### 2. Set working directory
 
-    setwd("/Users/thomasa/Desktop/")
+    setwd("/Users/thomasa/Desktop/Spectre demo")
 
 ### 3. Load data and set preferences
 
@@ -25,19 +27,17 @@
     ## Define columns for clustering
     #...
 
-### 4. Run FlowSOM
+### 4. Run FlowSOM and UMAP
 
     cell.dat <- Spectre::run.flowsom(x = cell.dat,
                                      clustering.cols = )#####
-
-### 5. Run UMAP
 
     cell.dat <- Spectre::run.umap(x = cell.dat,
                                   use.cols = )####
 
     plot(cell.dat$UMAP_X, cell.dat$UMAP_Y)
 
-### 6. Save the data to disk
+### 5. Save the data to disk
 
     Spectre::write.files()
 
