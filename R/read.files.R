@@ -98,10 +98,10 @@
         #assign("colName.check", colName.check, envir = globalenv())
         assign("nrow.check", nrow.check, envir = globalenv())
 
-        #assign("data.list", data.list, envir = globalenv())
-        return(data.list)
-
         ## Result message
         #print(msg)
         warning("Files have been imported into a list")
+
+        #assign("data.list", data.list, envir = globalenv())
+        return(data.list)]
         }
