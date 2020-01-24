@@ -110,7 +110,7 @@ labelled.factor.plot <- function(d,
         centroidCol = labels)
     }
 
-    P <- ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = as.factor(d[[col.axis]]))) +
+    p <- ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = as.factor(d[[col.axis]]))) +
             geom_point(size = dot.size)+ # 2 for large # 0.5 for small
             #scale_colour_gradientn(colours = colour.scheme(50)) +
             #scale_colour_manual(name = "FileName", values = c(colour.scheme(length(filenames)))) +

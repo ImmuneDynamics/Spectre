@@ -214,16 +214,64 @@
                                           use.cols = ClusteringCols,
                                           umap.seed = 42)
 
+
+    ### Preview results (without saving to disk)
+
         plot(cell.dat.sub$UMAP_X, cell.dat.sub$UMAP_Y)
 
+        Spectre::colour.plot(d = cell.dat.sub,
+                             x.axis = "UMAP_X",
+                             y.axis = "UMAP_Y",
+                             col.axis = "BV605.Ly6C",
+                             align.xy.by = cell.dat.sub,
+                             align.col.by = cell.dat.sub)
+
+##########################################################################################################
+#### 6. Save data to disk
+##########################################################################################################
+
+        ### Save data (cell.dat) including clustering results
+        setwd(OutputDirectory)
+        dir.create("Output-data")
+        setwd("Output-data")
+
+        head(cell.dat)
+        head(cell.dat.sub)
+
+        ## Write 'large' dataset
+        Spectre::write.files(x = cell.dat,
+                             file.prefix= paste0("Clustered_", exp.name), # required
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat,
+                             file.prefix= paste0("Clustered_", exp.name), # required
+                             divide.by = "Sample",
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
+        ## Write 'subsample' dataset
+        Spectre::write.files(x = cell.dat.sub,
+                             file.prefix = paste0("DimRed_", exp.name), # required
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
+        Spectre::write.files(x = cell.dat.sub,
+                             file.prefix = paste0("DimRed_", exp.name), # required
+                             divide.by = "Sample",
+                             write.csv = TRUE,
+                             write.fcs = TRUE)
+
+        setwd(PrimaryDirectory)
+
 #########################################################################################################
-#### 6. Create and save some plots
+#### 7. Create and save some plots
 ##########################################################################################################
 
     ### Plot some sample-oriented plots
         setwd(OutputDirectory)
-        dir.create("Sample_plots")
-        setwd("Sample_plots")
+        dir.create("Plots-samples")
+        setwd("Plots-samples")
 
         Spectre::factor.plot(d = cell.dat.sub,
                              x.axis = "UMAP_X",
@@ -244,20 +292,23 @@
 
     ### Plot some cluster-oriented plots
         setwd(OutputDirectory)
-        dir.create("Cluster_plots")
-        setwd("Cluster_plots")
+        dir.create("Plots-clusters")
+        setwd("Plots-clusters")
 
-        Spectre::factor.plot(d = cell.dat.sub,
-                             x.axis = "UMAP_X",
-                             y.axis = "UMAP_Y",
-                             col.axis = "FlowSOM_metacluster",
-                             align.xy.by = cell.dat.sub,
-                             align.col.by = cell.dat.sub)
+        Spectre::labelled.factor.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_X",
+                                   y.axis = "UMAP_Y",
+                                   col.axis = "FlowSOM_metacluster",
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat.sub)
 
     ### Plot some marker-oriented plots
         setwd(OutputDirectory)
-        dir.create("Marker_plots")
-        setwd("Marker_plots")
+        dir.create("Plots-markers")
+        setwd("Plots-markers")
+
+        dir.create("All samples")
+        setwd("All samples")
 
         Spectre::multi.marker.plot(d = cell.dat.sub,
                                    x.axis = "UMAP_X",
@@ -265,49 +316,48 @@
                                    plot.by = c(CellularCols),
                                    align.xy.by = cell.dat.sub,
                                    align.col.by = cell.dat.sub,
-                                   colours = "magma",
                                    figure.title = "Markers",
                                    dot.size = 1,
                                    save.each.plot = TRUE)
 
-##########################################################################################################
-#### 7. Save data to disk
-##########################################################################################################
-
-    ### Save data (cell.dat) including clustering results
+    ### Plot some marker-oriented plots -- one set per sample
         setwd(OutputDirectory)
-        dir.create("Data_output")
-        setwd("Data_output")
+        setwd("Plots-markers")
+        dir.create("By sample")
+        setwd("By sample")
 
-        head(cell.dat)
-        head(cell.dat.sub)
+        for(i in as.matrix(unique(cell.dat.sub[[sample.col]]))){
+          for(a in ClusteringCols){
+            Spectre::colour.plot(d = cell.dat.sub[cell.dat.sub[[sample.col]] == i,],
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 col.axis = a,
+                                 title = paste0(i, "_", a),
+                                 align.xy.by = cell.dat.sub,
+                                 align.col.by = cell.dat.sub)
+          }
+        }
 
-        ## Write 'large' dataset
-        Spectre::write.files(x = cell.dat,
-                             file.prefix= paste0("Clustered_", exp.name), # required
-                             write.csv = TRUE,
-                             write.fcs = TRUE)
+    ### Plot some marker-oriented plots -- one set per group
+        setwd(OutputDirectory)
+        setwd("Plots-markers")
+        dir.create("By group")
+        setwd("By group")
 
-        Spectre::write.files(x = cell.dat,
-                             file.prefix= paste0("Clustered_", exp.name), # required
-                             divide.by = "Sample",
-                             write.csv = TRUE,
-                             write.fcs = TRUE)
+        for(i in as.matrix(unique(cell.dat.sub[[group.col]]))){
+          for(a in ClusteringCols){
+            Spectre::colour.plot(d = cell.dat.sub[cell.dat.sub[[group.col]] == i,],
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 col.axis = a,
+                                 title = paste0(i, "_", a),
+                                 align.xy.by = cell.dat.sub,
+                                 align.col.by = cell.dat.sub)
+          }
+        }
 
 
-        ## Write 'subsample' dataset
-        Spectre::write.files(x = cell.dat.sub,
-                             file.prefix = paste0("DimRed_", exp.name), # required
-                             write.csv = TRUE,
-                             write.fcs = TRUE)
 
-        Spectre::write.files(x = cell.dat.sub,
-                             file.prefix = paste0("DimRed_", exp.name), # required
-                             divide.by = "Sample",
-                             write.csv = TRUE,
-                             write.fcs = TRUE)
-
-        setwd(PrimaryDirectory)
 
 ##########################################################################################################
 #### 8. Save summary statistics to disk
@@ -340,3 +390,5 @@
                                )
 
         setwd(PrimaryDirectory)
+
+
