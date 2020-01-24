@@ -43,7 +43,8 @@ multi.plot <- function(d,
                        col.max.threshold = 0.995,
                        path = getwd(),
                        plot.width = 9,
-                       plot.height = 7
+                       plot.height = 7,
+                       save.each.plot = FALSE
                        )
 {
 
