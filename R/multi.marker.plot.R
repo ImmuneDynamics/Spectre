@@ -39,7 +39,8 @@ multi.marker.plot <- function(d,
                                col.max.threshold = 0.995,
                                path = getwd(),
                                plot.width = 9,
-                               plot.height = 7
+                               plot.height = 7,
+                               save.each.plot = FALSE
                               )
 {
 
@@ -98,7 +99,12 @@ multi.marker.plot <- function(d,
                                 colours = colours,
                                 col.min.threshold = col.min.threshold,
                                 col.max.threshold = col.max.threshold,
-                                dot.size = dot.size)
+                                dot.size = dot.size,
+                                path = path,
+                                plot.width = plot.width,
+                                plot.height = plot.height,
+                                save.to.disk = save.each.plot
+                                )
     }
 
 

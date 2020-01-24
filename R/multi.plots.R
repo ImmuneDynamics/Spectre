@@ -126,7 +126,11 @@ multi.plot <- function(d,
                                     title = to.plot[i],
                                     align.xy.by = d,
                                     align.col.by = d,
-                                    dot.size = dot.size)
+                                    dot.size = dot.size,
+                                    path = path,
+                                    plot.width = plot.width,
+                                    plot.height = plot.height,
+                                    save.to.disk = save.each.plot)
         }
       }
 

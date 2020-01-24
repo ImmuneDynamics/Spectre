@@ -217,6 +217,7 @@
         plot(cell.dat.sub$UMAP_X, cell.dat.sub$UMAP_Y)
 
     ### Review results
+        setwd(OutputDirectory)
         Spectre::colour.plot(d = cell.dat.sub,
                              x.axis = "UMAP_X",
                              y.axis = "UMAP_Y",
