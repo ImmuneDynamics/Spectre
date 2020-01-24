@@ -216,69 +216,69 @@
 
         plot(cell.dat.sub$UMAP_X, cell.dat.sub$UMAP_Y)
 
-    ### Review results
+#########################################################################################################
+#### 6. Create and save some plots
+##########################################################################################################
+
+    ### Plot some sample-oriented plots
         setwd(OutputDirectory)
-        Spectre::colour.plot(d = cell.dat.sub,
+        dir.create("Sample_plots")
+        setwd("Sample_plots")
+
+        Spectre::factor.plot(d = cell.dat.sub,
                              x.axis = "UMAP_X",
                              y.axis = "UMAP_Y",
-                             col.axis = "BV605.Ly6C",
-                             title = paste0("All samples", " - ", "BV605.Ly6C"),
+                             col.axis = "Sample",
+                             align.xy.by = cell.dat.sub,
+                             align.col.by = cell.dat.sub)
+
+        Spectre::multi.plot(d = cell.dat.sub,
+                             type = "factor",
+                             x.axis = "UMAP_X",
+                             y.axis = "UMAP_Y",
+                             col.axis = group.col,
+                             plot.by = sample.col,
                              align.xy.by = cell.dat.sub,
                              align.col.by = cell.dat.sub,
-                             colours = "magma"
-                             )
+                             dot.size = 1)
 
-    ### Generate some multi.plots
+    ### Plot some cluster-oriented plots
         setwd(OutputDirectory)
+        dir.create("Cluster_plots")
+        setwd("Cluster_plots")
 
-        ## Plot by 'Sample', coloured by 'Group'
-        multi.plot(d = cell.dat.sub,
-                   type = "factor",
-                   x.axis = "UMAP_X",
-                   y.axis = "UMAP_Y",
-                   col.axis = group.col,
-                   plot.by = sample.col,
-                   align.xy.by = cell.dat.sub,
-                   align.col.by = cell.dat.sub,
-                   dot.size = 3
-                   )
+        Spectre::factor.plot(d = cell.dat.sub,
+                             x.axis = "UMAP_X",
+                             y.axis = "UMAP_Y",
+                             col.axis = "FlowSOM_metacluster",
+                             align.xy.by = cell.dat.sub,
+                             align.col.by = cell.dat.sub)
 
-        ## Plot the whole dataset, one plot per marker in one image
-        multi.marker.plot(d = cell.dat.sub,
-                          x.axis = "UMAP_X",
-                          y.axis = "UMAP_Y",
-                          plot.by = c(CellularCols),
-                          align.xy.by = cell.dat.sub,
-                          align.col.by = cell.dat.sub,
-                          colours = "magma",
-                          figure.title = "Markers",
-                          dot.size = 3)
+    ### Plot some marker-oriented plots
+        setwd(OutputDirectory)
+        dir.create("Marker_plots")
+        setwd("Marker_plots")
 
-        ## Plot by 'Sample', coloured by 'marker' levels
-        for(i in CellularCols){
-            multi.plot(d = cell.dat.sub,
-                       type = "colour",
-                       x.axis = "UMAP_X",
-                       y.axis = "UMAP_Y",
-                       col.axis = i,
-                       colour = "magma",
-                       plot.by = sample.col,
-                       figure.title = i,
-                       align.xy.by = cell.dat.sub,
-                       align.col.by = cell.dat.sub,
-                       dot.size = 3
-                       )
-            }
-
+        Spectre::multi.marker.plot(d = cell.dat.sub,
+                                   x.axis = "UMAP_X",
+                                   y.axis = "UMAP_Y",
+                                   plot.by = c(CellularCols),
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat.sub,
+                                   colours = "magma",
+                                   figure.title = "Markers",
+                                   dot.size = 1,
+                                   save.each.plot = TRUE)
 
 ##########################################################################################################
-#### 6. Save data to disk
+#### 7. Save data to disk
 ##########################################################################################################
 
     ### Save data (cell.dat) including clustering results
-
-        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
+        dir.create("Data_output")
+        setwd("Data_output")
+
         head(cell.dat)
         head(cell.dat.sub)
 
@@ -310,11 +310,10 @@
         setwd(PrimaryDirectory)
 
 ##########################################################################################################
-#### 7. Save summary statistics to disk
+#### 8. Save summary statistics to disk
 ##########################################################################################################
 
     ### Create and save sumtables
-        setwd(PrimaryDirectory)
         setwd(OutputDirectory)
         dir.create("Output-SumTables", showWarnings = FALSE)
         setwd("Output-SumTables")
