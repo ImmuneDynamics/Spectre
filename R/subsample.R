@@ -56,6 +56,8 @@ subsample <- function(x,
       subsample.res <- rbind(subsample.res, data.temp)
     }
     dim(subsample.res)
-    assign("subsample.res", subsample.res, envir = globalenv())
+    #assign("subsample.res", subsample.res, envir = globalenv())
+    return(subsample.res)
+
   }
 }

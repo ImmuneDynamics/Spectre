@@ -183,19 +183,14 @@
 ##########################################################################################################
 
     ### Run FlowSOM
-        Spectre::run.flowsom(x = cell.dat,
+        cell.dat <- Spectre::run.flowsom(x = cell.dat,
                              xdim = 10,
                              ydim = 10,
                              meta.k = 40,
                              clustering.cols = ClusteringCols)
 
-        cell.dat <- cbind(cell.dat, flowsom.res.original)   # Add results to cell.dat
-        cell.dat <- cbind(cell.dat, flowsom.res.meta)       # Add results to cell.dat
-
         head(cell.dat)                                      # Check cell.dat to ensure FlowSOM data correctly attached
-
-        rm(flowsom.res.original)                            # Remove results from global environment
-        rm(flowsom.res.meta)                                # Remove results from global environment
+                          # Remove results from global environment
 
 #########################################################################################################
 #### 5. Perform downsampling and dimensionality reduction
@@ -205,24 +200,21 @@
         meta.dat
         as.matrix(unique(cell.dat[["Sample"]]))
 
-        Spectre::subsample(x = cell.dat,
+        cell.dat.sub <- Spectre::subsample(x = cell.dat,
                            method = "per.sample", # or "random
                            samp.col = sample.col,
                            targets = c(rep(500,12)),
                            seed = 42)
 
-        cell.dat.sub <- subsample.res
         nrow(cell.dat.sub)
 
-        rm(subsample.res)
 
     ### Run UMAP
 
-        Spectre::run.umap(x = cell.dat.sub,
+        cell.dat <- Spectre::run.umap(x = cell.dat.sub,
                           use.cols = ClusteringCols,
                           umap.seed = 42)
 
-        cell.dat.sub <- cbind(cell.dat.sub, umap.res) # Merge UMAP results with data
         plot(cell.dat.sub$UMAP_X, cell.dat.sub$UMAP_Y)
 
     ### Review results
