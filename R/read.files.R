@@ -100,7 +100,7 @@
 
         ## Result message
         #print(msg)
-        warning("Files have been imported into a list")
+        message("Files have been imported into a list")
 
         #assign("data.list", data.list, envir = globalenv())
         return(data.list)]
