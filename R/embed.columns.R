@@ -93,7 +93,7 @@ embed.columns <- function(x, # the list of dataframes (samples) where each dataf
         }
       }
       #assign("data.list", x, envir = globalenv())
-      return(data.list)
+      return(x)
     }
 
   ##############################################
