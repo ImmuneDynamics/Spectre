@@ -90,7 +90,6 @@
 
         ## Save relevant values
         assign("name.table", name.table, envir = globalenv())
-        assign("data.list", data.list, envir = globalenv())
 
         ncol.check <- as.matrix(ncol.check)
         nrow.check <- as.matrix(nrow.check)
@@ -98,6 +97,9 @@
         assign("ncol.check", ncol.check, envir = globalenv())
         #assign("colName.check", colName.check, envir = globalenv())
         assign("nrow.check", nrow.check, envir = globalenv())
+
+        #assign("data.list", data.list, envir = globalenv())
+        return(data.list)
 
         ## Result message
         print(msg)

@@ -74,9 +74,9 @@
         list.files(PrimaryDirectory, ".csv")
 
         ## Import samples (read files into R from disk)
-        Spectre::read.files(file.loc = PrimaryDirectory,
-                            file.type = ".csv",
-                            do.embed.file.names = TRUE)
+        teset <- Spectre::read.files(file.loc = PrimaryDirectory,
+                                      file.type = ".csv",
+                                      do.embed.file.names = TRUE)
 
         ## Some checks
         ncol.check    # Review number of columns (features, markers) in each sample
