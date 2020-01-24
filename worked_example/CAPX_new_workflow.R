@@ -74,9 +74,9 @@
         list.files(PrimaryDirectory, ".csv")
 
         ## Import samples (read files into R from disk)
-        test <- Spectre::read.files(file.loc = PrimaryDirectory,
-                                      file.type = ".csv",
-                                      do.embed.file.names = TRUE)
+        data.list <- Spectre::read.files(file.loc = PrimaryDirectory,
+                                         file.type = ".csv",
+                                         do.embed.file.names = TRUE)
 
         ## Some checks
         ncol.check    # Review number of columns (features, markers) in each sample
@@ -92,23 +92,23 @@
     ### Read sample metadata and embed in sample data
         meta.dat <- read.delim(file = "metadata/sample.details.txt")
 
-        Spectre::embed.columns(x = data.list,
-                               type = "list",
-                               match.to = meta.dat[c(1)],
-                               new.cols = meta.dat[c(2)],
-                               col.name = names(meta.dat[c(2)]))
+        data.list <- Spectre::embed.columns(x = data.list,
+                                           type = "list",
+                                           match.to = meta.dat[c(1)],
+                                           new.cols = meta.dat[c(2)],
+                                           col.name = names(meta.dat[c(2)]))
 
-        Spectre::embed.columns(x = data.list,
-                               type = "list",
-                               match.to = meta.dat[c(1)],
-                               new.cols = meta.dat[c(3)],
-                               col.name = names(meta.dat[c(3)]))
+        data.list <- Spectre::embed.columns(x = data.list,
+                                           type = "list",
+                                           match.to = meta.dat[c(1)],
+                                           new.cols = meta.dat[c(3)],
+                                           col.name = names(meta.dat[c(3)]))
 
-        Spectre::embed.columns(x = data.list,
-                               type = "list",
-                               match.to = meta.dat[c(1)],
-                               new.cols = meta.dat[c(4)],
-                               col.name = names(meta.dat[c(4)]))
+        data.list <- Spectre::embed.columns(x = data.list,
+                                           type = "list",
+                                           match.to = meta.dat[c(1)],
+                                           new.cols = meta.dat[c(4)],
+                                           col.name = names(meta.dat[c(4)]))
 
 
         head(data.list)
@@ -116,7 +116,7 @@
     ### Merge files
 
         ## Merge files and review
-        Spectre::file.merge(x = data.list)
+        cell.dat <- Spectre::file.merge(x = data.list)
 
         str(cell.dat)
         head(cell.dat)

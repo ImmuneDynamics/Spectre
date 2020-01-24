@@ -33,6 +33,10 @@ file.merge <- function(x,remove.duplicates = TRUE)
   }
 
   ## Assign to global environment
-  assign("cell.dat", cell.dat, envir = globalenv())
-  ifelse(exists("cell.dat"), "All files merged into 'cell.dat'", "ERROR in merging files into 'cell.dat'")
-}
+  #assign("cell.dat", cell.dat, envir = globalenv())
+  return(cell.dat)
+
+  #ifelse(exists("cell.dat"), "All files merged into 'cell.dat'", "ERROR in merging files into 'cell.dat'")
+  ifelse(exists("cell.dat"), message("All files merged into 'cell.dat'", stop("ERROR in merging files into 'cell.dat'")
+
+  }

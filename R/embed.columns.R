@@ -92,7 +92,8 @@ embed.columns <- function(x, # the list of dataframes (samples) where each dataf
           print("Error - list element list and 'match.to' do not match")
         }
       }
-      assign("data.list", x, envir = globalenv())
+      #assign("data.list", x, envir = globalenv())
+      return(data.list)
     }
 
   ##############################################
@@ -131,7 +132,8 @@ embed.columns <- function(x, # the list of dataframes (samples) where each dataf
         print("Error - list element list and 'match.to' do not match")
       }
     }
-    assign("embed.res", embed.res, envir = globalenv())
+    #assign("embed.res", embed.res, envir = globalenv())
+    return(embed.res)
   }
 
 }
