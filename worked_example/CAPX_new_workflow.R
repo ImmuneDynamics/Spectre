@@ -184,13 +184,12 @@
 
     ### Run FlowSOM
         cell.dat <- Spectre::run.flowsom(x = cell.dat,
-                             xdim = 10,
-                             ydim = 10,
-                             meta.k = 40,
-                             clustering.cols = ClusteringCols)
+                                         xdim = 10,
+                                         ydim = 10,
+                                         meta.k = 40,
+                                         clustering.cols = ClusteringCols)
 
-        head(cell.dat)                                      # Check cell.dat to ensure FlowSOM data correctly attached
-                          # Remove results from global environment
+        head(cell.dat)    # Check cell.dat to ensure FlowSOM data correctly attached
 
 #########################################################################################################
 #### 5. Perform downsampling and dimensionality reduction
@@ -201,10 +200,10 @@
         as.matrix(unique(cell.dat[["Sample"]]))
 
         cell.dat.sub <- Spectre::subsample(x = cell.dat,
-                           method = "per.sample", # or "random
-                           samp.col = sample.col,
-                           targets = c(rep(500,12)),
-                           seed = 42)
+                                           method = "per.sample", # or "random
+                                           samp.col = sample.col,
+                                           targets = c(rep(500,12)),
+                                           seed = 42)
 
         nrow(cell.dat.sub)
 

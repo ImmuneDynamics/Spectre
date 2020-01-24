@@ -52,7 +52,10 @@ run.flowsom <- function(x,
       #dimnames(x)[[2]]
 
   ## Remove non-numeric
-      head(x)
+      head
+
+      x.start <- x
+
       nums <- unlist(lapply(x, is.numeric))
       x <- x[ , nums]
       x[clustering.cols]
@@ -159,10 +162,10 @@ run.flowsom <- function(x,
   #assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
   #assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
 
-  x <- cbind(x, flowsom.res.original)   # Add results to x
-  x <- cbind(x, flowsom.res.meta)       # Add results to x
+  x.start <- cbind(x, flowsom.res.original)   # Add results to x
+  x.start <- cbind(x, flowsom.res.meta)       # Add results to x
 
-  return(x)
+  return(x.start)
 
 }
 
