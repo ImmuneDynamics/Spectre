@@ -210,9 +210,9 @@
 
     ### Run UMAP
 
-        cell.dat <- Spectre::run.umap(x = cell.dat.sub,
-                          use.cols = ClusteringCols,
-                          umap.seed = 42)
+        cell.dat.sub <- Spectre::run.umap(x = cell.dat.sub,
+                                          use.cols = ClusteringCols,
+                                          umap.seed = 42)
 
         plot(cell.dat.sub$UMAP_X, cell.dat.sub$UMAP_Y)
 
