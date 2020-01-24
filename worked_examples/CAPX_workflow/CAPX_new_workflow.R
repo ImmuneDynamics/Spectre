@@ -12,26 +12,9 @@
 #### 1. Install packages, load packages, and set working directory
 ##########################################################################################################
 
-    ### 1.1. Load 'Spectre' package (using devtools) and the dependencies that Spectre requires
+    ### 1.1. Install 'Spectre' package (using devtools) and the dependencies that Spectre requires
 
-        ## Install devtolls
-        if(!require('devtools')) {install.packages('devtools')}
-        library('devtools')
-
-        ## Install Spectre
-        #install_github("sydneycytometry/spectre")
-        install_github("sydneycytometry/spectre", ref = 'development') # option to install the development verison if required
-        library("Spectre")
-
-        ## Install BiocManager to download packages from Bioconductor
-        if (!requireNamespace("BiocManager", quietly = TRUE))
-          install.packages("BiocManager")
-
-        ## Download additional BioConductor packages
-        if(!require('flowCore')) {BiocManager::install('flowCore')}
-        if(!require('Biobase')) {BiocManager::install('Biobase')}
-        if(!require('flowViz')) {BiocManager::install('flowViz')}
-        if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+        # For installation instructions, please see https://wiki.centenary.org.au/x/YpL3C
 
     ### 1.2. Load packages
 

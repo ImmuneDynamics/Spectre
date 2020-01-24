@@ -27,7 +27,11 @@ labelled.factor.plot <- function(d,
                                  align.xy.by = NULL,
                                  align.col.by = NULL,
                                  nudge_x = 0.5,
-                                 nudge_y = 0.5){
+                                 nudge_y = 0.5,
+                                 save.to.disk = TRUE,
+                                 path = getwd(),
+                                 plot.width = 9,
+                                 plot.height = 7){
   ## TESTING
       # install.packages('ggrepel')
       # library('ggrepel')
@@ -154,5 +158,14 @@ labelled.factor.plot <- function(d,
 
             guides(alpha = "none")
     )
+
+    if(save.to.disk == TRUE){
+      ggsave(filename = paste0(title, ".png"),
+             plot = p,
+             path = path,
+             width = plot.width,
+             height = plot.height,
+             limitsize = FALSE)
+    }
 
 }

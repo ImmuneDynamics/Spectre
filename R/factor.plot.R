@@ -25,7 +25,11 @@ factor.plot <- function(d,
                         title = col.axis,
                         dot.size = 1,
                         align.xy.by = NULL,
-                        align.col.by = NULL)
+                        align.col.by = NULL,
+                        save.to.disk = TRUE,
+                        path = getwd(),
+                        plot.width = 9,
+                        plot.height = 7)
 {
 
     ## TESTING
@@ -118,6 +122,15 @@ factor.plot <- function(d,
                       legend.title=element_blank(),
                       plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
                 )
+
+                if(save.to.disk == TRUE){
+                  ggsave(filename = paste0(title, ".png"),
+                         plot = p,
+                         path = path,
+                         width = plot.width,
+                         height = plot.height,
+                         limitsize = FALSE)
+                }
 
                 print(p)
 
