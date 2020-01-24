@@ -46,5 +46,7 @@ run.umap <- function(x,
     names(umap.res)[names(umap.res) == "V2"] <- paste0("UMAP_Y", "_", suffix)
   }
 
-  assign("umap.res", umap.res, envir = globalenv())
+  #assign("umap.res", umap.res, envir = globalenv())
+  x <- cbind(x, umap.res) # Merge UMAP results with data
+  return(x)
 }

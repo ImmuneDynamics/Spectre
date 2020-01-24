@@ -156,8 +156,13 @@ run.flowsom <- function(x,
   dim(flowsom.res.meta)
   head(flowsom.res.meta)
 
-  assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
-  assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
+  #assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
+  #assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
+
+  x <- cbind(x, flowsom.res.original)   # Add results to x
+  x <- cbind(x, flowsom.res.meta)       # Add results to x
+
+  return(x)
 
 }
 
