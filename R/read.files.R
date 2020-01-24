@@ -102,5 +102,6 @@
         return(data.list)
 
         ## Result message
-        print(msg)
+        #print(msg)
+        warning("Files have been imported into a list")
         }

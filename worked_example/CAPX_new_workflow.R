@@ -74,7 +74,7 @@
         list.files(PrimaryDirectory, ".csv")
 
         ## Import samples (read files into R from disk)
-        teset <- Spectre::read.files(file.loc = PrimaryDirectory,
+        test <- Spectre::read.files(file.loc = PrimaryDirectory,
                                       file.type = ".csv",
                                       do.embed.file.names = TRUE)
 
