@@ -17,7 +17,6 @@
 
 check.packages <- function()
 {
-  if(!is.element('devtools', installed.packages()[,1])) stop('devtools is required by not installed')
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required by not installed')
   if(!is.element('plyr', installed.packages()[,1])) stop('plyr is required by not installed')
   if(!is.element('dplyr', installed.packages()[,1])) stop('dplyr is required by not installed')
