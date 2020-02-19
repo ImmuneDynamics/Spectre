@@ -1,21 +1,21 @@
-#' colour.plot - Create a dot plot (X vs Y) coloured by a selected column
+#' make.colour.plot - Create a dot plot (X vs Y) coloured by a selected column
 #'
 #' This function allows you to create a coloured XY plot where each cell is coloured by a selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select cellular markers.
 #'
-#' @param d data.frame. Input sample. No default.
-#' @param x.axis Character. Column for X axis. No default.
-#' @param y.axis Character. Column for Y axis. No default.
-#' @param col.axis Character. Column for colour. No default.
-#' @param bubble.lab Character. Column for bubble labels. Defaults to NULL.
-#' @param title Character. Title for the plot. No default.
-#' @param col.min.threshold Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold. Defaults to 0.01.
-#' @param col.max.threshold Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold. Defaults to 0.995.
-#' @param colours Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno". Defaults to "spectral".
-#' @param dot.size Numeric. Size of the dots. Defaults to 1.
-#' @param align.xy.by data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.
-#' @param align.col.by data.frame. Sample to use to determine minimum and maximum colour values. No default.
+#' @param d NO DEFAULT. data.table Input sample.
+#' @param x.axis NO DEFAULT. Character. Column for X axis.
+#' @param y.axis NO DEFAULT. Character. Column for Y axis.
+#' @param col.axis NO DEFAULT. Character. Column for colour.
+#' @param title DEFAULT = col.axis. Character. Title for the plot.
+#' @param col.min.threshold DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.
+#' @param col.max.threshold DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.
+#' @param colours DEFAULT = "spectral". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".
+#' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
+#' @param align.xy.by DEFAULT = d. data.table Sample to use to determine minimum and maximum X and Y axis values.
+#' @param align.col.by DEFAULT = d. data.table. Sample to use to determine minimum and maximum colour values.
+#' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
 #'
-#' @return prints a ggplot.
+#' @return prints and saves a ggplot.
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
@@ -24,41 +24,28 @@
 #' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @examples
-#' colour.plot()
+#' make.colour.plot(d = demo.umap, x = "UMAP_X", y = "UMAP_Y", col.axis = "BV605.Ly6C")
 #'
 #' @export
 
-colour.plot <- function(d,
-                        x.axis, # "UMAP1"
-                        y.axis, # "UMAP2"
-                        col.axis, # "BV605.Ly6C"
-                        bubble.lab = NULL,
-                        title = col.axis,
-                        col.min.threshold = 0.01,
-                        col.max.threshold = 0.995,
-                        colours = "spectral",
-                        dot.size = 1,
-                        align.xy.by = NULL, # choose a data frame to set absolute limits for X/Y/colour
-                        align.col.by = NULL,
-                        save.to.disk = TRUE,
-                        path = getwd(),
-                        plot.width = 9,
-                        plot.height = 7)
+make.colour.plot <- function(d,
+                            x.axis,
+                            y.axis,
+                            col.axis,
 
-                        # ### align axis and colours
-                            # align.x = FALSE,
-                            # align.y = FALSE,
-                            # align.colour = FALSE,
+                            title = col.axis,
+                            col.min.threshold = 0.01,
+                            col.max.threshold = 0.995,
+                            colours = "spectral",
+                            dot.size = 1,
+                            align.xy.by = d, # choose a data frame to set absolute limits for X/Y/colour
+                            align.col.by = d,
+                            save.to.disk = TRUE,
+                            path = getwd(),
+                            plot.width = 9,
+                            plot.height = 7,
+                            blank.axis = FALSE)
 
-                        ## Manual set max and min for alignment
-                            # xMax = NULL,
-                            # xMin = NULL,
-                            #
-                            # yMax = NULL,
-                            # yMin = NULL,
-                            #
-                            # colourMax = NULL,
-                            # colourMin = NULL
 {
 
   ## -- copy the # codes for 'spectral' colours -- use that directly, avoid needing Rcolourbrewer etc
@@ -78,13 +65,6 @@ colour.plot <- function(d,
       # align.xy.by = demo.umap
       # align.col.by = demo.umap
 
-      # # xMax = 5
-      # # xMin = -5
-      # # yMax = 5
-      # # yMin = -5
-      # # colourMax = 600
-      # # colourMin = 0
-
   ## Check that necessary packages are installed
     if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required by not installed')
     if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required by not installed')
@@ -92,8 +72,6 @@ colour.plot <- function(d,
     if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required by not installed')
     if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required by not installed')
     if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required by not installed')
-    #if(!is.element('ggforce', installed.packages()[,1])) stop('ggforce is required by not installed')
-    #if(!is.element('concaveman', installed.packages()[,1])) stop('concaveman is required by not installed')
 
   ## Require packages
     require(Spectre)
@@ -102,11 +80,10 @@ colour.plot <- function(d,
     require(colorRamps)
     require(ggthemes)
     require(RColorBrewer)
-    #require(ggforce)
-    #require(concaveman)
 
   ## Colour setup
-        # Jet
+
+      # Jet
       if(colours == "jet"){
         colour.scheme <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
       }
@@ -171,54 +148,55 @@ colour.plot <- function(d,
 
 
   ## Generate and show coloured plot
-  p <- ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = d[[col.axis]])) +
-    geom_point(size = dot.size) +
+    p <- ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = d[[col.axis]])) +
+                geom_point(size = dot.size) +
 
-    #scale_colour_gradientn(colours = c("Black", colour.scheme(50)),
-    #                       #values = rescale(c(ColrMin, ColrMax)),
-    #                       breaks = c(ColrMin),
-    #                       limits = c(min(d[[col.axis]]), ColrMax),
-    #                       na.value = "Purple"
-    #                       )+
+                scale_colour_gradientn(colours = colour.scheme(50),
+                                       limits = c(ColrMin, ColrMax),
+                                       oob=squish) +
+                ggtitle(title) +
+                xlim(Xmin, Xmax) +
+                ylim(Ymin, Ymax) +
 
-    scale_colour_gradientn(colours = colour.scheme(50),
-                           limits = c(ColrMin, ColrMax), #0.03-01 seems to work well#0.97-995 seems to work well
-                           #na.value = "Purple")+
-                           oob=squish) +
-    ggtitle(title) +
-    #guides(fill = guide_legend(angle = 90, colour = "red"))+ ###
-    #labs(colour = col.axis)+
+                xlab(x.axis)+
+                ylab(y.axis)
 
-    xlim(Xmin, Xmax) +
-    ylim(Ymin, Ymax) +
+  ## Add some themes
 
-    xlab(x.axis)+
-    ylab(y.axis)
+    p <- p + theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
+                   axis.title.x=element_text(color="Black", face="bold", size=18),
+                   axis.title.y=element_text(color="Black", face="bold", size=18),
+                   legend.text=element_text(size=12), # large = 30 # small = 8
+                   legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                   legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
+                   legend.title=element_blank(),
+                   plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
+                   )
 
-    if(is.null(bubble.lab) == FALSE){
-      p <- p+ geom_mark_hull(aes(label = as.factor(d[[bubble.lab]]), fill = as.factor(d[[bubble.lab]])), show.legend = FALSE)
+  ## Blank the axes if desired
+
+    if(blank.axis == TRUE){
+      p <- p + theme(axis.line=element_blank(),
+                     axis.text.x=element_blank(),
+                     axis.text.y=element_blank(),
+                     axis.ticks=element_blank(),
+                     axis.title.x=element_blank(),
+                     axis.title.y=element_blank(),
+                     panel.grid.major = element_blank(),
+                     panel.background=element_blank(),
+                     panel.border=element_blank(),
+                     panel.grid.minor=element_blank(),
+                     plot.background=element_blank(),
+                     # legend.position = "right",
+                     # legend.text=element_text(size=15), # large = 30 # small = 8
+                     # legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                     # legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
+                     #legend.title=element_blank(),
+                     #plot.title = element_text(color="Black", face="bold", size=15, hjust=0
+                     )
       }
 
-      p <- p+ theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
-      #axis.line=element_blank(),
-      #axis.text.x=element_blank(),
-      #axis.text.y=element_blank(),
-      #axis.ticks=element_blank(),
-      axis.title.x=element_text(color="Black", face="bold", size=18),
-      axis.title.y=element_text(color="Black", face="bold", size=18),
-      #panel.grid.major = element_blank(),
-      #panel.background=element_blank(),
-      #panel.border=element_blank(),
-      #panel.grid.minor=element_blank(),
-      #plot.background=element_blank(),
-      #legend.position = "right",
-      legend.text=element_text(size=12), # large = 30 # small = 8
-      legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-      legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
-      legend.title=element_blank(),
-      plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
-      )
-
+  ## Save ggplot to disk if desired
       if(save.to.disk == TRUE){
         ggsave(filename = paste0(title, ".png"),
                plot = p,
