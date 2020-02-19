@@ -1,12 +1,10 @@
 ##########################################################################################################
-#### DRAFT Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
-#### Part 1 - Clustering, dimensionality reduction, save files
+#### Spectre -- General Discovery Workflow
+#### Part 1/2 - Clustering and dimensionality reduction
 ##########################################################################################################
 
-    # Thomas Myles Ashhurst, Felix Marsh-Wakefield, Givanna Putri
-    # 2019-12-02
-    # Workflow: https://sydneycytometry.org.au/capx
     # Spectre R package: https://sydneycytometry.org.au/spectre
+    # Thomas Myles Ashhurst, Felix Marsh-Wakefield, Givanna Putri
 
 ##########################################################################################################
 #### 1. Install packages, load packages, and set working directory
@@ -14,24 +12,7 @@
 
     ### 1.1. Install 'Spectre' package (using devtools) and the dependencies that Spectre requires
 
-        ## Install devtolls
-        if(!require('devtools')) {install.packages('devtools')}
-        library('devtools')
-
-        ## Install Spectre
-        #install_github("sydneycytometry/spectre")
-        install_github("sydneycytometry/spectre", ref = 'development') # option to install the development verison if required
-        library("Spectre")
-
-        ## Install BiocManager to download packages from Bioconductor
-        if (!requireNamespace("BiocManager", quietly = TRUE))
-          install.packages("BiocManager")
-
-        ## Download additional BioConductor packages
-        if(!require('flowCore')) {BiocManager::install('flowCore')}
-        if(!require('Biobase')) {BiocManager::install('Biobase')}
-        if(!require('flowViz')) {BiocManager::install('flowViz')}
-        if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+        # For instructions on installing Spectre, please visit https://wiki.centenary.org.au/display/SPECTRE
 
     ### 1.2. Load packages
 
@@ -59,8 +40,8 @@
             #setwd(PrimaryDirectory)
 
         ## Create output directory
-        dir.create("Output_CAPX", showWarnings = FALSE)
-        setwd("Output_CAPX")
+        dir.create("Output_Spectre", showWarnings = FALSE)
+        setwd("Output_Spectre")
         OutputDirectory <- getwd()
         setwd(PrimaryDirectory)
 
@@ -140,7 +121,7 @@
         ## Define key columns that might be used or dividing data (samples, groups, batches, etc)
         exp.name <- "TAdemo"
 
-        file.col <- "Filename"
+        file.col <- "FileName"
         sample.col <- "Sample"
         group.col <- "Group"
         batch.col <- "Batch"

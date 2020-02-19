@@ -1,24 +1,22 @@
-#' file.merge - ...
+#' do.merge.files - Function to merge a list of data.tables (one data.table per 'sample') into a single large data.table.
 #'
-#' @usage file.merge(x, ...)
+#' @usage file.merge(x, remove.duplicates)
 #'
-#' @param x List of data frames or data tables
-#' @param remove.duplicates Do you want to remove duplicates?
+#' @param x NO DEFAULT. List of data.tables (or data.frames)
+#' @param remove.duplicates DEFAULT = TRUE. Do you want to remove duplicates?
 #'
-#' @return A combined data.table
+#' @return Returns a combined data.table.
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
 #' @examples
-#' file.merge()
+#' cell.dat <- file.merge(x = data.list, remove.duplicates = TRUE)
 #'
 #' @export
 
-file.merge <- function(x,remove.duplicates = TRUE)
-
-{
+file.merge <- function(x, remove.duplicates = TRUE){
 
   ## Data table (fastest) row binding solution
     cell.dat <- data.table::rbindlist(x, fill = TRUE)
@@ -37,6 +35,7 @@ file.merge <- function(x,remove.duplicates = TRUE)
   return(cell.dat)
 
   #ifelse(exists("cell.dat"), "All files merged into 'cell.dat'", "ERROR in merging files into 'cell.dat'")
-  ifelse(exists("cell.dat"), message("All files merged into 'cell.dat'"), stop("ERROR in merging files into 'cell.dat'"))
+  ifelse(exists("cell.dat"), message("All files merged into a single data.table"), stop("ERROR in merging files into a single data.table"))
 
-  }
+}
+
