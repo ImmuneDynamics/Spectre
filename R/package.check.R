@@ -1,4 +1,4 @@
-#' check.packages
+#' package.check - a function to check the installation of all required packages.
 #'
 #' This function allows you to check to see if all the common use packages dependencies for Spectre are installed.
 #'
@@ -11,11 +11,11 @@
 #' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @examples
-#' check.packages()
+#' package.check()
 #'
 #' @export
 
-check.packages <- function()
+package.check <- function()
 {
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required by not installed')
   if(!is.element('plyr', installed.packages()[,1])) stop('plyr is required by not installed')

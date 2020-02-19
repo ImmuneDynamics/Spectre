@@ -1,4 +1,4 @@
-#' load.packages
+#' package.load - a function to load (library) all required packages.
 #'
 #' This function allows you to load all of the common use packages dependencies for Spectre.
 #'
@@ -11,11 +11,11 @@
 #' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @examples
-#' load.packages()
+#' package.load()
 #'
 #' @export
 
-load.packages <- function()
+package.load <- function()
 {
   require('devtools')
   require('data.table')
