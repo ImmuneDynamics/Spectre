@@ -174,7 +174,7 @@ make.factor.plot <- function(dat,
           # Add labels
 
               p <- p + geom_point(data = centroidsDf,                     # separate data.frame
-                                  aes(x = centroidX, y = centroidY),
+                                  aes(x = centroidsDf$centroidX, y = centroidsDf$centroidY),
                                   col = "black",                          # notice "col" and "shape" are
                                   #shape = 1,
                                   size = 2)
@@ -183,7 +183,7 @@ make.factor.plot <- function(dat,
                                   hjust = 0,
                                   nudge_x = nudge_x,
                                   nudge_y = nudge_y,
-                                  aes(x = centroidX, y = centroidY, label=centroidCol, alpha = 0.5),
+                                  aes(x = centroidsDf$centroidX, y = centroidsDf$centroidY, label=centroidsDf$centroidCol, alpha = 0.5),
                                   col = "black",
                                   fontface = "bold")
 
