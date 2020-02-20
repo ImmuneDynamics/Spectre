@@ -38,6 +38,7 @@ factor.plot <- function(dat,
                         col.axis,
                         add.label = FALSE,
                         nudge_x = 0.5,
+                        nudge_y = 0.5,
                         title = col.axis,
                         dot.size = 1,
                         align.xy.by = dat,
@@ -57,6 +58,7 @@ factor.plot <- function(dat,
         add.label = FALSE
         nudge_x = 0.5
         nudge_y = 0.5
+        title = col.axis
         dot.size = 1
         align.xy.by = dat
         align.col.by = dat
