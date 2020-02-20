@@ -55,7 +55,7 @@ make.factor.plot <- function(dat,
         # x.axis = "UMAP_42_X"
         # y.axis = "UMAP_42_Y"
         # col.axis = "FlowSOM_metacluster"
-        # add.label = FALSE
+        # add.label = TRUE
         # nudge_x = 0.5
         # nudge_y = 0.5
         # title = col.axis
@@ -154,10 +154,12 @@ make.factor.plot <- function(dat,
 
           # Prepare centroids
               if(is.numeric(dat[[col.axis]])){
-                centroidsDf <- data.frame(
-                  centroidX = tapply(dat[[x.axis]], dat[[col.axis]], median), # median
-                  centroidY = tapply(dat[[y.axis]], dat[[col.axis]], median),
-                  centroidCol = tapply(dat[[col.axis]], dat[[col.axis]], median))
+
+                centroidX = tapply(dat[[x.axis]], dat[[col.axis]], median) # median
+                centroidY = tapply(dat[[y.axis]], dat[[col.axis]], median)
+                centroidCol = tapply(dat[[col.axis]], dat[[col.axis]], median)
+
+                centroidsDf <- data.frame(centroidX, centroidY, centroidCol)
               }
 
               if(!is.numeric(dat[[col.axis]])){
