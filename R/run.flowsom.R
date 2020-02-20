@@ -117,7 +117,7 @@ run.flowsom <- function(x,
 
     assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
 
-    x <- cbind(x, flowsom.res.meta)       # Add results to x
+    x.start <- cbind(x.start, flowsom.res.meta)       # Add results to x
   }
 
   ## save ORIGINAL cluster labels
@@ -130,8 +130,8 @@ run.flowsom <- function(x,
 
   assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
 
-  x <- cbind(x, flowsom.res.original)   # Add results to x
+  x.start <- cbind(x.start, flowsom.res.original)   # Add results to x
 
-  x <- data.table::as.data.table(x) # Make x a data.table for future manipulation
+  x.start <- data.table::as.data.table(x.start) # Make x a data.table for future manipulation
 
 }
