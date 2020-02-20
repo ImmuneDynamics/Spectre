@@ -151,7 +151,7 @@ make.colour.plot <- function(dat,
 
   ## Generate and show coloured plot
 
-    p <- ggplot(data = d, aes(x = d[[x.axis]], y = d[[y.axis]], colour = d[[col.axis]])) +
+    p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], colour = dat[[col.axis]])) +
                 geom_point(size = dot.size) +
 
                 scale_colour_gradientn(colours = colour.scheme(50),

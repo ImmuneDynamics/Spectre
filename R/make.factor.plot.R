@@ -32,22 +32,22 @@
 #'
 #' @export
 
-factor.plot <- function(dat,
-                        x.axis,
-                        y.axis,
-                        col.axis,
-                        add.label = FALSE,
-                        nudge_x = 0.5,
-                        nudge_y = 0.5,
-                        title = col.axis,
-                        dot.size = 1,
-                        align.xy.by = dat,
-                        align.col.by = dat,
-                        save.to.disk = TRUE,
-                        path = getwd(),
-                        plot.width = 9,
-                        plot.height = 7,
-                        blank.axis = FALSE)
+make.factor.plot <- function(dat,
+                              x.axis,
+                              y.axis,
+                              col.axis,
+                              add.label = FALSE,
+                              nudge_x = 0.5,
+                              nudge_y = 0.5,
+                              title = col.axis,
+                              dot.size = 1,
+                              align.xy.by = dat,
+                              align.col.by = dat,
+                              save.to.disk = TRUE,
+                              path = getwd(),
+                              plot.width = 9,
+                              plot.height = 7,
+                              blank.axis = FALSE)
 {
 
     ## TESTING
