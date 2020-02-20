@@ -11,7 +11,7 @@ run.flowsom(x, ...)
 
 \item{clustering.cols}{Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended, as No default.}
 
-\item{meta.k}{Numeric. Number of clusters to create. DEFAULT = 20.}
+\item{meta.k}{Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created. DEFAULT = 20.}
 
 \item{xdim}{Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.}
 

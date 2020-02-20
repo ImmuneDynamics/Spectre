@@ -2,33 +2,37 @@
 % Please edit documentation in R/do.embed.columns.R
 \name{embed.columns}
 \alias{embed.columns}
-\title{embed.columns}
+\title{do.embed.columns}
 \usage{
-embed.columns(x, ...)
+do.embed.columns(x, type, base.name, col.name, match.to, new.cols, rmv.ext)
 }
 \arguments{
 \item{x}{NO DEFAULT. A list of dataframes (samples) that will recieve the new columns.}
 
-\item{type}{DEFAULTS TO "data.frame". Can be "data.frame" or "list". Whether you wish to embed new values into a single dataframe based on values in another column, or dataframes as part of a list based on the name of the dataframes.}
+\item{type}{DEFAULTS TO "data.table". Can be "data.table" or "list". Whether you wish to embed new values into a single dataframe based on values in another column, or dataframes as part of a list based on the name of the dataframes.}
 
-\item{base.name}{NO DEFAULT. The column containing values that new values will be matched to. Only required when embedding into a single data frame -- when embedding into a list of dataframes, matching is done based on the name of each dataframe.}
+\item{base.name}{NO DEFAULT. Name or number of the column containing values that new values will be matched to. Only required when embedding into a single data.table/data.frame -- when embedding into a list of data.tables/data.frames, matching is done based on the name of each data.table/data.frame}
 
 \item{col.name}{NO DEFAULT. Character, desired name for the new column.}
 
-\item{match.to}{NO DEFAULT. A character vector that specifies which dataframe in the list is used for matching (e.g. "Sample 1", "Sample 2", "Sample 3", "Sample 4", etc).}
+\item{match.to}{NO DEFAULT. Avector that specifies which terms are used for matching (e.g. c("Sample 1", "Sample 2", "Sample 3", "Sample 4"), or c("Cluster 1", "Cluster 2"), etc).}
 
-\item{rmv.ext}{DEFAULTS TO TRUE. Logical, remove the ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.}
+\item{rmv.ext}{DEFAULTS TO TRUE. Logical, can be TRUE or FALSE. Removes the ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.}
 
-\item{new.cils}{NO DEFAULT. A vector of new values to embed to each dataframe, matched to the corresponding value in 'match.to' (e.g. "Group 1", "Group 1", "Group 2", "Group 2", etc).}
+\item{new.cils}{NO DEFAULT. A vector of new values to embed as a new column, matched to the corresponding value in 'match.to' (e.g. c("Group 1", "Group 1", "Group 2", "Group 2"), or c("T cells", "B cells"), etc).}
 }
 \value{
-For type = "data.frame", returns a vector of the new row values (called embed.res), that can be attached to the starting dataset using cbind. For type = "list", embeds new columns into each row (cell) of dataframes in a list called 'data.list'.
+For type = "data.table", returns the data.table with new columns embedded. For type = "list", returns list with newly embedded values in each data.table within the list.
 }
 \description{
-embed.columns
+do.embed.columns
 }
 \examples{
-embed.columns()
+# For type = "list"
+data.list <- .........
+
+# For type = "data.table"
+cell.dat <- ........
 
 }
 \references{

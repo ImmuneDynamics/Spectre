@@ -2,32 +2,54 @@
 % Please edit documentation in R/make.factor.plot.R
 \name{factor.plot}
 \alias{factor.plot}
-\title{factor.plot - Create a factor plot}
+\title{make.factor.plot - Create a dot plot (X vs Y) coloured by a selected factor column (e.g. clusters, samples)}
 \usage{
-factor.plot(x, ...)
+make.factor.plot(d, x.axis, y.axis, col.axis)
+
+See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
 \arguments{
-\item{d}{data.frame. Input sample. No default.}
+\item{dat}{NO DEFAULT. data.table Input sample.}
 
-\item{y.axis}{Character. Column for Y axis. No default.}
+\item{x.axis}{NO DEFAULT. Character. Column for X axis.}
 
-\item{col.axis}{Character. Column for colour. No default.}
+\item{y.axis}{NO DEFAULT. Character. Column for Y axis.}
 
-\item{bubble.lab}{Character. Column for bubble labels. Defaults to NULL.}
+\item{col.axis}{NO DEFAULT. Character. Column for colour, should be a factor (e.g. cluster, group, sample, etc).}
 
-\item{title}{Character. Title for the plot. No default.}
+\item{add.label}{DEFAULT = FALSE. Add's a label for the entries in 'col.axis' onto the plot -- useful for labelling clusters (e.g. 1, 2, 3 etc) or populations (T cell, B cell, etc).}
 
-\item{dot.size}{Numeric. Size of the dots. Defaults to 1.}
+\item{nudge_x}{DEFAULT = 0.5. Distance to nudge the label from the point (on the x axis) when add.label = TRUE.}
 
-\item{align.xy.by}{data.frame. Sample to use to determine minimum and maximum X and Y axis values. No default.}
+\item{nudge_y}{DEFAULT = 0.5. Distance to nudge the label from the point (on the y axis) when add.label = TRUE.}
 
-\item{align.col.by}{data.frame. Sample to use to determine minimum and maximum colour values. No default.
+\item{title}{DEFAULT = col.axis. Character. Title for the plot.}
 
-This function allows you to plot cells on an XY plot, coloured by some factor (group, cluster, etc)
-factor.plot is a wrapper around the heatmap.2 function from gplots.}
+\item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
-\item{a.axis}{Character. Column for X axis. No default.}
+\item{align.xy.by}{DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.}
+
+\item{align.col.by}{DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.}
+
+\item{blank.axis}{DEFAULT = FALSE. Logical, do you want a minimalist graph?}
+
+\item{col.min.threshold}{DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.}
+
+\item{col.max.threshold}{DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.}
+}
+\value{
+prints and saves a ggplot.
 }
 \description{
-factor.plot - Create a factor plot
+This function allows you to create a coloured XY plot where each cell is coloured by a selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select factor, such as clusters, samples, groups, batches etc.
+}
+\examples{
+make.factor.plot(d = demo.umap, x = "UMAP_X", y = "UMAP_Y", col.axis = "FlowSOM_metacluster")
+
+}
+\references{
+\url{https://sydneycytometry.org.au/spectre}
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }
