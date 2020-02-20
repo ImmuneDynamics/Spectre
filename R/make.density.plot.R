@@ -39,10 +39,10 @@ make.density.plot <- function(dat,
   # y.axis <- "UMAP_42_Y"
   
   ## Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required by not installed')
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required by not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required by not installed')
-  if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required by not installed')
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
+  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
+  if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
   
   ## Require packages
   require(Spectre)

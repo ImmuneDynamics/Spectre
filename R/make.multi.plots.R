@@ -1,10 +1,10 @@
-#' multi.plot
+#' make.multi.plot
 #'
-#' @param d NO DEFAULT. A data frame containing all the data you wish to plot
+#' @param dat NO DEFAULT. A data frame containing all the data you wish to plot
 #' @param x.axis NO DEFAULT. X axis
 #' @param y.axis NO DEFAULT. Y axis
 #' @param col.axis NO DEFAULT. Colour axis
-#' @param type NO DEFAULT. Specify whether col.axis is continious ('colour', for markers) or a factor ('factor', for clusters, sample, groups etc), or 'labelled.factor'.
+#' @param type NO DEFAULT. Specify whether col.axis is continious ('colour', for markers) or a factor ('factor', for clusters, sample, groups etc), 'labelled.factor' or 'density' (for density plots - note figure.title must be entered).
 #'
 #' @param plot.by NO DEFAULT. Name of the FACTORS that the plots will be divided by (e.g. Sample, Group, Batch etc).
 #' @param align.xy.by NO DEFAULT. Align X and Y to a dataset
@@ -18,14 +18,16 @@
 #' @param path DEFAULTS TO getwd() -- i.e. the current working directory. Path to the desired output directory
 #' @param plot.width DEFAULTS to 9.
 #' @param plot.height DEFAULTS to 7.
+#' @param blank.axis DEFAULT = FALSE. Logical, do you want a minimalist graph?
+#' @param save.each.plot DEFAULT = FALSE. Do you want to save each plot?
 #'
 #' This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot). These can then be coloured by a marker or by another factor (e.g Group).
 #'
-#' @usage multi.plot(x, ...)
+#' @usage make.multi.plot(x, ...)
 #'
 #' @export
 
-multi.plot <- function(d,
+make.multi.plot <- function(dat,
                        x.axis, # X axis for all plots
                        y.axis, # Y axis for all plots
                        col.axis,
@@ -44,6 +46,7 @@ multi.plot <- function(d,
                        path = getwd(),
                        plot.width = 9,
                        plot.height = 7,
+                       blank.axis = FALSE,
                        save.each.plot = FALSE
                        )
 {
@@ -69,15 +72,15 @@ multi.plot <- function(d,
       # setwd("/Users/Tom/Desktop")
       # getwd()
       #
-      # d <- demo.umap
+      # dat <- Spectre::demo.umap
       # x.axis = "UMAP_42_X"
       # y.axis = "UMAP_42_Y"
       # col.axis = "Group"
       # type = "factor"
       #
       # plot.by = "Sample"
-      # align.xy.by = d
-      # align.col.by = d
+      # align.xy.by = dat
+      # align.col.by = dat
       #
       # colour = "magma"
       # figure.title = paste0("By ", plot.by, " - ", col.axis)
@@ -91,15 +94,15 @@ multi.plot <- function(d,
       # setwd("/Users/Tom/Desktop")
       # getwd()
       #
-      # d <- demo.umap
+      # dat <- Spectre::demo.umap
       # x.axis = "UMAP_42_X"
       # y.axis = "UMAP_42_Y"
       # col.axis = "AF700.CD45"
       # type = "colour"
       #
       # plot.by = "Sample"
-      # align.xy.by = d
-      # align.col.by = d
+      # align.xy.by = dat
+      # align.col.by = dat
       #
       # colours = "magma"
       # figure.title = paste0("By ", plot.by, " - ", col.axis)
@@ -114,23 +117,24 @@ multi.plot <- function(d,
       to.plot <- list()
       plots <- list()
 
-      to.plot <- unique(d[[plot.by]])
+      to.plot <- unique(dat[[plot.by]])
 
       ## For type = 'factor'
       if(type == 'factor'){
         for(i in c(1:length(to.plot))){
           to.plot[i]
-          plots[[i]] <- factor.plot(d = subset(d, d[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+          plots[[i]] <- Spectre::make.factor.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                                     x.axis = x.axis,
                                     y.axis = y.axis,
                                     col.axis = col.axis,
                                     title = to.plot[i],
-                                    align.xy.by = d,
-                                    align.col.by = d,
+                                    align.xy.by = dat,
+                                    align.col.by = dat,
                                     dot.size = dot.size,
                                     path = path,
                                     plot.width = plot.width,
                                     plot.height = plot.height,
+                                    blank.axis = blank.axis,
                                     save.to.disk = save.each.plot)
         }
       }
@@ -140,13 +144,13 @@ multi.plot <- function(d,
       if(type == 'labelled.factor'){
         for(i in c(1:length(to.plot))){
           to.plot[i]
-          plots[[i]] <- labelled.factor.plot(d = subset(d, d[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+          plots[[i]] <- Spectre::make.labelled.factor.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                                             x.axis = x.axis,
                                             y.axis = y.axis,
                                             col.axis = col.axis,
                                             title = to.plot[i],
-                                            align.xy.by = d,
-                                            align.col.by = d,
+                                            align.xy.by = dat,
+                                            align.col.by = dat,
                                             dot.size = dot.size)
         }
       }
@@ -156,17 +160,36 @@ multi.plot <- function(d,
       if(type == 'colour'){
           for(i in c(1:length(to.plot))){
             to.plot[i]
-            plots[[i]] <- colour.plot(d = subset(d, d[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+            plots[[i]] <- Spectre::make.colour.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                                       x.axis = x.axis,
                                       y.axis = y.axis,
                                       col.axis = col.axis,
                                       title = to.plot[i],
-                                      align.xy.by = d,
-                                      align.col.by = d,
+                                      align.xy.by = dat,
+                                      align.col.by = dat,
                                       colours = colours,
                                       col.min.threshold = col.min.threshold,
                                       col.max.threshold = col.max.threshold,
-                                      dot.size = dot.size)
+                                      dot.size = dot.size,
+                                      blank.axis = blank.axis)
+          }
+      }
+      
+      if(type == 'density'){
+          for (i in c(1:length(to.plot))){
+            to.plot[i]
+            plots[[i]] <- Spectre::make.density.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+                                                     x.axis = x.axis,
+                                                     y.axis = y.axis,
+                                                     colours = "viridis",
+                                                     dot.size = dot.size,
+                                                     align.xy.by = dat,
+                                                     align.col.by = dat,
+                                                     save.to.disk = save.each.plot,
+                                                     path = path,
+                                                     plot.width = plot.width,
+                                                     plot.height = plot.height,
+                                                     blank.axis = blank.axis)
           }
       }
 
@@ -189,9 +212,9 @@ multi.plot <- function(d,
             num.rows <- ceiling(num.rows)
           }
 
-          gp <- grid.arrange(grobs = plots,
+          gp <- gridExtra::grid.arrange(grobs = plots,
                              ncol = num.cols,
-                             nrow = num.rows,
+                             nrow = num.rows
                              #top = figure.title,
                              #top = textGrob(figure.title,gp=gpar(fontsize=20,font=3)),
                              )
@@ -205,7 +228,7 @@ multi.plot <- function(d,
           # height = 7 per graph
           hght <- num.rows*plot.height
 
-          ggsave(filename = paste0(figure.title, ".png"),
+          ggplot2::ggsave(filename = paste0(figure.title, ".png"),
                  plot = gp,
                  path = path,
                  width = wdth,

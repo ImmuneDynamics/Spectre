@@ -1,10 +1,11 @@
-#' multi.marker.plot
+#' make.multi.marker.plot
 #'
-#' @param d NO DEFAULT. A data frame containing all the data you wish to plot
+#' @param dat NO DEFAULT. A data frame containing all the data you wish to plot
 #' @param x.axis NO DEFAULT. X axis
 #' @param y.axis NO DEFAULT. Y axis
 #'
 #' @param plot.by NO DEFAULT. A list or vector of column names (markers) to plot.
+#' @param density.plot DEFAULT = FALSE. Logical. Creates a density plot (using 'ggpointdensity' package).
 #' @param align.xy.by NO DEFAULT. Align X and Y to a dataset
 #' @param align.col.by NO DEFAULT. Align colour to a dataset
 #'
@@ -16,22 +17,23 @@
 #' @param path DEFAULTS TO getwd() -- i.e. the current working directory. Path to the desired output directory
 #' @param plot.width DEFAULTS to 9.
 #' @param plot.height DEFAULTS to 7.
+#' @param blank.axis DEFAULT = FALSE. Logical, do you want a minimalist graph?
+#' @param save.each.plot DEFAULT = FALSE. Do you want to save each plot?
 #'
 #' This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot). These can then be coloured by a marker or by another factor (e.g Group).
 #'
-#' @usage multi.marker.plot(x, ...)
+#' @usage make.multi.marker.plot(x, ...)
 #'
 #' @export
 
-multi.marker.plot <- function(d,
+make.multi.marker.plot <- function(dat,
                                x.axis, # X axis for all plots
                                y.axis, # Y axis for all plots
-
                                plot.by,
-
+                               plot.by, # Column -- where each unique value is plotted separately (i.e. plot by sample, etc)
+                               density.plot = FALSE,
                                align.xy.by, # alignment for X and Y
                                align.col.by, # alignment for colours
-
                                colours = 'spectral',
                                figure.title = 'Marker expression',
                                dot.size = 1,
@@ -40,6 +42,7 @@ multi.marker.plot <- function(d,
                                path = getwd(),
                                plot.width = 9,
                                plot.height = 7,
+                               blank.axis = FALSE,
                                save.each.plot = FALSE
                               )
 {
@@ -65,14 +68,14 @@ multi.marker.plot <- function(d,
       # setwd("/Users/Tom/Desktop")
       # getwd()
 
-      # d <- demo.umap
+      # dat <- Spectre::demo.umap
       # x.axis <- "UMAP_42_X"
       # y.axis <- "UMAP_42_Y"
       #
       # plot.by <- c("AF700.CD45", "APCCy7.CD48", "BV605.Ly6C", "DL800.SA.Bio.Ly6G")
       #
-      # align.xy.by <- demo.umap
-      # align.col.by <- demo.umap
+      # align.xy.by <- Spectre::demo.umap
+      # align.col.by <- Spectre::demo.umap
       #
       # colours = 'spectral'
       # figure.title = 'Marker expression'
@@ -82,6 +85,8 @@ multi.marker.plot <- function(d,
       # path = getwd()
       # plot.width = 9
       # plot.height = 7
+      # blank.axis = FALSE
+      # save.each.plot = FALSE
 
   ### Create each plot
   plots <- list()
@@ -89,13 +94,13 @@ multi.marker.plot <- function(d,
 
   ## Loop
     for(i in to.plot){
-      plots[[i]] <- colour.plot(d = d, #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+      plots[[i]] <- Spectre::make.colour.plot(dat = dat, #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                                 x.axis = x.axis,
                                 y.axis = y.axis,
                                 col.axis = i,
                                 title = i,
-                                align.xy.by = d,
-                                align.col.by = d,
+                                align.xy.by = dat,
+                                align.col.by = dat,
                                 colours = colours,
                                 col.min.threshold = col.min.threshold,
                                 col.max.threshold = col.max.threshold,
@@ -103,9 +108,29 @@ multi.marker.plot <- function(d,
                                 path = path,
                                 plot.width = plot.width,
                                 plot.height = plot.height,
+                                blank.axis = blank.axis,
                                 save.to.disk = save.each.plot
                                 )
     }
+
+  ## Add density plot
+  if(density.plot == TRUE){
+    plots[[length(to.plot) + 1]] <- Spectre::make.density.plot(dat = dat,
+                                                 x.axis = x.axis,
+                                                 y.axis = y.axis,
+                                                 colours = "viridis",
+                                                 dot.size = dot.size,
+                                                 align.xy.by = dat,
+                                                 align.col.by = dat,
+                                                 save.to.disk = save.each.plot,
+                                                 path = path,
+                                                 plot.width = plot.width,
+                                                 plot.height = plot.height,
+                                                 blank.axis = blank.axis
+                                                 )
+    # Rename density data set
+    names(plots)[length(to.plot) + 1] <- "Density"
+  }
 
 
   ### Arrange plots in grd
@@ -126,9 +151,9 @@ multi.marker.plot <- function(d,
     num.rows <- ceiling(num.rows)
   }
 
-  gp <- grid.arrange(grobs = plots,
+  gp <- gridExtra::grid.arrange(grobs = plots,
                      ncol = num.cols,
-                     nrow = num.rows,
+                     nrow = num.rows
                      #top = figure.title,
                      #top = textGrob(figure.title,gp=gpar(fontsize=20,font=3)),
   )
@@ -142,7 +167,7 @@ multi.marker.plot <- function(d,
   # height = 7 per graph
   hght <- num.rows*plot.height
 
-  ggsave(filename = paste0(figure.title, ".png"),
+  ggplot2::ggsave(filename = paste0(figure.title, ".png"),
          plot = gp,
          path = path,
          width = wdth,
