@@ -27,7 +27,7 @@ multi.marker.plot <- function(d,
                                x.axis, # X axis for all plots
                                y.axis, # Y axis for all plots
 
-                               plot.by, # Column -- where each unique value is plotted separately (i.e. plot by sample, etc)
+                               plot.by,
 
                                align.xy.by, # alignment for X and Y
                                align.col.by, # alignment for colours
@@ -46,42 +46,42 @@ multi.marker.plot <- function(d,
 
   ### Test data
 
-  # library(Spectre)
-  # library('plyr')
-  # library('data.table')
-  # library('tidyr') # for spread
-  # library('rstudioapi')
-  # library('ggplot2')
-  # library('scales')
-  # library('colorRamps')
-  # library('ggthemes')
-  # library('RColorBrewer')
-  # library("gridExtra")
-  #
-  # library(data.table)
-  #
-  # ### COLOURS
-  #
-  # setwd("/Users/Tom/Desktop")
-  # getwd()
+      # library(Spectre)
+      # library('plyr')
+      # library('data.table')
+      # library('tidyr') # for spread
+      # library('rstudioapi')
+      # library('ggplot2')
+      # library('scales')
+      # library('colorRamps')
+      # library('ggthemes')
+      # library('RColorBrewer')
+      # library("gridExtra")
+      #
+      # library(data.table)
+      #
+      # ### COLOURS
+      #
+      # setwd("/Users/Tom/Desktop")
+      # getwd()
 
-  # d <- demo.umap
-  # x.axis <- "UMAP_42_X"
-  # y.axis <- "UMAP_42_Y"
-  #
-  # plot.by <- c("AF700.CD45", "APCCy7.CD48", "BV605.Ly6C", "DL800.SA.Bio.Ly6G")
-  #
-  # align.xy.by <- demo.umap
-  # align.col.by <- demo.umap
-  #
-  # colours = 'spectral'
-  # figure.title = 'Marker expression'
-  # dot.size = 1
-  # col.min.threshold = 0.01
-  # col.max.threshold = 0.995
-  # path = getwd()
-  # plot.width = 9
-  # plot.height = 7
+      # d <- demo.umap
+      # x.axis <- "UMAP_42_X"
+      # y.axis <- "UMAP_42_Y"
+      #
+      # plot.by <- c("AF700.CD45", "APCCy7.CD48", "BV605.Ly6C", "DL800.SA.Bio.Ly6G")
+      #
+      # align.xy.by <- demo.umap
+      # align.col.by <- demo.umap
+      #
+      # colours = 'spectral'
+      # figure.title = 'Marker expression'
+      # dot.size = 1
+      # col.min.threshold = 0.01
+      # col.max.threshold = 0.995
+      # path = getwd()
+      # plot.width = 9
+      # plot.height = 7
 
   ### Create each plot
   plots <- list()
@@ -152,11 +152,11 @@ multi.marker.plot <- function(d,
   ### Message
 
   if(exists(x = "gp")){
-    print(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
+    message(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
   }
 
   if(exists(x = "gp") == FALSE){
-    print(paste0("Grid image was not created successfully"))
+    message(paste0("Grid image was not created successfully"))
   }
 
 }
