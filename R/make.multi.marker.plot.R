@@ -29,7 +29,6 @@
 make.multi.marker.plot <- function(dat,
                                x.axis, # X axis for all plots
                                y.axis, # Y axis for all plots
-                               plot.by,
                                plot.by, # Column -- where each unique value is plotted separately (i.e. plot by sample, etc)
                                density.plot = FALSE,
                                align.xy.by, # alignment for X and Y
