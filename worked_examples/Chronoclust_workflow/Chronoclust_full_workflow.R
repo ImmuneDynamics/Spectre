@@ -17,8 +17,8 @@
 ### 1.2. Load packages
 
 library(Spectre)
-Spectre::check.packages() # --> change so that message at the end is "All required packages have been successfully installed"
-Spectre::load.packages() # --> change so that message at the end is "All required packages have been successfully loaded"
+Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
+Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
 
 session_info()
 
@@ -103,17 +103,6 @@ file.col <- "FileName"
 ColumnNames <- as.matrix(unname(colnames(cell.dat))) # assign reporter and marker names (column names) to 'ColumnNames'
 ColumnNames
 
-### Define cellular and clustering columns
-
-## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
-ColumnNames # view the column 'number' for each parameter
-
-CellularColsNos <- c(1:3)
-CellularCols <- ColumnNames[CellularColsNos]
-
-CellularCols  # check that the column names that appear are the ones you want to analyse
-ColumnNames[-CellularColsNos] # Check which columns are being EXCLUDED!
-
 ### Define columns for clustering
 
 ## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
@@ -127,10 +116,7 @@ ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 ### Checks
 
 head(cell.dat)
-CellularCols
 ClusteringCols
-meta.dat
-
 
 ## Export data containing only columns for clustering out to csv files
 dir.create("Input_ChronoClust", showWarnings = FALSE)

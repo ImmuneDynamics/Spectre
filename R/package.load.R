@@ -37,5 +37,6 @@ package.load <- function()
   require('Biobase')
   require('flowViz')
   require('FlowSOM')
-
+  
+  require('reticulate')
   }
