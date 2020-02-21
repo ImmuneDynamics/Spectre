@@ -1,7 +1,5 @@
 #' make.density.plot - ...
 #'
-#' @usage make.density.plot(dat, ...)
-#'
 #' @param dat NO DEFAULT. data.frame.
 #' @param x.axis NO DEFAULT. Character. Column for X axis.
 #' @param y.axis NO DEFAULT. Character. Column for Y axis.
@@ -15,6 +13,10 @@
 #' @param plot.width DEFAULT = 9. Width of the ggplot when saved to disk.
 #' @param plot.height DEFAULT = 7. Height of the ggplot when saved to disk.
 #' @param blank.axis DEFAULT = FALSE. Logical, do you want a minimalist graph?
+#' 
+#' This function will create a density plot for the chosen axes.
+#'
+#' @usage make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.by, align.col.by, save.to.disk, path, plot.width,  plot.height, blank.axis, ...)
 #'
 #' @export
 

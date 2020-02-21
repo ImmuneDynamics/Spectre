@@ -2,7 +2,7 @@
 #'
 #' This function allows you to create a coloured XY plot where each cell is coloured by a selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select factor, such as clusters, samples, groups, batches etc.
 #'
-#' @usage make.factor.plot(d, x.axis, y.axis, col.axis)
+#' @usage make.factor.plot(dat, x.axis, y.axis, col.axis)
 #'
 #' @param dat NO DEFAULT. data.table Input sample.
 #' @param x.axis NO DEFAULT. Character. Column for X axis.
@@ -28,7 +28,7 @@
 #' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @examples
-#' make.factor.plot(d = demo.umap, x = "UMAP_X", y = "UMAP_Y", col.axis = "FlowSOM_metacluster")
+#' make.factor.plot(dat = demo.umap, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "FlowSOM_metacluster")
 #'
 #' @export
 

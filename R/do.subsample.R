@@ -2,10 +2,10 @@
 #'
 #' @usage do.subsample(dat, method, samp.col, targets, seed)
 #'
-#' @param dat Input dataframe with cells (rows) vs markers (columns). No default.
-#' @param method Character. Can be 'random' (downsampling single number from merged data), 'per.sample' (specifying number of cells each sample contributes) or 'min.per.sample' (each sample contributes the same amount of data based on sample with lowest count). No default
-#' @param samp.col Character. Name of the column that reflects sample names.
-#' @param targets List of downsample targets (if random, then absolute target; if per.sample, then targets per sample, must be in the same order as the unique sample names appear in the data frame or data table; can leave blank if min.per.sample). No default.
+#' @param dat NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).
+#' @param method NO DEFAULT. Character. Can be 'random' (downsampling single number from merged data), 'per.sample' (specifying number of cells each sample contributes) or 'min.per.sample' (each sample contributes the same amount of data based on sample with lowest count).
+#' @param samp.col NO DEFAULT. Character. Name of the column that reflects sample names.
+#' @param targets NO DEFAULT. List of downsample targets (if random, then absolute target; if per.sample, then targets per sample, must be in the same order as the unique sample names appear in the data frame or data table; can leave blank if min.per.sample).
 #' @param seed DEFAULT = 42. Numeric. Seed for reproducibility.
 #'
 #' @return Returns a subsampled data.table

@@ -22,7 +22,7 @@
 #'
 #' This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot). These can then be coloured by a marker or by another factor (e.g Group).
 #'
-#' @usage make.multi.marker.plot(x, ...)
+#' @usage make.multi.marker.plot(dat, x.axis, y.axis, plot.by, density.plot, align.xy.by, align.col.by, colours, figure.title, dot.size, col.min.threshold, col.max.threshold, path, plot.width,  plot.height, blank.axis, save.each.plot, ...)
 #'
 #' @export
 

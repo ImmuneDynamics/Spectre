@@ -1,8 +1,8 @@
 #' run.flowsom - ...
 #'
-#' @usage run.flowsom(x, ...)
+#' @usage run.flowsom(dat, ...)
 #'
-#' @param x data.frame. Input sample. No default.
+#' @param dat data.frame. Input sample. No default.
 #' @param clustering.cols Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended, as No default.
 #' @param meta.k Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created. DEFAULT = 20.
 #' @param xdim Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.
@@ -16,7 +16,7 @@
 #'
 #' @export
 
-run.flowsom <- function(x,
+run.flowsom <- function(dat,
                         clustering.cols, # names of columns to cluster
                         meta.k = 20,
                         xdim = 10,
@@ -27,10 +27,10 @@ run.flowsom <- function(x,
                         meta.clust.name = "FlowSOM_metacluster"){
 
   #### TEST VALUES
-      # x <- demo.start
+      # dat <- demo.start
       #
       # ##
-      # ColumnNames <- as.matrix(unname(colnames(x))) # assign reporter and marker names (column names) to 'ColumnNames'
+      # ColumnNames <- as.matrix(unname(colnames(dat))) # assign reporter and marker names (column names) to 'ColumnNames'
       # ColumnNames
       # ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
       # ClusteringCols <- ColumnNames[ClusteringColNos]
@@ -47,28 +47,28 @@ run.flowsom <- function(x,
       # meta.clust.name <- "FlowSOM_metacluster"
 
   ##
-      #head(x)
-      #dimnames(x)[[2]]
+      #head(dat)
+      #dimnames(dat)[[2]]
 
   ## Remove non-numeric
       head
-      x.start <- x
+      dat.start <- dat
 
-      nums <- unlist(lapply(x, is.numeric))
-      x <- as.data.frame(x)[ , nums]
-      x[clustering.cols]
+      nums <- unlist(lapply(dat, is.numeric))
+      dat <- as.data.frame(dat)[ , nums]
+      dat[clustering.cols]
 
   ## Create FCS file metadata - column names with descriptions
-  metadata <- data.frame(name=dimnames(x)[[2]], desc=paste('column',dimnames(x)[[2]],'from dataset'))
+  metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
 
   ## Create flowframe with data
-  x.ff <- new("flowFrame",
-                 exprs=as.matrix(x), # in order to create a flow frame, data needs to be read as matrix
+  dat.ff <- new("flowFrame",
+                 exprs=as.matrix(dat), # in order to create a flow frame, data needs to be read as matrix
                  parameters=Biobase::AnnotatedDataFrame(metadata))
 
-  head(flowCore::exprs(x.ff))
+  head(flowCore::exprs(dat.ff))
 
-  x_FlowSOM <- x.ff
+  dat_FlowSOM <- dat.ff
 
   # choose markers for FlowSOM analysis
   FlowSOM_cols <- clustering.cols
@@ -79,7 +79,7 @@ run.flowsom <- function(x,
   set.seed(clust.seed)
 
   ## run FlowSOM (initial steps prior to meta-clustering)
-  FlowSOM_out <- FlowSOM::ReadInput(x_FlowSOM, transform = FALSE, scale = FALSE)
+  FlowSOM_out <- FlowSOM::ReadInput(dat_FlowSOM, transform = FALSE, scale = FALSE)
 
   FlowSOM_out <- FlowSOM::BuildSOM(FlowSOM_out,
                                    colsToUse = FlowSOM_cols,
@@ -92,7 +92,7 @@ run.flowsom <- function(x,
   labels_pre <- FlowSOM_out$map$mapping[, 1]
   labels_pre
   length(labels_pre)
-  nrow(x)
+  nrow(dat)
 
   flowsom.res.original <- labels_pre
 
@@ -111,27 +111,27 @@ run.flowsom <- function(x,
     flowsom.res.meta <- data.frame("labels" = labels)
     colnames(flowsom.res.meta)[grepl('labels',colnames(flowsom.res.meta))] <- paste0(meta.clust.name, "_", meta.seed)
 
-    dim(x)
+    dim(dat)
     dim(flowsom.res.meta)
     head(flowsom.res.meta)
 
     assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
 
-    x.start <- cbind(x.start, flowsom.res.meta)       # Add results to x
+    dat.start <- cbind(dat.start, flowsom.res.meta)       # Add results to dat
   }
 
   ## save ORIGINAL cluster labels
   flowsom.res.original <- data.frame("labels_pre" = labels_pre)
   colnames(flowsom.res.original)[grepl('labels_pre',colnames(flowsom.res.original))] <- paste0(clust.name, "_", clust.seed)
 
-  dim(x)
+  dim(dat)
   dim(flowsom.res.original)
   head(flowsom.res.original)
 
   assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
 
-  x.start <- cbind(x.start, flowsom.res.original)   # Add results to x
+  dat.start <- cbind(dat.start, flowsom.res.original)   # Add results to dat
 
-  x.start <- data.table::as.data.table(x.start) # Make x a data.table for future manipulation
+  dat.start <- data.table::as.data.table(dat.start) # Make dat a data.table for future manipulation
 
 }

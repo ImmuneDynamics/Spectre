@@ -3,9 +3,9 @@
 #' This function allows you to create a coloured heatmap for clusters vs markers (coloured by MFI) or clusters vs samples (coloured by MFI or cell counts). Can be set to plot 'fold-change' values that are provided in log2.
 #' make.pheatmap is a wrapper around the pheatmap function from pheatmap.
 #'
-#' @usage make.pheatmap(x, ...)
+#' @usage make.pheatmap(dat, ...)
 #'
-#' @param x data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
+#' @param dat data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
 #' @param file.name Character. What do you want to call the file, including the extension.
 #' @param plot.title Character.
 #' @param sample.col Character. Specify the name of the column that indicates samples. No default.
@@ -39,7 +39,7 @@
 #'
 #' @export
 
-make.pheatmap <- function(x,
+make.pheatmap <- function(dat,
                           file.name,
                           plot.title,
                           sample.col,
@@ -77,7 +77,7 @@ make.pheatmap <- function(x,
      #
      #  setwd("/Users/Tom/Desktop")
      #
-     #  x <- hmap.mfi
+     #  dat <- hmap.mfi
      #
      #  file.name <- "test.png"
      #  plot.title <- "Test plot"
@@ -113,10 +113,10 @@ make.pheatmap <- function(x,
       #
       # setwd("/Users/Tom/Desktop")
       #
-      # x <- hmap.foldcell
-      # x$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2)
+      # dat <- hmap.foldcell
+      # dat$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2)
       #
-      # as.matrix(names(x))
+      # as.matrix(names(dat))
       #
       # sample.col <- "Sample"
       # file.name <- "test.png"
@@ -165,8 +165,8 @@ make.pheatmap <- function(x,
 
   ### Embed cluster or population name as row name
 
-      heatmap.data <- x
-      rownames(heatmap.data) <- t(x[sample.col])
+      heatmap.data <- dat
+      rownames(heatmap.data) <- t(dat[sample.col])
       heatmap.data
 
       heatmap.data

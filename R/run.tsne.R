@@ -1,8 +1,6 @@
 #' run.tsne - ...
 #'
-#' @usage run.tsne(x, use.cols, ...)
-#'
-#' @param x data.frame. No default.
+#' @param dat data.frame. No default.
 #' @param use.cols Vector of numbers, reflecting the columns to use for clustering. No default.
 #' @param tsne.seed Numeric. Seed value for reproducibility. Default = 42.
 #' @param dims Number of dimensions for output results, either 2 or 3. Default = 2.
@@ -22,11 +20,13 @@
 #' @param eta Learning rate. Default = 200.
 #' @param exaggeration_factor Factor used during early exaggeration. Default = 12.0.
 #'
-#'This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.
+#' This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.
+#' 
+#' @usage run.tsne(dat, use.cols, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
 #'
 #' @export
 
-run.tsne <- function(x,
+run.tsne <- function(dat,
                  use.cols,
                  tsne.seed = 42,
                  dims = 2,
@@ -47,7 +47,7 @@ run.tsne <- function(x,
                  exaggeration_factor = 12.0
                  ){
   
-  tsne_out <- Rtsne::Rtsne(as.matrix(x[use.cols]),
+  tsne_out <- Rtsne::Rtsne(as.matrix(dat[use.cols]),
         dims = dims,
         initial_dims = initial_dims,
         perplexity = perplexity,
@@ -69,7 +69,7 @@ run.tsne <- function(x,
   tsne_out_Y <- tsne_out$Y
   colnames(tsne_out_Y) <- c(paste0("tSNE", "_", tsne.seed, "_", "X"), paste0("tSNE", "_", tsne.seed, "_", "Y"))
   
-  tsne.res <- cbind(x, tsne_out_Y)
+  tsne.res <- cbind(dat, tsne_out_Y)
   
   assign("tsne.res", tsne.res, envir = globalenv())
 }

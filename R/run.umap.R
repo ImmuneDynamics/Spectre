@@ -1,17 +1,17 @@
 #' run.umap - ...
 #'
-#' @usage run.umap(x, ...)
-#'
-#' @param x NO DEFAULT. Input data.table or data.frame.
+#' @param dat NO DEFAULT. Input data.table or data.frame.
 #' @param use.cols NO DEFAULT. Vector of column names or numbers for clustering.
 #' @param umap.seed DEFAULT = 42. Numeric. Seed value for reproducibility.
 #' @param suffix DEFAULT = blank.
 #'
-#'This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.
+#' This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.
+#' 
+#' @usage run.umap(dat, use.cols, umap.seed, suffix, ...)
 #'
 #' @export
 
-run.umap <- function(x,
+run.umap <- function(dat,
                      use.cols,
                      umap.seed = 42,
                      suffix = NULL
@@ -19,7 +19,7 @@ run.umap <- function(x,
 {
 
   ### Test data
-      # x <- iris
+      # dat <- iris
       # umap.seed <- 42
       # use.cols <- c(1:4)
 
@@ -27,7 +27,7 @@ run.umap <- function(x,
   custom.config <- umap.defaults
   custom.config$random_state <- umap.seed
 
-  res <- umap(d = x[use.cols],
+  res <- umap(d = dat[use.cols],
               condif = custom.config)
 
   umap.res <- res$layout
@@ -47,6 +47,6 @@ run.umap <- function(x,
   }
 
   #assign("umap.res", umap.res, envir = globalenv())
-  x <- cbind(x, umap.res) # Merge UMAP results with data
-  return(x)
+  dat <- cbind(dat, umap.res) # Merge UMAP results with data
+  return(dat)
 }
