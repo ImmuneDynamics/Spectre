@@ -47,6 +47,13 @@ run.tsne <- function(dat,
                  exaggeration_factor = 12.0
                  ){
   
+  ## Check that necessary packages are installed
+  if(!is.element('Rtsne', installed.packages()[,1])) stop('Rtsne is required but not installed')
+  
+  ## Require packages
+  require(Rtsne)
+  
+  ## Run tSNE
   tsne_out <- Rtsne::Rtsne(as.matrix(dat[use.cols]),
         dims = dims,
         initial_dims = initial_dims,

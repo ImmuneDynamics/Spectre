@@ -68,12 +68,12 @@ make.colour.plot <- function(dat,
       # align.col.by = dat
 
   ## Check that necessary packages are installed
-    if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required by not installed')
-    if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required by not installed')
-    if(!is.element('scales', installed.packages()[,1])) stop('scales is required by not installed')
-    if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required by not installed')
-    if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required by not installed')
-    if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required by not installed')
+    if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+    if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
+    if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
+    if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
+    if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
+    if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
 
   ## Require packages
     require(Spectre)
