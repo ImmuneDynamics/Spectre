@@ -1,8 +1,8 @@
 #' do.merge.files - Function to merge a list of data.tables (one data.table per 'sample') into a single large data.table.
 #'
-#' @usage file.merge(x, remove.duplicates)
+#' @usage do.merge.files(dat, remove.duplicates)
 #'
-#' @param x NO DEFAULT. List of data.tables (or data.frames)
+#' @param dat NO DEFAULT. List of data.tables (or data.frames)
 #' @param remove.duplicates DEFAULT = TRUE. Do you want to remove duplicates?
 #'
 #' @return Returns a combined data.table.
@@ -12,17 +12,25 @@
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
 #' @examples
-#' cell.dat <- file.merge(x = data.list, remove.duplicates = TRUE)
+#' cell.dat <- file.merge(dat = data.list, remove.duplicates = TRUE)
 #'
 #' @export
 
-file.merge <- function(x, remove.duplicates = TRUE){
+do.merge.files <- function(dat, remove.duplicates = TRUE){
+  
+  ## Check that necessary packages are installed
+    if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+    if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+
+  ## Require packages
+    require(Spectre)
+    require(data.table)
 
   ## Data table (fastest) row binding solution
-    cell.dat <- data.table::rbindlist(x, fill = TRUE)
+    cell.dat <- data.table::rbindlist(dat, fill = TRUE)
 
   ## Plyr (slower) row binding solution (then need to convert from DF to DT)
-    # cell.dat <- plyr::rbind.fill(x) # slower plyr solution
+    # cell.dat <- plyr::rbind.fill(dat) # slower plyr solution
     # cell.dat <- as.data.table(cell.dat)
 
   ## Duplicates
