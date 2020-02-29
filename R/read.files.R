@@ -28,6 +28,16 @@ read.files <- function(file.loc = getwd(),
             #file.loc <- "/Users/thomasa/Google Drive File Stream/My Drive/_Sydney Cytometry/Libraries (synced)/GitHub/Public github/Spectre/worked_examples/CAPX_workflow/"
             #file.type <- ".csv"
             #do.embed.file.names = TRUE
+  
+    ## Check that necessary packages are installed
+    if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+    if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+    if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
+
+    ## Require packages
+    require(Spectre)
+    require(data.table)
+    require(flowCore)
 
     ## Initial warnings
         wd <- setwd(file.loc)
@@ -52,7 +62,7 @@ read.files <- function(file.loc = getwd(),
           file.names <- list.files(path=file.loc, pattern = file.type)
 
           for (file in file.names) { # Loop to read files into the list
-            tempdata <- fread(file, check.names = FALSE)
+            tempdata <- data.table::fread(file, check.names = FALSE)
             file <- gsub(".csv", "", file)
             data.list[[file]] <- tempdata
           }
@@ -66,7 +76,7 @@ read.files <- function(file.loc = getwd(),
           file.names <- list.files(path=file.loc, pattern = file.type)
 
           for (file in file.names) { # Loop to read files into the list
-            tempdata <- exprs(read.FCS(file, transformation = FALSE))
+            tempdata <- exprs(flowCore::read.FCS(file, transformation = FALSE))
             tempdata <- tempdata[1:nrow(tempdata),1:ncol(tempdata)]
             tempdata <- as.data.table(tempdata)
             file <- gsub(".fcs", "", file)
