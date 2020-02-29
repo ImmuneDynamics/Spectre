@@ -12,7 +12,7 @@
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
 #' @examples
-#' cell.dat <- file.merge(dat = data.list, remove.duplicates = TRUE)
+#' cell.dat <- do.merge.files(dat = data.list, remove.duplicates = TRUE)
 #'
 #' @export
 
