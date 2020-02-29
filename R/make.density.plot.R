@@ -4,7 +4,7 @@
 #' @param x.axis NO DEFAULT. Character. Column for X axis.
 #' @param y.axis NO DEFAULT. Character. Column for Y axis.
 #' @param title DEFAULT = "Density". Character. Title for the plot.
-#' @param colours DEFAULT = "spectral". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".
+#' @param colours DEFAULT = "viridis". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".
 #' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
 #' @param align.xy.by DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.
 #' @param align.col.by DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.
