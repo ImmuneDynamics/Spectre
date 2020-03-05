@@ -25,7 +25,7 @@
 #'
 #' @export
 
-embed.columns <- function(x, # the list of dataframes (samples) where each dataframe will have the columns embedded
+do.embed.columns <- function(x, # the list of dataframes (samples) where each dataframe will have the columns embedded
                           type = "data.table", # "list" or "data.frame"
                           base.name, #
                           col.name,
