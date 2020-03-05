@@ -8,8 +8,8 @@
 
     library(Spectre)
 
-    Spectre::check.packages()
-    Spectre::load.packages()
+    Spectre::package.check()
+    Spectre::package.load()
 
 ### 2. Set working directory
 
