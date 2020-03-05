@@ -4,10 +4,10 @@
 \alias{write.files}
 \title{write.files - Write .csv or .fcs files}
 \usage{
-write.files(x, ...)
+write.files(dat, file.prefix, divide.by, write.csv, write.fcs)
 }
 \arguments{
-\item{x}{Dataframe. No default.}
+\item{dat}{Dataframe. No default.}
 
 \item{file.prefix}{Character prefix to add before filename.}
 

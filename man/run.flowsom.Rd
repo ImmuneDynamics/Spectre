@@ -4,10 +4,10 @@
 \alias{run.flowsom}
 \title{run.flowsom - ...}
 \usage{
-run.flowsom(x, ...)
+run.flowsom(dat, ...)
 }
 \arguments{
-\item{x}{data.frame. Input sample. No default.}
+\item{dat}{data.frame. Input sample. No default.}
 
 \item{clustering.cols}{Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended, as No default.}
 

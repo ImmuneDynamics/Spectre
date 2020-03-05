@@ -4,10 +4,10 @@
 \alias{run.tsne}
 \title{run.tsne - ...}
 \usage{
-run.tsne(x, use.cols, ...)
+run.tsne(dat, use.cols, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
 }
 \arguments{
-\item{x}{data.frame. No default.}
+\item{dat}{data.frame. No default.}
 
 \item{use.cols}{Vector of numbers, reflecting the columns to use for clustering. No default.}
 

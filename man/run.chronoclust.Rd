@@ -7,15 +7,19 @@
 run.chronoclust(x, ...)
 }
 \arguments{
-\item{config.xml.file.location}{NO DEFAULT. Location of xml file describing the parameter values for Chronoclust to operate on.}
+\item{data.files}{NO DEFAULT. A vector containing the location of csv file containing the time series datasets. 
+Make sure that each 1 csv file is data for only 1 time point. 
+Thus if you have 3 time points, this vector have 3 elements in it.}
 
-\item{input.xml.file.location}{NO DEFAULT. Location of xml file describing the location of the dataset (for each timepoint) for Chronoclust to operate on.}
-
-\item{output.dir.location}{NO DEFAULT. The directory for Chronoclust to write its result to.}
+\item{output.dir}{NO DEFAULT. The directory for Chronoclust to write its result to.}
 
 \item{conda.env.name}{NO DEFAULT. The conda virtual environment name where Chronoclust wil run.}
 
-\item{conda.env.location}{DEFAULT NULL. Specify where anaconda is installed. If nothing is given, then reticulate will look at where it's normally installed /Users/<yourname>/anaconda
+\item{conda.env.location}{DEFAULT NULL. Specify where anaconda is installed. If nothing is given, 
+then reticulate will look at where it's normally installed /Users/<yourname>/anaconda.}
+
+\item{config}{DEFAULT NULL. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
+run on a default config. Only specify the parameter that you do not wish to use the default value for.
 
 
 This function run a time-series clustering and cluster tracking algorithm Chronoclust.
@@ -24,10 +28,12 @@ Only anaconda/miniconda virtual environment is supported by this function. This 
 Please visit the various guide in the following link to install anaconda/miniconda and setup an environment:
 https://docs.conda.io/projects/conda/en/latest/user-guide/index.html
 ChronoClust requires the following python package to run: numpy, pandas, scikit-learn, tqdm, numba.
-You can either install them separately after setting up your anaconda environment
-or just simply import them from the prepared environment script provided in our github repository (worked_example/Chronoclust_workflow)
 
-Please make sure that your environment is running Python 3 (preferably 3.7).
+ChronoClust package is available for download through Github: https://github.com/ghar1821/chronoclust.
+To install ChronoClust in your environment, please visit the Github page and follow the instruction:
+"How do I use Chronoclust".
+
+Please make sure that your environment is running Python 3.7.
 ChronoClust is not supported for Python 2.}
 }
 \description{

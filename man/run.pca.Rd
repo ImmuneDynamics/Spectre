@@ -4,10 +4,10 @@
 \alias{run.pca}
 \title{run.pca - ...}
 \usage{
-run.pca(x, use.cols, ...)
+run.pca(dat, use.cols, cor, scores, scree.plot, component.loading, marker.contribution, loading.plot, individual.samples, sample.code, top.tally, path, ...)
 }
 \arguments{
-\item{x}{data.frame. No default.}
+\item{dat}{data.frame. No default.}
 
 \item{use.cols}{Vector of numbers, reflecting the columns to use for clustering. No default.}
 
