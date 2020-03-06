@@ -17,8 +17,8 @@
     ### 1.2. Load packages
 
         library(Spectre)
-        Spectre::check.packages() # --> change so that message at the end is "All required packages have been successfully installed"
-        Spectre::load.packages() # --> change so that message at the end is "All required packages have been successfully loaded"
+        Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
+        Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
 
         session_info()
 
@@ -73,19 +73,19 @@
     ### Read sample metadata and embed in sample data
         meta.dat <- read.delim(file = "metadata/sample.details.txt")
 
-        data.list <- Spectre::embed.columns(x = data.list,
+        data.list <- Spectre::do.embed.columns(x = data.list,
                                            type = "list",
                                            match.to = meta.dat[c(1)],
                                            new.cols = meta.dat[c(2)],
                                            col.name = names(meta.dat[c(2)]))
 
-        data.list <- Spectre::embed.columns(x = data.list,
+        data.list <- Spectre::do.embed.columns(x = data.list,
                                            type = "list",
                                            match.to = meta.dat[c(1)],
                                            new.cols = meta.dat[c(3)],
                                            col.name = names(meta.dat[c(3)]))
 
-        data.list <- Spectre::embed.columns(x = data.list,
+        data.list <- Spectre::do.embed.columns(x = data.list,
                                            type = "list",
                                            match.to = meta.dat[c(1)],
                                            new.cols = meta.dat[c(4)],
@@ -97,7 +97,7 @@
     ### Merge files
 
         ## Merge files and review
-        cell.dat <- Spectre::file.merge(x = data.list)
+        cell.dat <- Spectre::do.merge.files(dat = data.list)
 
         str(cell.dat)
         head(cell.dat)
@@ -163,7 +163,7 @@
 ##########################################################################################################
 
     ### Run FlowSOM
-        cell.dat <- Spectre::run.flowsom(x = cell.dat,
+        cell.dat <- Spectre::run.flowsom(dat = cell.dat,
                                          xdim = 10,
                                          ydim = 10,
                                          meta.k = 40,
@@ -179,18 +179,18 @@
         meta.dat
         as.matrix(unique(cell.dat[["Sample"]]))
 
-        cell.dat.sub <- Spectre::subsample(x = cell.dat,
-                                           method = "per.sample", # or "random
-                                           samp.col = sample.col,
-                                           targets = c(rep(500,12)),
-                                           seed = 42)
+        cell.dat.sub <- Spectre::do.subsample(dat = cell.dat,
+                                               method = "per.sample", # or "random
+                                               samp.col = sample.col,
+                                               targets = c(rep(500,12)),
+                                               seed = 42)
 
         nrow(cell.dat.sub)
 
 
     ### Run UMAP
 
-        cell.dat.sub <- Spectre::run.umap(x = cell.dat.sub,
+        cell.dat.sub <- Spectre::run.umap(dat = cell.dat.sub,
                                           use.cols = ClusteringCols,
                                           umap.seed = 42)
 
@@ -351,6 +351,18 @@
 
         meta.dat
         as.matrix(names(cell.dat))
+
+        Spectre::write.sumtables(x = cell.dat,
+                                 sample.col = "Sample",
+                                 pop.col = , "FlowSOM_metacluster",
+                                 measure.col = CellularCols,
+                                 annot.col = names(cell.dat)[c(33:37)],
+                                 group.col = "Group",
+                                 do.frequencies = TRUE,
+                                 cell.counts = c(rep(2*10^7, 6), rep(1.8*10^7, 6)),
+                                 do.mfi.per.sample = TRUE,
+                                 do.mfi.per.marker = FALSE)
+
 
         Spectre::make.sumtable(x = cell.dat,
                                sample.col = "Sample",

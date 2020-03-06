@@ -53,7 +53,7 @@ write.sumtables <- function(x,
       # library(Spectre)
       # library(data.table)
       # library(tidyr)
-      # x = Spectre::demo.clustered
+      # x = as.data.table(Spectre::demo.clustered)
       # sample.col = "Sample"
       # pop.col = "FlowSOM_metacluster"
       #
@@ -75,6 +75,7 @@ write.sumtables <- function(x,
 
       ## Order the data by pop and then sample
           x.start <- x
+          x <- as.data.frame(x)
           # x <- x.start
 
           if(!is.null(cell.counts)){
