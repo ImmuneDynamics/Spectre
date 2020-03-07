@@ -74,7 +74,6 @@ write.sumtables <- function(x,
 #####################################################################
 
       ## Order the data by pop and then sample
-          x.start <- x
           x <- as.data.frame(x)
           # x <- x.start
 
@@ -123,6 +122,8 @@ write.sumtables <- function(x,
 
           x[,"SAMPLE"]
           x[,"POPULATION"]
+
+      message("Initial setup complete")
 
 #####################################################################
 ### 2. PROPORTIONS
@@ -189,6 +190,8 @@ write.sumtables <- function(x,
         dir.create("SumTable-Frequency", showWarnings = FALSE)
         setwd("SumTable-Frequency")
         write.csv(x.freq.res, "SumTable-Proportions.csv", row.names=FALSE)
+
+        message("Frequencies complete")
       }
 
 #####################################################################
@@ -216,6 +219,8 @@ write.sumtables <- function(x,
       dir.create("SumTable-Frequency", showWarnings = FALSE)
       setwd("SumTable-Frequency")
       write.csv(x.count.res, "SumTable-CellCounts.csv", row.names=FALSE)
+
+      message("Cell counts complete")
     }
   }
 
@@ -275,6 +280,7 @@ write.sumtables <- function(x,
           write.csv(data.MFI.per.group, paste0("SumTable-MFI-Group-", i, ".csv"), row.names=FALSE)
         }
       }
+      message("MFI per sample complete")
     }
 
 

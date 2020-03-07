@@ -345,8 +345,6 @@
 
     ### Create and save sumtables
         setwd(OutputDirectory)
-        dir.create("Output-SumTables", showWarnings = FALSE)
-        setwd("Output-SumTables")
         getwd()
 
         meta.dat
@@ -354,33 +352,13 @@
 
         Spectre::write.sumtables(x = cell.dat,
                                  sample.col = "Sample",
-                                 pop.col = , "FlowSOM_metacluster",
+                                 pop.col = "FlowSOM_metacluster_42",
                                  measure.col = CellularCols,
                                  annot.col = names(cell.dat)[c(33:37)],
                                  group.col = "Group",
                                  do.frequencies = TRUE,
-                                 cell.counts = c(rep(2*10^7, 6), rep(1.8*10^7, 6)),
+                                 cell.counts = meta.dat$Cells.per.sample,
                                  do.mfi.per.sample = TRUE,
                                  do.mfi.per.marker = FALSE)
-
-
-        Spectre::make.sumtable(x = cell.dat,
-                               sample.col = "Sample",
-                               clust.col = "FlowSOM_metacluster",
-                               annot.col.nums = c(1,33:39),
-
-                               do.frequencies = TRUE,
-                               cells.per.tissue = meta.dat$Cells.per.sample, ## CHECK THE ORDER OF OCCURANCE OF THE unique entries in the sample.col COLUMN -- the order or cell counts in the vector MUST be the same
-
-                               do.exp.per.marker = TRUE,
-                               do.exp.per.sample = TRUE,
-                               fun.type = "median",
-
-                               do.foldchange = TRUE,
-                               group.col = "Group",
-                               control.group = "Mock"
-                               )
-
-        setwd(PrimaryDirectory)
 
 
