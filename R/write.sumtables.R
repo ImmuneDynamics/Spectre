@@ -330,5 +330,8 @@ write.sumtables <- function(x,
 
         message("MFI per marker complete")
     }
+
+    setwd(path)
+
 }
 

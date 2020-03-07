@@ -71,7 +71,7 @@
         data.start <- data.list
 
     ### Read sample metadata and embed in sample data
-        meta.dat <- read.delim(file = "metadata/sample.details.txt")
+        meta.dat <- read.csv(file = "metadata/sample.details.csv")
 
         data.list <- Spectre::do.embed.columns(x = data.list,
                                            type = "list",
@@ -187,7 +187,6 @@
 
         nrow(cell.dat.sub)
 
-
     ### Run UMAP
 
         cell.dat.sub <- Spectre::run.umap(dat = cell.dat.sub,
@@ -206,10 +205,10 @@
                                   save.to.disk = FALSE)
 
 ##########################################################################################################
-#### 6. Save data to disk
+#### 6. Save data and summary data to disk
 ##########################################################################################################
 
-        ### Save data (cell.dat) including clustering results
+    ### Save data (cell.dat) including clustering results
         setwd(OutputDirectory)
         dir.create("Output-data")
         setwd("Output-data")
@@ -217,7 +216,7 @@
         head(cell.dat)
         head(cell.dat.sub)
 
-        ## Write 'large' dataset
+    ### Write 'large' dataset
         Spectre::write.files(dat = cell.dat,
                              file.prefix= paste0("Clustered_", exp.name), # required
                              write.csv = TRUE,
@@ -229,7 +228,7 @@
                              write.csv = FALSE,
                              write.fcs = TRUE)
 
-        ## Write 'subsample' dataset
+    ### Write 'subsample' dataset
         Spectre::write.files(dat = cell.dat.sub,
                              file.prefix = paste0("DimRed_", exp.name), # required
                              write.csv = TRUE,
@@ -243,7 +242,7 @@
 
         setwd(PrimaryDirectory)
 
-        ### Create and save sumtables
+    ### Create and save sumtables
         setwd(OutputDirectory)
         getwd()
 
@@ -259,7 +258,7 @@
                                  do.frequencies = TRUE,
                                  cell.counts = meta.dat$Cells.per.sample,
                                  do.mfi.per.sample = TRUE,
-                                 do.mfi.per.marker = FALSE)
+                                 do.mfi.per.marker = TRUE)
 
 #########################################################################################################
 #### 7. Create and save some plots
@@ -352,14 +351,5 @@
                                  align.col.by = cell.dat.sub)
           }
         }
-
-
-
-
-##########################################################################################################
-#### 8. Save summary statistics to disk
-##########################################################################################################
-
-
 
 
