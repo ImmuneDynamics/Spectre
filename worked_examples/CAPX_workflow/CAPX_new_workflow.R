@@ -197,14 +197,13 @@
 
     ### Preview results (without saving to disk)
 
-        plot(cell.dat.sub$UMAP_X, cell.dat.sub$UMAP_Y)
-
-        Spectre::colour.plot(d = cell.dat.sub,
-                             x.axis = "UMAP_X",
-                             y.axis = "UMAP_Y",
-                             col.axis = "BV605.Ly6C",
-                             align.xy.by = cell.dat.sub,
-                             align.col.by = cell.dat.sub)
+        Spectre::make.colour.plot(dat = cell.dat.sub,
+                                  x.axis = "UMAP_X",
+                                  y.axis = "UMAP_Y",
+                                  col.axis = "BV605.Ly6C",
+                                  align.xy.by = cell.dat.sub,
+                                  align.col.by = cell.dat.sub,
+                                  save.to.disk = FALSE)
 
 ##########################################################################################################
 #### 6. Save data to disk
@@ -219,30 +218,48 @@
         head(cell.dat.sub)
 
         ## Write 'large' dataset
-        Spectre::write.files(x = cell.dat,
+        Spectre::write.files(dat = cell.dat,
                              file.prefix= paste0("Clustered_", exp.name), # required
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-        Spectre::write.files(x = cell.dat,
+        Spectre::write.files(dat = cell.dat,
                              file.prefix= paste0("Clustered_", exp.name), # required
                              divide.by = "Sample",
-                             write.csv = TRUE,
+                             write.csv = FALSE,
                              write.fcs = TRUE)
 
         ## Write 'subsample' dataset
-        Spectre::write.files(x = cell.dat.sub,
+        Spectre::write.files(dat = cell.dat.sub,
                              file.prefix = paste0("DimRed_", exp.name), # required
                              write.csv = TRUE,
                              write.fcs = TRUE)
 
-        Spectre::write.files(x = cell.dat.sub,
+        Spectre::write.files(dat = cell.dat.sub,
                              file.prefix = paste0("DimRed_", exp.name), # required
                              divide.by = "Sample",
-                             write.csv = TRUE,
+                             write.csv = FALSE,
                              write.fcs = TRUE)
 
         setwd(PrimaryDirectory)
+
+        ### Create and save sumtables
+        setwd(OutputDirectory)
+        getwd()
+
+        meta.dat
+        as.matrix(names(cell.dat))
+
+        Spectre::write.sumtables(x = cell.dat,
+                                 sample.col = "Sample",
+                                 pop.col = "FlowSOM_metacluster_42",
+                                 measure.col = CellularCols,
+                                 annot.col = names(cell.dat)[c(33:37)],
+                                 group.col = "Group",
+                                 do.frequencies = TRUE,
+                                 cell.counts = meta.dat$Cells.per.sample,
+                                 do.mfi.per.sample = TRUE,
+                                 do.mfi.per.marker = FALSE)
 
 #########################################################################################################
 #### 7. Create and save some plots
@@ -343,22 +360,6 @@
 #### 8. Save summary statistics to disk
 ##########################################################################################################
 
-    ### Create and save sumtables
-        setwd(OutputDirectory)
-        getwd()
 
-        meta.dat
-        as.matrix(names(cell.dat))
-
-        Spectre::write.sumtables(x = cell.dat,
-                                 sample.col = "Sample",
-                                 pop.col = "FlowSOM_metacluster_42",
-                                 measure.col = CellularCols,
-                                 annot.col = names(cell.dat)[c(33:37)],
-                                 group.col = "Group",
-                                 do.frequencies = TRUE,
-                                 cell.counts = meta.dat$Cells.per.sample,
-                                 do.mfi.per.sample = TRUE,
-                                 do.mfi.per.marker = FALSE)
 
 

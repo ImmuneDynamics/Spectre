@@ -48,12 +48,15 @@ write.sumtables <- function(x,
                            path = getwd())
 {
 
-  ### Test data
+#####################################################################
+#### Data for testing
+#####################################################################
 
       # library(Spectre)
       # library(data.table)
       # library(tidyr)
       # x = as.data.table(Spectre::demo.clustered)
+      # x <- as.data.frame(x)
       # sample.col = "Sample"
       # pop.col = "FlowSOM_metacluster"
       #
@@ -70,11 +73,10 @@ write.sumtables <- function(x,
       # path = setwd("/Users/thomasa/Desktop/")
 
 #####################################################################
-### 1. Initial setup
+#### 1. Initial setup
 #####################################################################
 
       ## Order the data by pop and then sample
-          x <- as.data.frame(x)
           # x <- x.start
 
           if(!is.null(cell.counts)){
@@ -126,7 +128,7 @@ write.sumtables <- function(x,
       message("Initial setup complete")
 
 #####################################################################
-### 2. PROPORTIONS
+#### 2. PROPORTIONS
 #####################################################################
 
       if(do.frequencies == TRUE){
@@ -195,7 +197,7 @@ write.sumtables <- function(x,
       }
 
 #####################################################################
-### 3. CELL COUNTS
+#### 3. CELL COUNTS
 #####################################################################
 
   if(do.frequencies == TRUE){
@@ -225,7 +227,7 @@ write.sumtables <- function(x,
   }
 
 #####################################################################
-### 4. MFI PER SAMPLE (each table = cluster x marker)
+#### 4. MFI PER SAMPLE (each table = cluster x marker)
 #####################################################################
 
     if(do.mfi.per.sample == TRUE){
@@ -283,11 +285,50 @@ write.sumtables <- function(x,
       message("MFI per sample complete")
     }
 
-
 #####################################################################
-### 5. MFI PER MARKER (each table = cluster x sample)
+#### 5. MFI PER MARKER (each table = cluster x sample)
 #####################################################################
 
-    ## Coming soon
+    if(do.mfi.per.marker == TRUE){
 
+    ### Setup
+
+        ## Define marker names
+        markers <- names(x[,measure.col])
+        markers <- sort(markers, decreasing = FALSE)
+
+        ## Define column names
+        populations <- unique(x$POPULATION)
+        populations <- sort(populations, decreasing = FALSE)
+
+        ## Define data
+        temp <- cbind("SAMPLE" = x[,"SAMPLE"], "POPULATION" = x[,"POPULATION"], x[,measure.col])
+
+    ### Loop for each marker
+
+        for(i in markers){
+          mkr <- data.frame(row.names = populations)
+          test <- data.table("SAMPLE" = x[,"SAMPLE"],
+                             "POPULATION" = x[,"POPULATION"],
+                             "MARKER" = x[,i])
+
+          ## Sample loop
+          for(a in all.samples){
+            xp <- test[test[["SAMPLE"]] == a,]
+            xp <- xp[,c(2,3)] # don't need to see the 'sample
+            ad <- aggregate(. ~POPULATION, data = xp, FUN=mfi.type)
+            names(ad)[2] <- as.character(a)
+            mkr <- cbind(mkr, ad[2])
+          }
+
+          ## Save MARKER CSV
+          setwd(path)
+          dir.create("SumTable-MFI-PerMarker", showWarnings = FALSE)
+          setwd("SumTable-MFI-PerMarker")
+          write.csv(mkr, paste0("SumTable-MFI-", i, ".csv"))
+        }
+
+        message("MFI per marker complete")
+    }
 }
+
