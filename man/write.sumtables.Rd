@@ -30,6 +30,10 @@ make.sumtables(x, ...)
 \item{mfi.type}{DEFAULTS TO "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.}
 
 \item{path}{DEFAULTS TO getwd(). Defines the directory for write CSV files.}
+
+\item{perc.pos.markers}{DEFAULTS to NULL. A vector of column names of calculating percent positive summary stats.}
+
+\item{perc.pos.cutoff}{DEFAULTS to NULL. A vector of 'positive' cut-off values for the markers defined in perc.pos.markers. Must be in same order.}
 }
 \value{
 ...
