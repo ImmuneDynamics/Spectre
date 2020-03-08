@@ -434,7 +434,7 @@ write.sumtables <- function(x,
           setwd(path)
           dir.create("SumTable-MFI-PercentPositive", showWarnings = FALSE)
           setwd("SumTable-MFI-PercentPositive")
-          write.csv(df, paste0("SumTable-PercPos-", active.marker, ".csv"))
+          write.csv(df, paste0("SumTable-PercPos-", active.marker, ".csv"), row.names = FALSE)
 
           message(active.marker, " percent positive - CSV written to disk")
           setwd(path)

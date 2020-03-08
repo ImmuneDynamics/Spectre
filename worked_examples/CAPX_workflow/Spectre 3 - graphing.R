@@ -141,7 +141,7 @@
 
 
 ##########################################################################################################
-#### COMING SOON - MFI (per marker) HEATMAPS
+#### MFI (per marker)
 ##########################################################################################################
 
     ### Read in proportion and cell count data
@@ -219,23 +219,23 @@
 
 
 ##########################################################################################################
-#### COMING SOON - PERCENT POSITIVE
+#### PERCENT POSITIVE
 ##########################################################################################################
 
 
     ### Read in proportion and cell count data
         setwd(InputDirectory)
-        setwd("SumTable-PercentPositive")
+        setwd("SumTable-MFI-PercentPositive")
         files <- list.files(getwd(), ".csv")
         files
 
     ### Setup
 
-        setup <- read.csv(files[1])
+        setup <- read.csv(files[1], check.names = FALSE)
         as.matrix(names(setup))
 
         to.plot <- c(8:27)
-        to.annot <- c(6:7)
+        to.annot <- c(5:6)
         to.rmv <- c(1:7)
 
         samp.col <- "Sample"
@@ -252,7 +252,7 @@
           dat <- read.csv(i)
 
           nme <- gsub(".csv", "", i)
-          nme <- gsub("SumTable-MFI-*", "", nme)
+          nme <- gsub("SumTable-PercPos-*", "", nme)
 
           for(a in plot.names){
             make.autograph(x = dat,
@@ -260,10 +260,10 @@
                            y.axis = a,
                            colour.by = "Batch",
                            colours = c("Black", "Red"),
-                           y.axis.label = "MFI",
+                           y.axis.label = "Percent positive",
                            my_comparisons = my.comparisons,
-                           title = paste0(nme, " MFI", " for ", a),
-                           filename = paste0(nme, " MFI", " for ", a, ".pdf"))
+                           title = paste0(a, " - ", nme, " percent positive"),
+                           filename = paste0(nme, " - percent positive of ", a, ".pdf"))
           }
         }
 
@@ -273,7 +273,7 @@
           temp <- read.csv(i)
 
           nme <- gsub(".csv", "", i)
-          nme <- gsub("SumTable-MFI-*", "", nme)
+          nme <- gsub("SumTable-PercPos-*", "", nme)
 
           counts.fold <- Spectre::do.convert.to.fold(x = temp,
                                                      sample.col = samp.col,
@@ -295,24 +295,5 @@
                         dendrograms = "none",
                         is.fold = TRUE)
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
