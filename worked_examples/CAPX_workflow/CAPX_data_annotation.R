@@ -18,11 +18,6 @@
 
         session_info()
 
-        if(!require('pheatmap')) {install.packages('pheatmap')}
-        if(!require('ggpubr')) {install.packages('ggpubr')}
-        library(pheatmap)
-        library(ggpubr)
-
     ### Set working directory
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
         setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
@@ -197,4 +192,44 @@
                                  cell.counts = cell.counts,
                                  do.mfi.per.sample = TRUE,
                                  do.mfi.per.marker = TRUE)
+
+
+##########################################################################################################
+#### Some extra plots
+##########################################################################################################
+
+        ### Make a cluster plot
+        setwd(OutputDirectory)
+        dir.create("Annotated-plots", showWarnings = FALSE)
+        setwd("Annotated-plots")
+
+        as.matrix(names(cell.dat.sub))
+
+        ## All data
+        make.factor.plot(dat = cell.dat.sub,
+                         x.axis = "UMAP_X",
+                         y.axis = "UMAP_Y",
+                         col.axis = "Population",
+                         add.label = TRUE)
+
+
+        ## Sample multi plots
+        make.multi.plot(dat = cell.dat.sub,
+                        x.axis = "UMAP_X",
+                        y.axis = "UMAP_Y",
+                        col.axis = "Population",
+                        type = "factor",
+                        plot.by = "Sample",
+                        align.xy.by = cell.dat.sub,
+                        align.col.by = cell.dat.sub)
+
+        ## Group multi plots
+        make.multi.plot(dat = cell.dat.sub,
+                        x.axis = "UMAP_X",
+                        y.axis = "UMAP_Y",
+                        col.axis = "Population",
+                        type = "factor",
+                        plot.by = "Group",
+                        align.xy.by = cell.dat.sub,
+                        align.col.by = cell.dat.sub)
 

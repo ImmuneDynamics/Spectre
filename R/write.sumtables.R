@@ -335,7 +335,7 @@ write.sumtables <- function(x,
           setwd(path)
           dir.create("SumTable-MFI-PerMarker", showWarnings = FALSE)
           setwd("SumTable-MFI-PerMarker")
-          write.csv(mkr, paste0("SumTable-MFI-", i, ".csv"))
+          write.csv(mkr.res, paste0("SumTable-MFI-", i, ".csv"))
         }
 
         message("MFI per marker complete")
