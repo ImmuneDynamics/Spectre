@@ -428,6 +428,9 @@ write.sumtables <- function(x,
             }
 
           ## Save
+          df <- cbind("SAMPLE" = df[1], annots, df)
+          names(df)[1] <- sample.col
+
           setwd(path)
           dir.create("SumTable-MFI-PercentPositive", showWarnings = FALSE)
           setwd("SumTable-MFI-PercentPositive")
@@ -435,7 +438,7 @@ write.sumtables <- function(x,
 
           message(active.marker, " percent positive - CSV written to disk")
           setwd(path)
-        }
+         }
       }
     }
 

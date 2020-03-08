@@ -146,9 +146,6 @@
 
         setwd(OutputDirectory)
         dir.create("Annotated-sumtables", showWarnings = FALSE)
-        setwd("Annotated-sumtables")
-        dir.create("SumTable-PercentPositive")
-        setwd("SumTable-PercentPositive")
 
         as.matrix(names(cell.dat))
 
@@ -179,6 +176,7 @@
                                  measure.col = CellularCols,
                                  annot.col = names(cell.dat)[c(33:37)],
                                  group.col = "Group",
+
                                  do.frequencies = TRUE,
                                  cell.counts = cell.counts,
 
