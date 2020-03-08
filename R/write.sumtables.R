@@ -47,8 +47,8 @@ write.sumtables <- function(x,
                            do.mfi.per.marker = FALSE, # coming soon
 
                            ## Functions for percentage positive calculations
-                           markers = NULL,
-                           cutoff = NULL,
+                           perc.pos.markers = NULL,
+                           perc.pos.cutoff = NULL,
 
                            ## Other defaults
                            mfi.type = "median",
