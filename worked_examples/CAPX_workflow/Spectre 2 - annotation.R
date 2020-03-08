@@ -179,12 +179,11 @@
 
                                  do.frequencies = TRUE,
                                  cell.counts = cell.counts,
+                                 do.mfi.per.sample = TRUE,
+                                 do.mfi.per.marker = TRUE,
 
                                  perc.pos.markers = c("BV711.SCA.1","APC.BrdU"),
-                                 perc.pos.cutoff = c(580, 450),
-
-                                 do.mfi.per.sample = TRUE,
-                                 do.mfi.per.marker = TRUE)
+                                 perc.pos.cutoff = c(580, 450))
 
 
 ##########################################################################################################
