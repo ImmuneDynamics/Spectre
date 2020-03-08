@@ -1,6 +1,6 @@
 ##########################################################################################################
 #### Spectre -- General Discovery Workflow
-#### Part 1/2 - Clustering and dimensionality reduction
+#### Part 1/3 - Clustering, dimensionality reduction, plotting, and summarise data
 ##########################################################################################################
 
     # Spectre R package: https://sydneycytometry.org.au/spectre
@@ -285,8 +285,8 @@
 
     ### Plot some sample-oriented plots
         setwd(OutputDirectory)
-        dir.create("Plots-samples")
-        setwd("Plots-samples")
+        dir.create("Output-plots")
+        setwd("Output-plots")
 
         Spectre::make.factor.plot(dat = cell.dat.sub,
                                  x.axis = "UMAP_X",
@@ -304,6 +304,12 @@
                                  align.xy.by = cell.dat.sub,
                                  align.col.by = cell.dat.sub,
                                  dot.size = 1)
+
+
+
+
+
+
 
     ### Plot some cluster-oriented plots
         setwd(OutputDirectory)

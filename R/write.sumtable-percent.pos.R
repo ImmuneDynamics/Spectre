@@ -3,11 +3,11 @@
 #' @export
 
 write.sumtable.percent.pos <- function(x,
-                                     sample.name,
-                                     cluster.name,
-                                     Markers,
-                                     Cutoff
-                                     )
+                                       sample.name,
+                                       cluster.name,
+                                       Markers,
+                                       Cutoff
+                                       )
 {
 
   ### Test data
@@ -31,7 +31,7 @@ write.sumtable.percent.pos <- function(x,
     # x
     #
     # sample.name <- "Sample"
-    # cluster.name <- "PopName"
+    # cluster.name <- "FlowSOM_metacluster"
     # Markers <- c("BV711.SCA.1", "APC.BrdU", "PECy7.CD80")
     # Cutoff <- c(500, 700, 600)
 
