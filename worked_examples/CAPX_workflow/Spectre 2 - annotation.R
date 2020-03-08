@@ -35,9 +35,6 @@
         dir.create("Output_Spectre", showWarnings = FALSE)
         setwd("Output_Spectre")
 
-        dir.create("Output-annotated", showWarnings = FALSE)
-        setwd("Output-annotated")
-
         OutputDirectory <- getwd()
         setwd(PrimaryDirectory)
 
@@ -90,8 +87,8 @@
                                               type = "data.table",
                                               base.name = "FlowSOM_metacluster_42",
                                               col.name = "Population",
-                                              match.to = annotations[,1],
-                                              new.cols = annotations[,2])
+                                              match.to = annotations[1],
+                                              new.cols = annotations[2])
 
         cell.dat
 
@@ -101,8 +98,8 @@
                                                  type = "data.table",
                                                  base.name = "FlowSOM_metacluster_42",
                                                  col.name = "Population",
-                                                 match.to = annotations[,1],
-                                                 new.cols = annotations[,2])
+                                                 match.to = annotations[1],
+                                                 new.cols = annotations[2])
 
         cell.dat.sub
 
@@ -155,6 +152,7 @@
 
         as.matrix(names(cell.dat))
 
+        ## Plots
         make.density.plot(dat = cell.dat.sub,
                           x.axis = "BV711.SCA.1",
                           y.axis = "BV605.Ly6C",
@@ -166,13 +164,6 @@
                           y.axis = "BV605.Ly6C",
                           title = paste0("Density-", "APC.BrdU"),
                           save.to.disk = TRUE)
-
-        # write.sumtable.percent.pos(x = cell.dat,
-        #                            sample.name = "Sample",
-        #                            cluster.name = "Population",
-        #                            Markers = c("BV711.SCA.1","APC.BrdU"),
-        #                            Cutoff = c(580, 450)
-        #                            )
 
     ### Generate summary data
         setwd(OutputDirectory)
@@ -190,6 +181,10 @@
                                  group.col = "Group",
                                  do.frequencies = TRUE,
                                  cell.counts = cell.counts,
+
+                                 perc.pos.markers = c("BV711.SCA.1","APC.BrdU"),
+                                 perc.pos.cutoff = c(580, 450),
+
                                  do.mfi.per.sample = TRUE,
                                  do.mfi.per.marker = TRUE)
 

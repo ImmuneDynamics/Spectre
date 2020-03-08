@@ -31,7 +31,7 @@
         PrimaryDirectory
 
     ### Determine input directory
-        setwd("Output_Spectre/Output-annotated/")
+        setwd("Output_Spectre/Annotated-sumtables")
         InputDirectory <- getwd()
 
 ##########################################################################################################
@@ -40,9 +40,6 @@
 
     ### Read in proportion and cell count data
         setwd(InputDirectory)
-        setwd("Annotated-sumtables")
-        list.files(getwd())
-
         setwd("SumTable-Frequency/")
         list.files(getwd(), ".csv")
 
@@ -96,9 +93,6 @@
 
     ### Read in proportion and cell count data
         setwd(InputDirectory)
-        setwd("Annotated-sumtables")
-        list.files(getwd())
-
         setwd("SumTable-Frequency/")
         list.files(getwd(), ".csv")
 
@@ -145,48 +139,82 @@
                       rmv.cols = c(1:7),
                       is.fold = TRUE)
 
+
 ##########################################################################################################
-#### COMING SOON - MFI HEATMAPS
+#### COMING SOON - MFI (per marker) HEATMAPS
 ##########################################################################################################
 
     ### Read in proportion and cell count data
         setwd(InputDirectory)
-        setwd("Annotated-sumtables")
         setwd("SumTable-MFI-PerMarker")
-        files <- list.files(getwd())
+        files <- list.files(getwd(), ".csv")
         files
 
     ### Setup
 
-        temp <- read.csv(files[1])
-        as.matrix(names(temp))
+        setup <- read.csv(files[1])
+        as.matrix(names(setup))
 
-        to.plot <- c(2:13)
-        ctrl.grp <- c(2:7)
+        to.plot <- c(8:27)
+        to.annot <- c(6:7)
+        to.rmv <- c(1:7)
+
+        samp.col <- "Sample"
+        grp.col <- "Group"
+        ctrl.grp <- "Mock"
+
+        my.comparisons <- list(c("Mock", "WNV"))
+
+    ### Create  AutoGraphs
+
+        plot.names <- names(setup)[to.plot]
+
+        for(i in files){
+          dat <- read.csv(i)
+
+          nme <- gsub(".csv", "", i)
+          nme <- gsub("SumTable-MFI-*", "", nme)
+
+          for(a in plot.names){
+            make.autograph(x = dat,
+                           x.axis = grp.col,
+                           y.axis = a,
+                           colour.by = "Batch",
+                           colours = c("Black", "Red"),
+                           y.axis.label = "MFI",
+                           my_comparisons = my.comparisons,
+                           title = paste0(nme, " MFI", " for ", a),
+                           filename = paste0(nme, " MFI", " for ", a, ".pdf"))
+          }
+        }
 
     ### Heatmap loop
 
         for(i in files){
           temp <- read.csv(i)
 
-          counts.fold <- Spectre::do.convert.to.fold(x = counts,
-                                                     sample.col = "Sample",
-                                                     group.col = "Group",
+          nme <- gsub(".csv", "", i)
+          nme <- gsub("SumTable-MFI-*", "", nme)
+
+          counts.fold <- Spectre::do.convert.to.fold(x = temp,
+                                                     sample.col = samp.col,
+                                                     group.col = grp.col,
                                                      ctrl.grp = ctrl.grp,
                                                      convert.cols = to.plot)
 
           counts.fold
 
           make.pheatmap(dat = counts.fold,
-                        file.name = "Counts.png",
-                        plot.title = "Counts",
-                        sample.col = "Sample",
-                        annot.cols = c(5,6),
-                        rmv.cols = c(1:7),
+                        file.name = paste0(nme, ".png"),
+                        plot.title = paste0(nme),
+                        sample.col = samp.col,
+                        annot.cols = to.annot,
+                        rmv.cols = to.rmv,
+                        fold.max.range = 2,
+                        fold.min.range = -2,
+                        row.sep = 6,
+                        dendrograms = "none",
                         is.fold = TRUE)
-
-
-
         }
 
 
@@ -195,230 +223,90 @@
 ##########################################################################################################
 
 
+    ### Read in proportion and cell count data
+        setwd(InputDirectory)
+        setwd("SumTable-PercentPositive")
+        files <- list.files(getwd(), ".csv")
+        files
 
+    ### Setup
 
+        setup <- read.csv(files[1])
+        as.matrix(names(setup))
 
+        to.plot <- c(8:27)
+        to.annot <- c(6:7)
+        to.rmv <- c(1:7)
 
+        samp.col <- "Sample"
+        grp.col <- "Group"
+        ctrl.grp <- "Mock"
 
+        my.comparisons <- list(c("Mock", "WNV"))
 
+    ### Create  AutoGraphs
 
+        plot.names <- names(setup)[to.plot]
 
+        for(i in files){
+          dat <- read.csv(i)
 
+          nme <- gsub(".csv", "", i)
+          nme <- gsub("SumTable-MFI-*", "", nme)
 
+          for(a in plot.names){
+            make.autograph(x = dat,
+                           x.axis = grp.col,
+                           y.axis = a,
+                           colour.by = "Batch",
+                           colours = c("Black", "Red"),
+                           y.axis.label = "MFI",
+                           my_comparisons = my.comparisons,
+                           title = paste0(nme, " MFI", " for ", a),
+                           filename = paste0(nme, " MFI", " for ", a, ".pdf"))
+          }
+        }
 
+    ### Heatmap loop
 
+        for(i in files){
+          temp <- read.csv(i)
 
+          nme <- gsub(".csv", "", i)
+          nme <- gsub("SumTable-MFI-*", "", nme)
 
+          counts.fold <- Spectre::do.convert.to.fold(x = temp,
+                                                     sample.col = samp.col,
+                                                     group.col = grp.col,
+                                                     ctrl.grp = ctrl.grp,
+                                                     convert.cols = to.plot)
 
+          counts.fold
 
+          make.pheatmap(dat = counts.fold,
+                        file.name = paste0(nme, ".png"),
+                        plot.title = paste0(nme),
+                        sample.col = samp.col,
+                        annot.cols = to.annot,
+                        rmv.cols = to.rmv,
+                        fold.max.range = 2,
+                        fold.min.range = -2,
+                        row.sep = 6,
+                        dendrograms = "none",
+                        is.fold = TRUE)
+        }
 
 
 
 
 
-##########################################################################################################
-#### PERCENT POSITIVE DATA
-##########################################################################################################
 
-### Read in and setup up FREQUENCY data
 
-setwd(OutputDirectory)
-setwd("SumTable-PercentPos")
 
-files <- list.files(path = getwd(), pattern = ".csv")
-files
 
-file.list <- list()
 
-for(i in files){
-  file.list[[i]] <- read.csv(i, check.names = FALSE)
-}
 
-file.list[[1]]
-as.matrix(names(file.list[[1]]))
 
-Batches <- c(1,1,1,1,2,2,
-             1,2,2,2,1,2,
-             2,2,2,2,2) # in order of sample (air, Smoke, Smoke + FT)
-
-Groups <- c(rep("Air", 6),
-            rep("Smoke", 6),
-            rep("Smoke + FT", 5))
-
-for(i in names(file.list)){
-  file.list[[i]][1] <- NULL
-  file.list[[i]] <- cbind(file.list[[i]], Batches, Groups)
-}
-
-file.list[[1]]
-
-as.matrix(names(file.list[[1]]))
-to.plot <- c(2:25)
-
-## Generic preferneces
-sample.col <- "Sample"
-group.col <- "Groups"
-ctrl.grp <- "Air"
-
-## AutoGraph preferences
-file.list[[1]]
-as.matrix(names(file.list[[1]]))
-unique(file.list[[1]][[group.col]])
-
-to.plot <- c(2:25)
-my.comparisons <- list(c("Air", "Smoke"),
-                       c("Smoke", "Smoke + FT"),
-                       c("Air", "Smoke + FT"))
-
-
-### Percent positive FOLD CHANGE heatmap
-
-setwd(OutputDirectory)
-setwd("SumTable-PercentPos")
-
-for(i in names(file.list)){
-  # i <- names(file.list)[[1]]
-
-  dat <- file.list[[i]]
-  as.matrix(names(dat))
-
-  dat <- convert.to.fold(x = dat,
-                         sample.col = sample.col,
-                         group.col = group.col,
-                         ctrl.grp = ctrl.grp,
-                         convert.cols = to.plot,
-                         log2 = TRUE)
-
-  i <- gsub(x = i, pattern = ".csv", "")
-
-  as.matrix(names(dat))
-  Spectre::make.pheatmap(x = dat,
-                         file.name = paste0(i, ".png"),
-                         plot.title = paste0(i, "Percent positive"),
-                         sample.col = "Sample",
-                         annot.cols = c(26,27),
-                         rmv.cols = c(1),
-                         row.sep = c(6,12),
-                         is.fold = TRUE,
-                         dendrograms = "none")
-}
-
-
-
-### Percent positive AUTOGRAPHS
-
-setwd(OutputDirectory)
-setwd("SumTable-PercentPos")
-
-for(i in names(file.list)){
-  # i <- "127I_IdU.csv"
-
-  dat <- file.list[[i]]
-  dat
-
-  for(a in to.plot){
-    # a <- 2
-    a <- names(dat)[[a]]
-    i <- gsub(x = i, pattern = ".csv", "")
-
-    make.autograph(x = dat,
-                   x.axis = group.col,
-                   y.axis = a,
-                   colour.by = "Batches",
-                   colours = c("Black", "Red"),
-                   y.axis.label = "Percent positive",
-                   my_comparisons = my.comparisons,
-                   title = paste0(i, " - % pos of ", a),
-                   filename = paste0(i, " - PC pos of ", a, ".pdf")
-    )
-  }
-}
-
-
-
-
-##########################################################################################################
-#### MFI HEATMAPS - per marker, samples vs clusters
-##########################################################################################################
-
-setwd(OutputDirectory)
-setwd("Output_MFI_per_marker/")
-
-files <- list.files(path = getwd(), pattern = ".csv")
-files
-
-file.list <- list()
-
-for(i in files){
-  file.list[[i]] <- read.csv(i, check.names = FALSE)
-  colnames(file.list[[i]])[1] <- "Sample"
-}
-
-file.list[[1]]
-as.matrix(names(file.list[[1]]))
-
-Batches <- c(1,1,1,1,2,2,
-             1,2,2,2,1,2,
-             2,2,2,2,2) # in order of sample (air, Smoke, Smoke + FT)
-
-Groups <- c(rep("Air", 6),
-            rep("Smoke", 6),
-            rep("Smoke + FT", 5))
-
-for(i in names(file.list)){
-  file.list[[i]] <- cbind(file.list[[i]], Batches, Groups)
-}
-
-file.list[[1]]
-
-as.matrix(names(file.list[[1]]))
-to.plot <- c(2:25)
-
-## Generic preferneces
-sample.col <- "Sample"
-group.col <- "Groups"
-ctrl.grp <- "Air"
-
-## AutoGraph preferences
-file.list[[1]]
-as.matrix(names(file.list[[1]]))
-unique(file.list[[1]][[group.col]])
-
-to.plot <- c(2:25)
-
-### MFI heatmap loop
-
-setwd(OutputDirectory)
-setwd("Output_MFI_per_marker/")
-
-# Heatmap loop
-
-for(i in names(file.list)){
-
-  dat <- file.list[[i]]
-
-  dat <- convert.to.fold(x = dat,
-                         sample.col = sample.col,
-                         group.col = group.col,
-                         ctrl.grp = ctrl.grp,
-                         convert.cols = to.plot,
-                         log2 = TRUE)
-
-
-  i <- gsub(x = i, pattern = ".csv", "")
-
-  as.matrix(names(dat))
-  Spectre::make.pheatmap(x = dat,
-                         file.name = paste0(i, ".png"),
-                         plot.title = paste0(i, ""),
-                         sample.col = c(1),
-                         annot.cols = c(26,27),
-                         rmv.cols = c(1),
-                         row.sep = c(6,12),
-
-                         is.fold = TRUE,
-                         dendrograms = "none")
-}
 
 
 

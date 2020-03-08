@@ -15,6 +15,9 @@
 #' @param do.mfi.per.sample DEFAULTS TO TRUE. Do you wish to generate MFI data (markers vs clusters) for each sample?
 #' @param do.mfi.per.marker Currently inactive, set to FALSE.
 #'
+#' @param perc.pos.markers DEFAULTS to NULL. A vector of column names of calculating percent positive summary stats.
+#' @param perc.pos.cutoff DEFAULTS to NULL. A vector of 'positive' cut-off values for the markers defined in perc.pos.markers. Must be in same order.
+#'
 #' @param mfi.type DEFAULTS TO "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.
 #' @param path DEFAULTS TO getwd(). Defines the directory for write CSV files.
 #'
@@ -43,6 +46,10 @@ write.sumtables <- function(x,
                            do.mfi.per.sample = TRUE,
                            do.mfi.per.marker = FALSE, # coming soon
 
+                           ## Functions for percentage positive calculations
+                           markers = NULL,
+                           cutoff = NULL,
+
                            ## Other defaults
                            mfi.type = "median",
                            path = getwd())
@@ -69,6 +76,9 @@ write.sumtables <- function(x,
       # do.mfi.per.sample = TRUE
       # do.mfi.per.marker = TRUE
       #
+      # perc.pos.markers = c("BV711.SCA.1","APC.BrdU")
+      # perc.pos.cutoff = c(580, 450)
+      #
       # mfi.type = "median"
       # path = setwd("/Users/thomasa/Desktop/")
 
@@ -78,6 +88,8 @@ write.sumtables <- function(x,
 
       ## Order the data by pop and then sample
           # x <- x.start
+
+          x <- as.data.frame(x)
 
           if(!is.null(cell.counts)){
             count <- data.frame(unique(x[sample.col]), cell.counts)
@@ -339,9 +351,94 @@ write.sumtables <- function(x,
         }
 
         message("MFI per marker complete")
+        setwd(path)
     }
 
-    setwd(path)
+#####################################################################
+#### 6. Percent positive
+#####################################################################
+
+    if(!is.null(perc.pos.markers)){
+      if(!is.null(perc.pos.cutoff)){
+
+        setwd(path)
+
+        ### Setup
+            x <- as.data.table(x)
+
+            clusters <- all.pops
+            clusters
+
+            samples <- all.samples
+            samples
+
+            MarkerCutoffs <- data.frame(perc.pos.markers, perc.pos.cutoff)
+            MarkerCutoffs
+
+        ### Loops
+
+          for(i in c(1:nrow(MarkerCutoffs))){ ## EACH CSV IS A MARKER
+            # i <- 1
+            active.marker <- MarkerCutoffs[i,1] #,1 is name, ,2 is cutoff
+            active.marker <- as.character(active.marker)
+            active.marker
+
+            active.marker.cutoff <- MarkerCutoffs[i,2]
+            active.marker.cutoff
+
+            df <- data.frame(matrix(ncol = (1 + length(clusters)), nrow = 0))
+            colnames(df) <- c("SAMPLE", as.vector(clusters))
+            df
+
+            for(a in samples){ ## EACH ROW IS A SAMPLE
+              #a <- "01_Mock_01"
+              active.sample <- a
+
+              x.samp <- x[x[["SAMPLE"]] == a,]
+              x.samp
+
+              all.cluster.res <- list()
+
+              for(o in clusters){  ## EACH COLUMN IS THE RESULTS OF A CLUSTER
+                #o <- 1
+                active.cluster <- o
+
+                active.sample.cluster <- x.samp[x.samp[["POPULATION"]] == o,] # Sample == a, Cluster == o
+                total <- nrow(active.sample.cluster) # Number of total events of this cluster from this sample
+
+                pos <- active.sample.cluster[active.sample.cluster[[active.marker]] >active.marker.cutoff ,]
+                num.pos <- nrow(pos)
+
+                freq <- num.pos / total
+                freq <- freq*100
+                freq
+
+                res <- data.frame(Cluster = o, Freq = freq)
+                res
+
+                all.cluster.res <- rbind(all.cluster.res, res)
+              }
+
+              active.sample
+              all.cluster.res
+
+              df[nrow(df) + 1,] = c(active.sample, as.vector(all.cluster.res[,2]))
+              df
+
+            }
+
+          ## Save
+          setwd(path)
+          dir.create("SumTable-MFI-PercentPositive", showWarnings = FALSE)
+          setwd("SumTable-MFI-PercentPositive")
+          write.csv(df, paste0("SumTable-PercPos-", active.marker, ".csv"))
+
+          message(active.marker, " percent positive - CSV written to disk")
+          setwd(path)
+        }
+      }
+    }
+
 
 }
 
