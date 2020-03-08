@@ -20,8 +20,6 @@
         Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
         Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
 
-        session_info()
-
     ### 1.3. Set number of threads for data.table functions
 
         getDTthreads()
@@ -36,13 +34,24 @@
         PrimaryDirectory
 
         ## Can set manually using these lines, if desired
-            #PrimaryDirectory <- "/Users/Tom/Desktop/TAXXX"
-            #setwd(PrimaryDirectory)
+        setwd("data/")
+        InputDirectory <- getwd()
+        InputDirectory
+        setwd(PrimaryDirectory)
 
         ## Create output directory
         dir.create("Output_Spectre", showWarnings = FALSE)
         setwd("Output_Spectre")
         OutputDirectory <- getwd()
+
+        ## Create "Output-info" directory and save session info
+        dir.create("Output-info", showWarnings = FALSE)
+        setwd("Output-info")
+
+        sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
+        session_info()
+        sink()
+
         setwd(PrimaryDirectory)
 
 ##########################################################################################################
@@ -52,10 +61,11 @@
     ### Read SAMPLES (data) into workspace and review
 
         ## List of CSV files in PrimaryDirectory # HERE WE WANT ONE FILE PER SAMPLE
-        list.files(PrimaryDirectory, ".csv")
+        setwd(InputDirectory)
+        list.files(InputDirectory, ".csv")
 
         ## Import samples (read files into R from disk)
-        data.list <- Spectre::read.files(file.loc = PrimaryDirectory,
+        data.list <- Spectre::read.files(file.loc = InputDirectory,
                                          file.type = ".csv",
                                          do.embed.file.names = TRUE)
 
@@ -67,11 +77,12 @@
         head(data.list)
         head(data.list[[1]])
 
-        ## Save starting data
-        data.start <- data.list
-
     ### Read sample metadata and embed in sample data
+
+        setwd(PrimaryDirectory)
         meta.dat <- read.csv(file = "metadata/sample.details.csv")
+
+    ### Embed sample metadata
 
         data.list <- Spectre::do.embed.columns(x = data.list,
                                            type = "list",
@@ -90,7 +101,6 @@
                                            match.to = meta.dat[c(1)],
                                            new.cols = meta.dat[c(4)],
                                            col.name = names(meta.dat[c(4)]))
-
 
         head(data.list)
 
@@ -158,6 +168,14 @@
         ClusteringCols
         meta.dat
 
+    ### Save CellularCols and ClusteringCols
+
+        setwd(OutputDirectory)
+        write.csv(x = CellularCols, file = "Output-info/CellularCols.csv", row.names = FALSE)
+        write.csv(x = ClusteringCols, file = "Output-info/ClusteringCols.csv", row.names = FALSE)
+        write.csv(x = meta.dat, file = "Output-info/metadata.csv", row.names = FALSE)
+        setwd(PrimaryDirectory)
+
 ##########################################################################################################
 #### 4. Perform clustering
 ##########################################################################################################
@@ -166,7 +184,7 @@
         cell.dat <- Spectre::run.flowsom(dat = cell.dat,
                                          xdim = 10,
                                          ydim = 10,
-                                         meta.k = 40,
+                                         meta.k = 20,
                                          clustering.cols = ClusteringCols)
 
         head(cell.dat)    # Check cell.dat to ensure FlowSOM data correctly attached
@@ -244,7 +262,8 @@
 
     ### Create and save sumtables
         setwd(OutputDirectory)
-        getwd()
+        dir.create("Output-sumtables")
+        setwd("Output-sumtables")
 
         meta.dat
         as.matrix(names(cell.dat))
@@ -269,22 +288,22 @@
         dir.create("Plots-samples")
         setwd("Plots-samples")
 
-        Spectre::factor.plot(d = cell.dat.sub,
-                             x.axis = "UMAP_X",
-                             y.axis = "UMAP_Y",
-                             col.axis = "Sample",
-                             align.xy.by = cell.dat.sub,
-                             align.col.by = cell.dat.sub)
+        Spectre::make.factor.plot(dat = cell.dat.sub,
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 col.axis = "Sample",
+                                 align.xy.by = cell.dat.sub,
+                                 align.col.by = cell.dat.sub)
 
-        Spectre::multi.plot(d = cell.dat.sub,
-                             type = "factor",
-                             x.axis = "UMAP_X",
-                             y.axis = "UMAP_Y",
-                             col.axis = group.col,
-                             plot.by = sample.col,
-                             align.xy.by = cell.dat.sub,
-                             align.col.by = cell.dat.sub,
-                             dot.size = 1)
+        Spectre::make.multi.plot(dat = cell.dat.sub,
+                                 type = "factor",
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 col.axis = group.col,
+                                 plot.by = sample.col,
+                                 align.xy.by = cell.dat.sub,
+                                 align.col.by = cell.dat.sub,
+                                 dot.size = 1)
 
     ### Plot some cluster-oriented plots
         setwd(OutputDirectory)

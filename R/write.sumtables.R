@@ -321,6 +321,16 @@ write.sumtables <- function(x,
             mkr <- cbind(mkr, ad[2])
           }
 
+          ## Final prep
+          mkr <- t(mkr)
+          mkr <- as.data.frame(mkr)
+
+          mkr.res <- cbind("SAMPLE" = rownames(mkr), annots, mkr)
+          mkr.res
+
+          names(mkr.res)[1] <- sample.col
+          mkr.res
+
           ## Save MARKER CSV
           setwd(path)
           dir.create("SumTable-MFI-PerMarker", showWarnings = FALSE)
