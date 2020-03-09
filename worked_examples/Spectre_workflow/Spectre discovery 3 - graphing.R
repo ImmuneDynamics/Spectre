@@ -222,7 +222,6 @@
 #### PERCENT POSITIVE
 ##########################################################################################################
 
-
     ### Read in proportion and cell count data
         setwd(InputDirectory)
         setwd("SumTable-MFI-PercentPositive")

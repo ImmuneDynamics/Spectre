@@ -1,5 +1,5 @@
 ##########################################################################################################
-#### Spectre -- General Discovery Workflow
+#### Spectre - General Discovery Workflow
 #### Part 1/3 - Clustering, dimensionality reduction, plotting, and summarise data
 ##########################################################################################################
 
@@ -7,7 +7,7 @@
     # Thomas Myles Ashhurst, Felix Marsh-Wakefield, Givanna Putri
 
 ##########################################################################################################
-#### 1. Install packages, load packages, and set working directory
+#### 1. Load packages, and set working directory
 ##########################################################################################################
 
     ### 1.1. Install 'Spectre' package (using devtools) and the dependencies that Spectre requires
@@ -17,8 +17,8 @@
     ### 1.2. Load packages
 
         library(Spectre)
-        Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
-        Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
+        Spectre::package.check()    # Check that all required packages are installed
+        Spectre::package.load()     # Load required packages
 
     ### 1.3. Set number of threads for data.table functions
 
@@ -26,17 +26,25 @@
 
     ### 1.4. Set working directory
 
-        ## Set working directory
+        ## Set PrimaryDirectory
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
         setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
         getwd()
         PrimaryDirectory <- getwd()
         PrimaryDirectory
 
-        ## Can set manually using these lines, if desired
+        ## Set 'input' directory
+        setwd(PrimaryDirectory)
         setwd("data/")
         InputDirectory <- getwd()
         InputDirectory
+        setwd(PrimaryDirectory)
+
+        ## Set 'metadata' directory
+        setwd(PrimaryDirectory)
+        setwd("metadata/")
+        MetaDirectory <- getwd()
+        MetaDirectory
         setwd(PrimaryDirectory)
 
         ## Create output directory
@@ -44,7 +52,7 @@
         setwd("Output_Spectre")
         OutputDirectory <- getwd()
 
-        ## Create "Output-info" directory and save session info
+    ### 1.5. Create "Output-info" directory and save session info
         dir.create("Output-info", showWarnings = FALSE)
         setwd("Output-info")
 
@@ -58,9 +66,9 @@
 #### 2. Read and prepare data
 ##########################################################################################################
 
-    ### Read SAMPLES (data) into workspace and review
+    ### 2.1. Read SAMPLES (data) into workspace and review
 
-        ## List of CSV files in PrimaryDirectory # HERE WE WANT ONE FILE PER SAMPLE
+        ## List of CSV files in InputDirectory
         setwd(InputDirectory)
         list.files(InputDirectory, ".csv")
 
@@ -77,13 +85,14 @@
         head(data.list)
         head(data.list[[1]])
 
-    ### Read sample metadata and embed in sample data
+    ### 2.2. Read sample metadata and embed in sample data
 
+        ## Read in metadata
+        setwd(MetaDirectory)
+        meta.dat <- read.csv(file = "sample.details.csv")
         setwd(PrimaryDirectory)
-        meta.dat <- read.csv(file = "metadata/sample.details.csv")
 
-    ### Embed sample metadata
-
+        ### Embed sample metadata
         data.list <- Spectre::do.embed.columns(x = data.list,
                                            type = "list",
                                            match.to = meta.dat[c(1)],
@@ -104,7 +113,7 @@
 
         head(data.list)
 
-    ### Merge files
+    ### 2.3. Merge files
 
         ## Merge files and review
         cell.dat <- Spectre::do.merge.files(dat = data.list)
@@ -206,14 +215,12 @@
         nrow(cell.dat.sub)
 
     ### Run UMAP
-
         cell.dat.sub <- Spectre::run.umap(dat = cell.dat.sub,
                                           use.cols = ClusteringCols,
                                           umap.seed = 42)
 
 
     ### Preview results (without saving to disk)
-
         Spectre::make.colour.plot(dat = cell.dat.sub,
                                   x.axis = "UMAP_X",
                                   y.axis = "UMAP_Y",
@@ -305,23 +312,18 @@
                                  align.col.by = cell.dat.sub,
                                  dot.size = 1)
 
-
-
-
-
-
-
     ### Plot some cluster-oriented plots
         setwd(OutputDirectory)
         dir.create("Plots-clusters")
         setwd("Plots-clusters")
 
-        Spectre::labelled.factor.plot(d = cell.dat.sub,
+        Spectre::make.factor.plot(d = cell.dat.sub,
                                    x.axis = "UMAP_X",
                                    y.axis = "UMAP_Y",
-                                   col.axis = "FlowSOM_metacluster",
+                                   col.axis = "FlowSOM_metacluster_42",
                                    align.xy.by = cell.dat.sub,
-                                   align.col.by = cell.dat.sub)
+                                   align.col.by = cell.dat.sub,
+                                  add.label = TRUE)
 
     ### Plot some marker-oriented plots
         setwd(OutputDirectory)
@@ -331,7 +333,7 @@
         dir.create("All samples")
         setwd("All samples")
 
-        Spectre::multi.marker.plot(d = cell.dat.sub,
+        Spectre::make.multi.marker.plot(dat = cell.dat.sub,
                                    x.axis = "UMAP_X",
                                    y.axis = "UMAP_Y",
                                    plot.by = c(CellularCols),
@@ -349,7 +351,7 @@
 
         for(i in as.matrix(unique(cell.dat.sub[[sample.col]]))){
           for(a in ClusteringCols){
-            Spectre::colour.plot(d = cell.dat.sub[cell.dat.sub[[sample.col]] == i,],
+            Spectre::make.colour.plot(dat = cell.dat.sub[cell.dat.sub[[sample.col]] == i,],
                                  x.axis = "UMAP_X",
                                  y.axis = "UMAP_Y",
                                  col.axis = a,
@@ -367,7 +369,7 @@
 
         for(i in as.matrix(unique(cell.dat.sub[[group.col]]))){
           for(a in ClusteringCols){
-            Spectre::colour.plot(d = cell.dat.sub[cell.dat.sub[[group.col]] == i,],
+            Spectre::make.colour.plot(dat = cell.dat.sub[cell.dat.sub[[group.col]] == i,],
                                  x.axis = "UMAP_X",
                                  y.axis = "UMAP_Y",
                                  col.axis = a,

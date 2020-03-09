@@ -1,34 +1,22 @@
-##########################################################################################################
-#### Install Spectre and dependent packages
-##########################################################################################################
+## Install (if not already installed)
+if(!require('devtools')) {install.packages('devtools')}
 
-### 1.1. Install Spectre and dependent packages
-    
-    ## Install devtolls
-    if(!require('devtools')) {install.packages('devtools')}
-    library('devtools')
-    
-    ## Install Spectre
-    #install_github("sydneycytometry/spectre")
-    install_github("sydneycytometry/spectre", ref = 'development') # option to install the development verison if required
-    library("Spectre")
-    
-    ## Install BiocManager to download packages from Bioconductor
-    if (!requireNamespace("BiocManager", quietly = TRUE))
-      install.packages("BiocManager")
-    
-    ## Download additional BioConductor packages
-    if(!require('flowCore')) {BiocManager::install('flowCore')}
-    if(!require('Biobase')) {BiocManager::install('Biobase')}
-    if(!require('flowViz')) {BiocManager::install('flowViz')}
-    if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+## Install Spectre
+library('devtools')
+install_github("sydneycytometry/spectre")
 
-### 1.2. Load packages to ensure successful installation
-    
-    library(Spectre)
-    Spectre::check.packages() # --> change so that message at the end is "All required packages have been successfully installed"
-    Spectre::load.packages() # --> change so that message at the end is "All required packages have been successfully loaded"
-    
-    session_info()
-    
-    
+## Install BiocManager to download packages from Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+## Download additional BioConductor packages
+if(!require('flowCore')) {BiocManager::install('flowCore')}
+if(!require('Biobase')) {BiocManager::install('Biobase')}
+if(!require('flowViz')) {BiocManager::install('flowViz')}
+if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+
+## Check if all required packages have been installed
+Spectre::package.check()
+
+## Load all required packages
+Spectre::package.load()
