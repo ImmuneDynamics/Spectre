@@ -4,7 +4,7 @@
 \alias{make.factor.plot}
 \title{make.factor.plot - Create a dot plot (X vs Y) coloured by a selected factor column (e.g. clusters, samples)}
 \usage{
-make.factor.plot(d, x.axis, y.axis, col.axis)
+make.factor.plot(dat, x.axis, y.axis, col.axis)
 
 See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
@@ -44,7 +44,7 @@ prints and saves a ggplot.
 This function allows you to create a coloured XY plot where each cell is coloured by a selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select factor, such as clusters, samples, groups, batches etc.
 }
 \examples{
-make.factor.plot(d = demo.umap, x = "UMAP_X", y = "UMAP_Y", col.axis = "FlowSOM_metacluster")
+make.factor.plot(dat = demo.umap, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "FlowSOM_metacluster")
 
 }
 \references{

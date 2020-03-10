@@ -4,7 +4,7 @@
 \alias{make.colour.plot}
 \title{make.colour.plot - Create a dot plot (X vs Y) coloured by a selected continuous column (e.g. marker expression)}
 \usage{
-make.colour.plot(d, x, y, col.axis)
+make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
@@ -48,7 +48,7 @@ prints and saves a ggplot.
 This function allows you to create a coloured XY plot where each cell is coloured by a selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select cellular markers.
 }
 \examples{
-make.colour.plot(d = demo.umap, x = "UMAP_X", y = "UMAP_Y", col.axis = "BV605.Ly6C")
+make.colour.plot(dat = demo.umap, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "BV605.Ly6C")
 
 }
 \references{

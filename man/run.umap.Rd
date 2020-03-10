@@ -4,10 +4,10 @@
 \alias{run.umap}
 \title{run.umap - ...}
 \usage{
-run.umap(x, ...)
+run.umap(dat, use.cols, umap.seed, suffix, ...)
 }
 \arguments{
-\item{x}{NO DEFAULT. Input data.table or data.frame.}
+\item{dat}{NO DEFAULT. Input data.table or data.frame.}
 
 \item{use.cols}{NO DEFAULT. Vector of column names or numbers for clustering.}
 

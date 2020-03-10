@@ -4,18 +4,18 @@
 \alias{do.subsample}
 \title{do.subsample - ...}
 \usage{
-do.subsample(x, method, samp.col, targets, seed)
+do.subsample(dat, method, samp.col, targets, seed)
 }
 \arguments{
-\item{samp.col}{Character. Name of the column that reflects sample names.}
+\item{dat}{NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).}
 
-\item{targets}{List of downsample targets (if random, then absolute target; if per.sample, then targets per sample, must be in the same order as the unique sample names appear in the data frame or data table; can leave blank if min.per.sample). No default.}
+\item{method}{NO DEFAULT. Character. Can be 'random' (downsampling single number from merged data), 'per.sample' (specifying number of cells each sample contributes) or 'min.per.sample' (each sample contributes the same amount of data based on sample with lowest count).}
 
-\item{seed}{Numeric. Seed for reproducibility. Default = 42.}
+\item{samp.col}{NO DEFAULT. Character. Name of the column that reflects sample names.}
 
-\item{x.}{Input dataframe with cells (rows) vs markers (columns). No default.}
+\item{targets}{NO DEFAULT. List of downsample targets (if random, then absolute target; if per.sample, then targets per sample, must be in the same order as the unique sample names appear in the data frame or data table; can leave blank if min.per.sample).}
 
-\item{method.}{Character. Can be 'random' (downsampling single number from merged data), 'per.sample' (specifying number of cells each sample contributes) or 'min.per.sample' (each sample contributes the same amount of data based on sample with lowest count). No default}
+\item{seed}{DEFAULT = 42. Numeric. Seed for reproducibility.}
 }
 \value{
 Returns a subsampled data.table

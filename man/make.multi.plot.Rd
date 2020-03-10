@@ -4,7 +4,7 @@
 \alias{make.multi.plot}
 \title{make.multi.plot}
 \usage{
-make.multi.plot(x, ...)
+make.multi.plot(dat, x.axis, y.axis, col.axis, type, plot.by, align.xy.by, align.col.by, colours, figure.title, dot.size, col.min.threshold, col.max.threshold, path, plot.width,  plot.height, blank.axis, save.each.plot, ...)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A data frame containing all the data you wish to plot}

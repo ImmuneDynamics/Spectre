@@ -4,7 +4,7 @@
 \alias{make.density.plot}
 \title{make.density.plot - ...}
 \usage{
-make.density.plot(dat, ...)
+make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.by, align.col.by, save.to.disk, path, plot.width,  plot.height, blank.axis, ...)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -15,7 +15,7 @@ make.density.plot(dat, ...)
 
 \item{title}{DEFAULT = "Density". Character. Title for the plot.}
 
-\item{colours}{DEFAULT = "spectral". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".}
+\item{colours}{DEFAULT = "viridis". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".}
 
 \item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
@@ -31,7 +31,9 @@ make.density.plot(dat, ...)
 
 \item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
 
-\item{blank.axis}{DEFAULT = FALSE. Logical, do you want a minimalist graph?}
+\item{blank.axis}{DEFAULT = FALSE. Logical, do you want a minimalist graph?
+
+This function will create a density plot for the chosen axes.}
 }
 \description{
 make.density.plot - ...
