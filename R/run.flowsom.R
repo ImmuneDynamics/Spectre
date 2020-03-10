@@ -1,16 +1,16 @@
 #' run.flowsom - ...
 #'
-#' @usage run.flowsom(dat, ...)
+#' @usage run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name, ...)
 #'
-#' @param dat data.frame. Input sample. No default.
-#' @param clustering.cols Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended, as No default.
-#' @param meta.k Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created. DEFAULT = 20.
-#' @param xdim Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.
-#' @param ydim Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters. DEFAULT = 10.
-#' @param clust.seed Numeric. Clustering seed for reproducibility. DEFAULT = 42
-#' @param meta.seed Numeric. Metaclustering seed for reproducibility. DEFAULT = 42.
-#' @param clust.name Character. Name of the resulting 'cluster' parameter. DEFAULT = "FlowSOM_cluster".
-#' @param meta.clust.name Character. Name of the resulting 'metacluster' parameter. DEFAULT = "FlowSOM_metacluster".
+#' @param dat NO DEFAULT. data.frame. Input sample.
+#' @param clustering.cols NO DEFAULT. Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended.
+#' @param meta.k DEFAULT = 20. Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created.
+#' @param xdim DEFAULT = 10. Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters.
+#' @param ydim DEFAULT = 10. Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters.
+#' @param clust.seed DEFAULT = 42 Numeric. Clustering seed for reproducibility.
+#' @param meta.seed DEFAULT = 42 Numeric. Metaclustering seed for reproducibility.
+#' @param clust.name DEFAULT = "FlowSOM_cluster". Character. Name of the resulting 'cluster' parameter.
+#' @param meta.clust.name DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
 #'
 #' This function runs FlowSOM on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns
 #'
@@ -123,7 +123,7 @@ run.flowsom <- function(dat,
 
     ## save META cluster labels
     flowsom.res.meta <- data.frame("labels" = labels)
-    colnames(flowsom.res.meta)[grepl('labels',colnames(flowsom.res.meta))] <- paste0(meta.clust.name, "_", meta.seed)
+    colnames(flowsom.res.meta)[grepl('labels',colnames(flowsom.res.meta))] <- meta.clust.name
 
     dim(dat)
     dim(flowsom.res.meta)
@@ -136,7 +136,7 @@ run.flowsom <- function(dat,
 
   ## save ORIGINAL cluster labels
   flowsom.res.original <- data.frame("labels_pre" = labels_pre)
-  colnames(flowsom.res.original)[grepl('labels_pre',colnames(flowsom.res.original))] <- paste0(clust.name, "_", clust.seed)
+  colnames(flowsom.res.original)[grepl('labels_pre',colnames(flowsom.res.original))] <- clust.name
 
   dim(dat)
   dim(flowsom.res.original)
