@@ -28,10 +28,10 @@ run.umap <- function(dat,
       # use.cols <- c(1:4)
 
   ###
-  custom.config <- umap.defaults
+  custom.config <- umap::umap.defaults
   custom.config$random_state <- umap.seed
 
-  res <- umap(d = dat[use.cols],
+  res <- umap::umap(d = dat[use.cols],
               condif = custom.config)
 
   umap.res <- res$layout
