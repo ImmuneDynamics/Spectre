@@ -26,6 +26,12 @@ run.umap <- function(dat,
       # dat <- iris
       # umap.seed <- 42
       # use.cols <- c(1:4)
+  
+  ## Check that necessary packages are installed
+  if(!is.element('umap', installed.packages()[,1])) stop('umap is required but not installed')
+  
+  ## Require packages
+  require(umap)
 
   ###
   custom.config <- umap::umap.defaults
