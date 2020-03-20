@@ -4,46 +4,50 @@
 \alias{run.tsne}
 \title{run.tsne - ...}
 \usage{
-run.tsne(dat, use.cols, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
+run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
 }
 \arguments{
-\item{dat}{data.frame. No default.}
+\item{dat}{NO DEFAULT. data.frame.}
 
-\item{use.cols}{Vector of numbers, reflecting the columns to use for clustering. No default.}
+\item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for clustering.}
 
-\item{tsne.seed}{Numeric. Seed value for reproducibility. Default = 42.}
+\item{tsne.x.name}{DEFAULT = "tSNE_X". Character. Name of tSNE x-axis.}
 
-\item{dims}{Number of dimensions for output results, either 2 or 3. Default = 2.}
+\item{tsne.y.name}{DEFAULT = "tSNE_Y". Character. Name of tSNE y-axis.}
 
-\item{initial_dims}{Number of dimensions retained in initial PCA step. Default = 50.}
+\item{tsne.seed}{DEFAULT = 42. Numeric. Seed value for reproducibility.}
 
-\item{perplexity}{Default = 30.}
+\item{dims}{DEFAULT = 2. Number of dimensions for output results, either 2 or 3.}
 
-\item{theta}{Use 0.5 for Barnes-Hut tSNE, 0.0 for exact tSNE (takes longer). Default = 0.5.}
+\item{initial_dims}{DEFAULT = 50. Number of dimensions retained in initial PCA step.}
 
-\item{check_duplicates}{Default = FALSE.}
+\item{perplexity}{DEFAULT = 30.}
 
-\item{pca}{Runs PCA prior to tSNE run. Default = TRUE.}
+\item{theta}{DEFAULT = 0.5. Use 0.5 for Barnes-Hut tSNE, 0.0 for exact tSNE (takes longer).}
 
-\item{max_iter}{Maximum number of iterations. Default = 1000.}
+\item{check_duplicates}{DEFAULT = FALSE.}
 
-\item{verbose}{Default = TRUE.}
+\item{pca}{DEFAULT = TRUE. Runs PCA prior to tSNE run.}
 
-\item{is_distance}{Experimental, using X as a distance matrix. Default = FALSE.}
+\item{max_iter}{DEFAULT = 1000. Maximum number of iterations.}
 
-\item{Y_init}{Recommend NULL for random initialisation. Default = NULL.}
+\item{verbose}{DEFAULT = TRUE.}
 
-\item{stop_lying_iter}{Number of iterations of early exaggeration. Default = 250.}
+\item{is_distance}{DEFAULT = FALSE. Experimental, using X as a distance matrix.}
 
-\item{mom_switch_iter}{Number of iterations before increased momentum of spread. Default = 250.}
+\item{Y_init}{DEFAULT = NULL. Recommend NULL for random initialisation.}
 
-\item{momentum}{Initial momentum of spread. Default = 0.5.}
+\item{stop_lying_iter}{DEFAULT = 250. Number of iterations of early exaggeration.}
 
-\item{final_momentum}{Momentum of spread at 'final_momentum'. Default = 0.8.}
+\item{mom_switch_iter}{DEFAULT = 250. Number of iterations before increased momentum of spread.}
 
-\item{eta}{Learning rate. Default = 200.}
+\item{momentum}{DEFAULT = 0.5. Initial momentum of spread.}
 
-\item{exaggeration_factor}{Factor used during early exaggeration. Default = 12.0.
+\item{final_momentum}{DEFAULT = 0.8. Momentum of spread at 'final_momentum'.}
+
+\item{eta}{DEFAULT = 200. Learning rate.}
+
+\item{exaggeration_factor}{DEFAULT = 12.0. Factor used during early exaggeration.
 
 This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.}
 }

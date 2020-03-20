@@ -39,11 +39,11 @@ make.pheatmap(dat, ...)
 
 \item{cell.size}{Numeric. Defaults to 15.}
 
-\item{standard.colours}{Character.}
+\item{standard.colours}{Character. DEFAULTS to "YlGnBu", can also be "RdYlBu", "viridis", etc}
 
 \item{fold.colours}{Character.}
 
-\item{colour.scheme}{Character.}
+\item{colour.scheme}{Character. Only one option currently.}
 
 \item{y.margin}{Numeric.}
 

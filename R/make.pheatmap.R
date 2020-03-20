@@ -24,9 +24,9 @@
 #' @param cell.size Numeric. Defaults to 15.
 #' @param y.margin Numeric.
 #' @param x.margin Numeric.
-#' @param standard.colours Character. "RdBu",
+#' @param standard.colours Character. DEFAULTS to "YlGnBu", can also be "RdYlBu", "viridis", etc
 #' @param fold.colours Character.
-#' @param colour.scheme Character.
+#' @param colour.scheme Character. Only one option currently.
 #'
 #' @return prints a 'pretty' heatmap with dendrograms.
 #'
@@ -62,7 +62,7 @@ make.pheatmap <- function(dat,
                           col.sep          = c(),
                           cell.size        = 15,
 
-                          standard.colours = "RdYlBu", # "custom"
+                          standard.colours = "YlGnBu",
                           fold.colours     = "fold.palette",
                           colour.scheme    = "group.palette")
 
