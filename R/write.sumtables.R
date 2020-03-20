@@ -56,6 +56,18 @@ write.sumtables <- function(x,
 {
 
 #####################################################################
+#### Required packages
+#####################################################################
+
+  ### Check that necessary packages are installed
+      if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+      if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+
+  ### Require packages
+      require(Spectre)
+      require(data.table)
+
+#####################################################################
 #### Data for testing
 #####################################################################
 
@@ -137,7 +149,7 @@ write.sumtables <- function(x,
           x[,"SAMPLE"]
           x[,"POPULATION"]
 
-      message("Initial setup complete")
+      message("SumTables - initial setup complete")
 
 #####################################################################
 #### 2. PROPORTIONS
@@ -205,7 +217,7 @@ write.sumtables <- function(x,
         setwd("SumTable-Frequency")
         write.csv(x.freq.res, "SumTable-Proportions.csv", row.names=FALSE)
 
-        message("Frequencies complete")
+        message("SumTables - frequencies complete")
       }
 
 #####################################################################
@@ -234,7 +246,7 @@ write.sumtables <- function(x,
       setwd("SumTable-Frequency")
       write.csv(x.count.res, "SumTable-CellCounts.csv", row.names=FALSE)
 
-      message("Cell counts complete")
+      message("SumTables - cell counts complete")
     }
   }
 
@@ -294,7 +306,7 @@ write.sumtables <- function(x,
           write.csv(data.MFI.per.group, paste0("SumTable-MFI-Group-", i, ".csv"), row.names=FALSE)
         }
       }
-      message("MFI per sample complete")
+      message("SumTables - MFI per sample complete")
     }
 
 #####################################################################
@@ -350,7 +362,7 @@ write.sumtables <- function(x,
           write.csv(mkr.res, paste0("SumTable-MFI-", i, ".csv"))
         }
 
-        message("MFI per marker complete")
+        message("SumTables - MFI per marker complete")
         setwd(path)
     }
 
@@ -436,12 +448,13 @@ write.sumtables <- function(x,
           setwd("SumTable-MFI-PercentPositive")
           write.csv(df, paste0("SumTable-PercPos-", active.marker, ".csv"), row.names = FALSE)
 
-          message(active.marker, " percent positive - CSV written to disk")
+          message("SumTables - ", active.marker, " percent positive - CSV written to disk")
           setwd(path)
          }
       }
     }
 
+message("SumTables complete")
 
 }
 

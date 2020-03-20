@@ -90,6 +90,7 @@
         ## Read in metadata
         setwd(MetaDirectory)
         meta.dat <- read.csv(file = "sample.details.csv")
+        meta.dat
         setwd(PrimaryDirectory)
 
         ### Embed sample metadata
@@ -118,10 +119,11 @@
         ## Merge files and review
         cell.dat <- Spectre::do.merge.files(dat = data.list)
 
-        str(cell.dat)
-        head(cell.dat)
-        dim(cell.dat)
-        as.matrix(unique(cell.dat[["Sample"]]))
+        ## Some checks
+        str(cell.dat) # check the structure of cell.dat
+        head(cell.dat) # check the first and last rows of cell dat
+        dim(cell.dat) # check the dimensionality of cell.dat
+        as.matrix(unique(cell.dat[["Sample"]])) # check the column names of cell.dat
 
         ## Are there any NAs present in cell.dat? Yes if 'TRUE', no if 'FALSE'
         any(is.na(cell.dat))
@@ -186,7 +188,7 @@
         setwd(PrimaryDirectory)
 
 ##########################################################################################################
-#### 4. Perform clustering
+#### 4. Perform clustering and dimensionality reduction
 ##########################################################################################################
 
     ### Run FlowSOM
@@ -197,10 +199,6 @@
                                          clustering.cols = ClusteringCols)
 
         head(cell.dat)    # Check cell.dat to ensure FlowSOM data correctly attached
-
-#########################################################################################################
-#### 5. Perform downsampling and dimensionality reduction
-##########################################################################################################
 
     ### Subsampling
         meta.dat
@@ -221,16 +219,17 @@
 
 
     ### Preview results (without saving to disk)
-        Spectre::make.colour.plot(dat = cell.dat.sub,
+        Spectre::make.factor.plot(dat = cell.dat.sub,
                                   x.axis = "UMAP_X",
                                   y.axis = "UMAP_Y",
-                                  col.axis = "BV605.Ly6C",
+                                  col.axis = "FlowSOM_metacluster_42",
                                   align.xy.by = cell.dat.sub,
                                   align.col.by = cell.dat.sub,
+                                  add.label = TRUE,
                                   save.to.disk = FALSE)
 
 ##########################################################################################################
-#### 6. Save data and summary data to disk
+#### 5. Save data and summary data to disk
 ##########################################################################################################
 
     ### Save data (cell.dat) including clustering results
@@ -267,7 +266,7 @@
 
         setwd(PrimaryDirectory)
 
-    ### Create and save sumtables
+    ### Create and save expression pattern data (cluster x marker, per sample)
         setwd(OutputDirectory)
         dir.create("Output-sumtables")
         setwd("Output-sumtables")
@@ -279,16 +278,25 @@
                                  sample.col = "Sample",
                                  pop.col = "FlowSOM_metacluster_42",
                                  measure.col = CellularCols,
-                                 annot.col = names(cell.dat)[c(33:37)],
-                                 group.col = "Group",
-                                 do.frequencies = TRUE,
-                                 cell.counts = meta.dat$Cells.per.sample,
-                                 do.mfi.per.sample = TRUE,
-                                 do.mfi.per.marker = TRUE)
+                                 do.frequencies = FALSE,
+                                 do.mfi.per.marker = FALSE,
+                                 do.mfi.per.sample = TRUE)
+
+    ### Create an expression heatmap
+
+        exp <- read.csv(list.files(getwd(), ".csv")[1])
+
+        library(pheatmap)
+        make.pheatmap(dat = exp,
+                      file.name = "MFI.heatmap.png",
+                      plot.title = "Expression",
+                      sample.col = "FlowSOM_metacluster_42",
+                      standard.colours = "YlGnBu",
+                      rmv.cols = 1)
 
 #########################################################################################################
-#### 7. Create and save some plots
-##########################################################################################################
+#### 6. Create and save some plots
+#########################################################################################################
 
     ### Plot some sample-oriented plots
         setwd(OutputDirectory)
@@ -313,23 +321,17 @@
                                  dot.size = 1)
 
     ### Plot some cluster-oriented plots
-        setwd(OutputDirectory)
-        dir.create("Plots-clusters")
-        setwd("Plots-clusters")
-
-        Spectre::make.factor.plot(d = cell.dat.sub,
+        Spectre::make.factor.plot(dat = cell.dat.sub,
                                    x.axis = "UMAP_X",
                                    y.axis = "UMAP_Y",
                                    col.axis = "FlowSOM_metacluster_42",
                                    align.xy.by = cell.dat.sub,
                                    align.col.by = cell.dat.sub,
-                                  add.label = TRUE)
+                                   add.label = TRUE)
 
     ### Plot some marker-oriented plots
         setwd(OutputDirectory)
-        dir.create("Plots-markers")
-        setwd("Plots-markers")
-
+        setwd("Output-plots")
         dir.create("All samples")
         setwd("All samples")
 
@@ -345,7 +347,7 @@
 
     ### Plot some marker-oriented plots -- one set per sample
         setwd(OutputDirectory)
-        setwd("Plots-markers")
+        setwd("Output-plots")
         dir.create("By sample")
         setwd("By sample")
 
@@ -363,7 +365,7 @@
 
     ### Plot some marker-oriented plots -- one set per group
         setwd(OutputDirectory)
-        setwd("Plots-markers")
+        setwd("Output-plots")
         dir.create("By group")
         setwd("By group")
 
@@ -378,5 +380,4 @@
                                  align.col.by = cell.dat.sub)
           }
         }
-
 

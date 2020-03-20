@@ -30,61 +30,169 @@
         PrimaryDirectory <- getwd()
         PrimaryDirectory
 
-    ### Determine input directory
-        setwd("Output_Spectre/Annotated-sumtables")
-        InputDirectory <- getwd()
+    ### Determine data input directory
+        InputDirectory <- PrimaryDirectory
+
+    ### Determine metadata directory
+        setwd(PrimaryDirectory)
+        setwd("../../../../metadata/")
+        MetaDirectory <- getwd()
+
+    ### Create an output directory
+        setwd(PrimaryDirectory)
+        dir.create("Annotated-sumtables")
+        setwd("Annotated-sumtables")
+        OutputDirectory <- getwd()
+
+##########################################################################################################
+#### LOAD DATA
+##########################################################################################################
+
+    ### Read data into R
+        setwd(InputDirectory)
+        list.files(path = getwd(), pattern = ".csv")
+
+        cell.dat <- fread("Clustered_annotated.csv")
+        cell.dat
+
+        cell.dat.sub <- fread("DimRed_annotated.csv")
+        cell.dat.sub
+
+    ### Define some parameters
+
+        as.matrix(names(cell.dat))
+
+        sample.name <- "Sample"
+        group.name <- "Group"
+
+        population.name <- "Population"
+
+        to.measure <- names(cell.dat)[c(2,4:6,8:9,11:13,16:19,21:30,32)]
+        to.annotate <- names(cell.dat)[c(36:37)]
+
+##########################################################################################################
+#### SUMMARY DATA
+##########################################################################################################
+
+    ### Set positive cut offs for selected markers
+        setwd(OutputDirectory)
+        as.matrix(names(cell.dat))
+
+    ## Plots
+        make.density.plot(dat = cell.dat.sub,
+                          x.axis = "BV711.SCA.1",
+                          y.axis = "BV605.Ly6C",
+                          title = paste0("Density-", "SCA-1"),
+                          save.to.disk = TRUE)
+
+    ### Read in sample (cell count) metadata
+
+        setwd(MetaDirectory)
+        list.files(getwd())
+
+        meta.dat <- read.csv("sample.details.csv")
+        meta.dat
+
+        count.vector <- as.vector(meta.dat[["Cells.per.sample"]])
+        count.vector
+
+    ### Generate summary data
+        setwd(OutputDirectory)
+        as.matrix(names(cell.dat))
+
+        Spectre::write.sumtables(x = cell.dat,
+                                 sample.col = sample.name,
+                                 pop.col = population.name,
+                                 measure.col = to.measure,
+                                 annot.col = to.annotate,
+                                 group.col = group.name,
+
+                                 do.frequencies = TRUE,
+                                 cell.counts = count.vector,
+                                 do.mfi.per.sample = FALSE,
+                                 do.mfi.per.marker = TRUE,
+
+                                 perc.pos.markers = c("BV711.SCA.1"),
+                                 perc.pos.cutoff = c(500))
 
 ##########################################################################################################
 #### PROPORTION DATA
 ##########################################################################################################
 
     ### Read in proportion and cell count data
-        setwd(InputDirectory)
+
+        ##
+        setwd(OutputDirectory)
         setwd("SumTable-Frequency/")
-        list.files(getwd(), ".csv")
+        freq.list <- list.files(getwd(), ".csv")
+        freq.list
 
+        ##
         prop <- read.csv("SumTable-Proportions.csv")
+        counts <- read.csv("SumTable-CellCounts.csv")
 
+        ##
         as.matrix(names(prop))
-        to.plot <- names(prop)[c(8:27)]
+
+        to.plot.nums <- c(5:24)
+        to.plot <- names(prop)[to.plot.nums]
+        to.annotate <- c(2:3)
+        to.rmv <- c(1:4)
+
         prop[to.plot] <- prop[to.plot]*100
         prop
 
+        ##
         my.comparisons <- list(c("Mock", "WNV"))
+        group.colours <- c("Black", "Red")
+        ctrl.group <- "Mock"
 
-    ### Create PROPORTION AutoGraphs
+        ##
+        lst <- list("Proportions" = prop, "Cells per sample" = counts)
 
-        for(a in to.plot){
-          # a <- "Cluster01"
-          make.autograph(x = prop,
-                         x.axis = "Group",
-                         y.axis = a,
-                         colour.by = "Batch",
-                         colours = c("Black", "Red"),
-                         y.axis.label = "Proportion",
-                         my_comparisons = my.comparisons,
-                         title = paste0("Proportion of ", a),
-                         filename = paste0("Proportion of ", a, ".pdf"))
+    ### LOOP to create AutoGraphs and Pheatmaps
+
+        for(i in names(lst)){
+
+          dat <- lst[[i]]
+
+          ## Autographs
+          for(a in to.plot){
+            # a <- "Cluster01"
+            make.autograph(x = dat,
+                           x.axis = group.name,
+                           y.axis = a,
+                           colour.by = group.name,
+                           colours = group.colours,
+                           y.axis.label = i,
+                           my_comparisons = my.comparisons,
+                           title = paste0(i, " - ", a),
+                           filename = paste0(i, " - ", a, ".pdf"))
+          }
+
+          ## Pheatmaps
+          dat.fold <- Spectre::do.convert.to.fold(x = dat,
+                                                   sample.col = sample.name,
+                                                   group.col = group.name,
+                                                   ctrl.grp = ctrl.group,
+                                                   convert.cols = to.plot.nums)
+
+          dat.fold
+
+          make.pheatmap(dat = dat.fold,
+                        file.name = paste0(i, ".png"),
+                        plot.title = i,
+                        sample.col = sample.name,
+                        annot.cols = to.annotate,
+                        rmv.cols = to.rmv,
+                        is.fold = TRUE)
         }
+
 
 
     ### Create heatmaps
 
-        prop.fold <- Spectre::do.convert.to.fold(x = prop,
-                                                 sample.col = "Sample",
-                                                 group.col = "Group",
-                                                 ctrl.grp = "Mock",
-                                                 convert.cols = c(8:27))
 
-        prop.fold
-
-        make.pheatmap(dat = prop.fold,
-                      file.name = "Proportions.png",
-                      plot.title = "Proportions",
-                      sample.col = "Sample",
-                      annot.cols = c(5,6),
-                      rmv.cols = c(1:7),
-                      is.fold = TRUE)
 
 
 ##########################################################################################################
