@@ -1,18 +1,18 @@
 #' write.files - Write .csv or .fcs files
 #'
-#' @usage write.files(x, ...)
-#'
-#' @param x Dataframe. No default.
+#' @param dat Dataframe. No default.
 #' @param file.prefix Character prefix to add before filename.
 #' @param divide.by Character. Do you want to write the whole dataset (use NULL) or split it by sample/group/cluster etc (etner the name of the column to divide by, e.g. "SampleName"). Default NULL. .
 #' @param write.csv Logical. TRUE to write CSV files, FALSE to not. Defaults to TRUE.
 #' @param write.fcs Logical. TRUE to write FCS files, FALSE to not. Defaults to FALSE
 #'
 #' This function writes CSV files from your data using fwrite. Can also write FCS files.
+#' 
+#' @usage write.files(dat, file.prefix, divide.by, write.csv, write.fcs)
 #'
 #' @export
 
-write.files <- function(x,      # data to save
+write.files <- function(dat,      # data to save
                         file.prefix,
 
                         divide.by = NULL,
@@ -22,7 +22,7 @@ write.files <- function(x,      # data to save
 
   ####### TESTING
 
-    # x <- demo.clustered
+    # dat <- demo.clustered
     # file.prefix = "Demo"
     #
     # divide.by = "Sample"
@@ -35,20 +35,20 @@ write.files <- function(x,      # data to save
 
       if(write.fcs == TRUE){
         ## Convert character entries into numeric -- so that it can be written as an FCS file
-            #nums <- unlist(lapply(x, is.numeric))
-            #char <- unlist(lapply(x, is.character))
+            #nums <- unlist(lapply(dat, is.numeric))
+            #char <- unlist(lapply(dat, is.character))
 
-        w <- x[sapply(x, function(x) !is.numeric(x))] # select all character and factor columns
+        w <- dat[sapply(dat, function(x) !is.numeric(x))] # select all character and factor columns
         head(w)
 
         for(a in colnames(w)){w[[a]] <- as.numeric(factor(w[[a]]))}
         head(w)
 
-        x.for.fcs <- x
-        x.for.fcs[sapply(x.for.fcs, function(x.for.fcs) !is.numeric(x.for.fcs))] <- w
+        dat.for.fcs <- dat
+        dat.for.fcs[sapply(dat.for.fcs, function(x.for.fcs) !is.numeric(x.for.fcs))] <- w
 
-        head(x.for.fcs)
-        head(x)
+        head(dat.for.fcs)
+        head(dat)
       }
 
 
@@ -56,29 +56,29 @@ write.files <- function(x,      # data to save
 
     if(is.null(divide.by) == TRUE){
       ## Write CSV (using fwrite)
-      if(write.csv == TRUE){fwrite(x = x, file = paste0(file.prefix, ".csv"))}
+      if(write.csv == TRUE){fwrite(x = dat, file = paste0(file.prefix, ".csv"))}
 
       ## Write FCS
       if(write.fcs == TRUE){
 
         ## Check data and data column names
-        head(x.for.fcs)
-        dimnames(x.for.fcs)[[2]]
+        head(dat.for.fcs)
+        dimnames(dat.for.fcs)[[2]]
 
         ## Create FCS file metadata - column names with descriptions
-        metadata <- data.frame(name=dimnames(x.for.fcs)[[2]], desc=paste('column',dimnames(x.for.fcs)[[2]],'from dataset'))
+        metadata <- data.frame(name=dimnames(dat.for.fcs)[[2]], desc=paste('column',dimnames(dat.for.fcs)[[2]],'from dataset'))
 
         ## Create FCS file metadata - ranges, min, and max settings
-        metadata$range <- apply(apply(x.for.fcs,2,range),2,diff)
-        metadata$minRange <- apply(x.for.fcs,2,min)
-        metadata$maxRange <- apply(x.for.fcs,2,max)
+        metadata$range <- apply(apply(dat.for.fcs,2,range),2,diff)
+        metadata$minRange <- apply(dat.for.fcs,2,min)
+        metadata$maxRange <- apply(dat.for.fcs,2,max)
 
         ## Create flowframe with tSNE data
-        x.ff <- new("flowFrame", exprs=as.matrix(x.for.fcs), parameters=AnnotatedDataFrame(metadata))
+        dat.ff <- new("flowFrame", exprs=as.matrix(dat.for.fcs), parameters=AnnotatedDataFrame(metadata))
 
         ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
         new_file_name_fcs <- paste0(file.prefix, ".fcs")
-        write.FCS(x.ff, new_file_name_fcs)
+        write.FCS(dat.ff, new_file_name_fcs)
       }
     }
 
@@ -89,12 +89,12 @@ write.files <- function(x,      # data to save
     if(is.null(divide.by) == FALSE){
 
       ## Prep keyword data to divide by
-      divide.list <- unique(x[[divide.by]])
+      divide.list <- unique(dat[[divide.by]])
 
         ## Write CSV (using fwrite)
         if(write.csv == TRUE){
           for(a in divide.list){
-            data_subset <- subset(x, x[[divide.by]] == a)
+            data_subset <- subset(dat, dat[[divide.by]] == a)
             dim(data_subset)
 
             if(isTRUE(exists("file.prefix"))){fwrite(x = data_subset, file = paste0(file.prefix, "_", divide.by, "_", a, ".csv"))}
@@ -106,10 +106,10 @@ write.files <- function(x,      # data to save
         ## Write FCS
         if(write.fcs == TRUE){
 
-          divide.list.fcs <- unique(x.for.fcs[[divide.by]])
+          divide.list.fcs <- unique(dat.for.fcs[[divide.by]])
 
           for(a in divide.list.fcs){
-            data_subset <- subset(x.for.fcs, x.for.fcs[[divide.by]] == a)
+            data_subset <- subset(dat.for.fcs, dat.for.fcs[[divide.by]] == a)
             dim(data_subset)
 
             ## Check data and data column names

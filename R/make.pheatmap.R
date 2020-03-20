@@ -3,9 +3,9 @@
 #' This function allows you to create a coloured heatmap for clusters vs markers (coloured by MFI) or clusters vs samples (coloured by MFI or cell counts). Can be set to plot 'fold-change' values that are provided in log2.
 #' make.pheatmap is a wrapper around the pheatmap function from pheatmap.
 #'
-#' @usage make.pheatmap(x, ...)
+#' @usage make.pheatmap(dat, ...)
 #'
-#' @param x data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
+#' @param dat data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
 #' @param file.name Character. What do you want to call the file, including the extension.
 #' @param plot.title Character.
 #' @param sample.col Character. Specify the name of the column that indicates samples. No default.
@@ -24,9 +24,9 @@
 #' @param cell.size Numeric. Defaults to 15.
 #' @param y.margin Numeric.
 #' @param x.margin Numeric.
-#' @param standard.colours Character.
+#' @param standard.colours Character. DEFAULTS to "YlGnBu", can also be "RdYlBu", "viridis", etc
 #' @param fold.colours Character.
-#' @param colour.scheme Character.
+#' @param colour.scheme Character. Only one option currently.
 #'
 #' @return prints a 'pretty' heatmap with dendrograms.
 #'
@@ -39,7 +39,7 @@
 #'
 #' @export
 
-make.pheatmap <- function(x,
+make.pheatmap <- function(dat,
                           file.name,
                           plot.title,
                           sample.col,
@@ -62,7 +62,7 @@ make.pheatmap <- function(x,
                           col.sep          = c(),
                           cell.size        = 15,
 
-                          standard.colours = "colour.palette",
+                          standard.colours = "YlGnBu",
                           fold.colours     = "fold.palette",
                           colour.scheme    = "group.palette")
 
@@ -77,7 +77,7 @@ make.pheatmap <- function(x,
      #
      #  setwd("/Users/Tom/Desktop")
      #
-     #  x <- hmap.mfi
+     #  dat <- hmap.mfi
      #
      #  file.name <- "test.png"
      #  plot.title <- "Test plot"
@@ -113,10 +113,10 @@ make.pheatmap <- function(x,
       #
       # setwd("/Users/Tom/Desktop")
       #
-      # x <- hmap.foldcell
-      # x$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2)
+      # dat <- hmap.foldcell
+      # dat$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2)
       #
-      # as.matrix(names(x))
+      # as.matrix(names(dat))
       #
       # sample.col <- "Sample"
       # file.name <- "test.png"
@@ -151,11 +151,46 @@ make.pheatmap <- function(x,
       # plot.width       = 11.69
       # plot.height      = 8.26
 
+  ### Check that necessary packages are installed
+      if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
+
+  ### Require packages
+      require(pheatmap)
 
   ### Setup color scheme
 
       ## Standard colour options
-      colour.palette <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
+
+      if(standard.colours == "RdYlBu"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "RdYlBu"))(31)) # 256
+        colour.palette <- rev(colour.palette)
+      }
+
+      if(standard.colours == "YlGnBu"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
+      }
+
+      if(standard.colours == "viridis"){
+        colour.palette <- colorRampPalette(c(viridis_pal(option = "viridis")(50)))
+        colour.palette <- colour.palette(31)
+      }
+
+      if(standard.colours == "spectral"){
+        spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
+        spectral.list <- rev(spectral.list)
+        colour.palette <- colorRampPalette(c(spectral.list))
+        colour.palette <- colour.palette(31)
+      }
+
+      if(standard.colours == "magma"){
+        colour.palette <- colorRampPalette(c(viridis_pal(option = "magma")(50)))
+        colour.palette <- colour.palette(31)
+      }
+
+      if(standard.colours == "inferno"){
+        colour.palette <- colorRampPalette(c(viridis_pal(option = "inferno")(50)))
+        colour.palette <- colour.palette(31)
+      }
 
       ## Fold-change colour options
       fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
@@ -166,8 +201,10 @@ make.pheatmap <- function(x,
 
   ### Embed cluster or population name as row name
 
-      heatmap.data <- x
-      rownames(heatmap.data) <- t(x[sample.col])
+      heatmap.data <- dat
+      rownames(heatmap.data) <- t(dat[sample.col])
+      heatmap.data
+
       heatmap.data
 
       if(is.null(annot.cols) == FALSE){
@@ -322,7 +359,7 @@ make.pheatmap <- function(x,
                color = map.colour,
                filename = file.name)
 
-      print("A pheatmap has been saved to your working directory")
+      message("A pheatmap has been saved to your working directory")
 
 }
 

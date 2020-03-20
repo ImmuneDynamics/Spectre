@@ -4,10 +4,10 @@
 \alias{make.pheatmap}
 \title{make.pheatmap - Create a 'pretty' heatmap (pheatmap)}
 \usage{
-make.pheatmap(x, ...)
+make.pheatmap(dat, ...)
 }
 \arguments{
-\item{x}{data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.}
+\item{dat}{data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.}
 
 \item{file.name}{Character. What do you want to call the file, including the extension.}
 
@@ -39,11 +39,11 @@ make.pheatmap(x, ...)
 
 \item{cell.size}{Numeric. Defaults to 15.}
 
-\item{standard.colours}{Character.}
+\item{standard.colours}{Character. DEFAULTS to "YlGnBu", can also be "RdYlBu", "viridis", etc}
 
 \item{fold.colours}{Character.}
 
-\item{colour.scheme}{Character.}
+\item{colour.scheme}{Character. Only one option currently.}
 
 \item{y.margin}{Numeric.}
 

@@ -1,33 +1,37 @@
 #' run.tsne - ...
 #'
-#' @usage run.tsne(x, use.cols, ...)
+#' @param dat NO DEFAULT. data.frame.
+#' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for clustering.
+#' @param tsne.x.name DEFAULT = "tSNE_X". Character. Name of tSNE x-axis.
+#' @param tsne.y.name DEFAULT = "tSNE_Y". Character. Name of tSNE y-axis.
+#' @param tsne.seed DEFAULT = 42. Numeric. Seed value for reproducibility.
+#' @param dims DEFAULT = 2. Number of dimensions for output results, either 2 or 3.
+#' @param initial_dims DEFAULT = 50. Number of dimensions retained in initial PCA step.
+#' @param perplexity DEFAULT = 30.
+#' @param theta DEFAULT = 0.5. Use 0.5 for Barnes-Hut tSNE, 0.0 for exact tSNE (takes longer).
+#' @param check_duplicates DEFAULT = FALSE.
+#' @param pca DEFAULT = TRUE. Runs PCA prior to tSNE run.
+#' @param max_iter DEFAULT = 1000. Maximum number of iterations.
+#' @param verbose DEFAULT = TRUE.
+#' @param is_distance DEFAULT = FALSE. Experimental, using X as a distance matrix.
+#' @param Y_init DEFAULT = NULL. Recommend NULL for random initialisation.
+#' @param stop_lying_iter DEFAULT = 250. Number of iterations of early exaggeration.
+#' @param mom_switch_iter DEFAULT = 250. Number of iterations before increased momentum of spread.
+#' @param momentum DEFAULT = 0.5. Initial momentum of spread.
+#' @param final_momentum DEFAULT = 0.8. Momentum of spread at 'final_momentum'.
+#' @param eta DEFAULT = 200. Learning rate.
+#' @param exaggeration_factor DEFAULT = 12.0. Factor used during early exaggeration.
 #'
-#' @param x data.frame. No default.
-#' @param use.cols Vector of numbers, reflecting the columns to use for clustering. No default.
-#' @param tsne.seed Numeric. Seed value for reproducibility. Default = 42.
-#' @param dims Number of dimensions for output results, either 2 or 3. Default = 2.
-#' @param initial_dims Number of dimensions retained in initial PCA step. Default = 50.
-#' @param perplexity Default = 30.
-#' @param theta Use 0.5 for Barnes-Hut tSNE, 0.0 for exact tSNE (takes longer). Default = 0.5.
-#' @param check_duplicates Default = FALSE.
-#' @param pca Runs PCA prior to tSNE run. Default = TRUE.
-#' @param max_iter Maximum number of iterations. Default = 1000.
-#' @param verbose Default = TRUE.
-#' @param is_distance Experimental, using X as a distance matrix. Default = FALSE.
-#' @param Y_init Recommend NULL for random initialisation. Default = NULL.
-#' @param stop_lying_iter Number of iterations of early exaggeration. Default = 250.
-#' @param mom_switch_iter Number of iterations before increased momentum of spread. Default = 250.
-#' @param momentum Initial momentum of spread. Default = 0.5.
-#' @param final_momentum Momentum of spread at 'final_momentum'. Default = 0.8.
-#' @param eta Learning rate. Default = 200.
-#' @param exaggeration_factor Factor used during early exaggeration. Default = 12.0.
-#'
-#'This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.
+#' This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.
+#' 
+#' @usage run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
 #'
 #' @export
 
-run.tsne <- function(x,
+run.tsne <- function(dat,
                  use.cols,
+                 tsne.x.name = "tSNE_X",
+                 tsne.y.name = "tSNE_Y",
                  tsne.seed = 42,
                  dims = 2,
                  initial_dims = 50,
@@ -47,7 +51,14 @@ run.tsne <- function(x,
                  exaggeration_factor = 12.0
                  ){
   
-  tsne_out <- Rtsne::Rtsne(as.matrix(x[use.cols]),
+  ## Check that necessary packages are installed
+  if(!is.element('Rtsne', installed.packages()[,1])) stop('Rtsne is required but not installed')
+  
+  ## Require packages
+  require(Rtsne)
+  
+  ## Run tSNE
+  tsne_out <- Rtsne::Rtsne(as.matrix(dat[use.cols]),
         dims = dims,
         initial_dims = initial_dims,
         perplexity = perplexity,
@@ -67,9 +78,9 @@ run.tsne <- function(x,
   )
   
   tsne_out_Y <- tsne_out$Y
-  colnames(tsne_out_Y) <- c(paste0("tSNE", "_", tsne.seed, "_", "X"), paste0("tSNE", "_", tsne.seed, "_", "Y"))
+  colnames(tsne_out_Y) <- c(tsne.x.name, tsne.y.name)
   
-  tsne.res <- cbind(x, tsne_out_Y)
+  tsne.res <- cbind(dat, tsne_out_Y)
   
   assign("tsne.res", tsne.res, envir = globalenv())
 }

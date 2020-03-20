@@ -2,25 +2,25 @@
 % Please edit documentation in R/read.files.R
 \name{read.files}
 \alias{read.files}
-\title{read.files - Function to read data from CSV or FCS files into a list}
+\title{read.files - Function to read data from CSV or FCS files into a list.}
 \usage{
-read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
+read.files(file.loc, file.type, do.embed.file.names)
 }
 \arguments{
-\item{file.loc}{What is the location of your files? Defaults to current working directory (getwd()).}
+\item{file.loc}{DEFAULT = getwd(). What is the location of your files?}
 
-\item{file.type}{What type of files do you want to read. Can be ".csv" or ".fcs". Defaults to ".csv".}
+\item{file.type}{DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".}
 
-\item{do.embed.file.names}{Do you want to embed each row (cell) of each file with the name name? Defaults to TRUE.}
+\item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?}
 }
 \value{
-a list (called data.list) of dataframes -- one file per dataframe.
+Returns a list of data.tables -- one per CSV file.
 }
 \description{
-This function allows you to read in sample files (.csv or .fcs) into a list called 'data.list'.
+This function allows you to read in sample files (.csv or .fcs) into a list, where each file is saved as a data.table.
 }
 \examples{
-read.files()
+data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
 
 }
 \references{

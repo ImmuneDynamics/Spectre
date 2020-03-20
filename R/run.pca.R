@@ -1,8 +1,6 @@
 #' run.pca - ...
 #'
-#' @usage run.pca(x, use.cols, ...)
-#'
-#' @param x data.frame. No default.
+#' @param dat data.frame. No default.
 #' @param use.cols Vector of numbers, reflecting the columns to use for clustering. No default.
 #' @param cor A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.). Default = TRUE.
 #' @param scores A logical value indicating whether the score on each principal component should be calculated. Default = TRUE.
@@ -15,11 +13,13 @@
 #' @param top.tally Number of top markers that contributed to PCA across each sample. Used for "individual.samples". Defalut = 10.
 #' @param path Location to save plots. Default = getwd() (working directory)
 #'
-#'This function runs a principal component analysis (PCA) on a dataframe with cells (rows) vs markers (columns), returning chosen figures. Uses the base R package "stats" for PCA, "factoextra" for scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.
+#' This function runs a principal component analysis (PCA) on a dataframe with cells (rows) vs markers (columns), returning chosen figures. Uses the base R package "stats" for PCA, "factoextra" for scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.
+#' 
+#' @usage run.pca(dat, use.cols, cor, scores, scree.plot, component.loading, marker.contribution, loading.plot, individual.samples, sample.code, top.tally, path, ...)
 #'
 #' @export
 
-run.pca <- function(x,
+run.pca <- function(dat,
                  use.cols,
                  cor = TRUE,
                  scores = TRUE,
@@ -33,7 +33,26 @@ run.pca <- function(x,
                  path = getwd()
                  ){
   
-  pca_out <- stats::princomp(as.matrix(x[use.cols]),
+  ## Check that necessary packages are installed
+  if(!is.element('stats', installed.packages()[,1])) stop('stats is required but not installed')
+  if(!is.element('factoextra', installed.packages()[,1])) stop('factoextra is required but not installed')
+  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
+  if(!is.element('gtools', installed.packages()[,1])) stop('gtools is required but not installed')
+  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+  if(!is.element('dplyr', installed.packages()[,1])) stop('dplyr is required but not installed')
+  if(!is.element('ggpubr', installed.packages()[,1])) stop('ggpubr is required but not installed')
+  
+  ## Require packages
+  require(stats)
+  require(factoextra)
+  require(ggplot2)
+  require(gtools)
+  require(data.table)
+  require(dplyr)
+  require(ggpubr)
+  
+  ## Run PCA
+  pca_out <- stats::princomp(as.matrix(dat[use.cols]),
                              cor = cor,
                              scores = scores,
                              scree.plot = scree.plot,
@@ -72,7 +91,7 @@ run.pca <- function(x,
       
       # Creates loadings plots for each of the components/dimensions (based on elbow point)
       for (i in 1:elbow.point) {
-        p_loading <- ggplot2::ggplot(data = data.load.order, ggplot2::aes(x = rownames(data.load.order), y = data.load.order[,i])) +
+        p_loading <- ggplot2::ggplot(data = data.load.order, ggplot2::aes(dat = rownames(data.load.order), y = data.load.order[,i])) +
           ggplot2::geom_bar(stat="identity", color = "black", fill = "black") +
           #theme_minimal() + #includes grids
           ggplot2::theme_classic() + #removes all grids
@@ -133,13 +152,13 @@ run.pca <- function(x,
     PrimaryDirectory <- getwd()
     
     # Define sample differentiator
-    sample.name <- unique(x[[sample.code]])
+    sample.name <- unique(dat[[sample.code]])
     
     # Create list that will hold contribution data for each sample
     contrib.list <- list()
     
     for (a in sample.name) {
-      data.sample <- x[x[[sample.code]] == a,]
+      data.sample <- dat[dat[[sample.code]] == a,]
       
       data.sample.select <- data.sample[,..use.cols]
       as.matrix(colnames(data.sample.select))
