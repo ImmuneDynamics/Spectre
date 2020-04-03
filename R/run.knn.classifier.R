@@ -20,16 +20,13 @@ run.knn.classifier <- function(train.data,
                                unlabelled.data,
                                num.neighbours = 1){
   
-  # normalised training and unlabelled data together
-  all.data <- rbind(train.data, unlabelled.data)
-  all.data.norm <- Spectre::run.minmax.normaliser(all.data)
+  # normalised the training and unlabelled data so each column is in range 0 to 1
+  # the unlabelled data will be normalised using the model built on the training data
+  preprocess.model <- caret::preProcess(train.data, method = "range")
+  norm.train.data <- as.data.table(predict(preprocess.model, train.data))
+  norm.unlab.data <- as.data.table(predict(preprocess.model, unlabelled.data))
   
-  train.data.norm <- all.data.norm[c(1:nrow(train.data)),]
-  start.test.data <- nrow(train.data) + 1
-  
-  test.data.norm <- all.data.norm[c(start.test.data:nrow(all.data.norm)),]
-  
-  pr <- knn(train.data.norm, test.data.norm, cl=train.label,k=num.neighbours)
+  pr <- knn(norm.train.data, norm.unlab.data, cl=train.label,k=num.neighbours)
   
   return(pr)
 }

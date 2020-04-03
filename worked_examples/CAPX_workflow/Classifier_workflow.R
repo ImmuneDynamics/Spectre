@@ -12,26 +12,23 @@
 ##########################################################################################################
 
 ### 1.1. Load 'Spectre' package (using devtools)
-if(!require('devtools')) {install.packages('devtools')}
-library('devtools')
+# For instructions on installing Spectre, please visit https://wiki.centenary.org.au/display/SPECTRE
 
-if(!require('Spectre')) {install_github("sydneycytometry/spectre", ref = "adding_classifier")}
-library("Spectre")
+### 1.2. Install and load packages
+library(Spectre)
+Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
+Spectre::package.load()  # --> change so that message at the end is "All required packages have been successfully loaded"
 
-### 1.2. Install packages
-
+# Classifier requires the following extra packages to be installed.
+# TODO merge this to package.load
 if(!require('class')) {install.packages('class')}
 if(!require('caret')) {install.packages('caret')}
-if(!require('rstudioapi')) {install.packages('rstudioapi')}
-if(!require('data.table')) {install.packages('data.table')}
-
-### 1.3. Load packages from library
-library("class")
+# library("class")
 library("caret")
-library("rstudioapi")
-library("data.table")
 
-### 1.4. Set working directory
+session_info()
+
+### 1.3. Set working directory
 
 ## Set working directory
 dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
@@ -63,9 +60,9 @@ setwd(TrainingDataDirectory)
 list.files(TrainingDataDirectory, ".csv")
 
 ## Import samples (read files into R from disk)
-Spectre::read.files(file.loc = TrainingDataDirectory,
-                    file.type = ".csv",
-                    do.embed.file.names = TRUE)
+data.list <- Spectre::read.files(file.loc = TrainingDataDirectory,
+                                 file.type = ".csv",
+                                 do.embed.file.names = TRUE)
 
 ncol.check    # Review number of columns (features, markers) in each sample
 nrow.check    # Review number of rows (cells) in each sample
@@ -79,7 +76,12 @@ head(data.list[[1]])
 data.start <- data.list
 
 ## Merge files and review
-Spectre::file.merge(x = data.list)
+cell.dat <- Spectre::do.merge.files(dat = data.list)
+
+str(cell.dat)
+head(cell.dat)
+dim(cell.dat)
+as.matrix(unique(cell.dat[["Sample"]]))
 
 ## Save as training data
 train.data <- cell.dat
@@ -92,9 +94,9 @@ setwd(UnlabelledDataDirectory)
 list.files(UnlabelledDataDirectory, ".csv")
 
 ## Import samples (read files into R from disk)
-Spectre::read.files(file.loc = UnlabelledDataDirectory,
-                    file.type = ".csv",
-                    do.embed.file.names = TRUE)
+data.list <- Spectre::read.files(file.loc = UnlabelledDataDirectory,
+                                 file.type = ".csv",
+                                 do.embed.file.names = TRUE)
 
 ncol.check    # Review number of columns (features, markers) in each sample
 nrow.check    # Review number of rows (cells) in each sample
@@ -110,7 +112,12 @@ data.start <- data.list
 ### Merge files
 
 ## Merge files and review
-Spectre::file.merge(x = data.list)
+cell.dat <- Spectre::do.merge.files(dat = data.list)
+
+str(cell.dat)
+head(cell.dat)
+dim(cell.dat)
+as.matrix(unique(cell.dat[["Sample"]]))
 
 ## Save as training data
 unlabelled.data <- cell.dat
@@ -151,9 +158,13 @@ CellNameCol
 ##########################################################################################################
 
 ## Split the cellular markers columns and the identity of each cell into separate dataframe and vector 
-train.data.features <- subset(train.data, select = ValidCellularCols)
+train.data.features <- train.data[, ..ValidCellularCols]
 # the label must be character label.
 train.data.label <- as.character(train.data[[CellNameColNos]])
+
+# check the subsetting are correct.
+head(train.data.features)
+unique(train.data.label)
 
 # train classifier using various number of neighbours
 knn.stats <- Spectre::train.knn.classifier(train.data = train.data.features, label = train.data.label)
@@ -164,19 +175,19 @@ knn.stats
 ##########################################################################################################
 
 ## Now we use the classifier to predict the cell type of new data
-unlabelled.data.features <- subset(unlabelled.data, select = ValidCellularCols)
+unlabelled.data.features <- unlabelled.data[, ..ValidCellularCols]
 
 predicted.label <- Spectre::run.knn.classifier(train.data = train.data.features,
                train.label = train.data.label,
                unlabelled.data = unlabelled.data.features,
                num.neighbours = 1)
 
-unlabelled.data <- cbind(unlabelled.data, Population=predicted.label)
+unlabelled.data[, ('population') := predicted.label]
 
 # Save data
 setwd(OutputDirectory)
 
-Spectre::write.files(x = unlabelled.data,
+Spectre::write.files(dat = unlabelled.data,
                      file.prefix= "Clustered_data", # required
                      write.csv = TRUE,
                      write.fcs = FALSE)

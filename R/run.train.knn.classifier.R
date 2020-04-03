@@ -33,11 +33,12 @@ train.knn.classifier <- function(train.data,
                                  num.folds = 10,
                                  num.repeats = 10){
   
-  # normalised the training data
-  normalised.data <- Spectre::run.minmax.normaliser(train.data)
+  # normalised the training data so each column is in range 0 to 1
+  preprocess.model <- caret::preProcess(train.data, method = "range")
+  normalised.data <- as.data.table(predict(preprocess.model, train.data))
   
   # add the label as a column in normalised data
-  normalised.data['Population'] <- label
+  normalised.data[, ('population') := label]
   
   # split data into 10 folds and repeat training and testing 10 times
   # each iteration will train and test on different fold.
@@ -48,7 +49,7 @@ train.knn.classifier <- function(train.data,
   )
   
   # train the classifier
-  knn.fit <- train(Population ~ .,
+  knn.fit <- train(population ~ .,
                    method     = "knn",
                    tuneGrid   = expand.grid(k = min.num.neighbours:max.num.neighbours),
                    trControl  = trControl,
