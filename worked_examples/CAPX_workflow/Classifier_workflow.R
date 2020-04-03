@@ -3,191 +3,106 @@
 #### Part 2 - Classification, save files
 ##########################################################################################################
 
-# Givanna Putri
-# 2019-12-05
+# Givanna Putri, Thomas Myles Ashhurst
+# 2020-04-03
 # Spectre R package: https://sydneycytometry.org.au/spectre
 
 ##########################################################################################################
 #### 1. Install packages, load packages, and set working directory
 ##########################################################################################################
 
-### 1.1. Load 'Spectre' package (using devtools)
-# For instructions on installing Spectre, please visit https://wiki.centenary.org.au/display/SPECTRE
-
-### 1.2. Install and load packages
 library(Spectre)
-Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
-Spectre::package.load()  # --> change so that message at the end is "All required packages have been successfully loaded"
+package.check()
+package.load()
 
-# Classifier requires the following extra packages to be installed.
-# TODO merge this to package.load
-if(!require('class')) {install.packages('class')}
-if(!require('caret')) {install.packages('caret')}
-# library("class")
-library("caret")
+library(caret)
 
-session_info()
-
-### 1.3. Set working directory
-
-## Set working directory
 dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
 getwd()
 PrimaryDirectory <- getwd()
 PrimaryDirectory
 
-## Can set manually using these lines, if desired
-PrimaryDirectory <- "/Users/givanna/Documents/phd/code/SpectreRunScript"
-setwd(PrimaryDirectory)
+##########################################################################################################
+#### Load data and run some clustering/UMAP etc
+##########################################################################################################
 
-## Create output directory
-dir.create("Output_Classifier", showWarnings = FALSE)
-setwd("Output_Classifier")
-OutputDirectory <- getwd()
-setwd(PrimaryDirectory)
+cell.dat <- as.data.table(demo.start)
+cell.dat <- do.subsample(cell.dat, "random", targets = 10000)
+
+as.matrix(names(cell.dat))
+CellularCols <- names(cell.dat)[c(2,4:6,8:9,11:13,16:19,21:30,32)]
+CellularCols
+
+as.matrix(names(cell.dat))
+ClusterCols <- names(cell.dat)[c(11,13,17,18,19,21,22,23,24,27,28,32)]
+ClusterCols
+
+cell.dat <- run.flowsom(cell.dat, clustering.cols = ClusterCols, meta.clust.name = "FlowSOM_metacluster", clust.name = "FlowSOM_cluster", meta.k = 10)
+cell.dat <- run.umap(cell.dat, use.cols = ClusterCols)
+cell.dat <- run.tsne(cell.dat, use.cols = ClusterCols)
+
+make.factor.plot(cell.dat, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "FlowSOM_metacluster", add.label = TRUE)
+make.factor.plot(cell.dat, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "Group")
+make.multi.marker.plot(cell.dat, x.axis = "UMAP_X", y.axis = "UMAP_Y", plot.by = CellularCols, figure.title = "CellularCols")
+make.multi.marker.plot(cell.dat, x.axis = "UMAP_X", y.axis = "UMAP_Y", plot.by = ClusterCols, figure.title = "ClusterCols")
+
 
 ##########################################################################################################
-#### 2. Read and prepare data
+#### Extract 1/3 of the dataset to use as 'training' data for the classifier
 ##########################################################################################################
-### Read SAMPLES (data) into workspace and review
 
-## Start with reading in the labelled data i.e. the data to be used to train the classifier
-TrainingDataDirectory <- paste(PrimaryDirectory, "training_data", sep="/")
-setwd(TrainingDataDirectory)
-
-## List of CSV files in PrimaryDirectory ## ADD A PRE-PROCESSING SCRIPT BEFORE THIS ONE -- FILE MERGE etc             ## HERE WE WANT ONE FILE PER SAMPLE
-list.files(TrainingDataDirectory, ".csv")
-
-## Import samples (read files into R from disk)
-data.list <- Spectre::read.files(file.loc = TrainingDataDirectory,
-                                 file.type = ".csv",
-                                 do.embed.file.names = TRUE)
-
-ncol.check    # Review number of columns (features, markers) in each sample
-nrow.check    # Review number of rows (cells) in each sample
-name.table    # Review column names and their subsequent values
-
-## Check data
-head(data.list)
-head(data.list[[1]])
-
-## Save starting data
-data.start <- data.list
-
-## Merge files and review
-cell.dat <- Spectre::do.merge.files(dat = data.list)
-
-str(cell.dat)
 head(cell.dat)
-dim(cell.dat)
-as.matrix(unique(cell.dat[["Sample"]]))
+nrow(cell.dat)
 
-## Save as training data
-train.data <- cell.dat
+thrd <- nrow(cell.dat)/3
 
-## Start with reading in the unlabelled data
-UnlabelledDataDirectory <- paste(PrimaryDirectory, "unlabelled_data", sep="/")
-setwd(UnlabelledDataDirectory)
+set.seed(42)
+rows <- sample(nrow(cell.dat))
+cell.dat <- cell.dat[rows, ]
 
-## List of CSV files in PrimaryDirectory ## ADD A PRE-PROCESSING SCRIPT BEFORE THIS ONE -- FILE MERGE etc             ## HERE WE WANT ONE FILE PER SAMPLE
-list.files(UnlabelledDataDirectory, ".csv")
-
-## Import samples (read files into R from disk)
-data.list <- Spectre::read.files(file.loc = UnlabelledDataDirectory,
-                                 file.type = ".csv",
-                                 do.embed.file.names = TRUE)
-
-ncol.check    # Review number of columns (features, markers) in each sample
-nrow.check    # Review number of rows (cells) in each sample
-name.table    # Review column names and their subsequent values
-
-## Check data
-head(data.list)
-head(data.list[[1]])
-
-## Save starting data
-data.start <- data.list
-
-### Merge files
-
-## Merge files and review
-cell.dat <- Spectre::do.merge.files(dat = data.list)
-
-str(cell.dat)
-head(cell.dat)
-dim(cell.dat)
-as.matrix(unique(cell.dat[["Sample"]]))
-
-## Save as training data
-unlabelled.data <- cell.dat
+train.dat <- cell.dat[c(1:(2*thrd)),]
+train.dat
 
 ##########################################################################################################
-#### 3. Define data and sample variables for analysis
+#### Train Classifier
 ##########################################################################################################
 
-## Define key columns that might be used or dividing data (samples, groups, batches, etc)
+## Split the cellular markers columns and the identity of each cell into separate dataframe and vector
+train.data.features <- train.dat[, ..ClusterCols]
 
-file.col <- "Filename"
-sample.col <- "Sample"
-group.col <- "Group"
-batch.col <- "Batch"
-
-## Create a list of column names
-ColumnNames <- as.matrix(unname(colnames(train.data))) # assign reporter and marker names (column names) to 'ColumnNames'
-ColumnNames
-
-### Define cellular and clustering columns
-
-## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
-## To be used by the classifier to identify cell
-ValidCellularColsNos <- c(5,6,8,9,11:13,16:19,21:30,32)
-ValidCellularCols <- ColumnNames[ValidCellularColsNos]
-
-ValidCellularCols  # check that the column names that appear are the ones you want to analyse
-
-## Define the column that identify the population a cell belong to (i.e. Neutrophils, B cells)
-## Note this column must NOT be numeric!
-CellNameColNos <- 39
-CellNameCol <- ColumnNames[CellNameColNos]
-
-CellNameCol
-
-##########################################################################################################
-#### 4. Train Classifier
-##########################################################################################################
-
-## Split the cellular markers columns and the identity of each cell into separate dataframe and vector 
-train.data.features <- train.data[, ..ValidCellularCols]
 # the label must be character label.
-train.data.label <- as.character(train.data[[CellNameColNos]])
-
-# check the subsetting are correct.
-head(train.data.features)
-unique(train.data.label)
+train.data.label <- as.character(train.dat[["FlowSOM_metacluster"]])
 
 # train classifier using various number of neighbours
-knn.stats <- Spectre::train.knn.classifier(train.data = train.data.features, label = train.data.label)
+knn.stats <- train.knn.classifier(train.data = train.data.features, label = train.data.label)
+
 knn.stats
 
 ##########################################################################################################
-#### 5. Run classifier
+#### Run classifier
 ##########################################################################################################
 
 ## Now we use the classifier to predict the cell type of new data
-unlabelled.data.features <- unlabelled.data[, ..ValidCellularCols]
+unlabelled.data.features <- cell.dat[, ..ClusterCols]
 
-predicted.label <- Spectre::run.knn.classifier(train.data = train.data.features,
-               train.label = train.data.label,
-               unlabelled.data = unlabelled.data.features,
-               num.neighbours = 1)
+predicted.label <- run.knn.classifier(train.data = train.data.features, # issue here -- the prediction labes come out in a character order, and are somehow paired on the basis of that order -- so cells in cluster '2' and assigned to predicted label '10' (which comes after 1, alphabetically)
+                                      train.label = train.data.label,
+                                      unlabelled.data = unlabelled.data.features,
+                                      num.neighbours = 1)
 
-unlabelled.data[, ('population') := predicted.label]
+cell.dat[, ('Prediction') := predicted.label]
+
+
+##########################################################################################################
+#### Assess classification
+##########################################################################################################
+
+make.factor.plot(cell.dat, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "Prediction", add.label = TRUE)
+
 
 # Save data
-setwd(OutputDirectory)
-
-Spectre::write.files(dat = unlabelled.data,
+Spectre::write.files(dat = cell.dat,
                      file.prefix= "Clustered_data", # required
                      write.csv = TRUE,
                      write.fcs = FALSE)
