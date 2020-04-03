@@ -24,9 +24,9 @@
 #' @param cell.size Numeric. Defaults to 15.
 #' @param y.margin Numeric.
 #' @param x.margin Numeric.
-#' @param standard.colours Character.
+#' @param standard.colours Character. DEFAULTS to "YlGnBu", can also be "RdYlBu", "viridis", etc
 #' @param fold.colours Character.
-#' @param colour.scheme Character.
+#' @param colour.scheme Character. Only one option currently.
 #'
 #' @return prints a 'pretty' heatmap with dendrograms.
 #'
@@ -62,7 +62,7 @@ make.pheatmap <- function(dat,
                           col.sep          = c(),
                           cell.size        = 15,
 
-                          standard.colours = "colour.palette",
+                          standard.colours = "YlGnBu",
                           fold.colours     = "fold.palette",
                           colour.scheme    = "group.palette")
 
@@ -151,10 +151,46 @@ make.pheatmap <- function(dat,
       # plot.width       = 11.69
       # plot.height      = 8.26
 
+  ### Check that necessary packages are installed
+      if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
+
+  ### Require packages
+      require(pheatmap)
+
   ### Setup color scheme
 
       ## Standard colour options
-      colour.palette <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
+
+      if(standard.colours == "RdYlBu"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "RdYlBu"))(31)) # 256
+        colour.palette <- rev(colour.palette)
+      }
+
+      if(standard.colours == "YlGnBu"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
+      }
+
+      if(standard.colours == "viridis"){
+        colour.palette <- colorRampPalette(c(viridis_pal(option = "viridis")(50)))
+        colour.palette <- colour.palette(31)
+      }
+
+      if(standard.colours == "spectral"){
+        spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
+        spectral.list <- rev(spectral.list)
+        colour.palette <- colorRampPalette(c(spectral.list))
+        colour.palette <- colour.palette(31)
+      }
+
+      if(standard.colours == "magma"){
+        colour.palette <- colorRampPalette(c(viridis_pal(option = "magma")(50)))
+        colour.palette <- colour.palette(31)
+      }
+
+      if(standard.colours == "inferno"){
+        colour.palette <- colorRampPalette(c(viridis_pal(option = "inferno")(50)))
+        colour.palette <- colour.palette(31)
+      }
 
       ## Fold-change colour options
       fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
@@ -323,7 +359,7 @@ make.pheatmap <- function(dat,
                color = map.colour,
                filename = file.name)
 
-      print("A pheatmap has been saved to your working directory")
+      message("A pheatmap has been saved to your working directory")
 
 }
 

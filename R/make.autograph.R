@@ -167,6 +167,6 @@ make.autograph <- function(x,
     p
 
     ## Save
-    ggsave(plot = p, filename = paste0(filename), width = 5, height = 5, path = path) # wdith 3.6 default, height 5 default
+    ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # wdith 3.6 default, height 5 default
 
 }

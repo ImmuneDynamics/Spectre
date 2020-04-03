@@ -4,12 +4,16 @@
 \alias{run.umap}
 \title{run.umap - ...}
 \usage{
-run.umap(dat, use.cols, umap.seed, suffix, ...)
+run.umap(dat, use.cols, umap.x.name, umap.y.name, umap.seed, suffix, ...)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input data.table or data.frame.}
 
 \item{use.cols}{NO DEFAULT. Vector of column names or numbers for clustering.}
+
+\item{umap.x.name}{DEFAULT = "UMAP_X". Character. Name of UMAP x-axis.}
+
+\item{umap.y.name}{DEFAULT = "UMAP_Y". Character. Name of UMAP y-axis.}
 
 \item{umap.seed}{DEFAULT = 42. Numeric. Seed value for reproducibility.}
 

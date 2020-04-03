@@ -199,6 +199,7 @@ make.multi.plot <- function(dat,
             plots[[i]] <- Spectre::make.density.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                                                      x.axis = x.axis,
                                                      y.axis = y.axis,
+                                                     title = to.plot[i],
                                                      colours = "viridis",
                                                      dot.size = dot.size,
                                                      align.xy.by = dat,

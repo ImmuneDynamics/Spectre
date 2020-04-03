@@ -31,7 +31,6 @@ package.load <- function()
   require('colorRamps')
   require('RColorBrewer')
   require('gridExtra')
-  require('caret')
 
   require('flowCore')
   require('Biobase')
