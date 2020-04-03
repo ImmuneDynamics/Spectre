@@ -90,8 +90,10 @@ predicted.label <- run.knn.classifier(train.data = train.data.features, # issue 
                                       train.label = train.data.label,
                                       unlabelled.data = unlabelled.data.features,
                                       num.neighbours = 1)
+new.dat <- cell.dat
 
-cell.dat[, ('Prediction') := predicted.label]
+# don't just use as.numeric as it will mess up the order.
+new.dat[, ('Prediction') := as.numeric(levels(predicted.label))[predicted.label]]
 
 
 ##########################################################################################################
