@@ -48,9 +48,9 @@ outdir <- "output_chronoclust"
 
 # assuming you have setup a conda environment, specify what's the environment name is
 # conda.env.name <- "r-reticulate" # note, 'anaconda' (https://www.anaconda.com/distribution/#download-section) needs to be installed for the conda environment to work
-conda.env.name <- "chronoclust-public"
+conda.env.name <- "base"
 # location where anaconda is installed in your computer. Read more below.
-conda.env.location <- NULL
+conda.env.location <- "/opt/conda/bin"
 # OPTIONAL: conda is normally installed under /Users/<yourname>/anaconda3, but it can also be installed
 # elsewhere such as /opt/anaconda3/bin/conda.
 # Hence if you encounter error such as "Have you installed conda?", then it's likely that your conda is not
