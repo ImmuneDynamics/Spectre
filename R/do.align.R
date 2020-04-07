@@ -127,7 +127,8 @@ do.align <- function(ref.dat,
     ### Initial stuff
 
     starting.dir <- getwd()
-    channels <- labels <- align.cols
+    labels <- align.cols
+    channels <- align.cols
     non.channels <- names(target.dat[, -(channels), with=FALSE])
 
     ### Merge outputs into Spectre format
