@@ -32,6 +32,9 @@ RUN install2.r --error devtools \
                         gridExtra \
                         reticulate \
                         pheatmap \
+                        ggpointdensity \
+                        ggpubr \
+                        viridis \
                         BiocManager
 
 # Install Spectre package. Master branch
