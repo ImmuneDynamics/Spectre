@@ -69,24 +69,22 @@ do.align <- function(ref.dat,
   ### Test data
   ###########################################################################################
 
-  # ref.dat = ref.fsom
-  # target.dat = t
-  #
-  # ## Columns
-  # sample.col = sample.col # used to divide 'ref' and 'target' data into 'samples'
-  # batch.col = batch.col # Column denoting batches
-  # align.cols = cols
-  # method = "CytoNorm" # Channels to align
-  #
-  # ## CytoNorm settings
-  # goal = "mean"
-  # nQ = 101
-  #
-  # ## Writing result files
-  # write.ref.fcs = TRUE
-  # write.target.fcs = TRUE
-
-
+        # ref.dat = ref.fsom
+        # target.dat = target.dat
+        #
+        # ## Columns
+        # sample.col = sample.col
+        # batch.col = batch.col
+        # align.cols = align.cols
+        #
+        # ## CytoNorm settings
+        # method = "CytoNorm"
+        # goal = "mean"
+        # nQ = 101
+        #
+        # ## Writing result files
+        # write.ref.fcs = TRUE
+        # write.target.fcs = TRUE
 
   ###########################################################################################
   ### If using quantile method
@@ -627,4 +625,3 @@ do.align <- function(ref.dat,
 
   }
 }
-
