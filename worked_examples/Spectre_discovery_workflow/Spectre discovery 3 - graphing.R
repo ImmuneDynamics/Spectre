@@ -31,11 +31,11 @@
         PrimaryDirectory
 
     ### Determine data input directory
-        InputDirectory <- PrimaryDirectory
+        InputDirectory <- paste0(PrimaryDirectory, "/Output_Annotated/Output-annotated-data")
 
     ### Determine metadata directory
         setwd(PrimaryDirectory)
-        setwd("../../../../metadata/")
+        setwd("metadata/")
         MetaDirectory <- getwd()
 
     ### Create an output directory
@@ -200,14 +200,14 @@
 ##########################################################################################################
 
     ### Read in proportion and cell count data
-        setwd(InputDirectory)
+        setwd(OutputDirectory)
         setwd("SumTable-Frequency/")
         list.files(getwd(), ".csv")
 
         counts <- read.csv("SumTable-CellCounts.csv")
 
         as.matrix(names(counts))
-        to.plot <- names(counts)[c(8:27)]
+        to.plot <- names(counts)[c(8:24)]
         counts[to.plot] <- counts[to.plot]*100
         counts
 
@@ -235,7 +235,7 @@
                                                    sample.col = "Sample",
                                                    group.col = "Group",
                                                    ctrl.grp = "Mock",
-                                                   convert.cols = c(8:27))
+                                                   convert.cols = c(8:24))
 
         counts.fold
 
@@ -253,7 +253,7 @@
 ##########################################################################################################
 
     ### Read in proportion and cell count data
-        setwd(InputDirectory)
+        setwd(OutputDirectory)
         setwd("SumTable-MFI-PerMarker")
         files <- list.files(getwd(), ".csv")
         files
@@ -263,7 +263,7 @@
         setup <- read.csv(files[1])
         as.matrix(names(setup))
 
-        to.plot <- c(8:27)
+        to.plot <- c(8:24)
         to.annot <- c(6:7)
         to.rmv <- c(1:7)
 
@@ -331,7 +331,7 @@
 ##########################################################################################################
 
     ### Read in proportion and cell count data
-        setwd(InputDirectory)
+        setwd(OutputDirectory)
         setwd("SumTable-MFI-PercentPositive")
         files <- list.files(getwd(), ".csv")
         files
@@ -341,7 +341,7 @@
         setup <- read.csv(files[1], check.names = FALSE)
         as.matrix(names(setup))
 
-        to.plot <- c(8:27)
+        to.plot <- c(8:24)
         to.annot <- c(5:6)
         to.rmv <- c(1:7)
 

@@ -222,7 +222,7 @@
         Spectre::make.factor.plot(dat = cell.dat.sub,
                                   x.axis = "UMAP_X",
                                   y.axis = "UMAP_Y",
-                                  col.axis = "FlowSOM_metacluster_42",
+                                  col.axis = "FlowSOM_metacluster",
                                   align.xy.by = cell.dat.sub,
                                   align.col.by = cell.dat.sub,
                                   add.label = TRUE,
@@ -276,7 +276,7 @@
 
         Spectre::write.sumtables(x = cell.dat,
                                  sample.col = "Sample",
-                                 pop.col = "FlowSOM_metacluster_42",
+                                 pop.col = "FlowSOM_metacluster",
                                  measure.col = CellularCols,
                                  do.frequencies = FALSE,
                                  do.mfi.per.marker = FALSE,
@@ -290,7 +290,7 @@
         make.pheatmap(dat = exp,
                       file.name = "MFI.heatmap.png",
                       plot.title = "Expression",
-                      sample.col = "FlowSOM_metacluster_42",
+                      sample.col = "FlowSOM_metacluster",
                       standard.colours = "YlGnBu",
                       rmv.cols = 1)
 
@@ -324,7 +324,7 @@
         Spectre::make.factor.plot(dat = cell.dat.sub,
                                    x.axis = "UMAP_X",
                                    y.axis = "UMAP_Y",
-                                   col.axis = "FlowSOM_metacluster_42",
+                                   col.axis = "FlowSOM_metacluster",
                                    align.xy.by = cell.dat.sub,
                                    align.col.by = cell.dat.sub,
                                    add.label = TRUE)

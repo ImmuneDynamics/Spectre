@@ -26,13 +26,13 @@
         PrimaryDirectory
 
     ### Determine input directory
-        InputDirectory <- PrimaryDirectory
+        InputDirectory <- paste0(PrimaryDirectory, "/Output_Spectre/Output-data/")
         InputDirectory
 
     ### Set metadata directory
 
         setwd(PrimaryDirectory)
-        setwd("../../metadata/")
+        setwd("metadata/")
         MetaDirectory <- getwd()
         MetaDirectory
 
@@ -66,7 +66,7 @@
         sample.name <- "Sample"
         group.name <- "Group"
 
-        cluster.name <- "FlowSOM_metacluster_42"
+        cluster.name <- "FlowSOM_metacluster"
 
         Xdim.name <- "UMAP_X"
         Ydim.name <- "UMAP_Y"
