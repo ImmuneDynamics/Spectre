@@ -38,4 +38,5 @@ package.load <- function()
   require('FlowSOM')
   
   require('reticulate')
+  require('caret')
   }
