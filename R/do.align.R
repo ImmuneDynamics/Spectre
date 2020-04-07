@@ -63,6 +63,7 @@ do.align <- function(ref.dat,
   ### Require packages
   require(Spectre)
   Spectre::package.load()
+  require(data.table)
   require(CytoNorm)
 
   ###########################################################################################
@@ -127,13 +128,12 @@ do.align <- function(ref.dat,
     ### Initial stuff
 
     starting.dir <- getwd()
+
     labels <- align.cols
     channels <- align.cols
+    channel.nums <- as.numeric(as.factor(channels))
 
-    message(channels)
-
-    target.dat <- as.data.table(target.dat)
-    non.channels <- names(target.dat[, -(channels), with=FALSE])
+    non.channels <- names(target.dat[, -channel.nums, with=FALSE])
 
     ### Merge outputs into Spectre format
     A <- ref.dat$fsom$FlowSOM$data
