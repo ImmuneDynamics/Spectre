@@ -1,0 +1,13 @@
+Filename,Sample,Group,Batch,Reference
+Mock_01.csv,Mock_01,Mock,1,TRUE
+Mock_02.csv,Mock_02,Mock,1,FALSE
+Mock_03.csv,Mock_03,Mock,1,FALSE
+Mock_04.csv,Mock_04,Mock,2,TRUE
+Mock_05.csv,Mock_05,Mock,2,FALSE
+Mock_06.csv,Mock_06,Mock,2,FALSE
+WNV_01.csv,WNV_01,WNV,1,FALSE
+WNV_02.csv,WNV_02,WNV,1,FALSE
+WNV_03.csv,WNV_03,WNV,1,FALSE
+WNV_04.csv,WNV_04,WNV,2,FALSE
+WNV_05.csv,WNV_05,WNV,2,FALSE
+WNV_06.csv,WNV_06,WNV,2,FALSE
