@@ -3,12 +3,11 @@
 #' @export
 
 do.convert.to.fold <- function(x,
-                            sample.col,
-                            group.col,
-                            ctrl.grp,
-                            convert.cols,
-                            log2 = TRUE)
-
+                                sample.col,
+                                group.col,
+                                ctrl.grp,
+                                convert.cols,
+                                log2 = TRUE)
 {
 
   ### Test data
@@ -22,13 +21,22 @@ do.convert.to.fold <- function(x,
       # log2 = TRUE
 
   ###
-      annot <- x[-c(convert.cols)]
-      temp <- x[c(convert.cols)]
 
-      ctrl.grp <- subset(x, x[group.col] == ctrl.grp)
-      #ctrl.grp <- ctrl.grp[,unlist(lapply(ctrl.grp, is.numeric))]
+      #x <- dat
+      x <- as.data.table(x)
 
-      ctrl.grp.means <- colMeans(ctrl.grp[c(convert.cols)])
+      annot <- x[,-convert.cols, with = FALSE]
+      temp <- x[,convert.cols, with = FALSE]
+
+      # annot <- x[-c(convert.cols)]
+      # temp <- x[c(convert.cols)]
+
+      ctrl.dat <- x[x[[group.col]] == ctrl.grp,]
+
+      #ctrl.grp <- subset(x, x[group.col] == ctrl.grp)
+          #ctrl.grp <- ctrl.grp[,unlist(lapply(ctrl.grp, is.numeric))]
+
+      ctrl.grp.means <- colMeans(ctrl.dat[,convert.cols, with = FALSE])
       as.matrix(ctrl.grp.means)
 
       fold.raw <- t(t(temp) / ctrl.grp.means)
@@ -42,8 +50,14 @@ do.convert.to.fold <- function(x,
         fold <- fold.raw
       }
 
-      x[c(convert.cols)] <- fold
-      x
+      fold <- as.data.table(fold)
 
-      return(x)
+      res <- cbind(annot, fold)
+
+      # x[,convert.cols, with = FALSE] <- fold
+
+      # x[c(convert.cols)] <- fold
+      # x
+
+      return(res)
 }

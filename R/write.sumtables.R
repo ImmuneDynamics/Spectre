@@ -101,6 +101,8 @@ write.sumtables <- function(x,
       ## Order the data by pop and then sample
           # x <- x.start
 
+          message("SumTables - initial setup started")
+
           x <- as.data.frame(x)
 
           if(!is.null(cell.counts)){
@@ -124,16 +126,28 @@ write.sumtables <- function(x,
 
       ## Create table of annot columns for append
           x[,annot.col]
-          annots <- list()
 
-          for(i in all.samples){
-            temp <- x[x[[sample.col]] == i,]
-            annots[[i]] <- temp[1,annot.col]
-            # add a warning here for if the values aren't identical
+          if(length(annot.col) > 1){
+            annots <- list()
+            for(i in all.samples){
+              temp <- x[x[[sample.col]] == i,]
+              annots[[i]] <- temp[1,annot.col]
+              # add a warning here for if the values aren't identical
+            }
+            annots <- rbindlist(annots)
+            annots
           }
 
-          annots <- rbindlist(annots)
-          annots
+          if(length(annot.col) == 1){
+            annots <- list()
+            for(i in all.samples){
+              temp <- x[x[[sample.col]] == i,]
+              annots[[i]] <- temp[1,annot.col]
+            }
+            annots <- as.data.frame(unlist(annots))
+            names(annots) <- annot.col
+            annots <- as.data.table(annots)
+          }
 
       ## Some checks
 
@@ -157,6 +171,8 @@ write.sumtables <- function(x,
 
       if(do.frequencies == TRUE){
 
+        message("SumTables - frequencies started")
+
         ## Set up data
         x.freq <- cbind(POPULATION = x[,"POPULATION"], SAMPLE = x[,"SAMPLE"], x[,measure.col])
         x.freq
@@ -173,8 +189,8 @@ write.sumtables <- function(x,
         }
 
         samp.list
-        samp.list[[7]]
-        nrow(samp.list[[7]])
+        #samp.list[[7]]
+        #nrow(samp.list[[7]])
 
         new.sample.list = list()
 
@@ -207,14 +223,12 @@ write.sumtables <- function(x,
         per
         as.matrix(rowSums(per))
 
-        x.freq.res <- cbind("SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(per), per)
+        x.freq.res <- cbind("Measurement" = rep("Proportion of total cells", nrow(per)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(per), per)
         names(x.freq.res)[names(x.freq.res) == "SAMPLE"] <- sample.col
         x.freq.res
 
         ## Save data
         setwd(path)
-        dir.create("SumTable-Frequency", showWarnings = FALSE)
-        setwd("SumTable-Frequency")
         write.csv(x.freq.res, "SumTable-Proportions.csv", row.names=FALSE)
 
         message("SumTables - frequencies complete")
@@ -227,6 +241,8 @@ write.sumtables <- function(x,
   if(do.frequencies == TRUE){
     if(!is.null(cell.counts)){
 
+      message("SumTables - cell counts started")
+
       ## Checks
       check <- length(cell.counts) == length(unique(all.samples))
       if(check == FALSE){
@@ -236,14 +252,12 @@ write.sumtables <- function(x,
       ## Calculations
       cellsper <- sweep(per,MARGIN=1,cell.counts,`*`)
 
-      x.count.res <- cbind("SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(cellsper), cellsper)
+      x.count.res <- cbind("Measurement" = rep("Cells per sample", nrow(cellsper)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(cellsper), cellsper)
       names(x.count.res)[names(x.count.res) == "SAMPLE"] <- sample.col
       x.count.res
 
       ## Save data
       setwd(path)
-      dir.create("SumTable-Frequency", showWarnings = FALSE)
-      setwd("SumTable-Frequency")
       write.csv(x.count.res, "SumTable-CellCounts.csv", row.names=FALSE)
 
       message("SumTables - cell counts complete")
@@ -256,6 +270,7 @@ write.sumtables <- function(x,
 
     if(do.mfi.per.sample == TRUE){
 
+      message("SumTables - MFI per sample started")
       ## All cells
 
       x.mfi <- cbind(POPULATION = x[,"POPULATION"], x[,measure.col])
@@ -315,6 +330,8 @@ write.sumtables <- function(x,
 
     if(do.mfi.per.marker == TRUE){
 
+      message("SumTables - MFI per marker started")
+
     ### Setup
 
         ## Define marker names
@@ -338,9 +355,28 @@ write.sumtables <- function(x,
 
           ## Sample loop
           for(a in all.samples){
+
+            # u <- test[,c(2,3)]
+            #
+            # ad <- aggregate(. ~POPULATION, data = u, FUN=mfi.type)
+            #
+            # xp <- test[test[["SAMPLE"]] == a,]
+            # xp <- xp[,c(2,3)] # don't need to see the 'sample
+
             xp <- test[test[["SAMPLE"]] == a,]
             xp <- xp[,c(2,3)] # don't need to see the 'sample
             ad <- aggregate(. ~POPULATION, data = xp, FUN=mfi.type)
+
+            ## Modification to adjust for any missing clusters (i.e. a sample where cluster 12 is missing, etc)
+
+            if(length(populations) != nrow(ad)){
+
+              strt <- as.data.frame(x = populations)
+              names(strt) <- "POPULATION"
+
+              ad <- merge(strt,ad,all = TRUE)
+            }
+
             names(ad)[2] <- as.character(a)
             mkr <- cbind(mkr, ad[2])
           }
@@ -349,16 +385,14 @@ write.sumtables <- function(x,
           mkr <- t(mkr)
           mkr <- as.data.frame(mkr)
 
-          mkr.res <- cbind("SAMPLE" = rownames(mkr), annots, mkr)
+          mkr.res <- cbind("Measurement" = rep(paste0("MFI of ", i), nrow(mkr)), "SAMPLE" = rownames(mkr), annots, "Blank" = rep("Blank", nrow(mkr)),mkr)
           mkr.res
 
-          names(mkr.res)[1] <- sample.col
+          names(mkr.res)[2] <- sample.col
           mkr.res
 
           ## Save MARKER CSV
           setwd(path)
-          dir.create("SumTable-MFI-PerMarker", showWarnings = FALSE)
-          setwd("SumTable-MFI-PerMarker")
           write.csv(mkr.res, paste0("SumTable-MFI-", i, ".csv"), row.names = FALSE)
         }
 
@@ -372,6 +406,7 @@ write.sumtables <- function(x,
 
     if(!is.null(perc.pos.markers)){
       if(!is.null(perc.pos.cutoff)){
+        message("SumTables - percent positive started")
 
         setwd(path)
 
@@ -440,12 +475,18 @@ write.sumtables <- function(x,
             }
 
           ## Save
-          df <- cbind("SAMPLE" = df[1], annots, df)
-          names(df)[1] <- sample.col
+          nms <- df$SAMPLE
+
+          df$SAMPLE <- NULL
+          df <- cbind("Measurement" = rep(paste0("Percent ", active.marker, " positive"), nrow(df)),
+                      "Sample" = nms,
+                      annots,
+                      "Blank" = rep("Blank", nrow(df)),
+                      df)
+
+          #names(df)[2] <- sample.col
 
           setwd(path)
-          dir.create("SumTable-MFI-PercentPositive", showWarnings = FALSE)
-          setwd("SumTable-MFI-PercentPositive")
           write.csv(df, paste0("SumTable-PercPos-", active.marker, ".csv"), row.names = FALSE)
 
           message("SumTables - ", active.marker, " percent positive - CSV written to disk")
