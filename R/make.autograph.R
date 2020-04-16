@@ -24,8 +24,8 @@ make.autograph <- function(x,
                            height = 5,
                            y.first.level = 1.2,
                            y.second.level = 1.5,
-                           Variance_test = "kruskal.test",
-                           Pairwise_test = "wilcox.test"
+                           Variance_test = "kruskal.test", # or "anova"
+                           Pairwise_test = "wilcox.test" # or 't.test'
                            )
 {
   ### Test data

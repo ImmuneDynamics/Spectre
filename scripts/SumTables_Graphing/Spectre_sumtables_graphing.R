@@ -54,6 +54,8 @@
 
     ### Read in any metadata
         setwd(InputDirectory)
+        setwd("metadata/")
+
         list.files(path = getwd(), pattern = ".csv")
 
         meta.dat <- fread("sample.details.csv")

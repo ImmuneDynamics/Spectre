@@ -10,7 +10,6 @@
 ##########################################################################################################
 
     ### Load packages from library
-
         library(Spectre)
         Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
         Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
@@ -157,14 +156,14 @@
 
         as.matrix(names(cell.dat.sub))
 
-        ### All data
+    ### All data
         make.factor.plot(dat = cell.dat.sub,
                          x.axis = Xdim.name,
                          y.axis = Ydim.name,
                          col.axis = population.name,
                          add.label = TRUE)
 
-        ## Group multi plots
+    ### Group multi plots
         make.multi.plot(dat = cell.dat.sub,
                         x.axis = Xdim.name,
                         y.axis = Ydim.name,
