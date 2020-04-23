@@ -4,7 +4,9 @@
 \name{hmap.foldcell}
 \alias{hmap.foldcell}
 \title{hmap.foldcell - Demo dataset.}
-\format{A demo dataframe.}
+\format{
+A demo dataframe.
+}
 \source{
 Thomas M Ashhurst.
 }

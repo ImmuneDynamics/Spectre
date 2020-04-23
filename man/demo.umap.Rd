@@ -4,7 +4,9 @@
 \name{demo.umap}
 \alias{demo.umap}
 \title{demo.umap - Demo dataset.}
-\format{A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice including FlowSOM cluster assignments and UMAP coordinates.}
+\format{
+A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice including FlowSOM cluster assignments and UMAP coordinates.
+}
 \source{
 Thomas M Ashhurst.
 }

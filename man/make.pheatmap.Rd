@@ -7,13 +7,15 @@
 make.pheatmap(dat, ...)
 }
 \arguments{
-\item{dat}{data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.}
+\item{dat}{NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.}
 
-\item{file.name}{Character. What do you want to call the file, including the extension.}
+\item{file.name}{NO DEFAULT. Character. What do you want to call the file, including the extension.}
 
-\item{plot.title}{Character.}
+\item{plot.title}{NO DEFAULT. Character.}
 
-\item{sample.col}{Character. Specify the name of the column that indicates samples. No default.}
+\item{sample.col}{NO DEFAULT. Character. Specify the name of the column that indicates samples. No default.}
+
+\item{plot.cols}{NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.}
 
 \item{annot.cols}{Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.}
 
@@ -23,9 +25,7 @@ make.pheatmap(dat, ...)
 
 \item{is.fold}{Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap. Defaults to FALSE.}
 
-\item{fold.max.range}{Numeric. For fold-change heatmaps, what is the maxium colour value that should be plotted. Defaults to 3.}
-
-\item{fold.min.range}{Numeric. For fold-change heatmaps, what is the minimum colour value that should be plotted. Defaults to -3.}
+\item{fold.range}{Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset)}
 
 \item{dendrograms}{Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none. Defaults to "both.}
 
@@ -39,7 +39,7 @@ make.pheatmap(dat, ...)
 
 \item{cell.size}{Numeric. Defaults to 15.}
 
-\item{standard.colours}{Character. DEFAULTS to "YlGnBu", can also be "RdYlBu", "viridis", etc}
+\item{standard.colours}{Character. DEFAULTS to "YlGnBu", can also be "viridis", "magma", "inferno", "spectral".}
 
 \item{fold.colours}{Character.}
 

@@ -70,7 +70,7 @@ head(data.list[[1]])
 ### Merge files
 
 ## Merge files and review
-cell.dat <- Spectre::file.merge(x = data.list)
+cell.dat <- Spectre::do.merge.files(dat = data.list)
 
 str(cell.dat)
 head(cell.dat)
@@ -148,9 +148,11 @@ config <- list(beta= 0.2,
                mu= 0.01)
 
 # Assuming you have setup a conda environment, specify what's the environment name is
-conda.env.name <- "chronoclust-public"
+conda.env.name <- "base"
+conda.env.location <- "/opt/conda/bin"
 
 Spectre::run.chronoclust(data.files=chronoclust.input.files,
                          output.dir=OutputDirectory,
                          conda.env.name=conda.env.name,
+                         conda.env.location=conda.env.location,
                          config=config)

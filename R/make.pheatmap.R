@@ -5,16 +5,16 @@
 #'
 #' @usage make.pheatmap(dat, ...)
 #'
-#' @param dat data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
-#' @param file.name Character. What do you want to call the file, including the extension.
-#' @param plot.title Character.
-#' @param sample.col Character. Specify the name of the column that indicates samples. No default.
+#' @param dat NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
+#' @param file.name NO DEFAULT. Character. What do you want to call the file, including the extension.
+#' @param plot.title NO DEFAULT. Character.
+#' @param sample.col NO DEFAULT. Character. Specify the name of the column that indicates samples. No default.
+#' @param plot.cols NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.
 #'
 #' @param annot.cols Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.
 #' @param transpose Logical. Do you want to transpose the heatmap. Defaults to FALSE.
 #' @param is.fold Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap. Defaults to FALSE.
-#' @param fold.max.range Numeric. For fold-change heatmaps, what is the maxium colour value that should be plotted. Defaults to 3.
-#' @param fold.min.range Numeric. For fold-change heatmaps, what is the minimum colour value that should be plotted. Defaults to -3.
+#' @param fold.range Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset)
 #' @param normalise Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values. Defaults to TRUE.
 #' @param dendrograms Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none. Defaults to "both.
 #' @param n.row.groups Numeric.
@@ -24,7 +24,7 @@
 #' @param cell.size Numeric. Defaults to 15.
 #' @param y.margin Numeric.
 #' @param x.margin Numeric.
-#' @param standard.colours Character. DEFAULTS to "YlGnBu", can also be "RdYlBu", "viridis", etc
+#' @param standard.colours Character. DEFAULTS to "YlGnBu", can also be "viridis", "magma", "inferno", "spectral".
 #' @param fold.colours Character.
 #' @param colour.scheme Character. Only one option currently.
 #'
@@ -42,17 +42,17 @@
 make.pheatmap <- function(dat,
                           file.name,
                           plot.title,
+
                           sample.col,
+                          plot.cols,
 
                           annot.cols = NULL,
-                          rmv.cols = NULL,
 
                           transpose = FALSE,
                           normalise = TRUE,
 
                           is.fold          = FALSE,
-                          fold.max.range    = 3,
-                          fold.min.range    = -3,
+                          fold.range    = NULL, # c(3,-3)
 
                           dendrograms      = "both",
                           n.row.groups     = 2,
@@ -201,21 +201,21 @@ make.pheatmap <- function(dat,
 
   ### Embed cluster or population name as row name
 
+      dat <- as.data.frame(dat)
+
       heatmap.data <- dat
       rownames(heatmap.data) <- t(dat[sample.col])
       heatmap.data
 
-      heatmap.data
-
       if(is.null(annot.cols) == FALSE){
         annot <- heatmap.data[annot.cols]
-        heatmap.data <- heatmap.data[-c(annot.cols, rmv.cols)] # remove columns
+        heatmap.data <- heatmap.data[plot.cols] # remove columns
         heatmap.data
       }
 
       if(is.null(annot.cols) == TRUE){
         annot <- NULL
-        heatmap.data <- heatmap.data[-c(rmv.cols)] # remove columns
+        heatmap.data <- heatmap.data[plot.cols] # remove columns
         heatmap.data
       }
 
@@ -315,7 +315,34 @@ make.pheatmap <- function(dat,
         map.colour <- fold.palette(31)
         sym.key <- FALSE # TRUE need if NOT creating own breaks
         sym.breaks <- TRUE
+
+        if(is.null(fold.range)){
+          fld.max <- max(heatmap.data, na.rm = TRUE)
+          fld.min <- min(heatmap.data, na.rm = TRUE)
+
+          if(fld.max == -fld.min){
+            fold.max.range <- fld.max
+            fold.min.range <- fld.min
+          }
+
+          if(fld.max > -fld.min){
+            fold.max.range <- fld.max
+            fold.min.range <- -fld.max
+          }
+
+          if(fld.max < -fld.min){
+            fold.max.range <- -fld.min
+            fold.min.range <- fld.min
+          }
+        }
+
+        if(!is.null(fold.range)){
+          fold.max.range <- fold.range[1]
+          fold.min.range <- fold.range[2]
+          }
+
         my.breaks <- seq(fold.min.range, fold.max.range, length.out = 32)
+
       }
 
       if(is.fold == FALSE){

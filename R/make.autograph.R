@@ -5,13 +5,15 @@
 make.autograph <- function(x,
                            x.axis,
                            y.axis,
+
                            colour.by,
 
                            colours,
                            y.axis.label,
 
-                           my_comparisons,
+                           my_comparisons = NULL,
 
+                           grp.order = NULL,
                            title = paste0(y.axis.label, " - ", y.axis),
                            filename = paste0(y.axis.label, " - ", y.axis, ".pdf"),
                            path = getwd(),
@@ -22,8 +24,8 @@ make.autograph <- function(x,
                            height = 5,
                            y.first.level = 1.2,
                            y.second.level = 1.5,
-                           Variance_test = "kruskal.test",
-                           Pairwise_test = "wilcox.test"
+                           Variance_test = "kruskal.test", # or "anova"
+                           Pairwise_test = "wilcox.test" # or 't.test'
                            )
 {
   ### Test data
@@ -72,23 +74,38 @@ make.autograph <- function(x,
       if(length(unique(x[[colour.by]])) != length(colours)) stop('The length of factors you want to colour the plot by does not match the number of colours you have provided.')
 
   ### Set up colours and other settings
+
+  message(paste0("AutoGraph for `", y.axis.label, " - ", y.axis, "` started"))
+
+  message("AutoGraph - setup started")
+
     # spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
     # spectral.list <- rev(spectral.list)
     # colour.scheme <- colorRampPalette(c(spectral.list))
 
   ### Max and min values
-    max_y_value <- max(x[y.axis], na.rm = TRUE)
+    x <- as.data.table(x)
+
+    max_y_value <- max(x[,y.axis, with = FALSE], na.rm = TRUE)
     max_y_value_p10 <- max_y_value*y.first.level
     max_y_value_p40 <- max_y_value*y.second.level
 
-    min_y_value<- min(x[y.axis], na.rm = TRUE)
+    min_y_value<- min(x[,y.axis, with = FALSE], na.rm = TRUE)
     bottom_y <- min_y_value
     bottom_y
 
   ###
     Xaxis <- x[[x.axis]] <- as.factor(x[[x.axis]])
 
+    if(!is.null(grp.order)){
+      Xaxis <- x[[x.axis]] <- factor(x[[x.axis]], levels = grp.order)
+    }
+
+  message("AutoGraph - setup complete")
+
   ### Plotting
+
+  message("AutoGraph - plotting started")
 
     p <- ggplot(x, aes(x=Xaxis, y=x[[y.axis]])) #, fill=Species)) + # can use fill = Species -- makes coloured by Species, with block outline of point -- NEED FILL for violin plot to be filled
 
@@ -107,12 +124,14 @@ make.autograph <- function(x,
           #scale_color_brewer(palette="Dark2") +
 
       ## PRISM -- SE (from https://stackoverflow.com/questions/2676554/in-r-how-to-find-the-standard-error-of-the-mean)
-          p <- p + stat_summary(
-                  fun.ymax=function(i) mean(i) + sd(i)/sqrt(length(i)), # 0.975
-                  fun.ymin=function(i) mean(i) - sd(i)/sqrt(length(i)), # 0.975
-                  geom="errorbar", width=0.5, size = 1)
 
-          p <- p + stat_summary(fun.y=mean, fun.ymin = mean, fun.ymax = mean, geom="crossbar", width = 0.7, size = 0.5) # add a large point for the mean
+            p <- p + stat_summary(
+              fun.ymax=function(i) mean(i) + sd(i)/sqrt(length(i)), # 0.975
+              fun.ymin=function(i) mean(i) - sd(i)/sqrt(length(i)), # 0.975
+              geom="errorbar", width=0.5, size = 1)
+
+
+            p <- p + stat_summary(fun.y=mean, fun.ymin = mean, fun.ymax = mean, geom="crossbar", width = 0.7, size = 0.5) # add a large point for the mean
 
 
       # VARIANCE
@@ -122,8 +141,10 @@ make.autograph <- function(x,
           #geom_errorbar(aes(ymax = Sepal.Length+sd, ymax = Sepal.Length-sd)) +
 
       # MORE THAN TWO GROUPS: pairwise comparison with overall anova/Kruskal-Wallis result
-          p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric)
-          p <- p + stat_compare_means(method = Variance_test, label.y = max_y_value_p40, size = 4) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
+          if(!is.null(my.comparisons)){
+            p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric)
+            p <- p + stat_compare_means(method = Variance_test, label.y = max_y_value_p40, size = 4) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
+          }
 
       # MORE THAN TWO GROUPS: compare against reference sample
           #stat_compare_means(method = "kruskal.test", label.y = 45) +      # Add global p-value
@@ -166,7 +187,9 @@ make.autograph <- function(x,
     ## View plot
     p
 
+    message("AutoGraph - plotting complete")
+
     ## Save
     ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # wdith 3.6 default, height 5 default
-
+    message("AutoGraph - saved to disk")
 }

@@ -4,7 +4,9 @@
 \name{hmap.mfi}
 \alias{hmap.mfi}
 \title{hmap.mfi - Demo dataset.}
-\format{A demo dataframe.}
+\format{
+A demo dataframe.
+}
 \source{
 Thomas M Ashhurst.
 }

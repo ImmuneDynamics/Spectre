@@ -9,7 +9,7 @@ run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clu
 \arguments{
 \item{dat}{NO DEFAULT. data.frame. Input sample.}
 
-\item{clustering.cols}{NO DEFAULT. Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended.}
+\item{use.cols}{NO DEFAULT. Vector of column names to use for clustering.}
 
 \item{meta.k}{DEFAULT = 20. Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created.}
 
@@ -25,7 +25,7 @@ run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clu
 
 \item{meta.clust.name}{DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
 
-This function runs FlowSOM on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns}
+This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.}
 }
 \description{
 run.flowsom - ...

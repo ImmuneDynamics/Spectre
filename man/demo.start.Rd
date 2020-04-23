@@ -4,7 +4,9 @@
 \name{demo.start}
 \alias{demo.start}
 \title{demo.start - Demo dataset.}
-\format{A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice.}
+\format{
+A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice.
+}
 \source{
 Thomas M Ashhurst.
 }
