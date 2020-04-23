@@ -3,7 +3,7 @@
 #' @usage run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name, ...)
 #'
 #' @param dat NO DEFAULT. data.frame. Input sample.
-#' @param clustering.cols NO DEFAULT. Vector of column names to use for clustering. It is possible to use a vector of column numbers here but this is not recommended.
+#' @param use.cols NO DEFAULT. Vector of column names to use for clustering.
 #' @param meta.k DEFAULT = 20. Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created.
 #' @param xdim DEFAULT = 10. Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters.
 #' @param ydim DEFAULT = 10. Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters.
@@ -12,7 +12,7 @@
 #' @param clust.name DEFAULT = "FlowSOM_cluster". Character. Name of the resulting 'cluster' parameter.
 #' @param meta.clust.name DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
 #'
-#' This function runs FlowSOM on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns
+#' This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.
 #'
 #' @export
 
