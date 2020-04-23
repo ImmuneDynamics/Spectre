@@ -4,6 +4,9 @@
 #'
 #' @return loads all the common use package libraries.
 #'
+#' @param type DEFAULT = "general". If "general", then loads packages required for general Spectre usage. If "spatial", then loads  additional packages required for spatial analysis. If "ML", then loads additional packages required for machine-learing functionality.
+#'
+#'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}
@@ -17,26 +20,38 @@
 
 package.load <- function()
 {
-  require('devtools')
-  require('data.table')
-  require('plyr')
-  require('dplyr')
-  require('tidyr')
-  require('rstudioapi')
-  require('Rtsne')
-  require('umap')
-  require('ggplot2')
-  require('ggthemes')
-  require('scales')
-  require('colorRamps')
-  require('RColorBrewer')
-  require('gridExtra')
+  if(type == "general"){
+    require('devtools')
+    require('data.table')
+    require('plyr')
+    require('dplyr')
+    require('tidyr')
+    require('rstudioapi')
+    require('Rtsne')
+    require('umap')
+    require('reticulate')
+    require('ggplot2')
+    require('ggthemes')
+    require('scales')
+    require('colorRamps')
+    require('RColorBrewer')
+    require('gridExtra')
+    require('ggpointdensity')
 
-  require('flowCore')
-  require('Biobase')
-  require('flowViz')
-  require('FlowSOM')
-  
-  require('reticulate')
-  require('caret')
+    require('flowCore')
+    require('Biobase')
+    require('flowViz')
+    require('FlowSOM')
   }
+
+  if(type == "spatial"){
+    require('raster')
+    require('tiff')
+    require('rgeos')
+  }
+
+  if(type == "ML"){
+    require('caret')
+  }
+
+}

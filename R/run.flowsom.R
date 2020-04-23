@@ -17,7 +17,7 @@
 #' @export
 
 run.flowsom <- function(dat,
-                        clustering.cols, # names of columns to cluster
+                        use.cols, # names of columns to cluster
                         meta.k = 20,
                         xdim = 10,
                         ydim = 10,
@@ -49,7 +49,7 @@ run.flowsom <- function(dat,
   ##
       #head(dat)
       #dimnames(dat)[[2]]
-  
+
   ## Check that necessary packages are installed
   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
@@ -63,7 +63,7 @@ run.flowsom <- function(dat,
   require(Biobase)
   require(FlowSOM)
   require(data.table)
-  
+
   ## Remove non-numeric
       head
       dat.start <- dat
