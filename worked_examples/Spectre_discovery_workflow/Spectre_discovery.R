@@ -378,7 +378,7 @@
         setwd("By sample")
 
         for(i in as.matrix(unique(cell.dat.sub[[sample.col]]))){
-          for(a in ClusteringCols){
+          for(a in CellularCols){
             Spectre::make.colour.plot(dat = cell.dat.sub[cell.dat.sub[[sample.col]] == i,],
                                       x.axis = "UMAP_X",
                                       y.axis = "UMAP_Y",
@@ -396,7 +396,7 @@
         setwd("By group")
 
         for(i in as.matrix(unique(cell.dat.sub[[group.col]]))){
-          for(a in ClusteringCols){
+          for(a in CellularCols){
             Spectre::make.colour.plot(dat = cell.dat.sub[cell.dat.sub[[group.col]] == i,],
                                       x.axis = "UMAP_X",
                                       y.axis = "UMAP_Y",
