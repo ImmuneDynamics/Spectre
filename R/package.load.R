@@ -18,7 +18,7 @@
 #'
 #' @export
 
-package.load <- function()
+package.load <- function(type = "general")
 {
   if(type == "general"){
     require('devtools')

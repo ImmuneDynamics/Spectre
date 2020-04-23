@@ -1,6 +1,6 @@
 ##########################################################################################################
 #### Spectre - General Discovery Workflow
-#### Part 1/3 - Clustering, dimensionality reduction, plotting, and summarise data
+#### Clustering, dimensionality reduction, plotting, and summarise data
 ##########################################################################################################
 
     # Spectre R package: https://sydneycytometry.org.au/spectre
@@ -168,6 +168,10 @@
         ClusteringCols  # check that the column names that appear are the ones you want to analyse
         ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 
+    ### Define downsample targets
+
+        down.samp.targets <- c(rep(500,12))
+
     ### Checks
 
         head(cell.dat)
@@ -198,12 +202,12 @@
 
     ### Subsampling
         meta.dat
-        as.matrix(unique(cell.dat[["Sample"]]))
+        as.matrix(unique(cell.dat[[sample.col]]))
 
         cell.dat.sub <- Spectre::do.subsample(dat = cell.dat,
                                                method = "per.sample", # or "random
                                                samp.col = sample.col,
-                                               targets = c(rep(500,12)),
+                                               targets = down.samp.targets,
                                                seed = 42)
 
         nrow(cell.dat.sub)
@@ -323,6 +327,16 @@
                                  y.axis = "UMAP_Y",
                                  col.axis = group.col,
                                  plot.by = sample.col,
+                                 align.xy.by = cell.dat.sub,
+                                 align.col.by = cell.dat.sub,
+                                 dot.size = 1)
+
+        Spectre::make.multi.plot(dat = cell.dat.sub,
+                                 type = "factor",
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 col.axis = sample.col,
+                                 plot.by = group.col,
                                  align.xy.by = cell.dat.sub,
                                  align.col.by = cell.dat.sub,
                                  dot.size = 1)
