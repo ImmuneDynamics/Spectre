@@ -192,7 +192,7 @@
                                          xdim = 10,
                                          ydim = 10,
                                          meta.k = 15,
-                                         clustering.cols = ClusteringCols)
+                                         use.cols = ClusteringCols)
 
         head(cell.dat)    # Check cell.dat to ensure FlowSOM data correctly attached
 

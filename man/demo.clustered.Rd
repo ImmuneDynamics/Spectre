@@ -4,7 +4,9 @@
 \name{demo.clustered}
 \alias{demo.clustered}
 \title{demo.clustered - Demo dataset.}
-\format{A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice, including FlowSOM cluster assignments.}
+\format{
+A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice, including FlowSOM cluster assignments.
+}
 \source{
 Thomas M Ashhurst.
 }

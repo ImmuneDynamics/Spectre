@@ -64,6 +64,9 @@ run.flowsom <- function(dat,
   require(FlowSOM)
   require(data.table)
 
+  ## Setup
+  clustering.cols <- use.cols
+
   ## Remove non-numeric
       head
       dat.start <- dat

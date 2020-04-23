@@ -6,6 +6,9 @@
 \usage{
 See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
+\arguments{
+\item{type}{DEFAULT = "general". If "general", then loads packages required for general Spectre usage. If "spatial", then loads  additional packages required for spatial analysis. If "ML", then loads additional packages required for machine-learing functionality.}
+}
 \value{
 loads all the common use package libraries.
 }
