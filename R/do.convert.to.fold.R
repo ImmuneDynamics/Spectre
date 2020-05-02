@@ -11,13 +11,12 @@ do.convert.to.fold <- function(x,
 {
 
   ### Test data
-      # x <- read.csv("/Users/Tom/Google Drive (t.ashhurst@centenary.org.au)/_Sydney Cytometry/2019_Synced/GitHub/Public github/Spectre/worked_example/Output_CAPX/Output-SumTables/Output_CellNums/SumTable_CellsPerTissue.csv")
-      # x$X <- NULL
+      # x <- read.csv("/Users/thomasa/Google Drive File Stream/My Drive/_Sydney Cytometry/Libraries (synced)/GitHub/Public github/Spectre/scripts/SumTables_Graphing/Output-sumtables/SumTable-CellCounts.csv")
       # as.matrix(names(x))
       # sample.col <- "Sample"
       # group.col <- "Group"
       # ctrl.grp <- "Mock"
-      # convert.cols <- c(3:42)
+      # convert.cols <- names(x)[c(6:20)]
       # log2 = TRUE
 
   ###
@@ -25,7 +24,7 @@ do.convert.to.fold <- function(x,
       #x <- dat
       x <- as.data.table(x)
 
-      annot <- x[,-convert.cols, with = FALSE]
+      annot <- x[,!convert.cols, with = FALSE]
       temp <- x[,convert.cols, with = FALSE]
 
       # annot <- x[-c(convert.cols)]

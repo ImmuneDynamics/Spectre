@@ -36,6 +36,8 @@ package.check <- function(type = "general")
     if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
     if(!is.element('gridExtra', installed.packages()[,1])) stop('gridExtra is required but not installed')
     if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
+    if(!is.element('pheatmap', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
+    if(!is.element('ggpubr', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
 
     if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed. Please install from BioConductor.')
     if(!is.element('Biobase', installed.packages()[,1])) stop('Biobase is required but not installed. Please install from BioConductor.')

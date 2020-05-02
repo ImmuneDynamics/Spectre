@@ -20,11 +20,6 @@
         Spectre::package.check()    # Check that all required packages are installed
         Spectre::package.load()     # Load required packages
 
-        if(!require('pheatmap')) {install.packages('pheatmap')}
-        if(!require('ggpubr')) {install.packages('ggpubr')}
-        library(pheatmap)
-        library(ggpubr)
-
     ### 1.3. Set number of threads for data.table functions
 
         getDTthreads()
@@ -195,7 +190,7 @@
         cell.dat <- Spectre::run.flowsom(dat = cell.dat,
                                          xdim = 10,
                                          ydim = 10,
-                                         meta.k = 15,
+                                         meta.k = 10,
                                          use.cols = ClusteringCols)
 
         head(cell.dat)    # Check cell.dat to ensure FlowSOM data correctly attached

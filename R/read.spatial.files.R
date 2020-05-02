@@ -285,6 +285,8 @@ read.spatial.files <- function(roi.loc, # Corresponding directory of ROI folders
             names <- names(measure.dat)[c(1:(names.length-1))]
             names
 
+            measure.dat <- as.data.table(measure.dat)
+
             measure.dat <- data.table("ImageName" = measure.dat$ImageName, measure.dat[,names,with = FALSE])
             as.matrix(names(measure.dat))
             dim(measure.dat)
@@ -302,6 +304,8 @@ read.spatial.files <- function(roi.loc, # Corresponding directory of ROI folders
 
             means <- measure.dat[,grepl( "Intensity_MeanIntensity_FullStack_" , names(measure.dat)),with = FALSE]
             means <- means*65535
+            means <- as.data.table(means)
+
             names(means) <- gsub("Intensity_MeanIntensity_FullStack_c", "", names(means))
             names(means)
 
@@ -322,6 +326,8 @@ read.spatial.files <- function(roi.loc, # Corresponding directory of ROI folders
 
             means.filtered <- measure.dat[,grepl( "Intensity_MeanIntensity_FullStackFiltered_" , names(measure.dat)),with = FALSE]
             means.filtered <- means.filtered*65535
+            means.filtered <- as.data.table(means.filtered)
+
             names(means.filtered) <- gsub("Intensity_MeanIntensity_FullStackFiltered_c", "", names(means.filtered))
             names(means.filtered)
 
