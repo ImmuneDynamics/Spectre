@@ -24,7 +24,9 @@ do.convert.to.fold <- function(x,
       #x <- dat
       x <- as.data.table(x)
 
-      annot <- x[,!convert.cols, with = FALSE]
+      #annot <- x[,!convert.cols, with = FALSE]
+
+      annot <- x[, setdiff(names(x), convert.cols), with = FALSE]
       temp <- x[,convert.cols, with = FALSE]
 
       # annot <- x[-c(convert.cols)]
