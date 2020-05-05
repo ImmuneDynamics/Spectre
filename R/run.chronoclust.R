@@ -48,10 +48,10 @@ run.chronoclust <- function(data.files,
     chronoclust$app$run(data=data.files, 
                         output_directory=output.dir)
   } else {
-    all.chronoclust.param <- list(beta= 0.5,
+    all.chronoclust.param <- list(beta= 0.2,
                                   delta= 0.05,
                                   epsilon= 0.03,
-                                  lambda= 0.5,
+                                  lambda= 2,
                                   k= 15,
                                   mu= 0.005,
                                   pi= 0,
