@@ -37,6 +37,8 @@ package.load <- function(type = "general")
     require('RColorBrewer')
     require('gridExtra')
     require('ggpointdensity')
+    require('pheatmap')
+    require('ggpubr')
 
     require('flowCore')
     require('Biobase')
@@ -52,6 +54,7 @@ package.load <- function(type = "general")
 
   if(type == "ML"){
     require('caret')
+    require('class')
   }
 
 }

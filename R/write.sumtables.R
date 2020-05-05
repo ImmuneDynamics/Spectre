@@ -221,9 +221,11 @@ write.sumtables <- function(x,
         per <- t(per)
 
         per
-        as.matrix(rowSums(per))
+        per.100 <- per*100
 
-        x.freq.res <- cbind("Measurement" = rep("Proportion of total cells", nrow(per)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(per), per)
+        as.matrix(rowSums(per.100))
+
+        x.freq.res <- cbind("Measurement" = rep("Percentage of total cells", nrow(per.100)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(per.100), per.100)
         names(x.freq.res)[names(x.freq.res) == "SAMPLE"] <- sample.col
         x.freq.res
 

@@ -35,7 +35,8 @@ do.merge.files <- function(dat, remove.duplicates = TRUE){
 
   ## Duplicates
   if(remove.duplicates == TRUE){
-    cell.dat <- cell.dat[!duplicated(cell.dat), ]  # remove rows containing duplicate values within rounding
+    # cell.dat <- cell.dat[!duplicated(cell.dat), ]  # remove rows containing duplicate values within rounding
+    cell.dat <- unique(cell.dat) # removes duplicate rows
   }
 
   ## Assign to global environment

@@ -24,7 +24,7 @@
 #' @param cell.size Numeric. Defaults to 15.
 #' @param y.margin Numeric.
 #' @param x.margin Numeric.
-#' @param standard.colours Character. DEFAULTS to "YlGnBu", can also be "viridis", "magma", "inferno", "spectral".
+#' @param standard.colours Character. DEFAULTS to "BuPu". Can also be "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
 #' @param fold.colours Character.
 #' @param colour.scheme Character. Only one option currently.
 #'
@@ -62,7 +62,7 @@ make.pheatmap <- function(dat,
                           col.sep          = c(),
                           cell.size        = 15,
 
-                          standard.colours = "YlGnBu",
+                          standard.colours = "BuPu",
                           fold.colours     = "fold.palette",
                           colour.scheme    = "group.palette")
 
@@ -161,9 +161,30 @@ make.pheatmap <- function(dat,
 
       ## Standard colour options
 
+      if(standard.colours == "BuPu"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "BuPu"))(31)) # 256
+      }
+
       if(standard.colours == "RdYlBu"){
         colour.palette <- (colorRampPalette(brewer.pal(9, "RdYlBu"))(31)) # 256
         colour.palette <- rev(colour.palette)
+      }
+
+      if(standard.colours == "rev(RdBu)"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "RdBu"))(31)) # 256
+        colour.palette <- rev(colour.palette)
+      }
+
+      if(standard.colours == "Blues"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "Blues"))(31)) # 256
+      }
+
+      if(standard.colours == "Reds"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "Reds"))(31)) # 256
+      }
+
+      if(standard.colours == "Greys"){
+        colour.palette <- (colorRampPalette(brewer.pal(9, "Greys"))(31)) # 256
       }
 
       if(standard.colours == "YlGnBu"){
