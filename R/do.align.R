@@ -175,6 +175,10 @@ do.align <- function(ref.dat,
       warning("It seems the column names you have specified are not all present in the 'target' dataset. Please check your entries and try again.")
     }
 
+    #### Cell barcodes for target.dat
+    target.dat[["temp-pre-alignment-barcode"]] <- c(1:nrow(target.dat))
+
+    ### Setup fsom
     fsom <- ref.dat$fsom
 
     ### Reference samples
@@ -569,10 +573,18 @@ do.align <- function(ref.dat,
     ## Replace target.dat with aligned.dat -- just the channels aligned
     mod.dat <- target.dat
 
+    aligned.dat <- aligned.dat[order(aligned.dat[['temp-pre-alignment-barcode']]),]
+
     for(a in channels){
-      mod.dat[[a]] <- aligned.dat[[a]]
-      names(mod.dat)[names(mod.dat) == a] <- paste0(a, "_align")
+      # mod.dat[[a]] <- aligned.dat[[a]]
+      # names(mod.dat)[names(mod.dat) == a] <- paste0(a, "_align")
+
+      ## Test function for 'adding' data
+      i <- paste0(a, "_aligned")
+      mod.dat[[i]] <- aligned.dat[[a]]
     }
+
+    mod.dat[["temp-post-alignment-barcode"]] <- aligned.dat[['temp-pre-alignment-barcode']]
 
     mod.dat
     names(mod.dat)

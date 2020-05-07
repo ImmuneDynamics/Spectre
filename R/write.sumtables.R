@@ -323,6 +323,7 @@ write.sumtables <- function(x,
           write.csv(data.MFI.per.group, paste0("SumTable-MFI-Group-", i, ".csv"), row.names=FALSE)
         }
       }
+      setwd(path)
       message("SumTables - MFI per sample complete")
     }
 
