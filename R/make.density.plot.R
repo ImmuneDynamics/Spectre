@@ -13,7 +13,7 @@
 #' @param plot.width DEFAULT = 9. Width of the ggplot when saved to disk.
 #' @param plot.height DEFAULT = 7. Height of the ggplot when saved to disk.
 #' @param blank.axis DEFAULT = FALSE. Logical, do you want a minimalist graph?
-#' 
+#'
 #' This function will create a density plot for the chosen axes.
 #'
 #' @usage make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.by, align.col.by, save.to.disk, path, plot.width,  plot.height, blank.axis, ...)
@@ -34,49 +34,53 @@ make.density.plot <- function(dat,
                         plot.height = 7,
                         blank.axis = FALSE
 ){
-  
+
   ### TEST DATA
   # dat <- Spectre::demo.umap
   # x.axis <- "UMAP_42_X"
   # y.axis <- "UMAP_42_Y"
-  
+
   ## Check that necessary packages are installed
   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
   if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
   if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
-  
+
   ## Require packages
   require(Spectre)
   require(ggplot2)
   require(RColorBrewer)
   require(ggpointdensity)
-  
+
   ## Define limits
       # X AXIS
         Xmax <- max(dat[[x.axis]])
         Xmin <- min(dat[[x.axis]])
-      
+
       # Y AXIS
         Ymax <- max(dat[[y.axis]])
         Ymin <- min(dat[[y.axis]])
-  
+
   ## Generate and show coloured plot
-      
+
       p <- ggplot2::ggplot(data = dat, ggplot2::aes(x = dat[[x.axis]], y = dat[[y.axis]])) +
         ggplot2::geom_point(size = dot.size) +
-        
+
         ggplot2::ggtitle(title) +
-        ggplot2::xlim(Xmin, Xmax) +
-        ggplot2::ylim(Ymin, Ymax) +
-        
-        ggplot2::xlab(x.axis) +
-        ggplot2::ylab(y.axis) +
-        
+        #ggplot2::xlim(Xmin, Xmax) +
+        #ggplot2::ylim(Ymin, Ymax) +
+
+        #ggplot2::xlab(x.axis) +
+        #ggplot2::ylab(y.axis) +
+
         ggpointdensity::geom_pointdensity()
-  
+
+  ## Axis
+      p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(Xmin, Xmax))
+      p <- p + scale_y_continuous(breaks = scales::pretty_breaks(n = 8), name = y.axis, limits = c(Ymin, Ymax))
+
   ## Add some themes
-      
+
       p <- p + ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
                      axis.title.x=ggplot2::element_text(color="Black", face="bold", size=18),
                      axis.title.y=ggplot2::element_text(color="Black", face="bold", size=18),
@@ -86,22 +90,22 @@ make.density.plot <- function(dat,
                      legend.title=ggplot2::element_blank(),
                      plot.title = ggplot2::element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
       )
-        
-        
+
+
       if(colours == "viridis" || colours == "magma" || colours == "inferno"){
         p <- p + viridis::scale_colour_viridis(option = colours)
       }
-        
+
       if(colours == "jet") {
         p <- p + ggplot2::scale_colour_gradientn(colours = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
       }
-      
+
       if(colours == "spectral"){
         p <- p + ggplot2::scale_colour_gradientn(colours = rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)))
       }
-  
+
   ## Blank the axes if desired
-      
+
       if(blank.axis == TRUE){
         p <- p + ggplot2::theme(axis.line=ggplot2::element_blank(),
                        axis.text.x=ggplot2::element_blank(),
@@ -122,17 +126,17 @@ make.density.plot <- function(dat,
                        #plot.title = element_text(color="Black", face="bold", size=15, hjust=0
         )
       }
-      
+
   ## Save ggplot to disk if desired
       if(save.to.disk == TRUE){
-        ggplot2::ggsave(filename = paste0(title, ".png"),
+        ggplot2::ggsave(filename = paste0("Density plot - ", title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
                plot = p,
                path = path,
                width = plot.width,
                height = plot.height,
                limitsize = FALSE)
       }
-      
+
       print(p)
 
 }

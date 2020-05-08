@@ -18,14 +18,14 @@ make.autograph <- function(x,
                            filename = paste0(y.axis.label, " - ", y.axis, ".pdf"),
                            path = getwd(),
 
-                           scale = "lin",
+                           scale = "lin", # can be "lin" or "sci"
                            dot.size = 5,
                            width = 5,
                            height = 5,
                            y.first.level = 1.2,
                            y.second.level = 1.5,
-                           Variance_test = "kruskal.test", # or "anova"
-                           Pairwise_test = "wilcox.test" # or 't.test'
+                           Variance_test = "kruskal.test", # or "anova", or NULL
+                           Pairwise_test = "wilcox.test" # or 't.test', or NULL
                            )
 {
   ### Test data
@@ -52,6 +52,9 @@ make.autograph <- function(x,
       # x.axis <- "Groups"
       # y.axis <- "Tcells"
       # colour.by <- "Batches"
+      #
+      # setwd("/Users/thomasa/Desktop")
+      # path <- getwd()
       #
       # colours <- c("Black", "Red", "Blue")
       # y.axis.label <- "Frequency"
@@ -107,10 +110,14 @@ make.autograph <- function(x,
 
   message("AutoGraph - plotting started")
 
-    p <- ggplot(x, aes(x=Xaxis, y=x[[y.axis]])) #, fill=Species)) + # can use fill = Species -- makes coloured by Species, with block outline of point -- NEED FILL for violin plot to be filled
+      p <- ggplot(x, aes(x=Xaxis, y=x[[y.axis]])) #, fill=Species)) + # can use fill = Species -- makes coloured by Species, with block outline of point -- NEED FILL for violin plot to be filled
 
       ## POINTS
-          p <- p + geom_point(aes(fill=as.factor(x[[colour.by]]), colour = as.factor(x[[colour.by]])), shape=21, stroke = 0, size = dot.size, position=position_jitter(width = 0.1, height = 0))
+      p <- p + geom_point(aes(fill=as.factor(x[[colour.by]]), colour = as.factor(x[[colour.by]])),
+                          shape=21,
+                          stroke = 0,
+                          size = dot.size,
+                          position=position_jitter(width = 0.1, height = 0))
 
       ## COLOUR CONTROL
           p <- p + scale_fill_manual(name = colour.by, values = colours)
@@ -130,9 +137,7 @@ make.autograph <- function(x,
               fun.ymin=function(i) mean(i) - sd(i)/sqrt(length(i)), # 0.975
               geom="errorbar", width=0.5, size = 1)
 
-
             p <- p + stat_summary(fun.y=mean, fun.ymin = mean, fun.ymax = mean, geom="crossbar", width = 0.7, size = 0.5) # add a large point for the mean
-
 
       # VARIANCE
           #stat_summary(fun.y=mean, geom="point", shape=18, size=8, color="Black") + # add a large point for the mean
@@ -141,8 +146,14 @@ make.autograph <- function(x,
           #geom_errorbar(aes(ymax = Sepal.Length+sd, ymax = Sepal.Length-sd)) +
 
       # MORE THAN TWO GROUPS: pairwise comparison with overall anova/Kruskal-Wallis result
-          if(!is.null(my.comparisons)){
-            p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric)
+
+          if(!is.null(my_comparisons)){
+            if(!is.null(Pairwise_test)){
+              p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
+            }
+          }
+
+          if(!is.null(Variance_test)){
             p <- p + stat_compare_means(method = Variance_test, label.y = max_y_value_p40, size = 4) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
           }
 
@@ -179,17 +190,25 @@ make.autograph <- function(x,
     #scale_x_discrete(limits=Group_Order) + # use to re-arrange X axis values
     if(scale == "lin"){
       p <- p + scale_y_continuous(limits = c(0, max_y_value_p40))
-      }
+    }
+
     if(scale == "sci"){
       p <- p + scale_y_continuous(labels = scales::scientific, limits = c(0, max_y_value_p40))
-      }
+    }
+
+    # if(scale == "log2"){
+    #   p <- p + scale_y_continuous(trans = "log2")
+    # }
+    #
+    # if(scale == "log10"){
+    #   p <- p + scale_y_continuous(trans = "log10")
+    #   # p <- p + scale_y_log10()
+    # }
 
     ## View plot
     p
 
-    message("AutoGraph - plotting complete")
-
     ## Save
     ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # wdith 3.6 default, height 5 default
-    message("AutoGraph - saved to disk")
+    message(paste0("AutoGraph for `", y.axis.label, " - ", y.axis, "` saved to disk"))
 }

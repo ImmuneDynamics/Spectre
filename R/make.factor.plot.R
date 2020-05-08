@@ -133,11 +133,15 @@ make.factor.plot <- function(dat,
         p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], colour = as.factor(dat[[col.axis]]))) +
                     geom_point(size = dot.size) +
                     ggtitle(title) +
-                    xlab(x.axis) +
-                    ylab(y.axis) +
-                    xlim(Xmin, Xmax) +
-                    ylim(Ymin, Ymax) +
+                    #xlab(x.axis) +
+                    #ylab(y.axis) +
+                    #xlim(Xmin, Xmax) +
+                    #ylim(Ymin, Ymax) +
                     lims(colour = colRange)
+
+    ## Axis
+        p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(Xmin, Xmax))
+        p <- p + scale_y_continuous(breaks = scales::pretty_breaks(n = 8), name = y.axis, limits = c(Ymin, Ymax))
 
     ## Add some themes
 
@@ -217,7 +221,7 @@ make.factor.plot <- function(dat,
     ## Save to disk if desired
 
         if(save.to.disk == TRUE){
-          ggsave(filename = paste0(title, ".png"),
+          ggsave(filename = paste0("Factor plot - ", title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
                  plot = p,
                  path = path,
                  width = plot.width,

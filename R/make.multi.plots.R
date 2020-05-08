@@ -112,7 +112,7 @@ make.multi.plot <- function(dat,
       # path = getwd()
       # plot.width = 9
       # plot.height = 7
-  
+
   ## Check that necessary packages are installed
   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
@@ -121,7 +121,7 @@ make.multi.plot <- function(dat,
   if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
   if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
   if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
-  
+
   ## Require packages
   require(Spectre)
   require(ggplot2)
@@ -134,6 +134,8 @@ make.multi.plot <- function(dat,
   ### Create each plot
       to.plot <- list()
       plots <- list()
+
+      title <- figure.title
 
       to.plot <- unique(dat[[plot.by]])
 
@@ -192,7 +194,7 @@ make.multi.plot <- function(dat,
                                       blank.axis = blank.axis)
           }
       }
-      
+
       if(type == 'density'){
           for (i in c(1:length(to.plot))){
             to.plot[i]
@@ -247,7 +249,7 @@ make.multi.plot <- function(dat,
           # height = 7 per graph
           hght <- num.rows*plot.height
 
-          ggplot2::ggsave(filename = paste0(figure.title, ".png"),
+          ggplot2::ggsave(filename = paste0("Multi plot - ", figure.title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
                  plot = gp,
                  path = path,
                  width = wdth,

@@ -86,7 +86,7 @@ make.multi.marker.plot <- function(dat,
       # plot.height = 7
       # blank.axis = FALSE
       # save.each.plot = FALSE
-  
+
   ## Check that necessary packages are installed
   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
@@ -95,7 +95,7 @@ make.multi.marker.plot <- function(dat,
   if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
   if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
   if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
-  
+
   ## Require packages
   require(Spectre)
   require(ggplot2)
@@ -106,6 +106,8 @@ make.multi.marker.plot <- function(dat,
   require(ggpointdensity)
 
   ### Create each plot
+  title <- figure.title
+
   plots <- list()
   to.plot <- plot.by
 
@@ -184,7 +186,7 @@ make.multi.marker.plot <- function(dat,
   # height = 7 per graph
   hght <- num.rows*plot.height
 
-  ggplot2::ggsave(filename = paste0(figure.title, ".png"),
+  ggplot2::ggsave(filename = paste0(figure.title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
          plot = gp,
          path = path,
          width = wdth,

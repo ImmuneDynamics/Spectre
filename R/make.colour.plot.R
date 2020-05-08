@@ -157,12 +157,16 @@ make.colour.plot <- function(dat,
                 scale_colour_gradientn(colours = colour.scheme(50),
                                        limits = c(ColrMin, ColrMax),
                                        oob=squish) +
-                ggtitle(title) +
-                xlim(Xmin, Xmax) +
-                ylim(Ymin, Ymax) +
+                ggtitle(title) #+
+                #xlim(Xmin, Xmax) +
+                #ylim(Ymin, Ymax) +
 
-                xlab(x.axis)+
-                ylab(y.axis)
+                #xlab(x.axis)+
+                #ylab(y.axis)
+
+  ## Axis
+    p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(Xmin, Xmax))
+    p <- p + scale_y_continuous(breaks = scales::pretty_breaks(n = 8), name = y.axis, limits = c(Ymin, Ymax))
 
   ## Add some themes
 
@@ -197,11 +201,11 @@ make.colour.plot <- function(dat,
                      #legend.title=element_blank(),
                      #plot.title = element_text(color="Black", face="bold", size=15, hjust=0
                      )
-      }
+    }
 
   ## Save ggplot to disk if desired
       if(save.to.disk == TRUE){
-        ggsave(filename = paste0(title, ".png"),
+        ggsave(filename = paste0("Colour plot - ", title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
                plot = p,
                path = path,
                width = plot.width,

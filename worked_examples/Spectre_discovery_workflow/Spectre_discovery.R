@@ -165,6 +165,8 @@
 
     ### Define downsample targets
 
+        as.matrix(unique(cell.dat[["Sample"]]))
+
         down.samp.targets <- c(rep(500,12))
 
     ### Checks
@@ -401,3 +403,4 @@
                                       align.col.by = cell.dat.sub)
           }
         }
+
