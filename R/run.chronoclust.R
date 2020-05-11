@@ -5,47 +5,28 @@
 #' Make sure that each 1 csv file is data for only 1 time point. 
 #' Thus if you have 3 time points, this vector have 3 elements in it.
 #' @param output.dir NO DEFAULT. The directory for Chronoclust to write its result to.
-#' @param conda.env.name NO DEFAULT. The conda virtual environment name where Chronoclust wil run.
-#' @param conda.env.location DEFAULT NULL. Specify where anaconda is installed. If nothing is given, 
-#' then reticulate will look at where it's normally installed /Users/<yourname>/anaconda.
+#' @param chronoclust.object NO DEFAULT. Chronoclust object imported by reticulate.
+#' Please run prepare.chronoclust.environment beforehand.
 #' @param config DEFAULT NULL. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
 #' run on a default config. Only specify the parameter that you do not wish to use the default value for.
 #'
 #'
 #' This function run a time-series clustering and cluster tracking algorithm Chronoclust.
 #' ChronoClust was originally written in Python 3. It'll be run using Reticulate.
-#' Only anaconda/miniconda virtual environment is supported by this function. This environment need to be setup before running the function.
-#' Please visit the various guide in the following link to install anaconda/miniconda and setup an environment:
-#' https://docs.conda.io/projects/conda/en/latest/user-guide/index.html
-#' ChronoClust requires the following python package to run: numpy, pandas, scikit-learn, tqdm, numba.
-#' 
-#' ChronoClust package is available for download through Github: https://github.com/ghar1821/chronoclust.
-#' To install ChronoClust in your environment, please visit the Github page and follow the instruction:
-#' "How do I use Chronoclust".
-#' 
-#' Please make sure that your environment is running Python 3.7.
-#' ChronoClust is not supported for Python 2.
+#' Please run prepare.chronoclust.environment before running this function to
+#' properly setup the environment for running chronoclust.
 #'
 #' @export
 
 run.chronoclust <- function(data.files,
                             output.dir,
-                            conda.env.name,
-                            conda.env.location=NULL,
+                            chronoclust.object,
                             config=NULL) {
-  # activate the conda env
-  if (is.null(conda.env.location)) {
-    use_condaenv(conda.env.name)
-  } else {
-    use_condaenv(conda.env.name, conda=conda.env.location)
-  }
-
 
   # Setup Chronoclust
-  chronoclust <- import("chronoclust")  # Import Chronoclust API
 
   if (is.null(config)) {
-    chronoclust$app$run(data=data.files, 
+    chronoclust.object$app$run(data=data.files, 
                         output_directory=output.dir)
   } else {
     all.chronoclust.param <- list(beta= 0.2,
@@ -71,7 +52,7 @@ run.chronoclust <- function(data.files,
     }
     
     # run chronoclust
-    chronoclust$app$run(data=data.files, 
+    chronoclust.object$app$run(data=data.files, 
                         output_directory=output.dir, 
                         param_beta=config.copy[['beta']], 
                         param_delta=config.copy[['delta']],

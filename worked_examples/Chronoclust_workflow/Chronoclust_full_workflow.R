@@ -40,8 +40,8 @@ PrimaryDirectory
 #setwd(PrimaryDirectory)
 
 ## Create output directory
-dir.create("Output_Spectre", showWarnings = FALSE)
-setwd("Output_Spectre")
+dir.create("Output_Spectre_cc", showWarnings = FALSE)
+setwd("Output_Spectre_cc")
 OutputDirectory <- getwd()
 setwd(PrimaryDirectory)
 
@@ -107,7 +107,8 @@ ColumnNames
 
 ## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
 ColumnNames
-ClusteringColNos <- c(1:3)
+# including SCA-1 as we're doing time series clustering
+ClusteringColNos <- c(4,6,8:12,14,16:21,22,23:24)
 ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to include the markers corresponding to the column numbers 11, 23, 10
 
 ClusteringCols  # check that the column names that appear are the ones you want to analyse
@@ -119,15 +120,21 @@ head(cell.dat)
 ClusteringCols
 
 ## Export data containing only columns for clustering out to csv files
+cell.dat.bk <- cell.dat
+# subsample for brevity
+call.dat <- do.subsample(cell.dat, "min.per.sample", samp.col = "Sample")
+
 dir.create("Input_ChronoClust", showWarnings = FALSE)
 setwd("Input_ChronoClust")
 InputDirectoryChronoClust <- getwd()
 
-file.number <- unique(cell.dat[['FileNo']])
-file.names <- unique(cell.dat[[file.col]])
-sapply(file.number, function(file.no) {
-  cell.dat.subset <- cell.dat[FileNo == file.no, ClusteringCols, with=FALSE]
-  Spectre::write.files(cell.dat.subset, file.names[file.no])
+# subset the data such that each time point is individual file.
+# in this case, the column Time.point determine the time point
+# move this to function maybe?
+time.points <- unique(cell.dat[['Time.point']])
+sapply(time.points, function(time.point) {
+  cell.dat.subset <- cell.dat[Time.point == time.point, ClusteringCols, with=FALSE]
+  Spectre::write.files(cell.dat.subset, time.point)
 })
 
 setwd(PrimaryDirectory)
@@ -147,12 +154,22 @@ config <- list(beta= 0.2,
                epsilon= 0.03,
                mu= 0.01)
 
-# Assuming you have setup a conda environment, specify what's the environment name is
-conda.env.name <- "base"
-conda.env.location <- "/opt/conda/bin"
+
+
+chronoclust <- Spectre::prepare.chronoclust.environment(environment_name = "chronoclust-experiment",
+                                                        create_environment = FALSE,
+                                                        install_dependencies = FALSE)
+
+
+
+
 
 Spectre::run.chronoclust(data.files=chronoclust.input.files,
                          output.dir=OutputDirectory,
-                         conda.env.name=conda.env.name,
-                         conda.env.location=conda.env.location,
+                         chronoclust.object=chronoclust, 
                          config=config)
+
+
+# Assuming you have setup a conda environment, specify what's the environment name is
+#conda.env.name <- "base"
+#conda.env.location <- "/opt/conda/bin"
