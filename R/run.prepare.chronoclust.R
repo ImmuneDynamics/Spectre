@@ -1,5 +1,5 @@
-#' prepare.chronoclust.environment - ...
-#' @usage prepare.chronoclust.environment(environment_name, ...)
+#' run.prepare.chronoclust - ...
+#' @usage run.prepare.chronoclust(environment_name, ...)
 #'
 #' @param environment_name NO DEFAULT. The name of the anaconda environment where chronoclust will execute.
 #' @param environment_path DEFAULT NULL. For expert users only. If you have custom
@@ -9,12 +9,15 @@
 #' environment exists in your anaconda installation.
 #' @param install_dependencies DEFAULT TRUE. Whether to install chronoclust and all its dependencies into the environment.
 #' If TRUE, it will install all the dependencies, and restart R session.
+#' When R session is restarted, the variables you have previously assigned
+#' will remain intact, but you will need to reload all the libraries again.
 #' 
 #'
 #' This function will prepare a Python environment to run ChronoClust.
 #' You need to install anaconda package management software for this to work.
-#' If Reticulate is kind, it might prompt you to install it when running this function.
-#' If it does not and you encounter an error such as no anaconda installation is found,
+#' If Reticulate is kind, it might prompt you to install it when running this function if you haven't got it installed.
+#' However, please do not count on it.
+#' If it does not prompt you, and you encounter an error such as no anaconda installation is found,
 #' please visit https://www.anaconda.com/products/individual to manually download and install anaconda.
 #' 
 #' For advanced users, if your anaconda is installed in custom location,
@@ -22,7 +25,7 @@
 #'
 #' @export
 
-prepare.chronoclust.environment <- function(environment_name,
+run.prepare.chronoclust <- function(environment_name,
                                             environment_path=NULL,
                                             create_environment=TRUE,
                                             install_dependencies=TRUE) {
@@ -64,14 +67,5 @@ prepare.chronoclust.environment <- function(environment_name,
     #chronoclust <- import_from_path("chronoclust")
     #setwd(WorkingDirectory)
     .rs.restartR()
-    require(reticulate)
-    chronoclust <- import("chronoclust")
   }
-  else {
-    chronoclust <- import("chronoclust")
-  }
-  
-  
-  
-  return(chronoclust)
 }

@@ -5,28 +5,27 @@
 #' Make sure that each 1 csv file is data for only 1 time point. 
 #' Thus if you have 3 time points, this vector have 3 elements in it.
 #' @param output.dir NO DEFAULT. The directory for Chronoclust to write its result to.
-#' @param chronoclust.object NO DEFAULT. Chronoclust object imported by reticulate.
-#' Please run prepare.chronoclust.environment beforehand.
 #' @param config DEFAULT NULL. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
 #' run on a default config. Only specify the parameter that you do not wish to use the default value for.
 #'
 #'
 #' This function run a time-series clustering and cluster tracking algorithm Chronoclust.
 #' ChronoClust was originally written in Python 3. It'll be run using Reticulate.
-#' Please run prepare.chronoclust.environment before running this function to
-#' properly setup the environment for running chronoclust.
+#' Please run run.prepare.chronoclust before running this function to
+#' properly setup the python environment for running chronoclust.
 #'
 #' @export
 
 run.chronoclust <- function(data.files,
                             output.dir,
-                            chronoclust.object,
                             config=NULL) {
 
   # Setup Chronoclust
+  require(reticulate)
+  chronoclust <- import("chronoclust")
 
   if (is.null(config)) {
-    chronoclust.object$app$run(data=data.files, 
+    chronoclust$app$run(data=data.files, 
                         output_directory=output.dir)
   } else {
     all.chronoclust.param <- list(beta= 0.2,
@@ -52,7 +51,7 @@ run.chronoclust <- function(data.files,
     }
     
     # run chronoclust
-    chronoclust.object$app$run(data=data.files, 
+    chronoclust$app$run(data=data.files, 
                         output_directory=output.dir, 
                         param_beta=config.copy[['beta']], 
                         param_delta=config.copy[['delta']],
