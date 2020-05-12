@@ -108,7 +108,7 @@ ColumnNames
 ## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
 ColumnNames
 # including SCA-1 as we're doing time series clustering
-ClusteringColNos <- c(4,6,8:12,14,16:21,22,23:24)
+ClusteringColNos <- c(1:3)
 ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to include the markers corresponding to the column numbers 11, 23, 10
 
 ClusteringCols  # check that the column names that appear are the ones you want to analyse
@@ -120,10 +120,6 @@ head(cell.dat)
 ClusteringCols
 
 ## Export data containing only columns for clustering out to csv files
-cell.dat.bk <- cell.dat
-# subsample for brevity
-call.dat <- do.subsample(cell.dat, "min.per.sample", samp.col = "Sample")
-
 dir.create("Input_ChronoClust", showWarnings = FALSE)
 setwd("Input_ChronoClust")
 InputDirectoryChronoClust <- getwd()
@@ -131,9 +127,9 @@ InputDirectoryChronoClust <- getwd()
 # subset the data such that each time point is individual file.
 # in this case, the column Time.point determine the time point
 # move this to function maybe?
-time.points <- unique(cell.dat[['Time.point']])
+time.points <- unique(cell.dat[['FileName']])
 sapply(time.points, function(time.point) {
-  cell.dat.subset <- cell.dat[Time.point == time.point, ClusteringCols, with=FALSE]
+  cell.dat.subset <- cell.dat[FileName == time.point, ClusteringCols, with=FALSE]
   Spectre::write.files(cell.dat.subset, time.point)
 })
 
@@ -155,19 +151,17 @@ config <- list(beta= 0.2,
                mu= 0.01)
 
 
-
-chronoclust <- Spectre::prepare.chronoclust.environment(environment_name = "chronoclust-experiment",
-                                                        create_environment = FALSE,
-                                                        install_dependencies = FALSE)
-
+Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
+                            create_environment = FALSE,
+                            install_dependencies = FALSE)
 
 
-
-
+# if the following fail with the following error message:
+# Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named 'chronoclust'
+# please manually restart your R-session and try again.
 Spectre::run.chronoclust(data.files=chronoclust.input.files,
-                         output.dir=OutputDirectory,
-                         chronoclust.object=chronoclust, 
-                         config=config)
+                output.dir=OutputDirectory,
+                config=config)
 
 
 # Assuming you have setup a conda environment, specify what's the environment name is
