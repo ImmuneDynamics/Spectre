@@ -126,12 +126,8 @@ InputDirectoryChronoClust <- getwd()
 
 # subset the data such that each time point is individual file.
 # in this case, the column Time.point determine the time point
-# move this to function maybe?
-time.points <- unique(cell.dat[['FileName']])
-sapply(time.points, function(time.point) {
-  cell.dat.subset <- cell.dat[FileName == time.point, ClusteringCols, with=FALSE]
-  Spectre::write.files(cell.dat.subset, time.point)
-})
+Spectre::do.split.data(cell.dat, 'FileName')
+
 
 setwd(PrimaryDirectory)
 
@@ -152,12 +148,12 @@ config <- list(beta= 0.2,
 
 
 Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
-                            create_environment = FALSE,
-                            install_dependencies = FALSE)
+                            create_environment = TRUE,
+                            install_dependencies = TRUE)
 
 
 # if the following fail with the following error message:
-# Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named 'chronoclust'
+# Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named
 # please manually restart your R-session and try again.
 Spectre::run.chronoclust(data.files=chronoclust.input.files,
                 output.dir=OutputDirectory,
