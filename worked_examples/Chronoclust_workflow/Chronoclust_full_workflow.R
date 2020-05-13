@@ -10,23 +10,9 @@
 #### 1. Install packages, load packages, and set working directory
 ##########################################################################################################
 
-### 1.1. Install 'Spectre' package (using devtools) and the dependencies that Spectre requires
-
-# For instructions on installing Spectre, please visit https://wiki.centenary.org.au/display/SPECTRE
-
-### 1.2. Load packages
-
 library(Spectre)
 Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
 Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
-
-session_info()
-
-### 1.3. Set number of threads for data.table functions
-
-getDTthreads()
-
-### 1.4. Set working directory
 
 ## Set working directory
 dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
@@ -44,6 +30,12 @@ dir.create("Output_Spectre_cc", showWarnings = FALSE)
 setwd("Output_Spectre_cc")
 OutputDirectory <- getwd()
 setwd(PrimaryDirectory)
+
+## Create directory to store ChronoClust input
+dir.create("Input_ChronoClust", showWarnings = FALSE)
+setwd("Input_ChronoClust")
+InputDirectoryChronoClust <- getwd()
+setwd(InputDirectoryChronoClust)
 
 ##########################################################################################################
 #### 2. Read and prepare data
@@ -77,13 +69,8 @@ head(cell.dat)
 dim(cell.dat)
 
 # There should be 1 file per time point. IF you have 2 time points, you should have 2 items printed out!
+# In this example, the time point is indicated by the FileName column.
 as.matrix(unique(cell.dat[["FileName"]]))
-
-## Are there any NAs present in cell.dat? Yes if 'TRUE', no if 'FALSE'
-any(is.na(cell.dat))
-
-## Cleanup (not necessary, but recommended)
-#rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums)
 
 ##########################################################################################################
 #### 3. Define data and sample variables for analysis
@@ -106,34 +93,29 @@ ColumnNames
 ### Define columns for clustering
 
 ## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
-ColumnNames
-# including SCA-1 as we're doing time series clustering
 ClusteringColNos <- c(1:3)
 ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to include the markers corresponding to the column numbers 11, 23, 10
 
 ClusteringCols  # check that the column names that appear are the ones you want to analyse
 ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 
-### Checks
-
-head(cell.dat)
-ClusteringCols
-
 ## Export data containing only columns for clustering out to csv files
-dir.create("Input_ChronoClust", showWarnings = FALSE)
-setwd("Input_ChronoClust")
-InputDirectoryChronoClust <- getwd()
-
-# subset the data such that each time point is individual file.
-# in this case, the column Time.point determine the time point
+setwd(InputDirectoryChronoClust)
 Spectre::do.split.data(cell.dat, 'FileName')
-
 
 setwd(PrimaryDirectory)
 
 ##########################################################################################################
 #### 4. Perform clustering
 ##########################################################################################################
+
+## Prepare the environment where ChronoClust will execute.
+# EXPERT USERS ONLY: if your anaconda is installed in custom location,
+# pass the location to the function using parameter environment_path, like:
+# environment_path = "/opt/conda/bin"
+Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
+                            create_environment = TRUE,
+                            install_dependencies = TRUE)
 
 ## Get the input files for ChronoClust
 chronoclust.input.files <- list.files(InputDirectoryChronoClust, ".csv")
@@ -146,20 +128,9 @@ config <- list(beta= 0.2,
                epsilon= 0.03,
                mu= 0.01)
 
-
-Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
-                            create_environment = TRUE,
-                            install_dependencies = TRUE)
-
-
 # if the following fail with the following error message:
 # Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named
 # please manually restart your R-session and try again.
 Spectre::run.chronoclust(data.files=chronoclust.input.files,
                 output.dir=OutputDirectory,
                 config=config)
-
-
-# Assuming you have setup a conda environment, specify what's the environment name is
-#conda.env.name <- "base"
-#conda.env.location <- "/opt/conda/bin"
