@@ -20,8 +20,10 @@ run.chronoclust <- function(data.files,
                             output.dir,
                             config=NULL) {
 
-  # Setup Chronoclust
+  if(!is.element('reticulate', installed.packages()[,1])) stop('reticulate is required but not installed')
   require(reticulate)
+  
+  # Setup Chronoclust
   chronoclust <- import("chronoclust")
 
   if (is.null(config)) {
