@@ -1,5 +1,9 @@
-#' run.chronoclust - ...
-#' @usage run.chronoclust(x, ...)
+#' run.chronoclust - Function to run Chronoclust. 
+#' ChronoClust was originally written in Python 3. It'll be run using Reticulate.
+#' Please run run.prepare.chronoclust before running this function to
+#' properly setup the python environment for running chronoclust.
+#' 
+#' @usage run.chronoclust(data.files, output.dir, config)
 #'
 #' @param data.files NO DEFAULT. A vector containing the location of csv file containing the time series datasets. 
 #' Make sure that each 1 csv file is data for only 1 time point. 
@@ -10,9 +14,13 @@
 #'
 #'
 #' This function run a time-series clustering and cluster tracking algorithm Chronoclust.
-#' ChronoClust was originally written in Python 3. It'll be run using Reticulate.
-#' Please run run.prepare.chronoclust before running this function to
-#' properly setup the python environment for running chronoclust.
+#'
+#' @author Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
+#'
+#' @references \url{https://sydneycytometry.org.au/spectre}.
+#'
+#' @examples
+#' run.chronoclust(data.files=c("day1.csv","day2.csv"), output.dir="outdir", config=list(beta= 0.2, delta= 0.05, epsilon= 0.03, mu= 0.01))
 #'
 #' @export
 

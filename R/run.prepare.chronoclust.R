@@ -1,5 +1,13 @@
-#' run.prepare.chronoclust - ...
-#' @usage run.prepare.chronoclust(environment_name, ...)
+#' run.prepare.chronoclust - This function will prepare a Python environment to run ChronoClust.
+#' You need to install anaconda package management software for this to work.
+#' If Reticulate is kind, it might prompt you to install it when running this function if you haven't got it installed.
+#' However, please do not count on it.
+#' If it does not prompt you, and you encounter an error such as no anaconda installation is found,
+#' please visit https://www.anaconda.com/products/individual to manually download and install anaconda.
+#' 
+#' For advanced users, if your anaconda is installed in custom location,
+#' you can specify this location as environment_path parameter.
+#' @usage run.prepare.chronoclust(environment_name, environment_path, create_environment, install_dependencies)
 #'
 #' @param environment_name NO DEFAULT. The name of the anaconda environment where chronoclust will execute.
 #' @param environment_path DEFAULT NULL. For expert users only. If you have custom
@@ -12,16 +20,12 @@
 #' When R session is restarted, the variables you have previously assigned
 #' will remain intact, but you will need to reload all the libraries again.
 #' 
+#' @author Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
 #'
-#' This function will prepare a Python environment to run ChronoClust.
-#' You need to install anaconda package management software for this to work.
-#' If Reticulate is kind, it might prompt you to install it when running this function if you haven't got it installed.
-#' However, please do not count on it.
-#' If it does not prompt you, and you encounter an error such as no anaconda installation is found,
-#' please visit https://www.anaconda.com/products/individual to manually download and install anaconda.
-#' 
-#' For advanced users, if your anaconda is installed in custom location,
-#' you can specify this location as environment_path parameter.
+#' @references \url{https://sydneycytometry.org.au/spectre}.
+#'
+#' @examples
+#' run.prepare.chronoclust(environment_name = "chronoclust-R", create_environment = TRUE, install_dependencies = TRUE)
 #'
 #' @export
 
