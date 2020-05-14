@@ -11,8 +11,8 @@
 ##########################################################################################################
 
 library(Spectre)
-Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
-Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
+Spectre::package.check()
+Spectre::package.load() # If you do not have anaconda installed in your system, reticulate will prompt you to install one when you run this function.
 
 ## Set working directory
 dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
