@@ -40,9 +40,9 @@ run.prepare.chronoclust <- function(environment_name,
     conda_create(environment_name)
   } else {
     if (is.null(environment_path)) {
-      use_condaenv(environment_name)
+      use_condaenv(environment_name, required = TRUE)
     } else {
-      use_condaenv(environment_name, conda=environment_path)
+      use_condaenv(environment_name, conda=environment_path, required = TRUE)
     }
     
   }

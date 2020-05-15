@@ -35,7 +35,7 @@ setwd(PrimaryDirectory)
 dir.create("Input_ChronoClust", showWarnings = FALSE)
 setwd("Input_ChronoClust")
 InputDirectoryChronoClust <- getwd()
-setwd(InputDirectoryChronoClust)
+setwd(PrimaryDirectory)
 
 ##########################################################################################################
 #### 2. Read and prepare data
@@ -83,7 +83,7 @@ as.matrix(names(cell.dat))
 ## Define key columns that might be used or dividing data (samples, groups, batches, etc)
 exp.name <- "TimeSeriesDemo"
 
-file.col <- "FileName"
+timepoint.col <- "FileName"
 
 
 ## Create a list of column names
@@ -94,6 +94,7 @@ ColumnNames
 
 ## Define columns that are 'valid' cellular markers (i.e. not live/dead, blank channels etc)
 ClusteringColNos <- c(1:3)
+
 ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to include the markers corresponding to the column numbers 11, 23, 10
 
 ClusteringCols  # check that the column names that appear are the ones you want to analyse
@@ -101,21 +102,20 @@ ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 
 ## Export data containing only columns for clustering out to csv files
 setwd(InputDirectoryChronoClust)
-Spectre::do.split.data(cell.dat, 'FileName')
+Spectre::do.split.data(cell.dat, timepoint.col, ClusteringCols)
 
 setwd(PrimaryDirectory)
 
 ##########################################################################################################
 #### 4. Perform clustering
 ##########################################################################################################
-
 ## Prepare the environment where ChronoClust will execute.
 # EXPERT USERS ONLY: if your anaconda is installed in custom location,
 # pass the location to the function using parameter environment_path, like:
 # environment_path = "/opt/conda/bin"
 Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
-                            create_environment = TRUE,
-                            install_dependencies = TRUE)
+                            create_environment = FALSE,
+                            install_dependencies = FALSE)
 
 ## Get the input files for ChronoClust
 chronoclust.input.files <- list.files(InputDirectoryChronoClust, ".csv")
