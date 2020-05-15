@@ -113,9 +113,11 @@ setwd(PrimaryDirectory)
 # EXPERT USERS ONLY: if your anaconda is installed in custom location,
 # pass the location to the function using parameter environment_path, like:
 # environment_path = "/opt/conda/bin"
+# NOTE: when running this in Docker, make sure you pass environment_path = "/opt/conda/bin"
+# in addition to the 3 parameters.
 Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
-                            create_environment = FALSE,
-                            install_dependencies = FALSE)
+                            create_environment = TRUE,
+                            install_dependencies = TRUE)
 
 ## Get the input files for ChronoClust
 chronoclust.input.files <- list.files(InputDirectoryChronoClust, ".csv")
