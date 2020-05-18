@@ -13,7 +13,6 @@
 #' run on a default config. Only specify the parameter that you do not wish to use the default value for.
 #'
 #'
-#' This function run a time-series clustering and cluster tracking algorithm Chronoclust.
 #'
 #' @author Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
 #'
