@@ -9,13 +9,13 @@
 #' you can specify this location as environment_path parameter.
 #' @usage run.prepare.chronoclust(environment_name, environment_path, create_environment, install_dependencies)
 #'
-#' @param environment_name NO DEFAULT. The name of the anaconda environment where chronoclust will execute.
-#' @param environment_path DEFAULT NULL. For expert users only. If you have custom
+#' @param environment_name NO DEFAULT. Character. The name of the anaconda environment where chronoclust will execute.
+#' @param environment_path DEFAULT NULL. Character. For expert users only. If you have custom
 #' anaconda installation i.e. not installed to default location, you can specify
 #' the location here.
-#' @param create_environment DEFAULT TRUE. Whether to newly create the environment or not. If FALSE, make sure the
+#' @param create_environment DEFAULT TRUE. Logical. Whether to newly create the environment or not. If FALSE, make sure the
 #' environment exists in your anaconda installation.
-#' @param install_dependencies DEFAULT TRUE. Whether to install chronoclust and all its dependencies into the environment.
+#' @param install_dependencies DEFAULT TRUE. Logical. Whether to install chronoclust and all its dependencies into the environment.
 #' If TRUE, it will install all the dependencies, and restart R session.
 #' When R session is restarted, the variables you have previously assigned
 #' will remain intact, but you will need to reload all the libraries again.

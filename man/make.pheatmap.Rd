@@ -39,7 +39,7 @@ make.pheatmap(dat, ...)
 
 \item{cell.size}{Numeric. Defaults to 15.}
 
-\item{standard.colours}{Character. DEFAULTS to "YlGnBu", can also be "viridis", "magma", "inferno", "spectral".}
+\item{standard.colours}{Character. DEFAULTS to "BuPu". Can also be "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".}
 
 \item{fold.colours}{Character.}
 

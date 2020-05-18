@@ -2,40 +2,36 @@
 % Please edit documentation in R/run.chronoclust.R
 \name{run.chronoclust}
 \alias{run.chronoclust}
-\title{run.chronoclust - ...}
+\title{run.chronoclust - Function to run Chronoclust. 
+ChronoClust was originally written in Python 3. It'll be run using Reticulate.
+Please run run.prepare.chronoclust before running this function to
+properly setup the python environment for running chronoclust.}
 \usage{
-run.chronoclust(x, ...)
+run.chronoclust(data.files, output.dir, config)
 }
 \arguments{
 \item{data.files}{NO DEFAULT. A vector containing the location of csv file containing the time series datasets. 
 Make sure that each 1 csv file is data for only 1 time point. 
 Thus if you have 3 time points, this vector have 3 elements in it.}
 
-\item{output.dir}{NO DEFAULT. The directory for Chronoclust to write its result to.}
+\item{output.dir}{NO DEFAULT. Character. The directory for Chronoclust to write its result to.}
 
-\item{conda.env.name}{NO DEFAULT. The conda virtual environment name where Chronoclust wil run.}
-
-\item{conda.env.location}{DEFAULT NULL. Specify where anaconda is installed. If nothing is given, 
-then reticulate will look at where it's normally installed /Users/<yourname>/anaconda.}
-
-\item{config}{DEFAULT NULL. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
-run on a default config. Only specify the parameter that you do not wish to use the default value for.
-
-
-This function run a time-series clustering and cluster tracking algorithm Chronoclust.
-ChronoClust was originally written in Python 3. It'll be run using Reticulate.
-Only anaconda/miniconda virtual environment is supported by this function. This environment need to be setup before running the function.
-Please visit the various guide in the following link to install anaconda/miniconda and setup an environment:
-https://docs.conda.io/projects/conda/en/latest/user-guide/index.html
-ChronoClust requires the following python package to run: numpy, pandas, scikit-learn, tqdm, numba.
-
-ChronoClust package is available for download through Github: https://github.com/ghar1821/chronoclust.
-To install ChronoClust in your environment, please visit the Github page and follow the instruction:
-"How do I use Chronoclust".
-
-Please make sure that your environment is running Python 3.7.
-ChronoClust is not supported for Python 2.}
+\item{config}{DEFAULT NULL. List of Character. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
+run on a default config. Only specify the parameter that you do not wish to use the default value for.}
 }
 \description{
-run.chronoclust - ...
+run.chronoclust - Function to run Chronoclust. 
+ChronoClust was originally written in Python 3. It'll be run using Reticulate.
+Please run run.prepare.chronoclust before running this function to
+properly setup the python environment for running chronoclust.
+}
+\examples{
+run.chronoclust(data.files=c("day1.csv","day2.csv"), output.dir="outdir", config=list(beta= 0.2, delta= 0.05, epsilon= 0.03, mu= 0.01))
+
+}
+\references{
+\url{https://sydneycytometry.org.au/spectre}.
+}
+\author{
+Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
 }

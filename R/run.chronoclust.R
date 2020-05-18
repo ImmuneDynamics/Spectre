@@ -8,8 +8,8 @@
 #' @param data.files NO DEFAULT. A vector containing the location of csv file containing the time series datasets. 
 #' Make sure that each 1 csv file is data for only 1 time point. 
 #' Thus if you have 3 time points, this vector have 3 elements in it.
-#' @param output.dir NO DEFAULT. The directory for Chronoclust to write its result to.
-#' @param config DEFAULT NULL. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
+#' @param output.dir NO DEFAULT. Character. The directory for Chronoclust to write its result to.
+#' @param config DEFAULT NULL. List of Character. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
 #' run on a default config. Only specify the parameter that you do not wish to use the default value for.
 #'
 #'
