@@ -1,17 +1,17 @@
 #' run.pca - ...
 #'
-#' @param dat data.frame. No default.
-#' @param use.cols Vector of numbers, reflecting the columns to use for clustering. No default.
-#' @param cor A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.). Default = TRUE.
-#' @param scores A logical value indicating whether the score on each principal component should be calculated. Default = TRUE.
-#' @param scree.plot Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot. Default = TRUE.
-#' @param component.loading Option to create plots for each component. Requires scree.plot = TRUE. Default = TRUE.
-#' @param marker.contribution Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE. Default = TRUE.
-#' @param loading.plot Option to create scree plots. Will save generated loading plot. Default = TRUE.
-#' @param individual.samples Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included. Default = FALSE.
-#' @param sample.code Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".Default = "FileName"
-#' @param top.tally Number of top markers that contributed to PCA across each sample. Used for "individual.samples". Defalut = 10.
-#' @param path Location to save plots. Default = getwd() (working directory)
+#' @param dat NO DEFAULT. data.frame.
+#' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").
+#' @param cor DEFAULT = TRUE. A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.).
+#' @param scores DEFAULT = TRUE. A logical value indicating whether the score on each principal component should be calculated.
+#' @param scree.plot DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.
+#' @param component.loading DEFAULT = TRUE. Option to create plots for each component. Requires scree.plot = TRUE.
+#' @param marker.contribution DEFAULT = TRUE.Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE.
+#' @param loading.plot DEFAULT = TRUE. Option to create scree plots. Will save generated loading plot.
+#' @param individual.samples DEFAULT = FALSE. Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included.
+#' @param sample.code DEFAULT = "FileName". Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".
+#' @param top.tally DEFAULT = 10. Number of top markers that contributed to PCA across each sample. Used for "individual.samples".
+#' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
 #' This function runs a principal component analysis (PCA) on a dataframe with cells (rows) vs markers (columns), returning chosen figures. Uses the base R package "stats" for PCA, "factoextra" for scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.
 #' 
@@ -51,18 +51,15 @@ run.pca <- function(dat,
   require(dplyr)
   require(ggpubr)
   
+  ## Check dat is a data.table
+  if (!is.data.table(dat)) {
+    dat <- as.data.table(dat)
+  }
+  
   ## Run PCA
-  pca_out <- stats::princomp(as.matrix(dat[use.cols]),
+  pca_out <- stats::princomp(as.matrix(dat[, ..use.cols]),
                              cor = cor,
-                             scores = scores,
-                             scree.plot = scree.plot,
-                             component.loading = component.loading,
-                             marker.contribution = marker.contribution,
-                             loading.plot = loading.plot,
-                             individual.samples = individual.samples,
-                             sample.code = sample.code,
-                             top.tally = top.tally,
-                             path = path
+                             scores = scores
                              )
   
   if (scree.plot == TRUE) {
@@ -91,7 +88,7 @@ run.pca <- function(dat,
       
       # Creates loadings plots for each of the components/dimensions (based on elbow point)
       for (i in 1:elbow.point) {
-        p_loading <- ggplot2::ggplot(data = data.load.order, ggplot2::aes(dat = rownames(data.load.order), y = data.load.order[,i])) +
+        p_loading <- ggplot2::ggplot(data = data.load.order, ggplot2::aes(x = rownames(data.load.order), y = data.load.order[,i])) +
           ggplot2::geom_bar(stat="identity", color = "black", fill = "black") +
           #theme_minimal() + #includes grids
           ggplot2::theme_classic() + #removes all grids

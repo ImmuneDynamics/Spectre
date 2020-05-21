@@ -1,7 +1,7 @@
 #' run.tsne - ...
 #'
 #' @param dat NO DEFAULT. data.frame.
-#' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for clustering.
+#' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction.
 #' @param tsne.x.name DEFAULT = "tSNE_X". Character. Name of tSNE x-axis.
 #' @param tsne.y.name DEFAULT = "tSNE_Y". Character. Name of tSNE y-axis.
 #' @param tsne.seed DEFAULT = 42. Numeric. Seed value for reproducibility.
