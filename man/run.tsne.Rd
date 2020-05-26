@@ -9,7 +9,7 @@ run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims,
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
 
-\item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for clustering.}
+\item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction.}
 
 \item{tsne.x.name}{DEFAULT = "tSNE_X". Character. Name of tSNE x-axis.}
 

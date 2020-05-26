@@ -1,4 +1,6 @@
-#' run.prepare.chronoclust - This function will prepare a Python environment to run ChronoClust.
+#' run.prepare.chronoclust
+#' 
+#' This function will prepare a Python environment to run ChronoClust.
 #' You need to install anaconda package management software for this to work.
 #' If Reticulate is kind, it might prompt you to install it when running this function if you haven't got it installed.
 #' However, please do not count on it.

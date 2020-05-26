@@ -7,29 +7,29 @@
 run.pca(dat, use.cols, cor, scores, scree.plot, component.loading, marker.contribution, loading.plot, individual.samples, sample.code, top.tally, path, ...)
 }
 \arguments{
-\item{dat}{data.frame. No default.}
+\item{dat}{NO DEFAULT. data.frame.}
 
-\item{use.cols}{Vector of numbers, reflecting the columns to use for clustering. No default.}
+\item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").}
 
-\item{cor}{A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.). Default = TRUE.}
+\item{cor}{DEFAULT = TRUE. A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.).}
 
-\item{scores}{A logical value indicating whether the score on each principal component should be calculated. Default = TRUE.}
+\item{scores}{DEFAULT = TRUE. A logical value indicating whether the score on each principal component should be calculated.}
 
-\item{scree.plot}{Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot. Default = TRUE.}
+\item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.}
 
-\item{component.loading}{Option to create plots for each component. Requires scree.plot = TRUE. Default = TRUE.}
+\item{component.loading}{DEFAULT = TRUE. Option to create plots for each component. Requires scree.plot = TRUE.}
 
-\item{marker.contribution}{Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE. Default = TRUE.}
+\item{marker.contribution}{DEFAULT = TRUE.Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE.}
 
-\item{loading.plot}{Option to create scree plots. Will save generated loading plot. Default = TRUE.}
+\item{loading.plot}{DEFAULT = TRUE. Option to create scree plots. Will save generated loading plot.}
 
-\item{individual.samples}{Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included. Default = FALSE.}
+\item{individual.samples}{DEFAULT = FALSE. Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included.}
 
-\item{sample.code}{Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".Default = "FileName"}
+\item{sample.code}{DEFAULT = "FileName". Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".}
 
-\item{top.tally}{Number of top markers that contributed to PCA across each sample. Used for "individual.samples". Defalut = 10.}
+\item{top.tally}{DEFAULT = 10. Number of top markers that contributed to PCA across each sample. Used for "individual.samples".}
 
-\item{path}{Location to save plots. Default = getwd() (working directory)
+\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 
 This function runs a principal component analysis (PCA) on a dataframe with cells (rows) vs markers (columns), returning chosen figures. Uses the base R package "stats" for PCA, "factoextra" for scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.}
 }

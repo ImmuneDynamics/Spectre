@@ -2,35 +2,49 @@
 % Please edit documentation in R/run.chronoclust.R
 \name{run.chronoclust}
 \alias{run.chronoclust}
-\title{run.chronoclust - Function to run Chronoclust. 
-ChronoClust was originally written in Python 3. It'll be run using Reticulate.
-Please run run.prepare.chronoclust before running this function to
-properly setup the python environment for running chronoclust.}
+\title{Run the ChronoClust algorithm}
 \usage{
-run.chronoclust(data.files, output.dir, config)
+run.chronoclust(data.files, output.dir, config = NULL)
 }
 \arguments{
-\item{data.files}{NO DEFAULT. A vector containing the location of csv file containing the time series datasets. 
-Make sure that each 1 csv file is data for only 1 time point. 
-Thus if you have 3 time points, this vector have 3 elements in it.}
+\item{data.files}{A character vector. Path and name of the csv files storing the time series dataset. \strong{1 csv file per time point}.}
 
-\item{output.dir}{NO DEFAULT. Character. The directory for Chronoclust to write its result to.}
+\item{output.dir}{Character. Path to the directory where the clustering results will be stored.}
 
-\item{config}{DEFAULT NULL. List of Character. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
-run on a default config. Only specify the parameter that you do not wish to use the default value for.}
+\item{config}{A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter. 
+\emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.}
 }
 \description{
-run.chronoclust - Function to run Chronoclust. 
-ChronoClust was originally written in Python 3. It'll be run using Reticulate.
-Please run run.prepare.chronoclust before running this function to
-properly setup the python environment for running chronoclust.
+Method to run ChronoClust clustering algorithm.
+For this to work properly, a Python session must already be embedded within the currently running R session.
+This is because ChronoClust is originally written in Python 3. 
+Spectre includes a function \code{\link{run.prepare.chronoclust}} that uses Reticulate to prepare and embed Python session within R session.
 }
 \examples{
-run.chronoclust(data.files=c("day1.csv","day2.csv"), output.dir="outdir", config=list(beta= 0.2, delta= 0.05, epsilon= 0.03, mu= 0.01))
+# Prepare Python session
+run.prepare.chronoclust(environment_name = "chronoclust-R", 
+                        create_environment = TRUE, 
+                        install_dependencies = TRUE)
+
+# Specify the data files location and output directory
+data.files <- c("cc_example/day1.csv", "cc_example/day2.csv")
+output.dir <- "cc_example/output"
+
+# Specify the parameters that need to be overriden
+config <- list(beta = 0.2, 
+               delta = 0.05, 
+               epsilon = 0.03, 
+               mu = 0.01)
+
+run.chronoclust(data.files = data.files, 
+                output.dir = output.dir, 
+                config = config)
 
 }
-\references{
-\url{https://sydneycytometry.org.au/spectre}.
+\seealso{
+\url{https://github.com/ghar1821/Chronoclust} for ChronoClust's Python implementation.
+
+\code{\link{run.prepare.chronoclust}} for how to embed Python session within R session.
 }
 \author{
 Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
