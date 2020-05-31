@@ -200,6 +200,14 @@ run.pca <- function(dat,
             # Saves scree plot
             ggplot2::ggsave(scree_plot_sample,
                             filename = "Scree plot.pdf",
+                            path = path)
+            
+        ## PCA plots
+            pca_plot_sample <- factoextra::fviz_pca_ind(data.pca.sample, geom="point")
+            
+            # Saves PCA plot
+            ggplot2::ggsave(pca_plot_sample,
+                            filename = "PCA plot.pdf",
                             path = OutputDirectory)
             
         ## Loading plots
