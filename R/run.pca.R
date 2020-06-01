@@ -1,4 +1,4 @@
-#' Run the PCA algorithm (using stats::princomp)
+#' Run the PCA algorithm (using stats::princomp())
 #' 
 #' Method to run a PCA dimensionality reduction algorithm.
 #' A principal component analysis (PCA) is capable of reducing the number of dimensions (i.e. parameters) with minimal effect on the variation of the given dataset.
@@ -27,7 +27,7 @@
 #' setwd("/Users/felixmarsh-wakefield/Desktop")
 #' 
 #' # Run PCA on demonstration dataset
-#' run.pca(dat = Spectre::demo.start,
+#' Spectre::run.pca(dat = Spectre::demo.start,
 #'         use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
 #'         
 #' # When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
