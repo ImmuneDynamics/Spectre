@@ -4,6 +4,7 @@
 #' A tSNE (t-distributed stochastic neighbor embedding) plot is a useful means to visualise data.
 #' As it is a dimensionality reduction algorithm, some data will be lost.
 #' It is good practice to validate any populations (namely through manual gating).
+#' Output data will be "tsne.res".
 #' Uses the R package "Rtsne" to calculate plots.
 #'
 #' @param dat NO DEFAULT. data.frame.
