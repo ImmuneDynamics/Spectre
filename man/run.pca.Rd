@@ -2,9 +2,9 @@
 % Please edit documentation in R/run.pca.R
 \name{run.pca}
 \alias{run.pca}
-\title{run.pca - ...}
+\title{Run the PCA algorithm (using stats::princomp())}
 \usage{
-run.pca(dat, use.cols, cor, scores, scree.plot, component.loading, marker.contribution, loading.plot, individual.samples, sample.code, top.tally, path, ...)
+run.pca(dat, use.cols, cor = TRUE, scores = TRUE, pca.plot = TRUE, scree.plot = TRUE, component.loading = TRUE, marker.contribution = TRUE, loading.plot = TRUE, individual.samples = FALSE, sample.code = "FileName", top.tally = 10, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -15,24 +15,42 @@ run.pca(dat, use.cols, cor, scores, scree.plot, component.loading, marker.contri
 
 \item{scores}{DEFAULT = TRUE. A logical value indicating whether the score on each principal component should be calculated.}
 
+\item{pca.plot}{DEFAULT = TRUE. Option to create PCA plot.}
+
 \item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.}
 
 \item{component.loading}{DEFAULT = TRUE. Option to create plots for each component. Requires scree.plot = TRUE.}
 
-\item{marker.contribution}{DEFAULT = TRUE.Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE.}
+\item{marker.contribution}{DEFAULT = TRUE. Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE.}
 
 \item{loading.plot}{DEFAULT = TRUE. Option to create scree plots. Will save generated loading plot.}
 
 \item{individual.samples}{DEFAULT = FALSE. Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included.}
 
-\item{sample.code}{DEFAULT = "FileName". Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".}
+\item{sample.code}{DEFAULT = "FileName". Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE. Used for "individual.samples".}
 
 \item{top.tally}{DEFAULT = 10. Number of top markers that contributed to PCA across each sample. Used for "individual.samples".}
 
-\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
-
-This function runs a principal component analysis (PCA) on a dataframe with cells (rows) vs markers (columns), returning chosen figures. Uses the base R package "stats" for PCA, "factoextra" for scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.}
+\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
 \description{
-run.pca - ...
+Method to run a PCA dimensionality reduction algorithm.
+A principal component analysis (PCA) is capable of reducing the number of dimensions (i.e. parameters) with minimal effect on the variation of the given dataset.
+A PCA is also capable of ranking parameters based on their contribution to the variability across a dataset in an extremely fast manner.
+In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
+Uses the base R package "stats" for PCA, "factoextra" for PCA, scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.
+}
+\examples{
+# Set directory to save files. By default it will save files at get()
+setwd("/Users/felixmarsh-wakefield/Desktop")
+
+# Run PCA on demonstration dataset
+Spectre::run.pca(dat = Spectre::demo.start,
+        use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+        
+# When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
+
+}
+\author{
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

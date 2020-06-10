@@ -4,7 +4,7 @@
 \alias{do.convert.mask.to.outline}
 \title{do.convert.mask.to.outline - convert mask rasters into polygons to create cell outlines}
 \usage{
-do.convert.mask.to.outline(dat)
+\method{do}{convert.mask.to.outline}(dat)
 }
 \description{
 This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.
