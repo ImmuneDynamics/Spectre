@@ -31,12 +31,6 @@ setwd("Output_Spectre_cc")
 OutputDirectory <- getwd()
 setwd(PrimaryDirectory)
 
-## Create directory to store ChronoClust input
-dir.create("Input_ChronoClust", showWarnings = FALSE)
-setwd("Input_ChronoClust")
-InputDirectoryChronoClust <- getwd()
-setwd(PrimaryDirectory)
-
 ##########################################################################################################
 #### 2. Read and prepare data
 ##########################################################################################################
@@ -64,7 +58,6 @@ head(data.list[[1]])
 ## Merge files and review
 cell.dat <- Spectre::do.merge.files(dat = data.list)
 
-str(cell.dat)
 head(cell.dat)
 dim(cell.dat)
 
@@ -100,12 +93,6 @@ ClusteringCols <- ColumnNames[ClusteringColNos] # e.g. [c(11, 23, 10)] to includ
 ClusteringCols  # check that the column names that appear are the ones you want to analyse
 ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 
-## Export data containing only columns for clustering out to csv files
-setwd(InputDirectoryChronoClust)
-Spectre::do.split.data(cell.dat, timepoint.col, ClusteringCols)
-
-setwd(PrimaryDirectory)
-
 ##########################################################################################################
 #### 4. Perform clustering
 ##########################################################################################################
@@ -116,12 +103,8 @@ setwd(PrimaryDirectory)
 # NOTE: when running this in Docker, make sure you pass environment_path = "/opt/conda/bin"
 # in addition to the 3 parameters.
 Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
-                            create_environment = TRUE,
-                            install_dependencies = TRUE)
-
-## Get the input files for ChronoClust
-chronoclust.input.files <- list.files(InputDirectoryChronoClust, ".csv")
-chronoclust.input.files <- paste(InputDirectoryChronoClust, chronoclust.input.files, sep="/")
+                            create_environment = FALSE,
+                            install_dependencies = FALSE)
 
 # Set config for Chronoclust.
 # We leave out k, lambda, pi, omicron, upsilon to default value.
@@ -133,6 +116,10 @@ config <- list(beta= 0.2,
 # if the following fail with the following error message:
 # Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named
 # please manually restart your R-session and try again.
-Spectre::run.chronoclust(data.files=chronoclust.input.files,
-                output.dir=OutputDirectory,
-                config=config)
+cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
+                            timepoint.col='FileNo',
+                            use.cols=ClusteringCols,
+                            config=config)
+
+# Check data
+head(cell.dat)
