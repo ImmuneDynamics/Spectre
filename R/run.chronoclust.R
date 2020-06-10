@@ -9,8 +9,8 @@
 #' @seealso \code{\link{run.prepare.chronoclust}} for how to embed Python session within R session.
 #' 
 #' 
-#' @param data.files A character vector. Path and name of the csv files storing the time series dataset. \strong{1 csv file per time point}.
-#' @param output.dir Character. Path to the directory where the clustering results will be stored.
+#' @param data.files NO DEFAULT. A character vector. Path and name of the csv files storing the time series dataset. \strong{1 csv file per time point}.
+#' @param output.dir NO DEFAULT. Character. Path to the directory where the clustering results will be stored.
 #' @param config A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter. 
 #' \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.
 #'
@@ -42,19 +42,44 @@
 #' @author Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
 #' @export
 
-run.chronoclust <- function(data.files,
-                            output.dir,
+run.chronoclust <- function(dat,
+                            timepoint.col,
+                            use.cols,
                             config=NULL) {
 
   if(!is.element('reticulate', installed.packages()[,1])) stop('reticulate is required but not installed')
-  require(reticulate)
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   
-  # Setup Chronoclust
+  require(reticulate)
+  require(Spectre)
+  
+  ## Store this and remember to change working directory after the function finishes
+  current.work.dir <- getwd()
+  
+  ## Create directory to store input file for ChronoClust. It requires each time point to be stored in separate csv file.
+  ## Each csv file must also contain markers to be used for clustering.
+  input.cc.dir <- 'input_chronoclust'
+  dir.create(input.cc.dir, showWarnings = FALSE)
+  setwd(input.cc.dir)
+  
+  ## Split the data into different csv files based on time point and columns for clustering.
+  Spectre::do.split.data(dat, timepoint.col, use.cols)
+  
+  ## Store the files in a vector
+  input.cc.files <- list.files(input.cc.dir, ".csv")
+  input.cc.files <- paste(input.cc.dir, input.cc.files, sep="/")
+  
+  
+  ## Setup Chronoclust
+  # Create output directory
+  output.cc.dir <- 'output_chronoclust'
+  dir.create(output.cc.dir, showWarnings = FALSE)
   chronoclust <- import("chronoclust")
 
+  # Run ChronoClust
   if (is.null(config)) {
-    chronoclust$app$run(data=data.files, 
-                        output_directory=output.dir)
+    chronoclust$app$run(data=input.cc.files, 
+                        output_directory=output.cc.dir)
   } else {
     all.chronoclust.param <- list(beta= 0.2,
                                   delta= 0.05,
@@ -79,8 +104,8 @@ run.chronoclust <- function(data.files,
     }
     
     # run chronoclust
-    chronoclust$app$run(data=data.files, 
-                        output_directory=output.dir, 
+    chronoclust$app$run(data=input.cc.files, 
+                        output_directory=output.cc.dir, 
                         param_beta=config.copy[['beta']], 
                         param_delta=config.copy[['delta']],
                         param_epsilon=config.copy[['epsilon']], 
@@ -91,5 +116,13 @@ run.chronoclust <- function(data.files,
                         param_omicron=config.copy[['omicron']], 
                         param_upsilon=config.copy[['upsilon']])
   }
+  
+  # Read the result files and merge that into the dat as cluster
+  
+  # Delete the input file directory and the output directory
+  unlink(input.cc.dir, recursive = TRUE)
+  unlink(output.cc.dir, recursive = TRUE)
+  # Set the working directory back to where it was
+  setwd(current.work.dir)
   
 }
