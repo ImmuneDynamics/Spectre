@@ -2,9 +2,9 @@
 % Please edit documentation in R/run.flowsom.R
 \name{run.flowsom}
 \alias{run.flowsom}
-\title{run.flowsom - ...}
+\title{Run the FlowSOM algorithm}
 \usage{
-run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name, ...)
+run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame. Input sample.}
@@ -23,10 +23,21 @@ run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clu
 
 \item{clust.name}{DEFAULT = "FlowSOM_cluster". Character. Name of the resulting 'cluster' parameter.}
 
-\item{meta.clust.name}{DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
-
-This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.}
+\item{meta.clust.name}{DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.}
 }
 \description{
-run.flowsom - ...
+Method to run the FlowSOM clustering algorithm.
+This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.
+Output data will be "flowsom.res"
+Uses the R packages "FlowSOM" for clustering, "flowCore" for handling .fcs files, "Biobase" for creating a flow frame, "data.table" for handling data.table format.
+}
+\examples{
+# Run FlowSOM on demonstration dataset
+Spectre::run.flowsom(Spectre::demo.start,
+                     use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+
+}
+\author{
+Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

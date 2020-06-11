@@ -2,9 +2,9 @@
 % Please edit documentation in R/run.tsne.R
 \name{run.tsne}
 \alias{run.tsne}
-\title{run.tsne - ...}
+\title{Run the tSNE algorithm (using Rtsne::Rtsne())}
 \usage{
-run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
+run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -47,10 +47,22 @@ run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims,
 
 \item{eta}{DEFAULT = 200. Learning rate.}
 
-\item{exaggeration_factor}{DEFAULT = 12.0. Factor used during early exaggeration.
-
-This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.}
+\item{exaggeration_factor}{DEFAULT = 12.0. Factor used during early exaggeration.}
 }
 \description{
-run.tsne - ...
+Method to run a tSNE dimensionality reduction algorithm.
+A tSNE (t-distributed stochastic neighbor embedding) plot is a useful means to visualise data.
+As it is a dimensionality reduction algorithm, some data will be lost.
+It is good practice to validate any populations (namely through manual gating).
+Output data will be "tsne.res".
+Uses the R package "Rtsne" to calculate plots.
+}
+\examples{
+# Run tSNE on demonstration dataset
+Spectre::run.tsne(dat = Spectre::demo.start,
+                  use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+
+}
+\author{
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

@@ -4,14 +4,7 @@
 \alias{do.convert.to.fold}
 \title{do.convert.to.fold}
 \usage{
-do.convert.to.fold(
-  x,
-  sample.col,
-  group.col,
-  ctrl.grp,
-  convert.cols,
-  log2 = TRUE
-)
+\method{do}{convert.to.fold}(x, sample.col, group.col, ctrl.grp, convert.cols, log2 = TRUE)
 }
 \description{
 do.convert.to.fold

@@ -162,6 +162,6 @@ run.flowsom <- function(dat,
 
   dat.start <- data.table::as.data.table(dat.start) # Make dat a data.table for future manipulation
   
-  assign("flowsom.res", dat.start, envir = globalenv())
+  return(dat.start)
 
 }
