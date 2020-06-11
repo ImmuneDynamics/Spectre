@@ -155,9 +155,6 @@ run.chronoclust <- function(dat,
   # Set the working directory back to where it was
   setwd(current.work.dir)
   
-  # TODO not sure about this
-  # assign("chronoclust.res", dat.bk, envir = globalenv())
-  
   return(dat.bk)
   
 }
