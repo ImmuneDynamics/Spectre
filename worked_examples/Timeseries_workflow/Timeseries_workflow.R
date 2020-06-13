@@ -127,10 +127,16 @@ Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
 # We leave out k, lambda, pi, omicron, upsilon to default value.
 config <- list(mu=0.001, beta=0.5, epsilon=0.03, upsilon=2, k=15, delta=1, lambda=0.9, omicron=0.0000901)
 
+## Subsample for testing.
+cell.dat.sub <- Spectre::do.subsample(dat = cell.dat,
+                                      method = 'random',
+                                      samp.col = timepoint.col,
+                                      targets = 30000)
+
 # if the following fail with the following error message:
 # Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named
 # please manually restart your R-session and try again.
-cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
+cell.dat.sub <- run.chronoclust(dat=cell.dat.sub,
                             timepoint.col=timepoint.col,
                             use.cols=ClusteringCols,
                             config=config)

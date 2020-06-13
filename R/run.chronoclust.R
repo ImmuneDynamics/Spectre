@@ -80,7 +80,13 @@ run.chronoclust <- function(dat,
   setwd(input.cc.dir)
   
   ## Split the data into different csv files based on time point and columns for clustering.
-  Spectre::do.split.data(dat, timepoint.col, use.cols)
+  timepoints <- unique(dat[[timepoint.col]])
+  for (time.point in timepoints) {
+    dat.subset <- dat.bk[dat.bk[, eval(as.name(timepoint.col)) == time.point]]
+    dat.subset <- dat.subset[, ..use.cols]
+    
+    Spectre::write.files(dat.subset, time.point)
+  }
   
   ## Store the files in a vector
   input.cc.files <- list.files(input.cc.dir, ".csv")
@@ -135,7 +141,6 @@ run.chronoclust <- function(dat,
   
   # Read the result files and merge that into the dat as cluster
   setwd(output.cc.dir)
-  timepoints <- unique(dat[[timepoint.col]])
   timepoints.from.0 <-c(0: (length(timepoints)-1))
   clusters <- lapply(timepoints.from.0, function(tp) {
     cluster.dat <- read.csv(paste0("cluster_points_D", tp, ".csv"))
