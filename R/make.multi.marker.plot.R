@@ -3,7 +3,7 @@
 #' Method to create multiple plots for each marker.
 #' This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot).
 #' These can then be coloured by a marker or by another factor (e.g Group).
-#' Makes use of Spectre functions and make.colour.plot make.density.plot.
+#' Makes use of Spectre functions make.colour.plot and make.density.plot.
 #'
 #' @param dat NO DEFAULT. A data frame containing all the data you wish to plot
 #' @param x.axis NO DEFAULT. X axis
