@@ -4,7 +4,7 @@
 \alias{do.label}
 \title{do.label}
 \usage{
-\method{do}{label}(dat, label.name, marker.name, marker.threshold, marker.value)
+do.label(dat, label.name, marker.name, marker.threshold, marker.value)
 }
 \description{
 do.label

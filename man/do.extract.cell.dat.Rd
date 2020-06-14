@@ -4,7 +4,7 @@
 \alias{do.extract.cell.dat}
 \title{do.extract.cell.dat}
 \usage{
-\method{do}{extract.cell.dat}(dat = spatial.dat, type = "per.cell.means")
+do.extract.cell.dat(dat = spatial.dat, type = "per.cell.means")
 }
 \description{
 do.extract.cell.dat

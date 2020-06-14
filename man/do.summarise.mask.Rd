@@ -4,7 +4,7 @@
 \alias{do.summarise.mask}
 \title{do.summarise.mask}
 \usage{
-\method{do}{summarise.mask}(dat, polygon, fun = "mean")
+do.summarise.mask(dat, polygon, fun = "mean")
 }
 \description{
 do.summarise.mask
