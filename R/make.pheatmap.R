@@ -5,10 +5,10 @@
 #' make.pheatmap is a wrapper around the pheatmap function from pheatmap.
 #' Also uses the packages 'RColorBrewer' and 'scales' for colour customisation.
 #'
-#' @param dat NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
+#' @param dat NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers).
 #' @param file.name NO DEFAULT. Character. What do you want to call the file, including the extension.
 #' @param plot.title NO DEFAULT. Character.
-#' @param sample.col NO DEFAULT. Character. Specify the name of the column that indicates samples. No default.
+#' @param sample.col NO DEFAULT. Character. Specify the name of the column that indicates samples.
 #' @param plot.cols NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.
 #'
 #' @param annot.cols NO DEFAULT. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.
