@@ -1,37 +1,52 @@
-#' write.sumtables
+#' write.sumtables - Export generated data as a .csv file
 #'
-#' @usage make.sumtables(x, ...)
+#' This function summarises generated results and exports them as a .csv file.
+#' It can include the calculation of median fluorescence intensity (or equivalent), proportion (%) or cell counts for clusters/subsets of interest.
+#' Makes use of the packages 'data.table' and 'tidyr' to handle the data.
 #'
-#' @param x NO DEFAULT. A data.table containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.
+#' @param dat NO DEFAULT. A data.table containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.
 #' @param sample.col NO DEFAULT. Character. Name of the sample column (e.g. "Sample").
 #' @param pop.col NO DEFAULT. Character. Name of the population/cluster column (e.g. "Population", "Cluster").
 #' @param measure.col NO DEFAULT. A character or numeric vector indicating the columns to be measured (e.g. cellular columns -- c("CD45", "CD3e") etc).
 #'
-#' @param annot.col DEFAULTS TO NULL. A character or numeric vector indicating the columns to be included as annotation columns (e.g. cellular columns -- c("Batch", "Group") etc). If groups are present, this column must be present here also.
-#' @param group.col DEFAULTS TO NULL. Character. Which column represent groups (e.g. "Group"). This is for dividing data within the function. If you wish for groups to be included in the annotations, you will need to also include it in the annot.col argument.
+#' @param annot.col DEFAULT = NULL. A character or numeric vector indicating the columns to be included as annotation columns (e.g. cellular columns -- c("Batch", "Group") etc). If groups are present, this column must be present here also.
+#' @param group.col DEFAULT = NULL. Character. Which column represent groups (e.g. "Group"). This is for dividing data within the function. If you wish for groups to be included in the annotations, you will need to also include it in the annot.col argument.
 
-#' @param do.frequencies DEFAULTS TO TRUE. Do you wish to create cell proportion and/or cell count results?
-#' @param cell.counts DEFAULTS TO NULL. If you wish to generate cell.count results, a vector of cell counts (e.g. c(1000, 1500, 2439,)) representing the cell counts in each of the samples. Must be entered in the order the that unique sample names appear in the dataset.
-#' @param do.mfi.per.sample DEFAULTS TO TRUE. Do you wish to generate MFI data (markers vs clusters) for each sample?
+#' @param do.proportions DEFAULT = TRUE. Do you wish to create cell proportion and/or cell count results?
+#' @param cell.counts DEFAULT = NULL. If you wish to generate cell.count results, a vector of cell counts (e.g. c(1000, 1500, 2439,)) representing the cell counts in each of the samples. Must be entered in the order the that unique sample names appear in the dataset.
+#' @param do.mfi.per.sample DEFAULT = TRUE. Do you wish to generate MFI data (markers vs clusters) for each sample?
 #' @param do.mfi.per.marker Currently inactive, set to FALSE.
 #'
-#' @param perc.pos.markers DEFAULTS to NULL. A vector of column names of calculating percent positive summary stats.
-#' @param perc.pos.cutoff DEFAULTS to NULL. A vector of 'positive' cut-off values for the markers defined in perc.pos.markers. Must be in same order.
+#' @param perc.pos.markers DEFAULT = NULL. A vector of column names of calculating percent positive summary stats.
+#' @param perc.pos.cutoff DEFAULT = NULL. A vector of 'positive' cut-off values for the markers defined in perc.pos.markers. Must be in same order.
 #'
-#' @param mfi.type DEFAULTS TO "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.
-#' @param path DEFAULTS TO getwd(). Defines the directory for write CSV files.
+#' @param mfi.type DEFAULT = "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.
+#' @param path DEFAULT = getwd(). Defines the directory for write CSV files.
+#' 
+#' @usage make.sumtables(dat, sample.col, pop.col, measure.col, annot.col, group.col, do.proportions, cell.counts, do.mfi.per.sample, do.mfi.per.marker, perc.pos.markers, perc.pos.cutoff, mfi.type, path)
 #'
-#' @return ...
+#' @examples
+#' # Calculate and export results from demonstration data
+#' Spectre::write.sumtables(dat = Spectre::demo.clustered,
+#'                          sample.col = "Sample",
+#'                          pop.col = "FlowSOM_metacluster",
+#'                          measure.col = c(2,5:6,8:9,11:13,16:19,21:30,32),
+#'                          annot.col = c(33:34,36:37),
+#'                          group.col = "Group",
+#'                          cell.counts = c(rep(2.0e+07, 6), rep(1.8e+07, 6)),
+#'                          do.mfi.per.marker = TRUE,
+#'                          perc.pos.markers = c("BV711.SCA.1","APC.BrdU"),
+#'                          perc.pos.cutoff = c(580, 450)
+#'                          )
 #'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' @author
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}.
-#'
-#' @examples make.sumtables()
-#'
 #' @export
 
-write.sumtables <- function(x,
+write.sumtables <- function(dat,
                            sample.col, # name
                            pop.col, # name
                            measure.col, # numbers
@@ -41,7 +56,7 @@ write.sumtables <- function(x,
                            group.col = NULL, # name
 
                            ## Functions
-                           do.frequencies = TRUE,
+                           do.proportions = TRUE,
                            cell.counts = NULL,
                            do.mfi.per.sample = TRUE,
                            do.mfi.per.marker = FALSE, # coming soon
@@ -62,10 +77,12 @@ write.sumtables <- function(x,
   ### Check that necessary packages are installed
       if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
       if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-
+      if(!is.element('tidyr', installed.packages()[,1])) stop('tidyr is required but not installed')
+  
   ### Require packages
       require(Spectre)
       require(data.table)
+      require(tidyr)
 
 #####################################################################
 #### Data for testing
@@ -74,74 +91,61 @@ write.sumtables <- function(x,
       # library(Spectre)
       # library(data.table)
       # library(tidyr)
-      # x = as.data.table(Spectre::demo.clustered)
-      # x <- as.data.frame(x)
-      # sample.col = "Sample"
-      # pop.col = "FlowSOM_metacluster"
+      # dat = as.data.table(Spectre::demo.clustered)
+      # dat <- as.data.frame(dat)
+      # measure.col = names(dat[c(2,5:6,8:9,11:13,16:19,21:30,32)])
+      # annot.col = names(dat[c(33:34,36:37)])
       #
-      # measure.col = names(x[c(2,5:6,8:9,11:13,16:19,21:30,32)])
-      # annot.col = names(x[c(33:34,36:37)])
-      # group.col = "Group"
-      # cell.counts = c(rep(2.0e+07, 6), rep(1.8e+07, 6))
-      #
-      # do.frequencies = TRUE
-      # do.mfi.per.sample = TRUE
       # do.mfi.per.marker = TRUE
-      #
-      # perc.pos.markers = c("BV711.SCA.1","APC.BrdU")
-      # perc.pos.cutoff = c(580, 450)
-      #
-      # mfi.type = "median"
-      # path = setwd("/Users/thomasa/Desktop/")
 
 #####################################################################
 #### 1. Initial setup
 #####################################################################
 
       ## Order the data by pop and then sample
-          # x <- x.start
+          # dat <- dat.start
 
           message("SumTables - initial setup started")
 
-          x <- as.data.frame(x)
+          dat <- as.data.frame(dat)
 
           if(!is.null(cell.counts)){
-            count <- data.frame(unique(x[sample.col]), cell.counts)
+            count <- data.frame(unique(dat[sample.col]), cell.counts)
             count <- count[order(count[1]),]
           }
 
-          x <- x[order(x[pop.col]),]
-          x <- x[order(x[sample.col]),]
+          dat <- dat[order(dat[pop.col]),]
+          dat <- dat[order(dat[sample.col]),]
 
       ## Unique lists
-          all.samples <- unique(x[[sample.col]])
-          all.pops <- unique(x[[pop.col]])
+          all.samples <- unique(dat[[sample.col]])
+          all.pops <- unique(dat[[pop.col]])
 
           if(!is.null(group.col)){
-            all.groups <- unique(x[[group.col]])
+            all.groups <- unique(dat[[group.col]])
           }
 
-          #sample.col.num <- match(sample.col,names(x))
-          #group.col.num <- match(group.col,names(x))
+          #sample.col.num <- match(sample.col,names(dat))
+          #group.col.num <- match(group.col,names(dat))
 
       ## Create table of annot columns for append
-          x[,annot.col]
+          dat[,annot.col]
 
           if(length(annot.col) > 1){
             annots <- list()
             for(i in all.samples){
-              temp <- x[x[[sample.col]] == i,]
+              temp <- dat[dat[[sample.col]] == i,]
               annots[[i]] <- temp[1,annot.col]
               # add a warning here for if the values aren't identical
             }
-            annots <- rbindlist(annots)
+            annots <- data.table::rbindlist(annots)
             annots
           }
 
           if(length(annot.col) == 1){
             annots <- list()
             for(i in all.samples){
-              temp <- x[x[[sample.col]] == i,]
+              temp <- dat[dat[[sample.col]] == i,]
               annots[[i]] <- temp[1,annot.col]
             }
             annots <- as.data.frame(unlist(annots))
@@ -151,17 +155,17 @@ write.sumtables <- function(x,
 
       ## Some checks
 
-          x[,sample.col]
-          x[,group.col]
-          x[,measure.col]
-          x[,annot.col]
+          dat[,sample.col]
+          dat[,group.col]
+          dat[,measure.col]
+          dat[,annot.col]
 
       ## RENAMING
-          colnames(x)[which(names(x) == sample.col)] <- "SAMPLE"
-          colnames(x)[which(names(x) == pop.col)] <- "POPULATION"
+          colnames(dat)[which(names(dat) == sample.col)] <- "SAMPLE"
+          colnames(dat)[which(names(dat) == pop.col)] <- "POPULATION"
 
-          x[,"SAMPLE"]
-          x[,"POPULATION"]
+          dat[,"SAMPLE"]
+          dat[,"POPULATION"]
 
       message("SumTables - initial setup complete")
 
@@ -169,13 +173,13 @@ write.sumtables <- function(x,
 #### 2. PROPORTIONS
 #####################################################################
 
-      if(do.frequencies == TRUE){
+      if(do.proportions == TRUE){
 
-        message("SumTables - frequencies started")
+        message("SumTables - proportions started")
 
         ## Set up data
-        x.freq <- cbind(POPULATION = x[,"POPULATION"], SAMPLE = x[,"SAMPLE"], x[,measure.col])
-        x.freq
+        dat.prop <- cbind(POPULATION = dat[,"POPULATION"], SAMPLE = dat[,"SAMPLE"], dat[,measure.col])
+        dat.prop
 
         all.samples
         all.pops
@@ -184,7 +188,7 @@ write.sumtables <- function(x,
         samp.list = list()
 
         for(i in all.samples) {
-          temp <- x.freq[x.freq$SAMPLE == i,]
+          temp <- dat.prop[dat.prop$SAMPLE == i,]
           samp.list[[i]] <- temp
         }
 
@@ -208,8 +212,8 @@ write.sumtables <- function(x,
         }
 
         ## Combine data
-        merged.df <- rbindlist(new.sample.list)
-        merged.df <- spread(merged.df, Cluster, NumCells)
+        merged.df <- data.table::rbindlist(new.sample.list)
+        merged.df <- tidyr::spread(merged.df, Cluster, NumCells)
         merged.df <- as.data.frame(merged.df)
 
         ## Calculate row totals -- to get total cells per sample
@@ -225,22 +229,22 @@ write.sumtables <- function(x,
 
         as.matrix(rowSums(per.100))
 
-        x.freq.res <- cbind("Measurement" = rep("Percentage of total cells", nrow(per.100)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(per.100), per.100)
-        names(x.freq.res)[names(x.freq.res) == "SAMPLE"] <- sample.col
-        x.freq.res
+        dat.prop.res <- cbind("Measurement" = rep("Percentage of total cells", nrow(per.100)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(per.100), per.100)
+        names(dat.prop.res)[names(dat.prop.res) == "SAMPLE"] <- sample.col
+        dat.prop.res
 
         ## Save data
         setwd(path)
-        write.csv(x.freq.res, "SumTable-Proportions.csv", row.names=FALSE)
+        data.table::fwrite(dat.prop.res, "SumTable-Proportions.csv", row.names=FALSE)
 
-        message("SumTables - frequencies complete")
+        message("SumTables - proportions complete")
       }
 
 #####################################################################
 #### 3. CELL COUNTS
 #####################################################################
 
-  if(do.frequencies == TRUE){
+  if(do.proportions == TRUE){
     if(!is.null(cell.counts)){
 
       message("SumTables - cell counts started")
@@ -254,13 +258,13 @@ write.sumtables <- function(x,
       ## Calculations
       cellsper <- sweep(per,MARGIN=1,cell.counts,`*`)
 
-      x.count.res <- cbind("Measurement" = rep("Cells per sample", nrow(cellsper)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(cellsper), cellsper)
-      names(x.count.res)[names(x.count.res) == "SAMPLE"] <- sample.col
-      x.count.res
+      dat.count.res <- cbind("Measurement" = rep("Cells per sample", nrow(cellsper)), "SAMPLE" = merged.df$SAMPLE, annots, "Row total" = rowSums(cellsper), cellsper)
+      names(dat.count.res)[names(dat.count.res) == "SAMPLE"] <- sample.col
+      dat.count.res
 
       ## Save data
       setwd(path)
-      write.csv(x.count.res, "SumTable-CellCounts.csv", row.names=FALSE)
+      data.table::fwrite(dat.count.res, "SumTable-CellCounts.csv", row.names=FALSE)
 
       message("SumTables - cell counts complete")
     }
@@ -275,33 +279,33 @@ write.sumtables <- function(x,
       message("SumTables - MFI per sample started")
       ## All cells
 
-      x.mfi <- cbind(POPULATION = x[,"POPULATION"], x[,measure.col])
-      x.mfi
+      dat.mfi <- cbind(POPULATION = dat[,"POPULATION"], dat[,measure.col])
+      dat.mfi
 
-      data.MFI <- aggregate(. ~POPULATION, data = x.mfi, FUN=mfi.type)
+      data.MFI <- aggregate(. ~POPULATION, data = dat.mfi, FUN=mfi.type)
       colnames(data.MFI)[1] <- pop.col
 
       setwd(path)
       dir.create("SumTable-MFI-PerSample", showWarnings = FALSE)
       setwd("SumTable-MFI-PerSample")
-      write.csv(data.MFI, "SumTable-MFI-AllSamples.csv", row.names=FALSE)
+      data.table::fwrite(data.MFI, "SumTable-MFI-AllSamples.csv", row.names=FALSE)
 
       ## Per sample
 
       for(i in all.samples){
         #i <- "01_Mock_01"
-        sample.temp <- x[x[["SAMPLE"]] == i,]
+        sample.temp <- dat[dat[["SAMPLE"]] == i,]
 
-        x.mfi.per.sample <- cbind(POPULATION = sample.temp[,"POPULATION"], sample.temp[,measure.col])
-        x.mfi.per.sample
+        dat.mfi.per.sample <- cbind(POPULATION = sample.temp[,"POPULATION"], sample.temp[,measure.col])
+        dat.mfi.per.sample
 
-        data.MFI.per.sample <- aggregate(. ~POPULATION, data = x.mfi.per.sample, FUN=mfi.type)
+        data.MFI.per.sample <- aggregate(. ~POPULATION, data = dat.mfi.per.sample, FUN=mfi.type)
         colnames(data.MFI.per.sample)[1] <- pop.col
 
         setwd(path)
         dir.create("SumTable-MFI-PerSample", showWarnings = FALSE)
         setwd("SumTable-MFI-PerSample")
-        write.csv(data.MFI.per.sample, paste0("SumTable-MFI-Sample-", i, ".csv"), row.names=FALSE)
+        data.table::fwrite(data.MFI.per.sample, paste0("SumTable-MFI-Sample-", i, ".csv"), row.names=FALSE)
       }
 
       ## Per group
@@ -309,18 +313,18 @@ write.sumtables <- function(x,
       if(!is.null(group.col)){
         for(i in all.groups){
           #i <- "Mock"
-          grp.temp <- x[x[[group.col]] == i,]
+          grp.temp <- dat[dat[[group.col]] == i,]
 
-          x.mfi.per.group <- cbind(POPULATION = grp.temp[,"POPULATION"], grp.temp[,measure.col])
-          x.mfi.per.group
+          dat.mfi.per.group <- cbind(POPULATION = grp.temp[,"POPULATION"], grp.temp[,measure.col])
+          dat.mfi.per.group
 
-          data.MFI.per.group <- aggregate(. ~POPULATION, data = x.mfi.per.group, FUN=mfi.type)
+          data.MFI.per.group <- aggregate(. ~POPULATION, data = dat.mfi.per.group, FUN=mfi.type)
           colnames(data.MFI.per.group)[1] <- pop.col
 
           setwd(path)
           dir.create("SumTable-MFI-PerSample", showWarnings = FALSE)
           setwd("SumTable-MFI-PerSample")
-          write.csv(data.MFI.per.group, paste0("SumTable-MFI-Group-", i, ".csv"), row.names=FALSE)
+          data.table::fwrite(data.MFI.per.group, paste0("SumTable-MFI-Group-", i, ".csv"), row.names=FALSE)
         }
       }
       setwd(path)
@@ -338,23 +342,23 @@ write.sumtables <- function(x,
     ### Setup
 
         ## Define marker names
-        markers <- names(x[,measure.col])
+        markers <- names(dat[,measure.col])
         markers <- sort(markers, decreasing = FALSE)
 
         ## Define column names
-        populations <- unique(x$POPULATION)
+        populations <- unique(dat$POPULATION)
         populations <- sort(populations, decreasing = FALSE)
 
         ## Define data
-        temp <- cbind("SAMPLE" = x[,"SAMPLE"], "POPULATION" = x[,"POPULATION"], x[,measure.col])
+        temp <- cbind("SAMPLE" = dat[,"SAMPLE"], "POPULATION" = dat[,"POPULATION"], dat[,measure.col])
 
     ### Loop for each marker
 
         for(i in markers){
           mkr <- data.frame(row.names = populations)
-          test <- data.table("SAMPLE" = x[,"SAMPLE"],
-                             "POPULATION" = x[,"POPULATION"],
-                             "MARKER" = x[,i])
+          test <- data.table::data.table("SAMPLE" = dat[,"SAMPLE"],
+                             "POPULATION" = dat[,"POPULATION"],
+                             "MARKER" = dat[,i])
 
           ## Sample loop
           for(a in all.samples){
@@ -414,7 +418,7 @@ write.sumtables <- function(x,
         setwd(path)
 
         ### Setup
-            x <- as.data.table(x)
+            dat <- data.table::as.data.table(dat)
 
             clusters <- all.pops
             clusters
@@ -444,8 +448,8 @@ write.sumtables <- function(x,
               #a <- "01_Mock_01"
               active.sample <- a
 
-              x.samp <- x[x[["SAMPLE"]] == a,]
-              x.samp
+              dat.samp <- dat[dat[["SAMPLE"]] == a,]
+              dat.samp
 
               all.cluster.res <- list()
 
@@ -453,17 +457,17 @@ write.sumtables <- function(x,
                 #o <- 1
                 active.cluster <- o
 
-                active.sample.cluster <- x.samp[x.samp[["POPULATION"]] == o,] # Sample == a, Cluster == o
+                active.sample.cluster <- dat.samp[dat.samp[["POPULATION"]] == o,] # Sample == a, Cluster == o
                 total <- nrow(active.sample.cluster) # Number of total events of this cluster from this sample
 
                 pos <- active.sample.cluster[active.sample.cluster[[active.marker]] >active.marker.cutoff ,]
                 num.pos <- nrow(pos)
 
-                freq <- num.pos / total
-                freq <- freq*100
-                freq
+                prop <- num.pos / total
+                prop <- prop*100
+                prop
 
-                res <- data.frame(Cluster = o, Freq = freq)
+                res <- data.frame(Cluster = o, Prop = prop)
                 res
 
                 all.cluster.res <- rbind(all.cluster.res, res)
