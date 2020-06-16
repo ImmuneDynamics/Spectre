@@ -21,8 +21,9 @@
 #' @param col.sep DEFAUT = c(). Numeric. Only used if not clustering columns
 #' @param cell.size DEFAUT = 15. Numeric.
 #' @param standard.colours DEFAUT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
+#' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
-#' @usage make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours)
+#' @usage make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
 #'
 #' @examples
 #' # MFI cluster vs marker heatmap
@@ -72,7 +73,8 @@ make.pheatmap <- function(dat,
                           row.sep = c(),
                           col.sep = c(),
                           cell.size = 15,
-                          standard.colours = "BuPu")
+                          standard.colours = "BuPu",
+                          path = getwd())
 
                         #n.row.groups = 2,
                         #n.col.groups = 2,
@@ -322,6 +324,9 @@ make.pheatmap <- function(dat,
       title.text <- plot.title
 
   ### Plot heatmap and dendrograms
+      
+      # Specify directory heatmap will be saved
+      setwd(path)
 
       pheatmap::pheatmap(mat = as.matrix(heatmap.data),
                main = title.text,
