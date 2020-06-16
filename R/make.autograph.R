@@ -1,31 +1,70 @@
-#' make.autograph
+#' make.autograph - Creates plots using ggplot2
+#' 
+#' This function allows you to generate quantitative plots of your data.
+#' Creates scatter plots.
+#' If interested in generating other plots (bar graphs) or adding statistics, we recommend reading more on using 'ggplot2' (for more info https://ggplot2.tidyverse.org/).
+#' Uses the package 'ggplot2' to generate plots, 'data.table' to manipulate data.
+#' 
+#' @param dat NO DEFAULT. data.frame.
+#' @param x.axis NO DEFAULT. Character or numeric. Selects column that will specify x-axis.
+#' @param y.axis NO DEFAULT. Character or numeric. Selects column that will specify y-axis.
+#' @param colour.by NO DEFAULT. Character or numeric. Selects column that will determine differentiator of colour in plots.
+#' @param colours NO DEFAULT. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.
+#' @param y.axis.label NO DEFAULT. Character. Specify y-axis label. Can be "" if one is not desired.
+#' @param grp.order DEFAULT = NULL. String of characters or numbers. Specify order of group for x-axis.
+#' @param title DEFAULT = paste0(y.axis.label, " - ", y.axis). Character. Specify title of plot on graph. Default combines 'y.axis.label' and 'y.axis'.
+#' @param filename DEFAULT = paste0(y.axis.label, " - ", y.axis, ".pdf"). Character. Specify name plot will be exported as. Default combines 'y.axis.label' and 'y.axis'. Make sure to end with ".pdf" so file is correctly saved.
+#' @param scale DEFAULT = "lin". Character. Select y-axis scale. Can also be "sci".
+#' @param dot.size DEFAULT = 5. Numeric. Specify size of dots on plot.
+#' @param width DEFAULT = 5. Numeric. Specify width of plot.
+#' @param height DEFAULT = 5. Numeric. Specify height of plot.
+#' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
+#' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
+#' 
+#' @examples
+#' dat <- data.frame(Samples = c("Mock_01", "Mock_02", "Mock_03", "WNV_01", "WNV_02", "WNV_03"),
+#'                   Group = c(rep("Mock", 3), rep("WNV", 3)),
+#'                   Tcells = c(20, 40, 30, 60, 70, 80),
+#'                   Bcells = c(90, 95, 70, 20, 15, 30),
+#'                   Batch = c(1,2,1,3,2,1)
+#'                   )
+#' 
+#' Spectre::make.autograph(dat = dat,
+#'                         x.axis = "Group",
+#'                         y.axis = "Tcells",
+#'                         colour.by = "Batch",
+#'                         colours = c("Black", "Red", "Blue"),
+#'                         y.axis.label = "Proportion"
+#'                         )
+#' 
+#' @author
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
-make.autograph <- function(x,
+make.autograph <- function(dat,
                            x.axis,
                            y.axis,
-
                            colour.by,
-
                            colours,
                            y.axis.label,
-
-                           my_comparisons = NULL,
 
                            grp.order = NULL,
                            title = paste0(y.axis.label, " - ", y.axis),
                            filename = paste0(y.axis.label, " - ", y.axis, ".pdf"),
-                           path = getwd(),
 
                            scale = "lin", # can be "lin" or "sci"
                            dot.size = 5,
                            width = 5,
                            height = 5,
-                           y.first.level = 1.2,
-                           y.second.level = 1.5,
-                           Variance_test = "kruskal.test", # or "anova", or NULL
-                           Pairwise_test = "wilcox.test" # or 't.test', or NULL
+                           
+                           path = getwd()
+                           # my_comparisons = NULL,
+                           # y.first.level = 1.2,
+                           # y.second.level = 1.5,
+                           # Variance_test = "kruskal.test", # or "anova", or NULL
+                           # Pairwise_test = "wilcox.test", # or 't.test', or NULL
                            )
 {
   ### Test data
@@ -35,35 +74,6 @@ make.autograph <- function(x,
       # if(!require('devtools')) {install.packages('devtools')}
       # if(!require('rstudioapi')) {install.packages('rstudioapi')}
       #
-      # library("Spectre")
-      # library(ggplot2)
-      # library(ggpubr)
-      # library(scales)
-      # library(devtools)
-      # library(rstudioapi)
-      #
-      # x <- data.frame(Samples = c("Mock_01", "Mock_02", "Mock_03", "WNV_01", "WNV_02", "WNV_03"),
-      #                 Groups = c(rep("Mock", 3), rep("WNV", 3)),
-      #                 Tcells = c(200, 400, 300, 600, 700, 800),
-      #                 Bcells = c(900, 950, 700, 200, 150, 300),
-      #                 Batches = c(1,2,1,3,2,1)
-      #                 )
-      #
-      # x.axis <- "Groups"
-      # y.axis <- "Tcells"
-      # colour.by <- "Batches"
-      #
-      # setwd("/Users/thomasa/Desktop")
-      # path <- getwd()
-      #
-      # colours <- c("Black", "Red", "Blue")
-      # y.axis.label <- "Frequency"
-      #
-      # my_comparisons <- list(c("Mock", "WNV"))
-      #
-      # title <- paste0(y.axis.label, " - ", y.axis)
-      # filename <-  paste0(y.axis.label, " - ", y.axis, ".pdf")
-      #
       # scale <- "lin"
       # dot.size <- 5
       # width <- 5
@@ -72,9 +82,19 @@ make.autograph <- function(x,
       # y.second.level = 1.5
       # Variance_test <- "kruskal.test"
       # Pairwise_test <- "wilcox.test"
+  
+  ### Check that necessary packages are installed
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')    
+  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
+  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+  
+  ### Require packages
+  require(Spectre)    
+  require(ggplot2)
+  require(data.table)
 
   ### Library test
-      if(length(unique(x[[colour.by]])) != length(colours)) stop('The length of factors you want to colour the plot by does not match the number of colours you have provided.')
+  if(length(unique(dat[[colour.by]])) != length(colours)) stop('The length of factors you want to colour the plot by does not match the number of colours you have provided.')
 
   ### Set up colours and other settings
 
@@ -87,21 +107,22 @@ make.autograph <- function(x,
     # colour.scheme <- colorRampPalette(c(spectral.list))
 
   ### Max and min values
-    x <- as.data.table(x)
+    dat <- data.table::as.data.table(dat)
 
-    max_y_value <- max(x[,y.axis, with = FALSE], na.rm = TRUE)
-    max_y_value_p10 <- max_y_value*y.first.level
-    max_y_value_p40 <- max_y_value*y.second.level
+    max_y_value <- max(dat[,y.axis, with = FALSE], na.rm = TRUE)
+    # max_y_value_p10 <- max_y_value*y.first.level
+    # max_y_value_p40 <- max_y_value*y.second.level
+    max_y_value_p40 <- max_y_value*1.4
 
-    min_y_value<- min(x[,y.axis, with = FALSE], na.rm = TRUE)
+    min_y_value<- min(dat[,y.axis, with = FALSE], na.rm = TRUE)
     bottom_y <- min_y_value
     bottom_y
 
   ###
-    Xaxis <- x[[x.axis]] <- as.factor(x[[x.axis]])
+    Xaxis <- dat[[x.axis]] <- as.factor(dat[[x.axis]])
 
     if(!is.null(grp.order)){
-      Xaxis <- x[[x.axis]] <- factor(x[[x.axis]], levels = grp.order)
+      Xaxis <- dat[[x.axis]] <- factor(dat[[x.axis]], levels = grp.order)
     }
 
   message("AutoGraph - setup complete")
@@ -110,21 +131,21 @@ make.autograph <- function(x,
 
   message("AutoGraph - plotting started")
 
-      p <- ggplot(x, aes(x=Xaxis, y=x[[y.axis]])) #, fill=Species)) + # can use fill = Species -- makes coloured by Species, with block outline of point -- NEED FILL for violin plot to be filled
+      p <- ggplot2::ggplot(dat, ggplot2::aes(x=Xaxis, y=dat[[y.axis]])) #, fill=Species)) + # can use fill = Species -- makes coloured by Species, with block outline of point -- NEED FILL for violin plot to be filled
 
       ## POINTS
-      p <- p + geom_point(aes(fill=as.factor(x[[colour.by]]), colour = as.factor(x[[colour.by]])),
-                          shape=21,
+      p <- p + ggplot2::geom_point(ggplot2::aes(fill=as.factor(dat[[colour.by]]), colour = as.factor(dat[[colour.by]])),
+                          shape = 21,
                           stroke = 0,
                           size = dot.size,
-                          position=position_jitter(width = 0.1, height = 0))
+                          position = ggplot2::position_jitter(width = 0.1, height = 0))
 
       ## COLOUR CONTROL
-          p <- p + scale_fill_manual(name = colour.by, values = colours)
-          p <- p + scale_color_manual(name = colour.by, values = colours)
+          p <- p + ggplot2::scale_fill_manual(name = colour.by, values = colours)
+          p <- p + ggplot2::scale_color_manual(name = colour.by, values = colours)
 
-          p <- p + ggtitle(title)
-          p <- p + labs(x= paste0(x.axis), y = y.axis.label) # colnames(data)[3] would return the name -- use similar for loop -- maybe data$dose
+          p <- p + ggplot2::ggtitle(title)
+          p <- p + ggplot2::labs(x= paste0(x.axis), y = y.axis.label) # colnames(data)[3] would return the name -- use similar for loop -- maybe data$dose
 
       # OTHER OPTIONS
           #scale_fill_brewer(palette="Dark2") +
@@ -132,12 +153,16 @@ make.autograph <- function(x,
 
       ## PRISM -- SE (from https://stackoverflow.com/questions/2676554/in-r-how-to-find-the-standard-error-of-the-mean)
 
-            p <- p + stat_summary(
-              fun.ymax=function(i) mean(i) + sd(i)/sqrt(length(i)), # 0.975
-              fun.ymin=function(i) mean(i) - sd(i)/sqrt(length(i)), # 0.975
+            p <- p + ggplot2::stat_summary(
+              fun.max=function(i) mean(i) + sd(i)/sqrt(length(i)), # 0.975
+              fun.min=function(i) mean(i) - sd(i)/sqrt(length(i)), # 0.975
               geom="errorbar", width=0.5, size = 1)
 
-            p <- p + stat_summary(fun.y=mean, fun.ymin = mean, fun.ymax = mean, geom="crossbar", width = 0.7, size = 0.5) # add a large point for the mean
+            p <- p + ggplot2::stat_summary(fun=mean,
+                                           fun.min = mean,
+                                           fun.max = mean, geom="crossbar",
+                                           width = 0.7,
+                                           size = 0.5) # add a large point for the mean
 
       # VARIANCE
           #stat_summary(fun.y=mean, geom="point", shape=18, size=8, color="Black") + # add a large point for the mean
@@ -147,15 +172,15 @@ make.autograph <- function(x,
 
       # MORE THAN TWO GROUPS: pairwise comparison with overall anova/Kruskal-Wallis result
 
-          if(!is.null(my_comparisons)){
-            if(!is.null(Pairwise_test)){
-              p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
-            }
-          }
-
-          if(!is.null(Variance_test)){
-            p <- p + stat_compare_means(method = Variance_test, label.y = max_y_value_p40, size = 4) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
-          }
+          # if(!is.null(my_comparisons)){
+          #   if(!is.null(Pairwise_test)){
+          #     p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
+          #   }
+          # }
+          # 
+          # if(!is.null(Variance_test)){
+          #   p <- p + stat_compare_means(method = Variance_test, label.y = max_y_value_p40, size = 4) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
+          # }
 
       # MORE THAN TWO GROUPS: compare against reference sample
           #stat_compare_means(method = "kruskal.test", label.y = 45) +      # Add global p-value
@@ -166,22 +191,22 @@ make.autograph <- function(x,
 
 
       #coord_fixed(ratio = 1) + # determines size ratio of the plot -- smaller increases width
-          p <- p + theme_classic(base_size = 30) # can be theme_classic(), theme_bw()
+          p <- p + ggplot2::theme_classic(base_size = 30) # can be theme_classic(), theme_bw()
 
       ## THEMES
-          p <- p + theme(legend.position = "right", # can be "left" "right" "top" "bottom" "none
-                legend.text = element_text(colour="black",size=10,angle=0,hjust=0,vjust=0,face="bold"),
-                legend.title = element_text(colour="black",size=10,angle=0,hjust=0,vjust=0,face="bold"),
+          p <- p + ggplot2::theme(legend.position = "right", # can be "left" "right" "top" "bottom" "none
+                legend.text = ggplot2::element_text(colour="black",size=10,angle=0,hjust=0,vjust=0,face="bold"),
+                legend.title = ggplot2::element_text(colour="black",size=10,angle=0,hjust=0,vjust=0,face="bold"),
 
-                axis.text.x = element_text(colour="black",size=12,angle=45,hjust=1,vjust=1,face="bold"),
-                axis.text.y = element_text(colour="black",size=12,angle=0,hjust=1,vjust=0,face="bold"),
-                axis.title.x = element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-                axis.title.y = element_text(colour="black",size=12,angle=90,hjust=.5,vjust=1,face="bold"),
+                axis.text.x = ggplot2::element_text(colour="black",size=12,angle=45,hjust=1,vjust=1,face="bold"),
+                axis.text.y = ggplot2::element_text(colour="black",size=12,angle=0,hjust=1,vjust=0,face="bold"),
+                axis.title.x = ggplot2::element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
+                axis.title.y = ggplot2::element_text(colour="black",size=12,angle=90,hjust=.5,vjust=1,face="bold"),
 
                 # Title
-                plot.title = element_text(lineheight=.8, face="bold", hjust = 0, size = 12), # hjust = 0.5 to centre
-                axis.line = element_line(colour = 'black', size = 1),
-                axis.ticks = element_line(colour = "black", size = 1)
+                plot.title = ggplot2::element_text(lineheight=.8, face="bold", hjust = 0, size = 12), # hjust = 0.5 to centre
+                axis.line = ggplot2::element_line(colour = 'black', size = 1),
+                axis.ticks = ggplot2::element_line(colour = "black", size = 1)
                 )
 
     ### End construction of 'p'
@@ -189,11 +214,11 @@ make.autograph <- function(x,
     ## SCALES
     #scale_x_discrete(limits=Group_Order) + # use to re-arrange X axis values
     if(scale == "lin"){
-      p <- p + scale_y_continuous(limits = c(0, max_y_value_p40))
+      p <- p + ggplot2::scale_y_continuous(limits = c(0, max_y_value_p40))
     }
 
     if(scale == "sci"){
-      p <- p + scale_y_continuous(labels = scales::scientific, limits = c(0, max_y_value_p40))
+      p <- p + ggplot2::scale_y_continuous(labels = scales::scientific, limits = c(0, max_y_value_p40))
     }
 
     # if(scale == "log2"){
@@ -209,6 +234,6 @@ make.autograph <- function(x,
     p
 
     ## Save
-    ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # wdith 3.6 default, height 5 default
+    ggplot2::ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # width 3.6 default, height 5 default
     message(paste0("AutoGraph for `", y.axis.label, " - ", y.axis, "` saved to disk"))
 }

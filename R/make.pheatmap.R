@@ -12,15 +12,15 @@
 #' @param plot.cols NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.
 #'
 #' @param annot.cols NO DEFAULT. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.
-#' @param transpose DEFAUT = FALSE. Logical. Do you want to transpose the heatmap.
-#' @param is.fold DEFAUT = FALSE. Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap.
-#' @param fold.range DEFAUT = NULL. Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset).
-#' @param normalise DEFAUT = TRUE. Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values.
-#' @param dendrograms DEFAUT = "both". Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none.
-#' @param row.sep DEFAUT = c(). Numeric. Only used if not clustering rows.
-#' @param col.sep DEFAUT = c(). Numeric. Only used if not clustering columns
-#' @param cell.size DEFAUT = 15. Numeric.
-#' @param standard.colours DEFAUT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
+#' @param transpose DEFAULT = FALSE. Logical. Do you want to transpose the heatmap.
+#' @param is.fold DEFAULT = FALSE. Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap.
+#' @param fold.range DEFAULT = NULL. Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset).
+#' @param normalise DEFAULT = TRUE. Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values.
+#' @param dendrograms DEFAULT = "both". Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none.
+#' @param row.sep DEFAULT = c(). Numeric. Only used if not clustering rows.
+#' @param col.sep DEFAULT = c(). Numeric. Only used if not clustering columns
+#' @param cell.size DEFAULT = 15. Numeric.
+#' @param standard.colours DEFAULT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
 #' @usage make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
