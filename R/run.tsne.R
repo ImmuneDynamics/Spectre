@@ -1,7 +1,14 @@
-#' run.tsne - ...
+#' Run the tSNE algorithm (using Rtsne::Rtsne())
+#' 
+#' Method to run a tSNE dimensionality reduction algorithm.
+#' A tSNE (t-distributed stochastic neighbor embedding) plot is a useful means to visualise data.
+#' As it is a dimensionality reduction algorithm, some data will be lost.
+#' It is good practice to validate any populations (namely through manual gating).
+#' Output data will be "tsne.res".
+#' Uses the R package "Rtsne" to calculate plots.
 #'
 #' @param dat NO DEFAULT. data.frame.
-#' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for clustering.
+#' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction.
 #' @param tsne.x.name DEFAULT = "tSNE_X". Character. Name of tSNE x-axis.
 #' @param tsne.y.name DEFAULT = "tSNE_Y". Character. Name of tSNE y-axis.
 #' @param tsne.seed DEFAULT = 42. Numeric. Seed value for reproducibility.
@@ -21,11 +28,15 @@
 #' @param final_momentum DEFAULT = 0.8. Momentum of spread at 'final_momentum'.
 #' @param eta DEFAULT = 200. Learning rate.
 #' @param exaggeration_factor DEFAULT = 12.0. Factor used during early exaggeration.
-#'
-#' This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.
 #' 
-#' @usage run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
+#' @usage run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
 #'
+#' @examples
+#' # Run tSNE on demonstration dataset
+#' Spectre::run.tsne(dat = Spectre::demo.start,
+#'                   use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+#'
+#' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
 run.tsne <- function(dat,

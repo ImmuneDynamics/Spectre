@@ -1,4 +1,9 @@
-#' make.multi.plot
+#' Make mulitple plots for each sample/group
+#'
+#' Method to create multiple plots for each marker.
+#' This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot).
+#' These can then be coloured by a marker or by another factor (e.g Group).
+#' Makes use of Spectre functions make.colour.plot and make.density.plot.
 #'
 #' @param dat NO DEFAULT. A data frame containing all the data you wish to plot
 #' @param x.axis NO DEFAULT. X axis
@@ -21,10 +26,22 @@
 #' @param blank.axis DEFAULT = FALSE. Logical, do you want a minimalist graph?
 #' @param save.each.plot DEFAULT = FALSE. Do you want to save each plot?
 #'
-#' This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot). These can then be coloured by a marker or by another factor (e.g Group).
-#'
-#' @usage make.multi.plot(dat, x.axis, y.axis, col.axis, type, plot.by, align.xy.by, align.col.by, colours, figure.title, dot.size, col.min.threshold, col.max.threshold, path, plot.width,  plot.height, blank.axis, save.each.plot, ...)
-#'
+#' @usage make.multi.plot(dat, x.axis, y.axis, col.axis, type, plot.by, align.xy.by, align.col.by, colours, figure.title, dot.size, col.min.threshold, col.max.threshold, path, plot.width,  plot.height, blank.axis, save.each.plot)
+#' 
+#' @examples
+#' # Create grid of plots on demonstration data
+#' Spectre::make.multi.plots(dat = Spectre::demo.umap,
+#'                           x.axis <- "UMAP_42_X",
+#'                           y.axis <- "UMAP_42_Y",
+#'                           col.axis = "Group",
+#'                           type = "factor",
+#'                           plot.by = "Sample",
+#'                           align.xy.by = dat,
+#'                           align.col.by = dat)
+#' 
+#' @author 
+#' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
 make.multi.plot <- function(dat,
@@ -244,26 +261,28 @@ make.multi.plot <- function(dat,
                              #top = textGrob(figure.title,gp=gpar(fontsize=20,font=3)),
                              )
                              #top = figure.title) #top = "Main Title" -- need to fix size issues
-
-  ### Save to disk
-
-          # width = 9 per graph (4 graphs across max, so 4 cols max)
-          wdth <- num.cols*plot.width
-
-          # height = 7 per graph
-          hght <- num.rows*plot.height
-
-          ggplot2::ggsave(filename = paste0("Multi plot - ", figure.title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
-                 plot = gp,
-                 path = path,
-                 width = wdth,
-                 height = hght,
-                 limitsize = FALSE)
-
-  ### Message
-
-          if(exists(x = "gp")){
-            print(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
+          
+          if (save.each.plot == TRUE) {
+            ### Save to disk
+            
+            # width = 9 per graph (4 graphs across max, so 4 cols max)
+            wdth <- num.cols*plot.width
+            
+            # height = 7 per graph
+            hght <- num.rows*plot.height
+            
+            ggplot2::ggsave(filename = paste0("Multi plot - ", figure.title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
+                            plot = gp,
+                            path = path,
+                            width = wdth,
+                            height = hght,
+                            limitsize = FALSE)
+            
+            ### Message
+            if(exists(x = "gp")){
+              print(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
+            }
+            
           }
 
           if(exists(x = "gp") == FALSE){

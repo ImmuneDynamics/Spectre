@@ -26,6 +26,7 @@ Imports:
     pheatmap,
     ggpubr,
     caret,
-    class
+    class,
+    ggpointdensity
 Suggests:
 RoxygenNote: 7.1.0

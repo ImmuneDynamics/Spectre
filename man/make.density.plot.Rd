@@ -2,9 +2,9 @@
 % Please edit documentation in R/make.density.plot.R
 \name{make.density.plot}
 \alias{make.density.plot}
-\title{make.density.plot - ...}
+\title{Make a density plot (using ggpointdensity::geom_pointdensity())}
 \usage{
-make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.by, align.col.by, save.to.disk, path, plot.width,  plot.height, blank.axis, ...)
+make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.by, align.col.by, save.to.disk, path, plot.width,  plot.height, blank.axis)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -31,10 +31,22 @@ make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.b
 
 \item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
 
-\item{blank.axis}{DEFAULT = FALSE. Logical, do you want a minimalist graph?
-
-This function will create a density plot for the chosen axes.}
+\item{blank.axis}{DEFAULT = FALSE. Logical, do you want a minimalist graph?}
 }
 \description{
-make.density.plot - ...
+Method to create a density plot.
+A density plot can summarise the cellular distribution across a given plot.
+Can be used to plot any two markers.
+Uses "ggplot2" for plots, "ggpointdensity" for adding density to plots, "RColorBrewer" for colour schemes.
+}
+\examples{
+# Create density plot on demonstration dataset
+Spectre::make.density.plot(dat = Spectre::demo.umap,
+                  x.axis = "UMAP_42_X",
+                  y.axis = "UMAP_42_Y",
+                  save.to.disk = FALSE)
+
+}
+\author{
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

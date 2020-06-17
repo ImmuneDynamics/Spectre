@@ -2,12 +2,7 @@
 % Please edit documentation in R/run.prepare.chronoclust.R
 \name{run.prepare.chronoclust}
 \alias{run.prepare.chronoclust}
-\title{run.prepare.chronoclust - This function will prepare a Python environment to run ChronoClust.
-You need to install anaconda package management software for this to work.
-If Reticulate is kind, it might prompt you to install it when running this function if you haven't got it installed.
-However, please do not count on it.
-If it does not prompt you, and you encounter an error such as no anaconda installation is found,
-please visit https://www.anaconda.com/products/individual to manually download and install anaconda.}
+\title{run.prepare.chronoclust}
 \usage{
 run.prepare.chronoclust(environment_name, environment_path, create_environment, install_dependencies)
 }
@@ -27,6 +22,14 @@ When R session is restarted, the variables you have previously assigned
 will remain intact, but you will need to reload all the libraries again.}
 }
 \description{
+This function will prepare a Python environment to run ChronoClust.
+You need to install anaconda package management software for this to work.
+If Reticulate is kind, it might prompt you to install it when running this function if you haven't got it installed.
+However, please do not count on it.
+If it does not prompt you, and you encounter an error such as no anaconda installation is found,
+please visit https://www.anaconda.com/products/individual to manually download and install anaconda.
+}
+\details{
 For advanced users, if your anaconda is installed in custom location,
 you can specify this location as environment_path parameter.
 }
