@@ -12,8 +12,8 @@
     ### Load packages from library
 
         library(Spectre)
-        Spectre::package.check() # --> change so that message at the end is "All required packages have been successfully installed"
-        Spectre::package.load() # --> change so that message at the end is "All required packages have been successfully loaded"
+        Spectre::package.check()
+        Spectre::package.load()
 
         session_info()
 
@@ -112,6 +112,8 @@
         plot.y <- "BV605.Ly6C"
         to.plot <- c("BV711.SCA.1", "APC.BrdU")
 
+    ### Create some plots
+
         setwd(OutputDirectory)
 
         for(i in to.plot){
@@ -151,24 +153,23 @@
                         do.mfi.per.marker = TRUE)
 
 
+    ### Write sumtables for 'percent positive' only
+        setwd(OutputDirectory)
 
-      ### Write sumtables for 'percent positive' only
-      setwd(OutputDirectory)
+        write.sumtables(x = cell.dat,
+                        sample.col = sample.col,
+                        pop.col = pop.col,
 
-      write.sumtables(x = cell.dat,
-                      sample.col = sample.col,
-                      pop.col = pop.col,
+                        measure.col = to.measure,
+                        annot.col = c(group.col, batch.col),
+                        group.col = group.col,
 
-                      measure.col = to.measure,
-                      annot.col = c(group.col, batch.col),
-                      group.col = group.col,
+                        do.frequencies = FALSE,
+                        do.mfi.per.sample = FALSE,
+                        do.mfi.per.marker = FALSE,
 
-                      do.frequencies = FALSE,
-                      do.mfi.per.sample = FALSE,
-                      do.mfi.per.marker = FALSE,
-
-                      perc.pos.markers = markers.cutoff,
-                      perc.pos.cutoff = values.cutoff)
+                        perc.pos.markers = markers.cutoff,
+                        perc.pos.cutoff = values.cutoff)
 
 #########################################################################################################
 #### Produce graphs and heatmaps

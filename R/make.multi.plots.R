@@ -159,19 +159,23 @@ make.multi.plot <- function(dat,
         }
       }
 
-
-      ## For type = 'labelled.factor'
+      ## For type = 'factor'
       if(type == 'labelled.factor'){
         for(i in c(1:length(to.plot))){
           to.plot[i]
-          plots[[i]] <- Spectre::make.labelled.factor.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
-                                            x.axis = x.axis,
-                                            y.axis = y.axis,
-                                            col.axis = col.axis,
-                                            title = to.plot[i],
-                                            align.xy.by = dat,
-                                            align.col.by = dat,
-                                            dot.size = dot.size)
+          plots[[i]] <- Spectre::make.factor.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+                                                  x.axis = x.axis,
+                                                  y.axis = y.axis,
+                                                  col.axis = col.axis,
+                                                  title = to.plot[i],
+                                                  align.xy.by = dat,
+                                                  align.col.by = dat,
+                                                  dot.size = dot.size,
+                                                  path = path,
+                                                  plot.width = plot.width,
+                                                  plot.height = plot.height,
+                                                  blank.axis = blank.axis,
+                                                  save.to.disk = save.each.plot, add.label = TRUE)
         }
       }
 

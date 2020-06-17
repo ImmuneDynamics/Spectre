@@ -14,6 +14,7 @@ read.spatial.files <- function(roi.loc, # Corresponding directory of ROI folders
                                panel.dat = NULL, # data.table
 
                                ext = ".tiff",
+                               read.tiff.stacks = TRUE,
                                convert.to.raster = TRUE,
                                correct.extent = TRUE,
                                value.modifier = 65535,
@@ -98,59 +99,89 @@ read.spatial.files <- function(roi.loc, # Corresponding directory of ROI folders
         tiffs.per.roi <- list()
 
         for(i in roi.names){
+          if(read.tiff.stacks == FALSE){
+            ## Setup
+            #i <- roi.names[1]
+            setwd(roi.loc)
+            setwd(i)
 
-          ## Setup
-              #i <- roi.names[1]
-              setwd(roi.loc)
-              setwd(i)
+            # tiffs.per.roi[[i]] <- list.files(getwd(), ext)
+            # if(!exists("tiffs.per.roi[[i]]")){
+            #   stop(paste0("We could not find any ", ext, " files in the first ROI directory (", i, ")"))
+            # }
 
-              # tiffs.per.roi[[i]] <- list.files(getwd(), ext)
-              # if(!exists("tiffs.per.roi[[i]]")){
-              #   stop(paste0("We could not find any ", ext, " files in the first ROI directory (", i, ")"))
-              # }
+            TIFFs <- list.files(getwd(), ext)
+            TIFF.list <- list()
 
-              TIFFs <- list.files(getwd(), ext)
-              TIFF.list <- list()
+            ## Loop to read in each tiff
+            for(a in TIFFs){
+              #a <- TIFFs[1]
+              TIFF.list[[a]] <- readTIFF(a)
 
-          ## Loop to read in each tiff
-              for(a in TIFFs){
-                #a <- TIFFs[1]
-                TIFF.list[[a]] <- readTIFF(a)
+              if(convert.to.raster == TRUE){
+                tiff.map <- TIFF.list[[a]]
+                tiff.raster <- raster(tiff.map)
 
-                if(convert.to.raster == TRUE){
-                  tiff.map <- TIFF.list[[a]]
-                  tiff.raster <- raster(tiff.map)
+                if(correct.extent == TRUE){
+                  extent(tiff.raster) <- c(0, dim(tiff.raster)[2], 0,dim(tiff.raster)[1]) # Y axis - X axis
+                }
 
-                  if(correct.extent == TRUE){
-                    extent(tiff.raster) <- c(0, dim(tiff.raster)[2], 0,dim(tiff.raster)[1]) # Y axis - X axis
+                values(tiff.raster) <- values(tiff.raster)*value.modifier
+                tiff.raster <- flip(tiff.raster, 'y')
+                TIFF.list[[a]] <- tiff.raster
+              }
+            }
+
+            ## Remove mask from list of rasters, if it is present
+            # val <- grep(mask.ext, names(TIFF.list))
+            # mask <- TIFF.list[val]
+            # TIFF.list <- TIFF.list[-val]
+
+            for(n in c(1:length(names(TIFF.list)))){
+              names(TIFF.list)[n] <- gsub(ext, "", names(TIFF.list)[n])
+            }
+
+            ## Finalise for ROI
+
+            raster.stack <- stack(TIFF.list)
+            #ROI.list[[i]][["tiffs"]] <- raster.stack
+            ROI.list[[i]]$rasters <- raster.stack
+            ROI.list[[i]]$raster.names <- names(raster.stack)
+          }
+
+
+          if(read.tiff.stacks == TRUE){
+            warning("Reading TIFF stacks not currently supported")
+
+                setwd(roi.loc)
+                stack.list <- list()
+                stack.list
+
+                for(i in rois){
+                  # i <- rois[1]
+                  stack.list[[i]] <- readTIFF(i, all = TRUE)
+
+                  for(a in c(1:length(stack.list[[i]]))){
+                    stack.list[[i]][[a]] <- raster(stack.list[[i]][[a]])
+                    if(correct.extent == TRUE){
+                      extent(stack.list[[i]][[a]]) <- c(0, dim(stack.list[[i]][[a]])[2], 0,dim(stack.list[[i]][[a]])[1]) # Y axis - X axis
+                    }
+                    stack.list[[i]][[a]] <- flip(stack.list[[i]][[a]], 'y')
                   }
 
-                  values(tiff.raster) <- values(tiff.raster)*value.modifier
-                  tiff.raster <- flip(tiff.raster, 'y')
-                  TIFF.list[[a]] <- tiff.raster
+
                 }
-              }
 
-          ## Remove mask from list of rasters, if it is present
-              # val <- grep(mask.ext, names(TIFF.list))
-              # mask <- TIFF.list[val]
-              # TIFF.list <- TIFF.list[-val]
+                names(stack.list) <- gsub(ext, "", names(stack.list))
+                names(stack.list)
 
-              for(n in c(1:length(names(TIFF.list)))){
-                names(TIFF.list)[n] <- gsub(ext, "", names(TIFF.list)[n])
-              }
+                ## Finalise for ROI
 
-          ## Finalise for ROI
-
-              raster.stack <- stack(TIFF.list)
-              #ROI.list[[i]][["tiffs"]] <- raster.stack
-              ROI.list[[i]]$rasters <- raster.stack
-              ROI.list[[i]]$raster.names <- names(raster.stack)
+                ROI.list[[i]]$rasters <- stack.list
+                ROI.list[[i]]$raster.names <- names(stack.list)
+          }
         }
 
-        # ROI.list$`20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac`$rasters
-        # ROI.list$`20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac`$raster.names
-        #
 
     ### Read mask TIFFs into a list, then add the masks to each ROI
     message("Reading mask tiffs as a raster")
