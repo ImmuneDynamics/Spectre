@@ -1,14 +1,20 @@
-#' make.colour.plot - Create a dot plot (X vs Y) coloured by a selected continuous column (e.g. marker expression)
+#' Create a dot plot (X vs Y) coloured by a selected continuous column (e.g. marker expression)
 #'
-#' This function allows you to create a coloured XY plot where each cell is coloured by a selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select cellular markers.
+#' This function allows you to create a coloured XY plot where each cell is coloured by a
+#' selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select
+#' cellular markers.
+#' 
+#' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+#' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @usage make.colour.plot(dat, x.axis, y.axis, col.axis)
 #'
 #' @param dat NO DEFAULT. data.table Input sample.
 #' @param x.axis NO DEFAULT. Character. Column for X axis.
 #' @param y.axis NO DEFAULT. Character. Column for Y axis.
 #' @param col.axis NO DEFAULT. Character. Column for colour.
 #' @param title DEFAULT = col.axis. Character. Title for the plot.
+#' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.
+#' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
 #' @param col.min.threshold DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.
 #' @param col.max.threshold DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.
 #' @param colours DEFAULT = "spectral". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".
@@ -20,17 +26,50 @@
 #' @param plot.width DEFAULT = 9. Width of the ggplot when saved to disk.
 #' @param plot.height DEFAULT = 7. Height of the ggplot when saved to disk.
 #' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
+#' @usage make.colour.plot(dat, x.axis, y.axis, col.axis,
+#'                         title = col.axis, 
+#'                         hex = FALSE,
+#'                         hex.bins = 30,
+#'                         col.min.threshold = 0.01,
+#'                         col.max.threshold = 0.995,
+#'                         colours = "spectral",
+#'                         dot.size = 1,
+#'                         align.xy.by = dat,
+#'                         align.col.by = dat,
+#'                         save.to.disk = TRUE,
+#'                         path = getwd(),
+#'                         plot.width = 9,
+#'                         plot.height = 7,
+#'                         blank.axis = FALSE)
 #'
-#' @return prints and saves a ggplot.
+#' @examples 
+#' # Read data
+#' data.list <- Spectre::read.files(file.loc = InputDirectory, file.type = ".csv", do.embed.file.names = TRUE)
+#' cell.dat <- Spectre::do.merge.files(dat = data.list)
+#' 
+#' # Specify clustering column
+#' ColumnNames <- as.matrix(unname(colnames(cell.dat)))
+#' ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
+#' ClusteringCols <- ColumnNames[ClusteringColNos]
+#' 
+#' # Run UMAP
+#' cell.dat <- Spectre::run.umap(dat = cell.dat, use.cols = ClusteringCols, umap.seed = 42)
+#' 
+#' # Draw plot
+#' Spectre::make.colour.plot(dat = cell.dat,
+#'                           x.axis = "UMAP_X",
+#'                           y.axis = "UMAP_Y",
+#'                           col.axis = "BV785.CD11c",
+#'                           title = paste0(i, "_", "BV785.CD11c"),
+#'                           align.xy.by = cell.dat,
+#'                           align.col.by = cell.dat, 
+#'                           save.to.disk = TRUE)
+#' 
 #'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
-#' @references \url{https://sydneycytometry.org.au/spectre}
-#'
-#' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
-#'
-#' @examples
-#' make.colour.plot(dat = demo.umap, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "BV605.Ly6C")
+#' @author 
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
 #'
 #' @export
 
@@ -39,6 +78,8 @@ make.colour.plot <- function(dat,
                              y.axis,
                              col.axis,
                              title = col.axis,
+                             hex = FALSE,
+                             hex.bins = 30,
                              col.min.threshold = 0.01,
                              col.max.threshold = 0.995,
                              colours = "spectral",
@@ -88,27 +129,18 @@ make.colour.plot <- function(dat,
       # Jet
       if(colours == "jet"){
         colour.scheme <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-      }
-
-      # Spectral
-      if(colours == "spectral"){
+      } else if (colours == "spectral"){
         spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
         spectral.list <- rev(spectral.list)
         colour.scheme <- colorRampPalette(c(spectral.list))
-      }
-
-      # Viridis
-      if(colours == "viridis"){
+      } else if (colours == "viridis") {
+        # Viridis
         colour.scheme <- colorRampPalette(c(viridis_pal(option = "viridis")(50)))
-      }
-
-      # Inferno
-      if(colours == "inferno"){
+      } else if (colours == "inferno") {
+        # Inferno
         colour.scheme <- colorRampPalette(c(viridis_pal(option = "inferno")(50)))
-      }
-
-      #Magma
-      if(colours == "magma"){
+      } else if (colours == "magma") {
+        # Magma
         colour.scheme <- colorRampPalette(c(viridis_pal(option = "magma")(50)))
       }
 
@@ -118,59 +150,58 @@ make.colour.plot <- function(dat,
       if(is.null(align.xy.by) == TRUE){
         Xmax <- max(dat[[x.axis]])
         Xmin <- min(dat[[x.axis]])
-      }
-
-      if(is.null(align.xy.by) == FALSE){
+      } else if(is.null(align.xy.by) == FALSE){
         Xmax <- max(align.xy.by[[x.axis]])
         Xmin <- min(align.xy.by[[x.axis]])
-        }
+      }
 
 
       # Y AXIS
       if(is.null(align.xy.by) == TRUE){
         Ymax <- max(dat[[y.axis]])
         Ymin <- min(dat[[y.axis]])
-        }
-
-      if(is.null(align.xy.by) == FALSE){
+      } else if(is.null(align.xy.by) == FALSE){
         Ymax <- max(align.xy.by[[y.axis]])
         Ymin <- min(align.xy.by[[y.axis]])
-        }
+      }
 
       # COLOUR
       if(is.null(align.col.by) == TRUE){
         ColrMin <- quantile(dat[[col.axis]], probs = c(col.min.threshold))
         ColrMax <- quantile(dat[[col.axis]], probs = c(col.max.threshold))
-      }
-
-      if(is.null(align.col.by) == FALSE){
+      } else if(is.null(align.col.by) == FALSE){
         ColrMin <- quantile(align.col.by[[col.axis]], probs = c(col.min.threshold))
         ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold))
       }
 
 
   ## Generate and show coloured plot
-
-    p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], colour = dat[[col.axis]])) +
-                geom_point(size = dot.size) +
-
-                scale_colour_gradientn(colours = colour.scheme(50),
-                                       limits = c(ColrMin, ColrMax),
-                                       oob=squish) +
-                ggtitle(title) #+
-                #xlim(Xmin, Xmax) +
-                #ylim(Ymin, Ymax) +
-
-                #xlab(x.axis)+
-                #ylab(y.axis)
-
+  
+  if (hex == TRUE) {
+    p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], z = dat[[col.axis]], colour = dat[[col.axis]])) + stat_summary_hex(fun = function(x) mean(x), bins = hex.bins) 
+    p <- p + scale_fill_gradientn(colours = c(colour.scheme(50)),
+                             limits = c(ColrMin, ColrMax))
+    #                          oob=squish)
+      
+  } else {
+    p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], colour = dat[[col.axis]])) + geom_point(size = dot.size)
+    p <- p + scale_colour_gradientn(colours = colour.scheme(50),
+                             limits = c(ColrMin, ColrMax),
+                             oob=squish) 
+  }
+  p
+  # add title
+  p <- p + ggtitle(title)
+  
   ## Axis
-    p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(Xmin, Xmax))
-    p <- p + scale_y_continuous(breaks = scales::pretty_breaks(n = 8), name = y.axis, limits = c(Ymin, Ymax))
+  p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(Xmin, Xmax)) 
+  p <- p + scale_y_continuous(breaks = scales::pretty_breaks(n = 8), name = y.axis, limits = c(Ymin, Ymax))
 
   ## Add some themes
 
-    p <- p + theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
+    p <- p + theme(panel.background = element_rect(fill = "white", 
+                                                   colour = "black", 
+                                                   size = 0.5), # change 'colour' to black for informative axis
                    axis.title.x=element_text(color="Black", face="bold", size=18),
                    axis.title.y=element_text(color="Black", face="bold", size=18),
                    legend.text=element_text(size=12), # large = 30 # small = 8
@@ -202,6 +233,7 @@ make.colour.plot <- function(dat,
                      #plot.title = element_text(color="Black", face="bold", size=15, hjust=0
                      )
     }
+    
 
   ## Save ggplot to disk if desired
       if(save.to.disk == TRUE){
