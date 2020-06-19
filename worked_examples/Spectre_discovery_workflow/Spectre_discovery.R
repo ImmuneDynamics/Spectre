@@ -166,6 +166,7 @@
     ### Define downsample targets
 
         as.matrix(unique(cell.dat[["Sample"]]))
+        data.frame(table(cell.dat[["Sample"]])) # Check number of cells per sample.
 
         down.samp.targets <- c(rep(500,12))
 
@@ -350,8 +351,8 @@
     ### Plot some marker-oriented plots
         setwd(OutputDirectory)
         setwd("Output-plots")
-        dir.create("All samples")
-        setwd("All samples")
+        dir.create("all-samples")
+        setwd("all-samples")
 
         Spectre::make.multi.marker.plot(dat = cell.dat.sub,
                                    x.axis = "UMAP_X",
@@ -371,8 +372,8 @@
     ### Plot some marker-oriented plots -- one set per sample
         setwd(OutputDirectory)
         setwd("Output-plots")
-        dir.create("By sample")
-        setwd("By sample")
+        dir.create("by-sample")
+        setwd("by-sample")
 
         for(i in as.matrix(unique(cell.dat.sub[[sample.col]]))){
           for(a in CellularCols){
@@ -389,8 +390,8 @@
     ### Plot some marker-oriented plots -- one set per group
         setwd(OutputDirectory)
         setwd("Output-plots")
-        dir.create("By group")
-        setwd("By group")
+        dir.create("by-group")
+        setwd("by-group")
 
         for(i in as.matrix(unique(cell.dat.sub[[group.col]]))){
           for(a in CellularCols){
