@@ -143,3 +143,7 @@ cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
 
 # Check data
 head(cell.dat)
+
+# Write results out
+setwd(OutputDirectory)
+Spectre::write.files(cell.dat, exp.name)
