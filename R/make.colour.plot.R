@@ -176,20 +176,22 @@ make.colour.plot <- function(dat,
 
 
   ## Generate and show coloured plot
+  p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], colour = dat[[col.axis]])) 
   
   if (hex == TRUE) {
-    p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], z = dat[[col.axis]], colour = dat[[col.axis]])) + stat_summary_hex(fun = function(x) mean(x), bins = hex.bins) 
+    p <- p + stat_summary_hex(aes(z = dat[[col.axis]]), 
+                              fun = "mean", 
+                              bins = hex.bins) 
     p <- p + scale_fill_gradientn(colours = c(colour.scheme(50)),
-                             limits = c(ColrMin, ColrMax))
-    #                          oob=squish)
+                             limits = c(ColrMin, ColrMax),
+                             oob=squish)
       
   } else {
-    p <- ggplot(data = dat, aes(x = dat[[x.axis]], y = dat[[y.axis]], colour = dat[[col.axis]])) + geom_point(size = dot.size)
+    p <- p + geom_point(size = dot.size)
     p <- p + scale_colour_gradientn(colours = colour.scheme(50),
                              limits = c(ColrMin, ColrMax),
                              oob=squish) 
   }
-  p
   # add title
   p <- p + ggtitle(title)
   
