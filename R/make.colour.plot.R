@@ -78,8 +78,6 @@ make.colour.plot <- function(dat,
                              y.axis,
                              col.axis,
                              title = col.axis,
-                             hex = FALSE,
-                             hex.bins = 30,
                              col.min.threshold = 0.01,
                              col.max.threshold = 0.995,
                              colours = "spectral",
@@ -90,7 +88,9 @@ make.colour.plot <- function(dat,
                              path = getwd(),
                              plot.width = 9,
                              plot.height = 7,
-                             blank.axis = FALSE)
+                             blank.axis = FALSE,
+                             hex = FALSE,
+                             hex.bins = 30)
 
 {
 

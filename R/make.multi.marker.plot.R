@@ -56,7 +56,9 @@ make.multi.marker.plot <- function(dat,
                                plot.width = 9,
                                plot.height = 7,
                                blank.axis = FALSE,
-                               save.each.plot = FALSE
+                               save.each.plot = FALSE,
+                               hex = FALSE,
+                               hex.bins = 30
                               )
 {
 
@@ -142,7 +144,9 @@ make.multi.marker.plot <- function(dat,
                                 plot.width = plot.width,
                                 plot.height = plot.height,
                                 blank.axis = blank.axis,
-                                save.to.disk = save.each.plot
+                                save.to.disk = save.each.plot,
+                                hex = FALSE,
+                                hex.bins = 30
                                 )
     }
 
