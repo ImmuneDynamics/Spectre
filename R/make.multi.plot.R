@@ -64,7 +64,8 @@ make.multi.plot <- function(dat,
                        plot.width = 9,
                        plot.height = 7,
                        blank.axis = FALSE,
-                       save.each.plot = FALSE
+                       save.each.plot = FALSE,
+                       save.multi.plot = TRUE
                        )
 {
 
@@ -177,7 +178,7 @@ make.multi.plot <- function(dat,
       }
 
       ## For type = 'factor'
-      if(type == 'labelled.factor'){
+      else if(type == 'labelled.factor'){
         for(i in c(1:length(to.plot))){
           to.plot[i]
           plots[[i]] <- Spectre::make.factor.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
@@ -198,7 +199,7 @@ make.multi.plot <- function(dat,
 
 
       ## For type = 'colour'
-      if(type == 'colour'){
+      else if(type == 'colour'){
           for(i in c(1:length(to.plot))){
             to.plot[i]
             plots[[i]] <- Spectre::make.colour.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
@@ -216,14 +217,14 @@ make.multi.plot <- function(dat,
           }
       }
 
-      if(type == 'density'){
+      else if(type == 'density'){
           for (i in c(1:length(to.plot))){
             to.plot[i]
             plots[[i]] <- Spectre::make.density.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                                                      x.axis = x.axis,
                                                      y.axis = y.axis,
                                                      title = to.plot[i],
-                                                     colours = "viridis",
+                                                     colours = colours,
                                                      dot.size = dot.size,
                                                      align.xy.by = dat,
                                                      align.col.by = dat,
@@ -261,8 +262,8 @@ make.multi.plot <- function(dat,
                              #top = textGrob(figure.title,gp=gpar(fontsize=20,font=3)),
                              )
                              #top = figure.title) #top = "Main Title" -- need to fix size issues
-          
-          if (save.each.plot == TRUE) {
+          # This is to save the multiple plots in 1 figure
+          if (save.multi.plot == TRUE) {
             ### Save to disk
             
             # width = 9 per graph (4 graphs across max, so 4 cols max)
