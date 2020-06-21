@@ -65,7 +65,6 @@ make.multi.plot <- function(dat,
                        plot.height = 7,
                        blank.axis = FALSE,
                        save.each.plot = FALSE,
-                       save.multi.plot = TRUE,
                        hex = FALSE,
                        hex.bins = 30)
 {
@@ -266,7 +265,7 @@ make.multi.plot <- function(dat,
                              )
                              #top = figure.title) #top = "Main Title" -- need to fix size issues
           # This is to save the multiple plots in 1 figure
-          if (save.multi.plot == TRUE) {
+          if (save.each.plot == TRUE) {
             ### Save to disk
             
             # width = 9 per graph (4 graphs across max, so 4 cols max)
