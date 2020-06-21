@@ -75,7 +75,6 @@ make.density.plot <- function(dat,
   ## Generate and show coloured plot
 
       p <- ggplot2::ggplot(data = dat, ggplot2::aes(x = dat[[x.axis]], y = dat[[y.axis]])) +
-        ggplot2::geom_point(size = dot.size) +
 
         ggplot2::ggtitle(title) +
         #ggplot2::xlim(Xmin, Xmax) +
@@ -84,7 +83,7 @@ make.density.plot <- function(dat,
         #ggplot2::xlab(x.axis) +
         #ggplot2::ylab(y.axis) +
 
-        ggpointdensity::geom_pointdensity()
+        ggpointdensity::geom_pointdensity(size = dot.size)
 
   ## Axis
       p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(Xmin, Xmax))
