@@ -145,8 +145,8 @@ make.multi.marker.plot <- function(dat,
                                 plot.height = plot.height,
                                 blank.axis = blank.axis,
                                 save.to.disk = save.each.plot,
-                                hex = FALSE,
-                                hex.bins = 30
+                                hex = hex,
+                                hex.bins = hex.bins
                                 )
     }
 
