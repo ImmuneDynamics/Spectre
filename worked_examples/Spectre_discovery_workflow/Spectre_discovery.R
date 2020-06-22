@@ -276,25 +276,27 @@
         meta.dat
         as.matrix(names(cell.dat))
 
-        Spectre::write.sumtables(x = cell.dat,
-                                 sample.col = "Sample",
+        Spectre::write.sumtables(dat = cell.dat,
+                                 sample.col = sample.col,
                                  pop.col = "FlowSOM_metacluster",
+                                 group.col = group.col,
+                                 annot.col = "Batch",
                                  measure.col = CellularCols,
-                                 do.frequencies = FALSE,
                                  do.mfi.per.marker = FALSE,
                                  do.mfi.per.sample = TRUE)
 
     ### Create an expression heatmap
 
-        exp <- read.csv("SumTable-MFI-AllSamples.csv")
+        ## Expression per cluster
+        exp <- read.csv("SumTable-MFI-PerSample/SumTable-MFI-AllSamples.csv")
 
         library(pheatmap)
         make.pheatmap(dat = exp,
                       file.name = "MFI.heatmap.png",
-                      plot.title = "Expression",
+                      plot.title = "Expression per cluster",
                       sample.col = "FlowSOM_metacluster",
                       standard.colours = "YlGnBu",
-                      rmv.cols = 1)
+                      plot.cols = CellularCols)
 
 #########################################################################################################
 #### Create and save some tSNE/UMAP plots for the whole dataset

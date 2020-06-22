@@ -171,7 +171,7 @@ make.pheatmap <- function(dat,
         heatmap.data
       }
 
-      if(is.null(annot.cols) == TRUE){
+      else if(is.null(annot.cols) == TRUE){
         annot <- NULL
         heatmap.data <- heatmap.data[plot.cols] # remove columns
         heatmap.data
