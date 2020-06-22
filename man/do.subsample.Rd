@@ -2,7 +2,7 @@
 % Please edit documentation in R/do.subsample.R
 \name{do.subsample}
 \alias{do.subsample}
-\title{do.subsample - ...}
+\title{Subsample data}
 \usage{
 do.subsample(dat, method, samp.col, targets, seed)
 }
@@ -17,11 +17,19 @@ do.subsample(dat, method, samp.col, targets, seed)
 
 \item{seed}{DEFAULT = 42. Numeric. Seed for reproducibility.}
 }
-\value{
-Returns a subsampled data.table
-
-This function facilitates downsampling of a dataframe.
-}
 \description{
-do.subsample - ...
+Method to subsample data.
+Can subsample by randomly selecting a desired number of cells from all samples (method = "random"), subsample by specifying the exact number of cells for each sample (method= "per.sample"), or by subsampling the same number of cells from each sample based on the sample with the lowest count (method = "min.per.sample").
+Useful to decrease total cells for generating dimensionality reduction plots (tSNE/UMAP).
+}
+\examples{
+Spectre::do.subsample(dat = Spectre::demo.start,
+                      method = "per.sample",
+                      samp.col = "FileName",
+                      targets = c(rep(1000,12)))
+
+}
+\author{
+Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }
