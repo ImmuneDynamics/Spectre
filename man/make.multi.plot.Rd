@@ -2,7 +2,7 @@
 % Please edit documentation in R/make.multi.plot.R
 \name{make.multi.plot}
 \alias{make.multi.plot}
-\title{Make mulitple plots for each sample/group}
+\title{Make multiple plots for each sample/group}
 \usage{
 make.multi.plot(dat, x.axis, y.axis, col.axis, type, plot.by, align.xy.by, align.col.by, colours, figure.title, dot.size, col.min.threshold, col.max.threshold, path, plot.width,  plot.height, blank.axis, save.each.plot)
 }

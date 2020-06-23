@@ -2,11 +2,23 @@
 % Please edit documentation in R/make.colour.plot.R
 \name{make.colour.plot}
 \alias{make.colour.plot}
-\title{make.colour.plot - Create a dot plot (X vs Y) coloured by a selected continuous column (e.g. marker expression)}
+\title{Create a dot plot (X vs Y) coloured by a selected continuous column (e.g. marker expression)}
 \usage{
-make.colour.plot(dat, x.axis, y.axis, col.axis)
-
-See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+make.colour.plot(dat, x.axis, y.axis, col.axis,
+                        title = col.axis, 
+                        hex = FALSE,
+                        hex.bins = 30,
+                        col.min.threshold = 0.01,
+                        col.max.threshold = 0.995,
+                        colours = "spectral",
+                        dot.size = 1,
+                        align.xy.by = dat,
+                        align.col.by = dat,
+                        save.to.disk = TRUE,
+                        path = getwd(),
+                        plot.width = 9,
+                        plot.height = 7,
+                        blank.axis = FALSE)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
@@ -40,20 +52,49 @@ See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vign
 \item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
 
 \item{blank.axis}{DEFAULT = FALSE Logical, do you want a minimalist graph?}
-}
-\value{
-prints and saves a ggplot.
+
+\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.}
+
+\item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
 }
 \description{
-This function allows you to create a coloured XY plot where each cell is coloured by a selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select cellular markers.
+This function allows you to create a coloured XY plot where each cell is coloured by a
+selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select
+cellular markers.
 }
 \examples{
-make.colour.plot(dat = demo.umap, x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = "BV605.Ly6C")
+# Read data
+data.list <- Spectre::read.files(file.loc = InputDirectory, file.type = ".csv", do.embed.file.names = TRUE)
+cell.dat <- Spectre::do.merge.files(dat = data.list)
+
+# Specify clustering column
+ColumnNames <- as.matrix(unname(colnames(cell.dat)))
+ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
+ClusteringCols <- ColumnNames[ClusteringColNos]
+
+# Run UMAP
+cell.dat <- Spectre::run.umap(dat = cell.dat, use.cols = ClusteringCols, umap.seed = 42)
+
+# Draw plot
+Spectre::make.colour.plot(dat = cell.dat,
+                          x.axis = "UMAP_X",
+                          y.axis = "UMAP_Y",
+                          col.axis = "BV785.CD11c",
+                          title = paste0(i, "_", "BV785.CD11c"),
+                          align.xy.by = cell.dat,
+                          align.col.by = cell.dat, 
+                          save.to.disk = TRUE)
+
+
 
 }
 \references{
 \url{https://sydneycytometry.org.au/spectre}
 }
+\seealso{
+\url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+}
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
 }
