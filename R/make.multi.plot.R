@@ -177,7 +177,7 @@ make.multi.plot <- function(dat,
       }
 
       ## For type = 'factor'
-      else if(type == 'labelled.factor'){
+      if(type == 'labelled.factor'){
         for(i in c(1:length(to.plot))){
           to.plot[i]
           plots[[i]] <- Spectre::make.factor.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
@@ -198,7 +198,7 @@ make.multi.plot <- function(dat,
 
 
       ## For type = 'colour'
-      else if(type == 'colour'){
+      if(type == 'colour'){
           for(i in c(1:length(to.plot))){
             to.plot[i]
             plots[[i]] <- Spectre::make.colour.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
@@ -216,7 +216,7 @@ make.multi.plot <- function(dat,
           }
       }
 
-      else if(type == 'density'){
+      if(type == 'density'){
           for (i in c(1:length(to.plot))){
             to.plot[i]
             plots[[i]] <- Spectre::make.density.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
