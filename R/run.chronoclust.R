@@ -7,6 +7,9 @@
 #' 
 #' @seealso \url{https://github.com/ghar1821/Chronoclust} for ChronoClust's Python implementation.
 #' @seealso \code{\link{run.prepare.chronoclust}} for how to embed Python session within R session.
+#' @import data.table
+#' @import reticulate
+#' @import Spectre
 #' 
 #' @param dat NO DEFAULT. Data.frame. Data to be clustered.
 #' @param timepoint.col NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.
@@ -82,8 +85,8 @@ run.chronoclust <- function(dat,
   ## Split the data into different csv files based on time point and columns for clustering.
   timepoints <- unique(dat.bk[[timepoint.col]])
   for (time.point in timepoints) {
-    dat.subset <- dat.bk[get(timepoint.col) == time.point]
-    dat.subset <- dat.subset[, ..use.cols]
+    dat.subset <- dat.bk[dat.bk[[timepoint.col]] == time.point,]
+    dat.subset <- dat.subset[, use.cols, with = FALSE]
     
     Spectre::write.files(dat.subset, time.point)
   }
