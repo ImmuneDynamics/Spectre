@@ -14,6 +14,7 @@ read.spatial.files(
   image.dat = NULL,
   panel.dat = NULL,
   ext = ".tiff",
+  read.tiff.stacks = TRUE,
   convert.to.raster = TRUE,
   correct.extent = TRUE,
   value.modifier = 65535,
