@@ -40,14 +40,16 @@ run.prepare.chronoclust <- function(environment_name,
   
   if(create_environment) {
     conda_create(environment_name)
+  } 
+  
+  # activate the environment regardless
+  if (is.null(environment_path)) {
+    use_condaenv(environment_name, required = TRUE)
   } else {
-    if (is.null(environment_path)) {
-      use_condaenv(environment_name, required = TRUE)
-    } else {
-      use_condaenv(environment_name, conda=environment_path, required = TRUE)
-    }
-    
+    use_condaenv(environment_name, conda=environment_path, required = TRUE)
   }
+    
+  
   
   if (install_dependencies) {
     # install chronoclust dependencies
@@ -63,15 +65,6 @@ run.prepare.chronoclust <- function(environment_name,
                   packages = c("Chronoclust"),
                   pip=TRUE)
     
-    # install chronoclust
-    #download.file(url = "https://github.com/ghar1821/Chronoclust/archive/master.zip",
-    #              destfile = "chronoclust-master.zip")
-    #unzip(zipfile = "chronoclust-master.zip")
-    #WorkingDirectory <- getwd()
-    #setwd(paste(WorkingDirectory, "chronoclust-master", sep = '/'))
-    #py_run_string(paste0("from setuptools import sandbox; sandbox.run_setup('",getwd(),"/setup.py', ['install'])"))
-    #chronoclust <- import_from_path("chronoclust")
-    #setwd(WorkingDirectory)
     .rs.restartR()
   }
 }
