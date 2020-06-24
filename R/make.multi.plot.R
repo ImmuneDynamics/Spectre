@@ -1,4 +1,4 @@
-#' Make mulitple plots for each sample/group
+#' Make multiple plots for each sample/group
 #'
 #' Method to create multiple plots for each marker.
 #' This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot).
@@ -64,8 +64,9 @@ make.multi.plot <- function(dat,
                        plot.width = 9,
                        plot.height = 7,
                        blank.axis = FALSE,
-                       save.each.plot = FALSE
-                       )
+                       save.each.plot = FALSE,
+                       hex = FALSE,
+                       hex.bins = 30)
 {
 
   ### Test data
@@ -177,7 +178,7 @@ make.multi.plot <- function(dat,
       }
 
       ## For type = 'factor'
-      else if(type == 'labelled.factor'){
+      if(type == 'labelled.factor'){
         for(i in c(1:length(to.plot))){
           to.plot[i]
           plots[[i]] <- Spectre::make.factor.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
@@ -198,10 +199,10 @@ make.multi.plot <- function(dat,
 
 
       ## For type = 'colour'
-      else if(type == 'colour'){
+      if(type == 'colour'){
           for(i in c(1:length(to.plot))){
             to.plot[i]
-            plots[[i]] <- Spectre::make.colour.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
+            plots[[i]] <- make.colour.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
                                       x.axis = x.axis,
                                       y.axis = y.axis,
                                       col.axis = col.axis,
@@ -212,11 +213,13 @@ make.multi.plot <- function(dat,
                                       col.min.threshold = col.min.threshold,
                                       col.max.threshold = col.max.threshold,
                                       dot.size = dot.size,
-                                      blank.axis = blank.axis)
+                                      blank.axis = blank.axis,
+                                      hex=hex,
+                                      hex.bins=hex.bins)
           }
       }
 
-      else if(type == 'density'){
+      if(type == 'density'){
           for (i in c(1:length(to.plot))){
             to.plot[i]
             plots[[i]] <- Spectre::make.density.plot(dat = subset(dat, dat[[plot.by]] == to.plot[i]), #instead, use d[d[$Sample][plot.by] == to.plot[i], ]
