@@ -83,10 +83,11 @@
         grp.order <- c("Mock", "WNV")
         grp.colours <- c("Black", "Red")
 
-        stat.comparisons <- list(c("Mock", "WNV")) # A list of comparisons for statistical test (used in graphing and stats)
-
-        var.test <- "kruskal.test" # can be "kruskal.test", "anova", or NULL
-        pair.test <- "wilcox.test" # can be "wilcox.test". "t.test", or NULL
+        # TODO remove no longer required as autograph is not supporting it
+        # stat.comparisons <- list(c("Mock", "WNV")) # A list of comparisons for statistical test (used in graphing and stats)
+        # 
+        # var.test <- "kruskal.test" # can be "kruskal.test", "anova", or NULL
+        # pair.test <- "wilcox.test" # can be "wilcox.test". "t.test", or NULL
 
     ### Define cell counts (if desired)
 
@@ -123,7 +124,8 @@
                          col.axis = group.col,
                          type = "factor",
                          plot.by = group.col,
-                         figure.title = paste0(i, " - split by group"))
+                         figure.title = paste0(i, " - split by group"),
+                         save.each.plot = TRUE)
         }
 
     ### Define cutoffs
@@ -139,7 +141,7 @@
     ### Write sumtables - proportions, cell counts, MFI
         setwd(OutputDirectory)
 
-        write.sumtables(x = cell.dat,
+        write.sumtables(dat = cell.dat,
                         sample.col = sample.col,
                         pop.col = pop.col,
 
@@ -147,7 +149,6 @@
                         annot.col = c(group.col, batch.col),
                         group.col = group.col,
 
-                        do.frequencies = TRUE,
                         cell.counts = cell.counts, # vector must be in order of the samples in which they appear (unique(cell.dat[[sample.col]]))
                         do.mfi.per.sample = FALSE,
                         do.mfi.per.marker = TRUE)
@@ -156,15 +157,14 @@
     ### Write sumtables for 'percent positive' only
         setwd(OutputDirectory)
 
-        write.sumtables(x = cell.dat,
+        write.sumtables(dat = cell.dat,
                         sample.col = sample.col,
                         pop.col = pop.col,
 
                         measure.col = to.measure,
                         annot.col = c(group.col, batch.col),
                         group.col = group.col,
-
-                        do.frequencies = FALSE,
+                        
                         do.mfi.per.sample = FALSE,
                         do.mfi.per.marker = FALSE,
 
@@ -234,16 +234,13 @@
           }
 
           for(a in plot.names){
-            make.autograph(x = dat,
+            make.autograph(dat = dat,
                            x.axis = group.col,
                            grp.order = grp.order,
                            y.axis = a,
                            colour.by = group.col,
                            colours = grp.colours,
                            y.axis.label = dat[1,1],
-                           my_comparisons = stat.comparisons,
-                           Variance_test = var.test,
-                           Pairwise_test = pair.test,
                            title = paste0(a),
                            scale = scale,
                            filename = paste0(dat[1,1], " - ", a, ".pdf"))
