@@ -74,7 +74,7 @@ run.pca <- function(dat,
   }
   
   ## Run PCA
-  pca_out <- stats::princomp(as.matrix(dat[, ..use.cols]),
+  pca_out <- stats::princomp(as.matrix(dat[use.cols]),
                              cor = cor,
                              scores = scores
                              )
@@ -182,7 +182,7 @@ run.pca <- function(dat,
     for (a in sample.name) {
       data.sample <- dat[dat[[sample.code]] == a,]
       
-      data.sample.select <- data.sample[,..use.cols]
+      data.sample.select <- data.sample[use.cols]
       as.matrix(colnames(data.sample.select))
       
       if (nrow(data.sample.select) > ncol(data.sample.select)) { #PCA cannot run if there are more markers/columns than cells/rows
