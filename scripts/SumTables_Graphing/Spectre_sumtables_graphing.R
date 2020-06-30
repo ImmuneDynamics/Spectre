@@ -83,10 +83,11 @@
         grp.order <- c("Mock", "WNV")
         grp.colours <- c("Black", "Red")
 
-        stat.comparisons <- list(c("Mock", "WNV")) # A list of comparisons for statistical test (used in graphing and stats)
-
-        var.test <- "kruskal.test" # can be "kruskal.test", "anova", or NULL
-        pair.test <- "wilcox.test" # can be "wilcox.test". "t.test", or NULL
+        # TODO remove no longer required as autograph is not supporting it
+        # stat.comparisons <- list(c("Mock", "WNV")) # A list of comparisons for statistical test (used in graphing and stats)
+        #
+        # var.test <- "kruskal.test" # can be "kruskal.test", "anova", or NULL
+        # pair.test <- "wilcox.test" # can be "wilcox.test". "t.test", or NULL
 
     ### Define cell counts (if desired)
 
@@ -242,12 +243,8 @@
                            colour.by = group.col,
                            colours = grp.colours,
                            y.axis.label = dat[1,1],
-                           my_comparisons = stat.comparisons,
-                           Variance_test = var.test,
-                           Pairwise_test = pair.test,
                            title = paste0(a),
                            scale = scale,
                            filename = paste0(dat[1,1], " - ", a, ".pdf"))
           }
         }
-
