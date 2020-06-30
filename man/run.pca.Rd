@@ -2,43 +2,50 @@
 % Please edit documentation in R/run.pca.R
 \name{run.pca}
 \alias{run.pca}
-\title{Run the PCA algorithm (using stats::princomp())}
+\title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, cor = TRUE, scores = TRUE, pca.plot = TRUE, scree.plot = TRUE, component.loading = TRUE, marker.contribution = TRUE, loading.plot = TRUE, individual.samples = FALSE, sample.code = "FileName", top.tally = 10, path = getwd())
+run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, component.loading = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
 
 \item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").}
 
-\item{cor}{DEFAULT = TRUE. A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.).}
-
-\item{scores}{DEFAULT = TRUE. A logical value indicating whether the score on each principal component should be calculated.}
-
-\item{pca.plot}{DEFAULT = TRUE. Option to create PCA plot.}
+\item{scale}{DEFAULT = TRUE. A logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place.}
 
 \item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.}
 
 \item{component.loading}{DEFAULT = TRUE. Option to create plots for each component. Requires scree.plot = TRUE.}
 
-\item{marker.contribution}{DEFAULT = TRUE. Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE.}
+\item{variable.contribution}{DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.}
 
-\item{loading.plot}{DEFAULT = TRUE. Option to create scree plots. Will save generated loading plot.}
+\item{plot.individuals}{DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).}
 
-\item{individual.samples}{DEFAULT = FALSE. Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included.}
+\item{plot.ind.label}{DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.}
 
-\item{sample.code}{DEFAULT = "FileName". Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE. Used for "individual.samples".}
+\item{row.names}{DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.}
 
-\item{top.tally}{DEFAULT = 10. Number of top markers that contributed to PCA across each sample. Used for "individual.samples".}
+\item{plot.ind.group}{DEFAULT = FALSE. Option to group inidividuals with ellipses. Must specify column that groups individuals with group.ind.}
+
+\item{group.ind}{DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.}
+
+\item{plot.variables}{DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).}
+
+\item{plot.combined}{DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.}
+
+\item{repel}{DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.}
 
 \item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
 \description{
 Method to run a PCA dimensionality reduction algorithm.
 A principal component analysis (PCA) is capable of reducing the number of dimensions (i.e. parameters) with minimal effect on the variation of the given dataset.
-A PCA is also capable of ranking parameters based on their contribution to the variability across a dataset in an extremely fast manner.
+This function will run a PCA calculation (extremely fast) and generate plots (takes time).
+For individuals (such as samples or patients), a PCA can group them based on their similarities.
+A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
 In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
-Uses the base R package "stats" for PCA, "factoextra" for PCA, scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.
+Uses the base R package "stats" for PCA, "factoextra" for PCA, scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
+More information on PCA plots can be found here http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/.
 }
 \examples{
 # Set directory to save files. By default it will save files at get()
@@ -46,7 +53,17 @@ setwd("/Users/felixmarsh-wakefield/Desktop")
 
 # Run PCA on demonstration dataset
 Spectre::run.pca(dat = Spectre::demo.start,
-        use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+                use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+                repel = TRUE
+                )
+
+# Compare between groups
+Spectre::run.pca(dat = Spectre::demo.start,
+                 use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+                 plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
+                 plot.ind.group = TRUE,
+                 group.ind = "Group"
+                 )
         
 # When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
 
