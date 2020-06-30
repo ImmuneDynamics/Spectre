@@ -13,7 +13,7 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{y.axis}{NO DEFAULT. Character. Column for Y axis.}
 
-\item{col.axis}{NO DEFAULT. Character. Column for colour.}
+\item{col.axis}{DEFAULT = NULL. If not specified, plot is coloured by density. If you provide a character name of a column (e.g. "BV605.Ly6C", "Group", "FlowSOM_metacluster" etc), then each point will be coloured by the value in that column.}
 
 \item{col.type}{DEFAULT = "continuous". Can also be "factor".}
 

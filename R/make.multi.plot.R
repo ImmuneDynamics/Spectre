@@ -146,7 +146,7 @@ make.multi.plot <- function(dat,
     ## Add density plot (if desired)
     if(length(dat.list) == 1){
       if(add.density == TRUE){
-        plots[[length(plots) + 1]] <- make.density.plot(dat = plot.dat,
+        plots[[length(plots) + 1]] <- make.colour.plot(dat = plot.dat,
                                                         x.axis = x.axis,
                                                         y.axis = y.axis,
                                                         colours = colours,
@@ -164,7 +164,7 @@ make.multi.plot <- function(dat,
 
     if(length(dat.list) > 1){
       if(add.density == TRUE){
-        plots[[length(plots) + 1]] <- Spectre::make.density.plot(dat = plot.dat,
+        plots[[length(plots) + 1]] <- make.colour.plot(dat = plot.dat,
                                                                  x.axis = x.axis,
                                                                  y.axis = y.axis,
                                                                  colours = colours,
