@@ -2,23 +2,9 @@
 % Please edit documentation in R/make.colour.plot.R
 \name{make.colour.plot}
 \alias{make.colour.plot}
-\title{Create a dot plot (X vs Y) coloured by a selected continuous column (e.g. marker expression)}
+\title{Create a dot plot (X vs Y) coloured by a selected continuous  (e.g. marker expression) or factorial (e..g. cluster, group) column.}
 \usage{
-make.colour.plot(dat, x.axis, y.axis, col.axis,
-                        title = col.axis, 
-                        hex = FALSE,
-                        hex.bins = 30,
-                        col.min.threshold = 0.01,
-                        col.max.threshold = 0.995,
-                        colours = "spectral",
-                        dot.size = 1,
-                        align.xy.by = dat,
-                        align.col.by = dat,
-                        save.to.disk = TRUE,
-                        path = getwd(),
-                        plot.width = 9,
-                        plot.height = 7,
-                        blank.axis = FALSE)
+make.colour.plot(dat, x.axis, y.axis, col.axis)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
@@ -29,62 +15,66 @@ make.colour.plot(dat, x.axis, y.axis, col.axis,
 
 \item{col.axis}{NO DEFAULT. Character. Column for colour.}
 
-\item{title}{DEFAULT = col.axis. Character. Title for the plot.}
+\item{col.type}{DEFAULT = "continuous". Can also be "factor".}
+
+\item{add.label}{DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".}
+
+\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.}
+
+\item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
+
+\item{colours}{DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu".}
 
 \item{col.min.threshold}{DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.}
 
 \item{col.max.threshold}{DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.}
 
-\item{colours}{DEFAULT = "spectral". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".}
-
-\item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
-
 \item{align.xy.by}{DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.}
 
 \item{align.col.by}{DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.}
 
-\item{save.to.disk}{DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.}
+\item{title}{DEFAULT = col.axis. Character. Title for the plot.}
 
-\item{path}{DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.}
+\item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
 \item{plot.width}{DEFAULT = 9. Width of the ggplot when saved to disk.}
 
 \item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
 
+\item{nudge_x}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.}
+
+\item{nudge_y}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.}
+
+\item{square}{DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.}
+
+\item{legend.loc}{DEFAULT = NULL. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired.}
+
+\item{save.to.disk}{DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.}
+
+\item{path}{DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.}
+
 \item{blank.axis}{DEFAULT = FALSE Logical, do you want a minimalist graph?}
-
-\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.}
-
-\item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
 }
 \description{
 This function allows you to create a coloured XY plot where each cell is coloured by a
 selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select
-cellular markers.
+cellular markers or clusters, samples, groups etc.
 }
 \examples{
+# Load packages
+library(Spectre)
+package.check()
+package.load()
+
 # Read data
-data.list <- Spectre::read.files(file.loc = InputDirectory, file.type = ".csv", do.embed.file.names = TRUE)
-cell.dat <- Spectre::do.merge.files(dat = data.list)
-
-# Specify clustering column
-ColumnNames <- as.matrix(unname(colnames(cell.dat)))
-ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
-ClusteringCols <- ColumnNames[ClusteringColNos]
-
-# Run UMAP
-cell.dat <- Spectre::run.umap(dat = cell.dat, use.cols = ClusteringCols, umap.seed = 42)
+cell.dat <- Spectre::demo.umap
+cell.dat <- as.data.table(cell.dat)
 
 # Draw plot
 Spectre::make.colour.plot(dat = cell.dat,
-                          x.axis = "UMAP_X",
-                          y.axis = "UMAP_Y",
-                          col.axis = "BV785.CD11c",
-                          title = paste0(i, "_", "BV785.CD11c"),
-                          align.xy.by = cell.dat,
-                          align.col.by = cell.dat, 
-                          save.to.disk = TRUE)
-
+                          x.axis = "UMAP_42_X",
+                          y.axis = "UMAP__42Y",
+                          col.axis = "BV605.Ly6C")
 
 
 }

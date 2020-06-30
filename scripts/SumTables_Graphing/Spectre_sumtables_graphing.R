@@ -120,9 +120,9 @@
           make.multi.plot(dat = plot.dat,
                          x.axis = i,
                          y.axis = plot.y,
-                         col.axis = group.col,
-                         type = "factor",
                          plot.by = group.col,
+                         divide.by = group.col,
+                         col.type = "factor",
                          figure.title = paste0(i, " - split by group"))
         }
 
@@ -139,7 +139,7 @@
     ### Write sumtables - proportions, cell counts, MFI
         setwd(OutputDirectory)
 
-        write.sumtables(x = cell.dat,
+        write.sumtables(dat = cell.dat,
                         sample.col = sample.col,
                         pop.col = pop.col,
 
@@ -147,7 +147,8 @@
                         annot.col = c(group.col, batch.col),
                         group.col = group.col,
 
-                        do.frequencies = TRUE,
+                        do.proportions = TRUE,
+
                         cell.counts = cell.counts, # vector must be in order of the samples in which they appear (unique(cell.dat[[sample.col]]))
                         do.mfi.per.sample = FALSE,
                         do.mfi.per.marker = TRUE)
@@ -156,7 +157,7 @@
     ### Write sumtables for 'percent positive' only
         setwd(OutputDirectory)
 
-        write.sumtables(x = cell.dat,
+        write.sumtables(dat = cell.dat,
                         sample.col = sample.col,
                         pop.col = pop.col,
 
@@ -164,7 +165,7 @@
                         annot.col = c(group.col, batch.col),
                         group.col = group.col,
 
-                        do.frequencies = FALSE,
+                        do.proportions = FALSE,
                         do.mfi.per.sample = FALSE,
                         do.mfi.per.marker = FALSE,
 
@@ -234,7 +235,7 @@
           }
 
           for(a in plot.names){
-            make.autograph(x = dat,
+            make.autograph(dat = dat,
                            x.axis = group.col,
                            grp.order = grp.order,
                            y.axis = a,

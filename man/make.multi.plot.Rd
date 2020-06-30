@@ -2,9 +2,9 @@
 % Please edit documentation in R/make.multi.plot.R
 \name{make.multi.plot}
 \alias{make.multi.plot}
-\title{Make multiple plots for each sample/group}
+\title{Make multiple plots for multiple columns and/or multiple sample/group/clusters}
 \usage{
-make.multi.plot(dat, x.axis, y.axis, col.axis, type, plot.by, align.xy.by, align.col.by, colours, figure.title, dot.size, col.min.threshold, col.max.threshold, path, plot.width,  plot.height, blank.axis, save.each.plot)
+make.multi.plot(dat, x.axis, y.axis, plot.by)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A data frame containing all the data you wish to plot}
@@ -13,25 +13,27 @@ make.multi.plot(dat, x.axis, y.axis, col.axis, type, plot.by, align.xy.by, align
 
 \item{y.axis}{NO DEFAULT. Y axis}
 
-\item{col.axis}{NO DEFAULT. Colour axis}
+\item{plot.by}{NO DEFAULT. A vector of character names for the columns you wish to plot.}
 
-\item{type}{NO DEFAULT. Specify whether col.axis is continious ('colour', for markers) or a factor ('factor', for clusters, sample, groups etc), 'labelled.factor' or 'density' (for density plots - note figure.title must be entered).}
+\item{divide.by}{DEFAULT = NULL. Here you can specify a character name of a column you wish to use to divide up the dataset.}
 
-\item{plot.by}{NO DEFAULT. Name of the FACTORS that the plots will be divided by (e.g. Sample, Group, Batch etc).}
+\item{add.density}{DEFAULT = FALSE. Can specify to add a density plot at the end the series of colour plots}
+
+\item{col.type}{DEFAULT = "continuous". Can also be "factor".}
+
+\item{figure.title}{DEFAULT = "Multi plot". Also used as the prefix for the saved file name.}
 
 \item{align.xy.by}{NO DEFAULT. Align X and Y to a dataset}
 
 \item{align.col.by}{NO DEFAULT. Align colour to a dataset}
 
-\item{colours}{DEFAULTS to 'spectral'. What colour scheme do you want to use. Only used if type = 'colour', ignored if type = 'factor'. Can be 'jet', 'spectral', 'viridis', 'inferno', or 'magma'.}
+\item{colours}{DEFAULTS to 'spectral'. What colour scheme do you want to use. Only used if type = 'colour', ignored if type = 'factor'. Can be 'jet', 'spectral', 'viridis', 'inferno', 'magma', or "BuPu".}
 
-\item{figure.title}{DEFAULTS to paste0(plot.by, " ", col.axis). Figure title. NOTE, CURRENTLY DISABLED.}
+\item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
-\item{dot.size}{DEFAULTS to 1. Size of dots}
+\item{col.min.threshold}{DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.}
 
-\item{col.min.threshold}{DEFAULTS to 0.01. Minimum threshold for colour scale.}
-
-\item{col.max.threshold}{DEFAULTS to 0.995. Maximum threshold for colour scale.}
+\item{col.max.threshold}{DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.}
 
 \item{path}{DEFAULTS TO getwd() -- i.e. the current working directory. Path to the desired output directory}
 
@@ -45,20 +47,15 @@ make.multi.plot(dat, x.axis, y.axis, col.axis, type, plot.by, align.xy.by, align
 }
 \description{
 Method to create multiple plots for each marker.
-This function allows you to create a grid of plots, where the cells are subsetted by a certain factor (e.g. one sample per plot).
-These can then be coloured by a marker or by another factor (e.g Group).
+This function allows you to create a grid of plots, where the cells are plotted by a series of columns, and/or subsetted by a certain factor (e.g. one sample per plot).
 Makes use of Spectre functions make.colour.plot and make.density.plot.
 }
 \examples{
 # Create grid of plots on demonstration data
-Spectre::make.multi.plots(dat = Spectre::demo.umap,
-                          x.axis <- "UMAP_42_X",
-                          y.axis <- "UMAP_42_Y",
-                          col.axis = "Group",
-                          type = "factor",
-                          plot.by = "Sample",
-                          align.xy.by = dat,
-                          align.col.by = dat)
+Spectre::make.multi.plot(dat = as.data.table(Spectre::demo.umap),
+                          x.axis = "UMAP_42_X",
+                          y.axis = "UMAP_42_Y",
+                          plot.by = c("BV605.Ly6C", "BUV737.B220", "AF700.CD45"))
 
 }
 \author{

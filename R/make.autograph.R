@@ -1,10 +1,10 @@
 #' make.autograph - Creates plots using ggplot2
-#' 
+#'
 #' This function allows you to generate quantitative plots of your data.
 #' Creates scatter plots.
 #' If interested in generating other plots (bar graphs) or adding statistics, we recommend reading more on using 'ggplot2' (for more info https://ggplot2.tidyverse.org/).
 #' Uses the package 'ggplot2' to generate plots, 'data.table' to manipulate data.
-#' 
+#'
 #' @param dat NO DEFAULT. data.frame.
 #' @param x.axis NO DEFAULT. Character or numeric. Selects column that will specify x-axis.
 #' @param y.axis NO DEFAULT. Character or numeric. Selects column that will specify y-axis.
@@ -21,7 +21,7 @@
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
 #' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
-#' 
+#'
 #' @examples
 #' dat <- data.frame(Samples = c("Mock_01", "Mock_02", "Mock_03", "WNV_01", "WNV_02", "WNV_03"),
 #'                   Group = c(rep("Mock", 3), rep("WNV", 3)),
@@ -29,7 +29,7 @@
 #'                   Bcells = c(90, 95, 70, 20, 15, 30),
 #'                   Batch = c(1,2,1,3,2,1)
 #'                   )
-#' 
+#'
 #' Spectre::make.autograph(dat = dat,
 #'                         x.axis = "Group",
 #'                         y.axis = "Tcells",
@@ -37,7 +37,7 @@
 #'                         colours = c("Black", "Red", "Blue"),
 #'                         y.axis.label = "Proportion"
 #'                         )
-#' 
+#'
 #' @author
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
@@ -50,6 +50,10 @@ make.autograph <- function(dat,
                            colours,
                            y.axis.label,
 
+                           my_comparisons = NULL,
+                           Variance_test = NULL,
+                           Pairwise_test = NULL,
+
                            grp.order = NULL,
                            title = paste0(y.axis.label, " - ", y.axis),
                            filename = paste0(y.axis.label, " - ", y.axis, ".pdf"),
@@ -58,7 +62,7 @@ make.autograph <- function(dat,
                            dot.size = 5,
                            width = 5,
                            height = 5,
-                           
+
                            path = getwd()
                            # my_comparisons = NULL,
                            # y.first.level = 1.2,
@@ -82,14 +86,14 @@ make.autograph <- function(dat,
       # y.second.level = 1.5
       # Variance_test <- "kruskal.test"
       # Pairwise_test <- "wilcox.test"
-  
+
   ### Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')    
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-  
+
   ### Require packages
-  require(Spectre)    
+  require(Spectre)
   require(ggplot2)
   require(data.table)
 
@@ -172,15 +176,15 @@ make.autograph <- function(dat,
 
       # MORE THAN TWO GROUPS: pairwise comparison with overall anova/Kruskal-Wallis result
 
-          # if(!is.null(my_comparisons)){
-          #   if(!is.null(Pairwise_test)){
-          #     p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
-          #   }
-          # }
-          # 
-          # if(!is.null(Variance_test)){
-          #   p <- p + stat_compare_means(method = Variance_test, label.y = max_y_value_p40, size = 4) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
-          # }
+          if(!is.null(my_comparisons)){
+            if(!is.null(Pairwise_test)){
+              p <- p + stat_compare_means(comparisons = my_comparisons, method = Pairwise_test) #, label.y = max_y_value_p10) + # Add pairwise comparisons p-value # default is "wilcox.test" (non-parametric), can be "t.test" (parametric) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
+            }
+          }
+
+          if(!is.null(Variance_test)){
+            p <- p + stat_compare_means(method = Variance_test, label.y = max_y_value_p40, size = 4) # Add global Anova ("anova") or Kruskal-Wallis ("kruskal.test", default) p-value # an add label.y = 50 to specifiy position
+          }
 
       # MORE THAN TWO GROUPS: compare against reference sample
           #stat_compare_means(method = "kruskal.test", label.y = 45) +      # Add global p-value

@@ -4,7 +4,7 @@
 \alias{make.density.plot}
 \title{Make a density plot (using ggpointdensity::geom_pointdensity())}
 \usage{
-make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.by, align.col.by, save.to.disk, path, plot.width,  plot.height, blank.axis)
+make.density.plot(dat, x.axis, y.axis)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -13,25 +13,29 @@ make.multi.marker.plot(dat, x.axis, y.axis, title, colours, dot.size, align.xy.b
 
 \item{y.axis}{NO DEFAULT. Character. Column for Y axis.}
 
-\item{title}{DEFAULT = "Density". Character. Title for the plot.}
-
-\item{colours}{DEFAULT = "viridis". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", or "inferno".}
-
-\item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
+\item{colours}{DEFAULT = "viridis". Character. Colour scheme to use. Can be "spectral", "jet", "viridis", "magma", "inferno", or "BuPu".}
 
 \item{align.xy.by}{DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.}
 
-\item{align.col.by}{DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.}
+\item{title}{DEFAULT = "Density". Character. Title for the plot.}
 
-\item{save.to.disk}{DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.}
-
-\item{path}{DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.}
+\item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
 \item{plot.width}{DEFAULT = 9. Width of the ggplot when saved to disk.}
 
 \item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
 
+\item{nudge_x}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.}
+
+\item{nudge_y}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.}
+
+\item{square}{DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.}
+
 \item{blank.axis}{DEFAULT = FALSE. Logical, do you want a minimalist graph?}
+
+\item{save.to.disk}{DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.}
+
+\item{path}{DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.}
 }
 \description{
 Method to create a density plot.
@@ -40,11 +44,18 @@ Can be used to plot any two markers.
 Uses "ggplot2" for plots, "ggpointdensity" for adding density to plots, "RColorBrewer" for colour schemes.
 }
 \examples{
-# Create density plot on demonstration dataset
-Spectre::make.density.plot(dat = Spectre::demo.umap,
-                  x.axis = "UMAP_42_X",
-                  y.axis = "UMAP_42_Y",
-                  save.to.disk = FALSE)
+library(Spectre)
+package.check()
+package.load()
+
+# Read data
+cell.dat <- Spectre::demo.umap
+cell.dat <- as.data.table(cell.dat)
+
+# Draw plot
+Spectre::make.density.plot(dat = cell.dat,
+                          x.axis = "UMAP_42_X",
+                          y.axis = "UMAP__42Y")
 
 }
 \author{
