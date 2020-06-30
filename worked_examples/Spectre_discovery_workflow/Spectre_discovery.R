@@ -217,7 +217,7 @@
 
 
     ### Preview results (without saving to disk)
-        Spectre::make.factor.plot(dat = cell.dat.sub,
+        Spectre::make.colour.plot(dat = cell.dat.sub,
                                   x.axis = "UMAP_X",
                                   y.axis = "UMAP_Y",
                                   col.axis = "FlowSOM_metacluster",

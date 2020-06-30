@@ -13,7 +13,7 @@ run.chronoclust(dat, timepoint.col, use.cols, config=NULL, clust.name = "ChronoC
 
 \item{use.cols}{NO DEFAULT. Vector of column names to use for clustering.}
 
-\item{config}{DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter. 
+\item{config}{DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
 \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.}
 
 \item{clust.name}{DEFAULT = "ChronoClust_cluster". Character. Name of the resulting 'cluster'}
@@ -21,7 +21,7 @@ run.chronoclust(dat, timepoint.col, use.cols, config=NULL, clust.name = "ChronoC
 \description{
 Method to run ChronoClust clustering algorithm.
 For this to work properly, a Python session must already be embedded within the currently running R session.
-This is because ChronoClust is originally written in Python 3. 
+This is because ChronoClust is originally written in Python 3.
 Spectre includes a function \code{\link{run.prepare.chronoclust}} that uses Reticulate to prepare and embed Python session within R session.
 }
 \examples{
@@ -38,18 +38,18 @@ ClusteringCols <- ColumnNames[ClusteringColNos]
 timepoint.col <- 'day'
 
 # Prepare Python session
-run.prepare.chronoclust(environment_name = "chronoclust-R", 
-                        create_environment = TRUE, 
+run.prepare.chronoclust(environment_name = "chronoclust-R",
+                        create_environment = TRUE,
                         install_dependencies = TRUE)
 
 
 # Specify the parameters that need to be overriden
-config <- list(beta = 0.2, 
-               delta = 0.05, 
-               epsilon = 0.03, 
+config <- list(beta = 0.2,
+               delta = 0.05,
+               epsilon = 0.03,
                mu = 0.01)
 
-cell.dat <- Spectre::run.chronoclust(dat=cell.dat, 
+cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
                                      timepoint.col=timepoint.col,
                                      use.cols=ClusteringCols,
                                      config=config)
