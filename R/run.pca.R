@@ -2,6 +2,7 @@
 #' 
 #' Method to run a PCA dimensionality reduction algorithm.
 #' A principal component analysis (PCA) is capable of reducing the number of dimensions (i.e. parameters) with minimal effect on the variation of the given dataset.
+#' This function will run a PCA calculation (extremely fast) and generate plots (takes time).
 #' For individuals (such as samples or patients), a PCA can group them based on their similarities.
 #' A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
 #' In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
@@ -15,6 +16,7 @@
 #' @param component.loading DEFAULT = TRUE. Option to create plots for each component. Requires scree.plot = TRUE.
 #' @param variable.contribution DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.
 #' @param plot.individuals DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).
+#' @param plot.ind.label DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.
 #' @param row.names DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.
 #' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses. Must specify column that groups individuals with group.ind.
 #' @param group.ind DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.
@@ -23,7 +25,7 @@
 #' @param repel DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, component.loading = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, component.loading = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
@@ -31,7 +33,17 @@
 #' 
 #' # Run PCA on demonstration dataset
 #' Spectre::run.pca(dat = Spectre::demo.start,
-#'         use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+#'                 use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+#'                 repel = TRUE
+#'                 )
+#' 
+#' # Compare between groups
+#' Spectre::run.pca(dat = Spectre::demo.start,
+#'                  use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+#'                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
+#'                  plot.ind.group = TRUE,
+#'                  group.ind = "Group"
+#'                  )
 #'         
 #' # When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
 #' 
@@ -45,6 +57,7 @@ run.pca <- function(dat,
                  component.loading = TRUE,
                  variable.contribution = TRUE,
                  plot.individuals = TRUE,
+                 plot.ind.label = "point",
                  row.names = NULL,
                  plot.ind.group = FALSE,
                  group.ind = NULL,
@@ -153,7 +166,8 @@ run.pca <- function(dat,
   # Create PCA plot with individuals
   if (plot.individuals == TRUE) {
     pca_plot_ind <- factoextra::fviz_pca_ind(pca_out,
-                                             repel = repel)
+                                             repel = repel,
+                                             geom = plot.ind.label)
     
     ggplot2::ggsave(pca_plot_ind,
                     filename = "PCA plot-individuals.pdf",
@@ -178,7 +192,8 @@ run.pca <- function(dat,
                              addEllipses = TRUE, # Concentration ellipses
                              ellipse.type = "confidence",
                              legend.title = "Groups",
-                             repel = repel
+                             repel = repel,
+                             geom = plot.ind.label
                              )
     
     ggplot2::ggsave(pca_out_ind_group,
@@ -219,7 +234,8 @@ run.pca <- function(dat,
     pca_out_comb <- factoextra::fviz_pca_biplot(pca_out,
                                 col.var = "Grey", # Variables color
                                 col.ind = "Black",  # Individuals color
-                                repel = repel
+                                repel = repel,
+                                geom = plot.ind.label
                                 )
     
     ggplot2::ggsave(pca_out_comb,
