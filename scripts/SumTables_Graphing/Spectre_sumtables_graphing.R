@@ -83,11 +83,9 @@
         grp.order <- c("Mock", "WNV")
         grp.colours <- c("Black", "Red")
 
-        # TODO remove no longer required as autograph is not supporting it
-        # stat.comparisons <- list(c("Mock", "WNV")) # A list of comparisons for statistical test (used in graphing and stats)
-        #
-        # var.test <- "kruskal.test" # can be "kruskal.test", "anova", or NULL
-        # pair.test <- "wilcox.test" # can be "wilcox.test". "t.test", or NULL
+        stat.comparisons <- list(c("Mock", "WNV")) # A list of comparisons for statistical test (used in graphing and stats)
+        var.test <- "kruskal.test" # can be "kruskal.test", "anova", or NULL
+        pair.test <- "wilcox.test" # can be "wilcox.test". "t.test", or NULL
 
     ### Define cell counts (if desired)
 
@@ -116,6 +114,14 @@
     ### Create some plots
 
         setwd(OutputDirectory)
+        dir.create("Plots")
+        setwd("Plots")
+
+        for(i in to.plot){
+          make.colour.plot(dat = plot.dat,
+                           x.axis = i,
+                           y.axis = plot.y)
+        }
 
         for(i in to.plot){
           make.multi.plot(dat = plot.dat,
@@ -139,6 +145,8 @@
 
     ### Write sumtables - proportions, cell counts, MFI
         setwd(OutputDirectory)
+        dir.create("SumTables")
+        setwd("SumTables")
 
         write.sumtables(dat = cell.dat,
                         sample.col = sample.col,
@@ -157,6 +165,8 @@
 
     ### Write sumtables for 'percent positive' only
         setwd(OutputDirectory)
+        dir.create("SumTables")
+        setwd("SumTables")
 
         write.sumtables(dat = cell.dat,
                         sample.col = sample.col,
@@ -179,6 +189,8 @@
 
     ### List of sumtables
         setwd(OutputDirectory)
+        dir.create("SumTables")
+        setwd("SumTables")
 
         sumtable.files <- list.files(getwd(), ".csv")
         sumtable.files
@@ -193,6 +205,8 @@
 
     ### Pheatmap loop
         setwd(OutputDirectory)
+        dir.create("SumTables")
+        setwd("SumTables")
 
         for(i in sumtable.files){
           dat <- fread(i)
@@ -204,12 +218,10 @@
                                          ctrl.grp = ctrl.grp,
                                          convert.cols = plot.names)
 
-          ## Remove "Inf" or -Inf"
-          dat.fold[sapply(dat.fold, is.infinite)] <- NA
+          dat.fold[sapply(dat.fold, is.infinite)] <- NA ## Remove "Inf" or -Inf"
 
           ## Make Pheatmap
           a <- gsub(".csv", "", i)
-
           make.pheatmap(dat = dat.fold,
                         file.name = paste0(a, ".png"),
                         plot.title = a,
@@ -217,12 +229,14 @@
                         annot.cols = group.col,
                         plot.cols = plot.names,
                         dendrograms = "none",
+                        row.sep = 6, # This will need to be changed depending on the samples/groups
                         is.fold = TRUE)
         }
 
-
     ### AutoGraph loops
         setwd(OutputDirectory)
+        dir.create("SumTables")
+        setwd("SumTables")
 
         for(i in sumtable.files){
           dat <- fread(i)
@@ -238,8 +252,13 @@
           for(a in plot.names){
             make.autograph(dat = dat,
                            x.axis = group.col,
-                           grp.order = grp.order,
                            y.axis = a,
+
+                           grp.order = grp.order,
+                           my_comparisons = stat.comparisons,
+                           Variance_test = var.test,
+                           Pairwise_test = pair.test,
+
                            colour.by = group.col,
                            colours = grp.colours,
                            y.axis.label = dat[1,1],

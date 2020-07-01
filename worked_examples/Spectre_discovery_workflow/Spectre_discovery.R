@@ -221,8 +221,7 @@
                                   x.axis = "UMAP_X",
                                   y.axis = "UMAP_Y",
                                   col.axis = "FlowSOM_metacluster",
-                                  align.xy.by = cell.dat.sub,
-                                  align.col.by = cell.dat.sub,
+                                  col.type = 'factor',
                                   add.label = TRUE,
                                   save.to.disk = FALSE)
 
@@ -282,8 +281,12 @@
                                  group.col = group.col,
                                  annot.col = "Batch",
                                  measure.col = CellularCols,
+                                 do.proportions = FALSE,
                                  do.mfi.per.marker = FALSE,
                                  do.mfi.per.sample = TRUE)
+
+        setwd(OutputDirectory)
+        setwd("Output-expression-heatmaps")
 
     ### Create an expression heatmap
 
@@ -295,115 +298,116 @@
                       file.name = "MFI.heatmap.png",
                       plot.title = "Expression per cluster",
                       sample.col = "FlowSOM_metacluster",
-                      standard.colours = "YlGnBu",
                       plot.cols = CellularCols)
 
 #########################################################################################################
 #### Create and save some tSNE/UMAP plots for the whole dataset
 #########################################################################################################
 
-    ### Plot some sample-oriented plots
+    ### Plot some 'all data' factor plots
         setwd(OutputDirectory)
         dir.create("Output-plots")
         setwd("Output-plots")
 
-        Spectre::make.factor.plot(dat = cell.dat.sub,
-                                 x.axis = "UMAP_X",
-                                 y.axis = "UMAP_Y",
-                                 col.axis = sample.col,
-                                 align.xy.by = cell.dat.sub,
-                                 align.col.by = cell.dat.sub)
+        Spectre::make.colour.plot(dat = cell.dat.sub,
+                                  x.axis = "UMAP_X",
+                                  y.axis = "UMAP_Y",
+                                  col.axis = sample.col,
+                                  col.type = 'factor')
 
-        Spectre::make.factor.plot(dat = cell.dat.sub,
+        Spectre::make.colour.plot(dat = cell.dat.sub,
                                   x.axis = "UMAP_X",
                                   y.axis = "UMAP_Y",
                                   col.axis = group.col,
-                                  align.xy.by = cell.dat.sub,
-                                  align.col.by = cell.dat.sub)
+                                  col.type = 'factor')
+
+        Spectre::make.colour.plot(dat = cell.dat.sub,
+                                  x.axis = "UMAP_X",
+                                  y.axis = "UMAP_Y",
+                                  col.axis = "FlowSOM_metacluster",
+                                  col.type = 'factor',
+                                  add.label = TRUE)
+
+    ### Make some factor multiplots
 
         Spectre::make.multi.plot(dat = cell.dat.sub,
-                                 type = "factor",
+                                 col.type = "factor",
                                  x.axis = "UMAP_X",
                                  y.axis = "UMAP_Y",
-                                 col.axis = group.col,
                                  plot.by = sample.col,
-                                 align.xy.by = cell.dat.sub,
-                                 align.col.by = cell.dat.sub,
-                                 dot.size = 1)
+                                 divide.by = group.col)
 
         Spectre::make.multi.plot(dat = cell.dat.sub,
-                                 type = "factor",
+                                 col.type = "factor",
                                  x.axis = "UMAP_X",
                                  y.axis = "UMAP_Y",
-                                 col.axis = sample.col,
                                  plot.by = group.col,
-                                 align.xy.by = cell.dat.sub,
-                                 align.col.by = cell.dat.sub,
-                                 dot.size = 1)
+                                 divide.by = sample.col)
 
-    ### Plot some cluster-oriented plots
-        Spectre::make.factor.plot(dat = cell.dat.sub,
-                                   x.axis = "UMAP_X",
-                                   y.axis = "UMAP_Y",
-                                   col.axis = "FlowSOM_metacluster",
-                                   align.xy.by = cell.dat.sub,
-                                   align.col.by = cell.dat.sub,
-                                   add.label = TRUE)
+        Spectre::make.multi.plot(dat = cell.dat.sub,
+                                 col.type = "factor",
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 figure.title = "Multiplot - clusters by sample",
+                                 plot.by = "FlowSOM_metacluster",
+                                 divide.by = sample.col)
 
-    ### Plot some marker-oriented plots
-        setwd(OutputDirectory)
-        setwd("Output-plots")
-        dir.create("all-samples")
-        setwd("all-samples")
+        Spectre::make.multi.plot(dat = cell.dat.sub,
+                                 col.type = "factor",
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 figure.title = "Multiplot - clusters by group",
+                                 plot.by = "FlowSOM_metacluster",
+                                 divide.by = group.col)
 
-        Spectre::make.multi.marker.plot(dat = cell.dat.sub,
-                                   x.axis = "UMAP_X",
-                                   y.axis = "UMAP_Y",
-                                   plot.by = c(CellularCols),
-                                   align.xy.by = cell.dat.sub,
-                                   align.col.by = cell.dat.sub,
-                                   figure.title = "Markers",
-                                   dot.size = 1,
-                                   save.each.plot = TRUE)
+    ### Make some expression multiplots
 
+        Spectre::make.multi.plot(dat = cell.dat.sub,
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 plot.by = CellularCols,
+                                 add.density = TRUE)
 
 #########################################################################################################
 #### Create tSNE/UMAP plots for each sample and group seperately
 #########################################################################################################
 
-    ### Plot some marker-oriented plots -- one set per sample
-        setwd(OutputDirectory)
-        setwd("Output-plots")
-        dir.create("by-sample")
-        setwd("by-sample")
-
-        for(i in as.matrix(unique(cell.dat.sub[[sample.col]]))){
-          for(a in CellularCols){
-            Spectre::make.colour.plot(dat = cell.dat.sub[cell.dat.sub[[sample.col]] == i,],
-                                      x.axis = "UMAP_X",
-                                      y.axis = "UMAP_Y",
-                                      col.axis = a,
-                                      title = paste0(i, "_", a),
-                                      align.xy.by = cell.dat.sub,
-                                      align.col.by = cell.dat.sub)
-          }
-        }
-
-    ### Plot some marker-oriented plots -- one set per group
+    ### Plot some marker-oriented plots -- one set per group, X/Y/colour min and max set by the full dataset
         setwd(OutputDirectory)
         setwd("Output-plots")
         dir.create("by-group")
         setwd("by-group")
 
         for(i in as.matrix(unique(cell.dat.sub[[group.col]]))){
-          for(a in CellularCols){
-            Spectre::make.colour.plot(dat = cell.dat.sub[cell.dat.sub[[group.col]] == i,],
-                                      x.axis = "UMAP_X",
-                                      y.axis = "UMAP_Y",
-                                      col.axis = a,
-                                      title = paste0(i, "_", a),
-                                      align.xy.by = cell.dat.sub,
-                                      align.col.by = cell.dat.sub)
-          }
+          temp <- cell.dat.sub[cell.dat.sub[[group.col]] == i,]
+
+          Spectre::make.multi.plot(dat = temp,
+                                   x.axis = "UMAP_X",
+                                   y.axis = "UMAP_Y",
+                                   plot.by = CellularCols,
+                                   figure.title = paste0("Multi plot - group ", i, " - "),
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat.sub,
+                                   add.density = TRUE)
+        }
+
+
+    ### Plot some marker-oriented plots -- one set per group, X/Y/colour min and max set by the full dataset
+        setwd(OutputDirectory)
+        setwd("Output-plots")
+        dir.create("by-sample")
+        setwd("by-sample")
+
+        for(i in as.matrix(unique(cell.dat.sub[[sample.col]]))){
+          temp <- cell.dat.sub[cell.dat.sub[[sample.col]] == i,]
+
+          Spectre::make.multi.plot(dat = temp,
+                                   x.axis = "UMAP_X",
+                                   y.axis = "UMAP_Y",
+                                   plot.by = CellularCols,
+                                   figure.title = paste0("Multi plot - sample ", i, " - "),
+                                   align.xy.by = cell.dat.sub,
+                                   align.col.by = cell.dat.sub,
+                                   add.density = TRUE)
         }
 

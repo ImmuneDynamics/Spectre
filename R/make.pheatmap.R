@@ -35,11 +35,11 @@
 #'                        annot.cols = 2,
 #'                        fold.range = c(3,-3)
 #'                        )
-#' 
+#'
 #' # Fold change heatmap
 #' dat <- Spectre::hmap.foldcell
 #' dat$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2) # Add variable that will be annotated on heatmap
-#' 
+#'
 #' Spectre::make.pheatmap(dat = dat,
 #'                        file.name = "test.png",
 #'                        plot.title = "Test plot",
@@ -83,13 +83,13 @@ make.pheatmap <- function(dat,
 {
 
   ### Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')    
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
   if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
   if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
 
   ### Require packages
-  require(Spectre)    
+  require(Spectre)
   require(pheatmap)
   require(RColorBrewer)
   require(scales)
@@ -171,7 +171,7 @@ make.pheatmap <- function(dat,
         heatmap.data
       }
 
-      else if(is.null(annot.cols) == TRUE){
+      if(is.null(annot.cols) == TRUE){
         annot <- NULL
         heatmap.data <- heatmap.data[plot.cols] # remove columns
         heatmap.data
@@ -324,7 +324,7 @@ make.pheatmap <- function(dat,
       title.text <- plot.title
 
   ### Plot heatmap and dendrograms
-      
+
       # Specify directory heatmap will be saved
       setwd(path)
 

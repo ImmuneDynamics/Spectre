@@ -157,35 +157,34 @@
         as.matrix(names(cell.dat.sub))
 
     ### All data
-        make.factor.plot(dat = cell.dat.sub,
+        make.colour.plot(dat = cell.dat.sub,
                          x.axis = Xdim.name,
                          y.axis = Ydim.name,
                          col.axis = population.name,
+                         col.type = 'factor',
                          add.label = TRUE)
 
     ### Group multi plots
         make.multi.plot(dat = cell.dat.sub,
                         x.axis = Xdim.name,
                         y.axis = Ydim.name,
-                        col.axis = population.name,
-                        type = "factor",
-                        plot.by = group.col,
-                        align.xy.by = cell.dat.sub,
-                        align.col.by = cell.dat.sub)
+                        plot.by = population.name,
+                        divide.by = group.col,
+                        col.type = "factor")
 
 ##########################################################################################################
 #### Make an expression heatmap
 ##########################################################################################################
 
     ### Summary data (cluster x marker)
-        Spectre::write.sumtables(x = cell.dat,
+        Spectre::write.sumtables(dat = cell.dat,
                                  sample.col = sample.col,
                                  pop.col = population.name,
                                  measure.col = to.measure,
                                  annot.col = to.annotate,
                                  group.col = group.col,
 
-                                 do.frequencies = FALSE,
+                                 do.proportions = FALSE,
                                  cell.counts = NULL,
                                  do.mfi.per.sample = TRUE, ###
                                  do.mfi.per.marker = FALSE)
