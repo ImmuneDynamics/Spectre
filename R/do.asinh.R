@@ -10,9 +10,9 @@
 #' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
 #' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.
 #' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation which should reduce noise from negative values. Use with caution.
-#' 
+#'
 #' @return A data.table with new columns added, that contain the asinh transformed data.
-#' 
+#'
 #' @export
 
 do.asinh <- function(dat,
@@ -20,9 +20,9 @@ do.asinh <- function(dat,
                      cofactor = 5,
                      append.cf = FALSE,
                      reduce.noise = FALSE) {
-  
+
   value <- dat[,use.cols,with = FALSE]
-  
+
   # https://github.com/JinmiaoChenLab/cytofkit/issues/71
   if(reduce.noise == TRUE){
     message("This noise reduction function is experimental, and should be used with caution")
@@ -31,16 +31,26 @@ do.asinh <- function(dat,
     if(length(loID) > 0)
       value[loID] <- rnorm(length(loID), mean = 0, sd = 0.01)
   }
-  
+
   value <- value / cofactor
   value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
-  
+
   if(append.cf == TRUE){
-    names(value) <- paste0(names(value), "_asinh_cf", cofactor)
+    if(length(use.cols) > 1){
+      names(value) <- paste0(names(value), "_asinh_cf", cofactor)
+    }
+    if(length(use.cols) == 1){
+      names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
+    }
   }
-  
+
   if(append.cf == FALSE){
-    names(value) <- paste0(names(value), "_asinh")
+    if(length(use.cols) > 1){
+      names(value) <- paste0(names(value), "_asinh")
+    }
+    if(length(use.cols) == 1){
+      names(value) <- paste0(use.cols, "_asinh")
+    }
   }
 
   dat <- cbind(dat, value)
