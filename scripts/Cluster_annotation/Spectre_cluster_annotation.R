@@ -88,23 +88,22 @@
 ##########################################################################################################
 
     ### Embed population name columns in cell.dat
-        cell.dat <- Spectre::do.embed.columns(x = cell.dat,
-                                              type = "data.table",
-                                              base.name = cluster.name,
-                                              col.name = population.name,
-                                              match.to = as.vector(annotations[,1]),
-                                              new.cols = as.vector(annotations[,2]))
+
+        cell.dat <- do.embed.columns(dat = cell.dat,
+                                     base.col = "FlowSOM_metacluster",
+                                     add.dat = annotations,
+                                     add.by = "Cluster")
+
 
         cell.dat
 
     ### Embed population name columns in cell.dat.sub
 
-        cell.dat.sub <- Spectre::do.embed.columns(x = cell.dat.sub,
-                                                  type = "data.table",
-                                                  base.name = cluster.name,
-                                                  col.name = population.name,
-                                                  match.to = as.vector(annotations[,1]),
-                                                  new.cols = as.vector(annotations[,2]))
+        cell.dat.sub <- do.embed.columns(dat = cell.dat.sub,
+                                         base.col = "FlowSOM_metacluster",
+                                         add.dat = annotations,
+                                         add.by = "Cluster")
+
 
         cell.dat.sub
 

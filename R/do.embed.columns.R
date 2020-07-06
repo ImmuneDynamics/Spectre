@@ -25,8 +25,20 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
                              add.by,
                              rmv.ext = TRUE)
 {
+
+  ## Packages
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+
+  ### Require packages
+  require(Spectre)
+  require(data.table)
+
   dat <- as.data.table(dat)
   add.dat <- as.data.table(add.dat)
+
+  dat.names <- names(dat)
+  add.dat.names <- names(add.dat)
 
   if(rmv.ext == TRUE){
     for(i in c(1:length(names(add.dat)))){
@@ -39,15 +51,42 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
     }
   }
 
-  add.dat <- cbind(add.dat[,add.by,with = FALSE], add.dat[,!add.by,with = FALSE])
+  p1 <- add.dat[,add.by,with = FALSE]
+  p2 <- add.dat[,!add.by,with = FALSE]
+
+  add.dat <- cbind(p1, p2)
+
+  rm(p1)
+  rm(p2)
+
   names(add.dat)[c(1)] <- base.col
+
+  dat[[base.col]] <- as.factor(dat[[base.col]])
+  add.dat[[base.col]] <- as.factor(add.dat[[base.col]])
+
+  # class(dat[[base.col]])
+  # class(add.dat[[base.col]])
 
   if(class(dat[[base.col]]) != class(add.dat[[base.col]])){
     warning(paste0("The column '", base.col, "' in your main dataset", " is ", class(dat[[base.col]]), ", whereas the column '", add.by, "' in the 'to add' data is ", class(add.dat[[base.col]]), ". You may need to adjust their types to ensure they are the same. If you are matching based on character values (filenames, popualtion names etc, then both need to be character."))
   }
 
-  res = merge(dat, add.dat, by = base.col, sort = FALSE)
+  res.1 = merge(dat, add.dat, by = base.col, sort = FALSE)
+  res.2 <- res.1[,add.dat.names[c(2:length(add.dat.names))], with = FALSE]
 
-  return(res)
+  res.3 <- cbind(dat, res.2)
+
+  # qrs <- dat[,base.col,with = FALSE]
+  #
+  # setkeyv(qrs, base.col)
+  # setkeyv(add.dat, base.col)
+  #
+  # qrs[,list(add.dat,qrs)]
+  # add.dat[,list(qrs,add.dat)]
+  #
+  # setkey(dat, NULL)
+  # setkeyv(add.dat, NULL)
+
+  return(res.3)
 }
 

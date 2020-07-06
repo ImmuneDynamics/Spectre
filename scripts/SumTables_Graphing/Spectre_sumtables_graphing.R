@@ -103,10 +103,9 @@
 
         as.matrix(names(cell.dat))
 
-        plot.dat <- do.subsample(cell.dat,
-                                 method = "per.sample",
-                                 samp.col = group.col,
-                                 targets = rep(5000, length(grp.order)))
+        plot.dat <- do.subsample(dat = cell.dat,
+                                 targets = rep(5000, length(grp.order)),
+                                 divide.by = group.col)
 
         plot.y <- "BV605.Ly6C"
         to.plot <- c("BV711.SCA.1", "APC.BrdU")

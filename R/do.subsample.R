@@ -5,7 +5,7 @@
 #' Useful to decrease total cells for generating dimensionality reduction plots (tSNE/UMAP).
 #'
 #' @param dat NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).
-#' @param targets NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique sample.by entries.
+#' @param targets NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries.
 #' @param divide.by DEFAULT = NULL. Character. Name of the column that reflects groupings of cells (sample names, group names etc) if you want to subsample by each.
 #' @param min.per DEFAULT = FALSE. If TRUE, and samp.col is specified, each sample contributes the same amount of data based on sample with lowest count.
 #' @param seed DEFAULT = 42. Numeric. Seed for reproducibility.
@@ -38,7 +38,7 @@ do.subsample <- function(dat,
   require(data.table)
 
   ## IF random
-  if(is.null(sample.by)){
+  if(is.null(divide.by)){
     set.seed(seed)
     subsample.res <- dat[sample(1:nrow(dat), targets), ]
     subsample.res <- as.data.table(subsample.res)
@@ -46,11 +46,11 @@ do.subsample <- function(dat,
   }
 
   ## IF per.sample
-  if(!is.null(sample.by)){
+  if(!is.null(divide.by)){
 
     if(min.per == FALSE){
       # Create list of unique sample names
-      sample.list <- unique(dat[,sample.by,with = FALSE])
+      sample.list <- unique(dat[,divide.by,with = FALSE])
       sample.list <- sample.list[[1]]
 
       # Create res data.frame
@@ -61,7 +61,7 @@ do.subsample <- function(dat,
         nam <- sample.list[i]
         nsub <- targets[i]
 
-        data.temp <- dat[dat[[sample.by]] == nam,]
+        data.temp <- dat[dat[[divide.by]] == nam,]
 
         nrow(data.temp)
         set.seed(seed)
@@ -79,7 +79,7 @@ do.subsample <- function(dat,
     ## IF min.per.sample
     if(min.per == TRUE){
       # Create list of unique sample names
-      sample.list <- unique(dat[sample.by])
+      sample.list <- unique(dat[divide.by])
       sample.list <- sample.list[,1]
       sample.list
 
@@ -87,9 +87,9 @@ do.subsample <- function(dat,
       #for(i in c(1:(length(DataList)))){nrow.check[[i]] <- nrow(DataList[[i]])}
       #DownSampleTargets <- c(rep(nrow.check[[which.min(nrow.check)]], each=length(unique(AllSampleNos))))
 
-      #min(data.frame(table(dat[[sample.by]]))$Freq) #calculates count of each parameter (sample.by) in data (dat), selecting the minimum number
+      #min(data.frame(table(dat[[divide.by]]))$Freq) #calculates count of each parameter (divide.by) in data (dat), selecting the minimum number
       # Sets downsample target to be the same for each sample, based on whichever has the smallest number of cells
-      targets <- c(rep(min(data.frame(table(dat[[sample.by]]))$Freq), each=length(unique(dat[[sample.by]]))))
+      targets <- c(rep(min(data.frame(table(dat[[divide.by]]))$Freq), each=length(unique(dat[[divide.by]]))))
 
       # Create res data.frame
       subsample.res <- data.frame()
@@ -97,7 +97,7 @@ do.subsample <- function(dat,
       for (i in c(1:length(sample.list))) {
         nam <- sample.list[i]
         nsub <- targets[i]
-        data.temp <- subset(dat, dat[[sample.by]] == nam) # works
+        data.temp <- subset(dat, dat[[divide.by]] == nam) # works
         nrow(data.temp)
         set.seed(seed)
         data.temp <- data.temp[sample(1:nrow(data.temp), nsub), ]

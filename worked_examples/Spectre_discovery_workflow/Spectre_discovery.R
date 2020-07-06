@@ -85,27 +85,7 @@
         head(data.list)
         head(data.list[[1]])
 
-    ### 2.2. Read sample metadata and embed in sample data
-
-        ## Read in metadata
-        setwd(MetaDirectory)
-        meta.dat <- read.csv(file = "sample.details.csv")
-        meta.dat
-        setwd(PrimaryDirectory)
-
-        ### Embed sample metadata
-
-        for(i in c(2:length(names(meta.dat)))){
-          data.list <- Spectre::do.embed.columns(x = data.list,
-                                                 type = "list",
-                                                 match.to = meta.dat[c(1)],
-                                                 new.cols = meta.dat[c(i)],
-                                                 col.name = names(meta.dat[c(i)]))
-        }
-
-        head(data.list)
-
-    ### 2.3. Merge files
+    ### 2.2. Merge files
 
         ## Merge files and review
         cell.dat <- Spectre::do.merge.files(dat = data.list)
@@ -119,8 +99,27 @@
         ## Are there any NAs present in cell.dat? Yes if 'TRUE', no if 'FALSE'
         any(is.na(cell.dat))
 
+    ### 2.3. Read sample metadata and embed in sample data
+
+        ## Read in metadata
+        setwd(MetaDirectory)
+        meta.dat <- fread("sample.details.csv")
+        meta.dat
+        setwd(PrimaryDirectory)
+
+        names(meta.dat)
+        meta.dat <- meta.dat[,c(1:4)]
+        meta.dat
+
+        cell.dat <- do.embed.columns(dat = cell.dat,
+                                     base.col = "FileName",
+                                     add.dat = meta.dat,
+                                     add.by = "Filename")
+
+        cell.dat
+
         ## Cleanup (not necessary, but recommended)
-          #rm(data.list, data.start, ncol.check, nrow.check, all.file.names, all.file.nums)
+        rm(data.list, all.file.names, all.file.nums)
 
 ##########################################################################################################
 #### 3. Define data and sample variables for analysis
@@ -203,10 +202,8 @@
         as.matrix(unique(cell.dat[[sample.col]]))
 
         cell.dat.sub <- Spectre::do.subsample(dat = cell.dat,
-                                               method = "per.sample", # or "random
-                                               samp.col = sample.col,
-                                               targets = down.samp.targets,
-                                               seed = 42)
+                                              targets = down.samp.targets,
+                                              divide.by = sample.col)
 
         nrow(cell.dat.sub)
 
@@ -324,6 +321,12 @@
         Spectre::make.colour.plot(dat = cell.dat.sub,
                                   x.axis = "UMAP_X",
                                   y.axis = "UMAP_Y",
+                                  col.axis = batch.col,
+                                  col.type = 'factor')
+
+        Spectre::make.colour.plot(dat = cell.dat.sub,
+                                  x.axis = "UMAP_X",
+                                  y.axis = "UMAP_Y",
                                   col.axis = "FlowSOM_metacluster",
                                   col.type = 'factor',
                                   add.label = TRUE)
@@ -335,14 +338,24 @@
                                  x.axis = "UMAP_X",
                                  y.axis = "UMAP_Y",
                                  plot.by = sample.col,
-                                 divide.by = group.col)
+                                 divide.by = group.col,
+                                 figure.title = "Sample by Group")
 
         Spectre::make.multi.plot(dat = cell.dat.sub,
                                  col.type = "factor",
                                  x.axis = "UMAP_X",
                                  y.axis = "UMAP_Y",
                                  plot.by = group.col,
-                                 divide.by = sample.col)
+                                 divide.by = sample.col,
+                                 figure.title = "Group by Sample")
+
+        Spectre::make.multi.plot(dat = cell.dat.sub,
+                                 col.type = "factor",
+                                 x.axis = "UMAP_X",
+                                 y.axis = "UMAP_Y",
+                                 plot.by = group.col,
+                                 divide.by = batch.col,
+                                 figure.title = "Group by Batch")
 
         Spectre::make.multi.plot(dat = cell.dat.sub,
                                  col.type = "factor",
