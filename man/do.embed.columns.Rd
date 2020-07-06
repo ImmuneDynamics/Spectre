@@ -4,35 +4,26 @@
 \alias{do.embed.columns}
 \title{do.embed.columns}
 \usage{
-do.embed.columns(x, type, base.name, col.name, match.to, new.cols, rmv.ext)
+do.embed.columns(dat, base.col, add.dat, add.by, rmv.ext)
 }
 \arguments{
-\item{x}{NO DEFAULT. A list of dataframes (samples) that will recieve the new columns.}
+\item{dat}{NO DEFAULT. A data.table (or data.frame) containing the data to have new values added to.}
 
-\item{type}{DEFAULTS TO "data.table". Can be "data.table" or "list". Whether you wish to embed new values into a single dataframe based on values in another column, or dataframes as part of a list based on the name of the dataframes.}
+\item{base.col}{NO DEFAULT. Name of the column containing values that new values will be matched to.}
 
-\item{base.name}{NO DEFAULT. Name or number of the column containing values that new values will be matched to. Only required when embedding into a single data.table/data.frame -- when embedding into a list of data.tables/data.frames, matching is done based on the name of each data.table/data.frame}
+\item{add.dat}{NO DEFAULT. A data table of new values to embed as a new columns, with one column containing values used for matching with the target data.table.}
 
-\item{col.name}{NO DEFAULT. Character, desired name for the new column.}
-
-\item{match.to}{NO DEFAULT. Avector that specifies which terms are used for matching (e.g. c("Sample 1", "Sample 2", "Sample 3", "Sample 4"), or c("Cluster 1", "Cluster 2"), etc).}
+\item{add.by}{NO DEFAULT. Character, name of the column in add.dat that is used for matching to the taret dataset.}
 
 \item{rmv.ext}{DEFAULTS TO TRUE. Logical, can be TRUE or FALSE. Removes the ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.}
-
-\item{new.cils}{NO DEFAULT. A vector of new values to embed as a new column, matched to the corresponding value in 'match.to' (e.g. c("Group 1", "Group 1", "Group 2", "Group 2"), or c("T cells", "B cells"), etc).}
 }
 \value{
-For type = "data.table", returns the data.table with new columns embedded. For type = "list", returns list with newly embedded values in each data.table within the list.
+Returns the data.table with new columns embedded..
 }
 \description{
 do.embed.columns
 }
 \examples{
-# For type = "list"
-data.list <- .........
-
-# For type = "data.table"
-cell.dat <- ........
 
 }
 \references{

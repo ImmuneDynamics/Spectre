@@ -4,12 +4,16 @@
 \alias{do.normalise}
 \title{do.normalise - Normalise data in selected columns between 0 and 1}
 \usage{
-do.normalise(dat, use.cols, zero.drops = NULL)
+do.normalise(dat, use.cols, new.min = 0, new.max = 1, zero.drops = NULL)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
 
 \item{use.cols}{NO DEFAULT. Vector of character column names -- these columns will be normalised and added to the data.table as new columns.}
+
+\item{new.min}{DEFAULT = 0. The new minimum value.}
+
+\item{new.max}{DEFAULT = 1. The new maximum value.}
 
 \item{zero.drops}{DEFAULT = NULL. This is an experimental calculation which should reduce noise from negative values. Use with caution. Supplying a vector of values for each column (that matches the order or use.cols) that reflects the negative 'cutoff' for eachc column. Values below this will be turned into this value, which will all then be converted to 0.}
 }
@@ -17,7 +21,7 @@ do.normalise(dat, use.cols, zero.drops = NULL)
 A data.table with new columns added, that contain the normalised data.
 }
 \description{
-This function allows you to normalise the data in selected columns between 0 and 1. Each column will this have it's minimum value transformed to 0, and it's maximum value transformed to 1.
+This function allows you to normalise the data in selected columns between two values, usually 0 and 1.
 }
 \references{
 \url{https://sydneycytometry.org.au/spectre}

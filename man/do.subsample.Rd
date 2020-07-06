@@ -4,16 +4,16 @@
 \alias{do.subsample}
 \title{Subsample data}
 \usage{
-do.subsample(dat, method, samp.col, targets, seed)
+do.subsample(dat, targets, samp.col, min.per, seed)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).}
 
-\item{method}{NO DEFAULT. Character. Can be 'random' (downsampling single number from merged data), 'per.sample' (specifying number of cells each sample contributes) or 'min.per.sample' (each sample contributes the same amount of data based on sample with lowest count).}
+\item{targets}{NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique sample.by entries.}
 
-\item{samp.col}{NO DEFAULT. Character. Name of the column that reflects sample names.}
+\item{divide.by}{DEFAULT = NULL. Character. Name of the column that reflects groupings of cells (sample names, group names etc) if you want to subsample by each.}
 
-\item{targets}{NO DEFAULT. List of downsample targets (if random, then absolute target; if per.sample, then targets per sample, must be in the same order as the unique sample names appear in the data frame or data table; can leave blank if min.per.sample).}
+\item{min.per}{DEFAULT = FALSE. If TRUE, and samp.col is specified, each sample contributes the same amount of data based on sample with lowest count.}
 
 \item{seed}{DEFAULT = 42. Numeric. Seed for reproducibility.}
 }
@@ -24,9 +24,7 @@ Useful to decrease total cells for generating dimensionality reduction plots (tS
 }
 \examples{
 Spectre::do.subsample(dat = Spectre::demo.start,
-                      method = "per.sample",
-                      samp.col = "FileName",
-                      targets = c(rep(1000,12)))
+                      targets = 10000)
 
 }
 \author{
