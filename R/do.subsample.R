@@ -37,6 +37,8 @@ do.subsample <- function(dat,
   require(Spectre)
   require(data.table)
 
+  dat <- as.data.table(dat)
+
   ## IF random
   if(is.null(divide.by)){
     set.seed(seed)
