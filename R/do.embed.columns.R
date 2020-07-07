@@ -34,7 +34,6 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   require(Spectre)
   require(data.table)
 
-
   dat.names <- names(dat)
   add.dat.names <- names(add.dat)
 
@@ -53,7 +52,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   add.dat <- as.data.table(add.dat)
 
   p1 <- add.dat[,add.by,with = FALSE]
-  p2 <- add.dat[,!add.by,with = FALSE]
+  p2 <- add.dat[,setdiff(names(add.dat),add.by),with = FALSE]
 
   add.dat <- cbind(p1, p2)
 
