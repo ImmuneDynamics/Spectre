@@ -67,9 +67,9 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   # class(dat[[base.col]])
   # class(add.dat[[base.col]])
 
-  if(class(dat[[base.col]]) != class(add.dat[[base.col]])){
-    warning(paste0("The column '", base.col, "' in your main dataset", " is ", class(dat[[base.col]]), ", whereas the column '", add.by, "' in the 'to add' data is ", class(add.dat[[base.col]]), ". You may need to adjust their types to ensure they are the same. If you are matching based on character values (filenames, popualtion names etc, then both need to be character."))
-  }
+  # if(class(dat[[base.col]]) != class(add.dat[[base.col]])){
+  #   warning(paste0("The column '", base.col, "' in your main dataset", " is ", class(dat[[base.col]]), ", whereas the column '", add.by, "' in the 'to add' data is ", class(add.dat[[base.col]]), ". You may need to adjust their types to ensure they are the same. If you are matching based on character values (filenames, popualtion names etc, then both need to be character."))
+  # }
 
   res.1 = merge(dat, add.dat, by = base.col, sort = FALSE)
   res.2 <- res.1[,add.dat.names[c(2:length(add.dat.names))], with = FALSE]

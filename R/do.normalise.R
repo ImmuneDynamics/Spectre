@@ -38,13 +38,15 @@ do.normalise <- function(dat,
   value <- dat[,use.cols,with = FALSE]
 
   ### Changes values < cutoff to the cutoff values
-  for(i in c(1:length(use.cols))){
-    # i <- 1
-    a <- use.cols[[i]]
-    b <- zero.drops[[i]]
-    temp <- value[,a,with = FALSE]
-    temp[temp[[a]] < b,] <- b
-    value[,a] <- temp
+  if(!is.null(zero.drops)){
+    for(i in c(1:length(use.cols))){
+      # i <- 1
+      a <- use.cols[[i]]
+      b <- zero.drops[[i]]
+      temp <- value[,a,with = FALSE]
+      temp[temp[[a]] < b,] <- b
+      value[,a] <- temp
+    }
   }
 
   ### Normalise between 0 to 1
