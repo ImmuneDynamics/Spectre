@@ -34,8 +34,6 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   require(Spectre)
   require(data.table)
 
-  dat <- as.data.table(dat)
-  add.dat <- as.data.table(add.dat)
 
   dat.names <- names(dat)
   add.dat.names <- names(add.dat)
@@ -50,6 +48,9 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
       }
     }
   }
+
+  dat <- as.data.table(dat)
+  add.dat <- as.data.table(add.dat)
 
   p1 <- add.dat[,add.by,with = FALSE]
   p2 <- add.dat[,!add.by,with = FALSE]
