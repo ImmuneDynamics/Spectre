@@ -6,7 +6,6 @@
 #'
 #' @param ref.dat NO DEFAULT. If using method = "CytoNorm", this must be a FlowSOM object created by Spectre::do.prep.fsom. If using "Quantiles", then this must be
 #' @param target.dat NO DEFAULT. A data.table of data you wish to align
-#' @param sample.col NO DEFAULT. Character, column that denotes samples
 #' @param batch.col NO DEFAULT. Character, column that denotes batches
 #' @param align.cols NO DEFAULT. Character, a vector of columns that you wish to align.
 #' @param method DEFAULT = "CytoNorm". Character, can be "CytoNorm" or "Quantile".
@@ -32,7 +31,9 @@ do.align <- function(ref.dat,
                      target.dat,
 
                      ## Columns
-                     sample.col, # used to divide 'ref' and 'target' data into 'samples'
+                     #sample.col, # used to divide 'ref' and 'target' data into 'samples'
+                        # @param sample.col NO DEFAULT. Character, column that denotes samples
+
                      batch.col, # Column denoting batches
                      align.cols, # Channels to align
 
@@ -74,7 +75,7 @@ do.align <- function(ref.dat,
   # target.dat = target.dat
   #
   # ## Columns
-  # sample.col = sample.col
+  # sample.col <- batch.col
   # batch.col = batch.col
   # align.cols = align.cols
   #
@@ -123,7 +124,9 @@ do.align <- function(ref.dat,
 
   if(method == "CytoNorm"){
 
-    message("do.align -- setup started")
+    message("do.align -- Step 1/5. Setup started")
+
+    sample.col <- batch.col
 
     ### Initial stuff
 
@@ -230,13 +233,11 @@ do.align <- function(ref.dat,
 
     target.labels
 
-    message("do.align -- setup complete")
-
     ###########################################################################################
     ### TRAIN THE MODEL -- Create quantile conversion model (using ref samples)
     ###########################################################################################
 
-    message("do.align -- training started")
+    message("do.align -- Step 2/5. Training started")
 
     ### Some preferences
 
@@ -361,13 +362,11 @@ do.align <- function(ref.dat,
     model <- named.list(fsom, clusterRes) ###### mismatch
     model
 
-    message("do.align -- training completed")
-
     ###########################################################################################
     ### APPLY THE MODEL -- Align datasets (apply to all samples)
     ###########################################################################################
 
-    message("do.align -- alignment started")
+    message("do.align -- Step 3/5. Alignment started")
 
     ## Write 'training' list samples to FCS files
     getwd()
@@ -543,11 +542,12 @@ do.align <- function(ref.dat,
                                                           paste0(prefix,gsub(".*/","",file)))))
     }
 
-    message("do.align -- alignment completed")
 
     ###########################################################################################
     ### Read FCS files back in and create merged DT
     ###########################################################################################
+
+    message("do.align -- Step 4/5. Re-import files and creating 'modified' data.table")
 
     setwd(starting.dir)
     setwd("tmp-target/")
@@ -589,12 +589,11 @@ do.align <- function(ref.dat,
     mod.dat
     names(mod.dat)
 
-    message("do.align -- modified data created")
-
     ###########################################################################################
     ### Return mod.dat and cleanup
     ###########################################################################################
 
+    message("do.align -- Step 5/5. Cleanup and returning aligned data")
 
     setwd(starting.dir)
     list.dirs(getwd(), full.names = FALSE, recursive = FALSE)
