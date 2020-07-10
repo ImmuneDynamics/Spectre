@@ -30,9 +30,9 @@ do.normalise <- function(dat,
   }
 
   ### Create normalisation function
-    #norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
-    norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (new.max - new.min) + new.min}
-    #norm.fun <- function(x){scales::rescale(value, to=c(new.min,new.max))}
+  #norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
+  norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (new.max - new.min) + new.min}
+  #norm.fun <- function(x){scales::rescale(value, to=c(new.min,new.max))}
 
   ### Establish dataset
   value <- dat[,use.cols,with = FALSE]
@@ -65,3 +65,4 @@ do.normalise <- function(dat,
   ###
   return(dat)
 }
+

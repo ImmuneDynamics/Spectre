@@ -70,22 +70,22 @@ do.align <- function(ref.dat,
   ### Test data
   ###########################################################################################
 
-        # ref.dat = ref.fsom
-        # target.dat = target.dat
-        #
-        # ## Columns
-        # sample.col = sample.col
-        # batch.col = batch.col
-        # align.cols = align.cols
-        #
-        # ## CytoNorm settings
-        # method = "CytoNorm"
-        # goal = "mean"
-        # nQ = 101
-        #
-        # ## Writing result files
-        # write.ref.fcs = TRUE
-        # write.target.fcs = TRUE
+  # ref.dat = ref.fsom
+  # target.dat = target.dat
+  #
+  # ## Columns
+  # sample.col = sample.col
+  # batch.col = batch.col
+  # align.cols = align.cols
+  #
+  # ## CytoNorm settings
+  # method = "CytoNorm"
+  # goal = "mean"
+  # nQ = 101
+  #
+  # ## Writing result files
+  # write.ref.fcs = TRUE
+  # write.target.fcs = TRUE
 
   ###########################################################################################
   ### If using quantile method
@@ -416,7 +416,7 @@ do.align <- function(ref.dat,
     if(is.null(model$fsom) |
        is.null(model$clusterRes)){
       stop("The 'model' paramter should be the result of using the
-             trainQuantiles function.")
+           trainQuantiles function.")
     }
 
     if(length(labels) != length(files)){
