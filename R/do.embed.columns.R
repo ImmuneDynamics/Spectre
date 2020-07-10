@@ -23,7 +23,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
 
                              add.dat,
                              add.by,
-                             rmv.ext = TRUE)
+                             rmv.ext = FALSE)
 {
 
   ## Packages
@@ -51,6 +51,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   add.dat.names <- names(add.dat)
 
   if(rmv.ext == TRUE){
+    message("Removing '.csv' or '.fcs' extension")
     for(i in c(1:length(names(add.dat)))){
       if(is.numeric(add.dat[[i]]) == FALSE){
         temp <- add.dat[[i]]
@@ -64,11 +65,11 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   dat <- as.data.table(dat)
   add.dat <- as.data.table(add.dat)
 
+  message("Step 1/3. Mapping data")
   p1 <- add.dat[,add.by,with = FALSE]
   p2 <- add.dat[,setdiff(names(add.dat),add.by),with = FALSE]
 
   added.names <- names(p2)
-
   add.dat <- cbind(p1, p2)
 
   rm(p1)
@@ -89,6 +90,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   dat.names
   added.names
 
+  message("Step 2/3. Merging data")
   res.1 = merge(dat, add.dat, by = base.col, sort = FALSE)
   res.1 <- res.1[,c(dat.names,added.names),]
 
@@ -108,6 +110,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   # setkeyv(add.dat, NULL)
 
   #return(res.3)
+  message("Step 3/3. Returning data")
   return(res.1)
 }
 

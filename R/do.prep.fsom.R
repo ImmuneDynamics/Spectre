@@ -81,9 +81,11 @@ do.prep.fsom <- function(dat,
   setwd("tmp-cytonorm-fsom")
 
   ### Write files
+
+  message("Step 1/4 - Splitting files for use with original FlowSOM function")
+
   dat.list <- unique(dat[[sample.col]])
   dat.list
-
 
   for(i in dat.list){
     write.files(dat = dat[dat[[sample.col]] == i,],
@@ -110,6 +112,8 @@ do.prep.fsom <- function(dat,
   batches <- as.vector(batches)
 
   ### Run FlowSOM on ref data (--> save as ref.ff, also save as ref.dat)
+
+  message("Step 2/4 - Running FlowSOM")
 
   ## With nCells downsampling
   if(!is.null(nCells)){
@@ -146,6 +150,9 @@ do.prep.fsom <- function(dat,
   # fsom$metaclustering[fsom$FlowSOM$map$mapping[,1]]
 
   ### Merge outputs into Spectre format
+
+  message("Step 3/4 - Preparing FlowSOM object and results data.table")
+
   A <- fsom$FlowSOM$data
   B <- fsom$FlowSOM$map$mapping[,1]
   C <- fsom$metaclustering[fsom$FlowSOM$map$mapping[,1]]
@@ -171,6 +178,8 @@ do.prep.fsom <- function(dat,
   fsom$batches <- batches
 
   res <- named.list(fsom, fsom.dt)
+
+  message("Step 4/4 - FlowSOM complete")
   return(res)
 }
 
