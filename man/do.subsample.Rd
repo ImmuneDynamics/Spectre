@@ -9,7 +9,7 @@ do.subsample(dat, targets, samp.col, min.per, seed)
 \arguments{
 \item{dat}{NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).}
 
-\item{targets}{NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique sample.by entries.}
+\item{targets}{NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries.}
 
 \item{divide.by}{DEFAULT = NULL. Character. Name of the column that reflects groupings of cells (sample names, group names etc) if you want to subsample by each.}
 

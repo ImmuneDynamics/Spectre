@@ -4,7 +4,7 @@
 \alias{do.prep.fsom}
 \title{do.prep.fsom - Function to prepare a FlowSOM (fsom) object for alignment with CytoNorm}
 \usage{
-do.prep.fsom(dat, cols, sample.col, xdim, ydim, nClus, nCells, scale, seed)
+do.prep.fsom(dat, use.cols, sample.col, xdim, ydim, nClus, nCells, scale, seed)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table of the dataset you wish to run in FlowSOM.}
