@@ -23,7 +23,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
 
                              add.dat,
                              add.by,
-                             rmv.ext = FALSE)
+                             rmv.ext = TRUE)
 {
 
   ## Packages
@@ -35,7 +35,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   require(data.table)
 
   ## Test data
-      # dat <- Spectre::demo.start
+      # dat <- as.data.table(Spectre::demo.start)
       # base.col <- "FileName"
       #
       # add.dat <- data.table(Filename = unique(dat$FileName),
@@ -45,10 +45,30 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
       # add.by <- "Filename"
       # rmv.ext = TRUE
 
-  ##
+  ### Checks
 
-  dat.names <- names(dat)
-  add.dat.names <- names(add.dat)
+      dat <- as.data.table(dat)
+      add.dat <- as.data.table(add.dat)
+
+      if(!(base.col %in% colnames(dat))){
+        stop(paste0("Your entry '", base.col, "' (base.col) was not found in your dataset (dat). Please make sure you have correctly entered the name of the column."))
+      }
+
+      if(!(add.by %in% colnames(add.dat))){
+        warning(paste0("Your entry '", add.by, "' (add.by) was not found in your dataset (add.dat). Please make sure you have correctly entered the name of the column."))
+      }
+
+      dat.names <- names(dat)
+      add.dat.names <- names(add.dat)
+
+      pos <- match(add.by,add.dat.names)
+      check.dup <- c(dat.names, add.dat.names[-pos])
+
+      if(any(duplicated(check.dup))){
+        stop("You have duplciate column names in your 'dat' and 'add.dat' entries. The 'base.col', and 'add.by' column names may be identical, but all other columns should unique.")
+      }
+
+  ###
 
   if(rmv.ext == TRUE){
     message("Removing '.csv' or '.fcs' extension")
@@ -92,7 +112,8 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
 
   message("Step 2/3. Merging data")
   res.1 = merge(dat, add.dat, by = base.col, sort = FALSE)
-  res.1 <- res.1[,c(dat.names,added.names),]
+  res.1 <- as.data.table(res.1)
+  res.2 <- res.1[,c(dat.names,added.names), with = FALSE]
 
   #res.2 <- res.1[,add.dat.names[c(2:length(add.dat.names))], with = FALSE]
 
@@ -111,6 +132,6 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
 
   #return(res.3)
   message("Step 3/3. Returning data")
-  return(res.1)
+  return(res.2)
 }
 
