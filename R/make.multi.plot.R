@@ -14,19 +14,19 @@
 #'
 #' @param col.type DEFAULT = "continuous". Can also be "factor".
 #' @param figure.title DEFAULT = "Multi plot". Also used as the prefix for the saved file name.
-#' @param align.xy.by NO DEFAULT. Align X and Y to a dataset
-#' @param align.col.by NO DEFAULT. Align colour to a dataset
+#' @param align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
+#' @param align.col.by DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.
 #' @param colours DEFAULTS to 'spectral'. What colour scheme do you want to use. Only used if type = 'colour', ignored if type = 'factor'. Can be 'jet', 'spectral', 'viridis', 'inferno', 'magma', or "BuPu".
 #' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
 #' @param col.min.threshold DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.
 #' @param col.max.threshold DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.
-#' @param path DEFAULTS TO getwd() -- i.e. the current working directory. Path to the desired output directory
-#' @param plot.width DEFAULTS to 9.
-#' @param plot.height DEFAULTS to 7.
-#' @param blank.axis DEFAULT = FALSE. Logical, do you want a minimalist graph?
-#' @param save.each.plot DEFAULT = FALSE. Do you want to save each plot?
+#' @param path DEFAULT = getwd() -- i.e. the current working directory. Path to the desired output directory
+#' @param plot.width DEFAULT = 9.
+#' @param plot.height DEFAULT = 7.
+#' @param blank.axis DEFAULT = FALSE. Logical. Do you want a minimalist graph?
+#' @param save.each.plot DEFAULT = FALSE. Logical. Do you want to save each plot?
 #'
-#' @usage make.multi.plot(dat, x.axis, y.axis, plot.by)
+#' @usage make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, col.min.threshold, col.max.threshold, path, plot.width, plot.height, blank.axis, save.each.plot)
 #'
 #' @examples
 #' # Create grid of plots on demonstration data
