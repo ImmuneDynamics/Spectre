@@ -15,7 +15,7 @@
 #' @param do.proportions DEFAULT = TRUE. Do you wish to create cell proportion and/or cell count results?
 #' @param cell.counts DEFAULT = NULL. If you wish to generate cell.count results, a vector of cell counts (e.g. c(1000, 1500, 2439,)) representing the cell counts in each of the samples. Must be entered in the order the that unique sample names appear in the dataset.
 #' @param do.mfi.per.sample DEFAULT = TRUE. Do you wish to generate MFI data (markers vs clusters) for each sample?
-#' @param do.mfi.per.marker Currently inactive, set to FALSE.
+#' @param do.mfi.per.marker DEFAULT = FALSE. Do you wish to generate MFI data (sample vs clusters) for each marker?
 #'
 #' @param perc.pos.markers DEFAULT = NULL. A vector of column names of calculating percent positive summary stats.
 #' @param perc.pos.cutoff DEFAULT = NULL. A vector of 'positive' cut-off values for the markers defined in perc.pos.markers. Must be in same order.
