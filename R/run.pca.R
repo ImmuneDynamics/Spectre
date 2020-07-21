@@ -6,14 +6,13 @@
 #' For individuals (such as samples or patients), a PCA can group them based on their similarities.
 #' A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
 #' In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
-#' Uses the base R package "stats" for PCA, "factoextra" for PCA, scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
+#' Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
 #' More information on PCA plots can be found here http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/.
 #'
 #' @param dat NO DEFAULT. data.frame.
 #' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").
 #' @param scale DEFAULT = TRUE. A logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place.
 #' @param scree.plot DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.
-#' @param component.loading DEFAULT = TRUE. Option to create plots for each component. Requires scree.plot = TRUE.
 #' @param variable.contribution DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.
 #' @param plot.individuals DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).
 #' @param plot.ind.label DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.
@@ -23,9 +22,10 @@
 #' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
 #' @param plot.combined DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.
 #' @param repel DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.
+#' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, component.loading = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
@@ -47,6 +47,16 @@
 #'         
 #' # When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
 #' 
+#' ## Possible issues ##
+#' # Remove any NA present
+#' na.omit(dat)
+#' 
+#' # Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
+#' dat <- data.table::as.data.table(dat)
+#' dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
+#' 
+#' # Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
+#' 
 #' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
@@ -54,7 +64,6 @@ run.pca <- function(dat,
                  use.cols,
                  scale = TRUE,
                  scree.plot = TRUE,
-                 component.loading = TRUE,
                  variable.contribution = TRUE,
                  plot.individuals = TRUE,
                  plot.ind.label = "point",
@@ -64,6 +73,7 @@ run.pca <- function(dat,
                  plot.variables = TRUE,
                  plot.combined = TRUE,
                  repel = FALSE,
+                 var.numb = 20,
                  path = getwd()
                  ) {
   
@@ -109,56 +119,28 @@ run.pca <- function(dat,
            filename = "Scree plot.pdf",
            path = path)
     
-    if (component.loading == TRUE) {
-      # Set parameters for plots
-      data.loadings <- unclass(pca_out$rotation) #'princomp' equivalent to 'loadings'
-      data.load.order <- as.data.frame(data.loadings[gtools::mixedsort(row.names(data.loadings)), ])
-      
-      # Create bargraphs for PC (up to the elbow)
-      max_y_value <- max(data.load.order[,1:elbow.point], na.rm = TRUE)
-      max_y_value_p10 <- max_y_value*1.1
-      
-      min_y_value <- min(data.load.order[,1:elbow.point], na.rm = TRUE)
-      min_y_value_p10 <- min_y_value*1.1
-      
-      # Creates loadings plots for each of the components/dimensions (based on elbow point)
-      for (i in 1:elbow.point) {
-        p_loading <- ggplot2::ggplot(data = data.load.order, ggplot2::aes(x = rownames(data.load.order), y = data.load.order[,i])) +
-          ggplot2::geom_bar(stat="identity", color = "black", fill = "black") +
-          #theme_minimal() + #includes grids
-          ggplot2::theme_classic() + #removes all grids
-          ggplot2::scale_x_discrete(limits = c(rownames(data.load.order))) + #sets order
-          ggplot2::scale_y_continuous(limits = c(min_y_value_p10, max_y_value_p10)) +
-          ggplot2::labs(title = paste0("PC", i), x = "Variable", y = "Component loading") +
-          ggplot2::theme(legend.position = "none", # can be "left" "right" "top" "bottom" "none
-                axis.text.x = ggplot2::element_text(colour="black",size=12,angle=90,hjust=1,vjust=1,face="bold"),
-                axis.text.y = ggplot2::element_text(colour="black",size=12,angle=0,hjust=1,vjust=0,face="bold"),  
-                axis.title.x = ggplot2::element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-                axis.title.y = ggplot2::element_text(colour="black",size=12,angle=90,hjust=.5,vjust=1,face="bold"),
-                plot.title = ggplot2::element_text(lineheight=.8, face="bold", hjust = 0, size = 18), # hjust = 0.5 to centre
-                axis.line = ggplot2::element_line(colour = 'black', size = 0.5),
-                axis.ticks = ggplot2::element_line(colour = "black", size = 0.5)
-          )
-        
-        ggplot2::ggsave(p_loading,
-                        filename = paste0("PC", i, sep = "_", "loading.pdf"),
-                        width = 16,
-                        height = 5,
-                        path = path)
-      }
-    }
-    
     if (variable.contribution == TRUE) {
       # Creates plot with contributions of each variable
       pca.contrib <- factoextra::fviz_contrib(pca_out, #red dashed line represents the expected average row contributions if the contributions were uniform: 1/nrow(markers)
                                   choice = "var", #variable ("var") or individual ("ind")
-                                  axes = 1:elbow.point) #axes refer to PCA number
+                                  axes = 1:elbow.point, #axes refer to PCA number
+                                  top = var.numb #top number of variables to be plotted
+                                  )
       
       ggplot2::ggsave(pca.contrib,
-             filename = "pca_contribution.pdf",
+             filename = "PCA plot-contribution.pdf",
              width = 16,
              height = 5,
              path = path)
+      
+      # Extract contribution of variables
+      pca_out_var <- factoextra::get_pca_var(pca_out)
+      pca_var_contrib <- as.data.frame(pca_out_var$contrib) #coordinates of each point for PCA plot
+
+      data.table::fwrite(pca_var_contrib,
+                         "PCA-contributions.csv",
+                         row.names = TRUE)
+      
     }
     
   }
@@ -207,11 +189,13 @@ run.pca <- function(dat,
     loading_plot <- factoextra::fviz_pca_var(pca_out,
                                       col.var = "contrib",
                                       gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
-                                      repel = repel)
+                                      repel = repel,
+                                      select.var = list(contrib = var.numb) #plots the top number of contributors
+                                      )
     
-    # Saves loadings plot
+    # Save loadings plot
     ggplot2::ggsave(loading_plot,
-           filename = "Loading plot.pdf",
+           filename = "PCA plot-variables.pdf",
            path = path)
     
     # Extract coordinates of variables
@@ -223,10 +207,6 @@ run.pca <- function(dat,
                        "PCA-variables.csv",
                        row.names = TRUE)
     
-    data.loadings <- unclass(pca_out$rotation) #shows the loadings values for everything!
-    data.table::fwrite(x = as.data.frame(data.loadings),
-           file = "loadings.csv",
-           row.names = TRUE)
   }
   
   # Create combined PCA plot with individuals and variables
@@ -235,7 +215,8 @@ run.pca <- function(dat,
                                 col.var = "Grey", # Variables color
                                 col.ind = "Black",  # Individuals color
                                 repel = repel,
-                                geom = plot.ind.label
+                                geom = plot.ind.label,
+                                select.var = list(contrib = var.numb) #plots the top number of contributors
                                 )
     
     ggplot2::ggsave(pca_out_comb,
