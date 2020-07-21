@@ -141,6 +141,13 @@ run.pca <- function(dat,
                          "PCA-contributions.csv",
                          row.names = TRUE)
       
+      # Extract eigenvalues
+      pca_eig <- factoextra::get_eig(pca_out)
+      
+      data.table::fwrite(pca_eig,
+                         "PCA-eigenvalues.csv",
+                         row.names = TRUE)
+      
     }
     
   }
