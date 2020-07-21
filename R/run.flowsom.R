@@ -2,7 +2,7 @@
 #'
 #' Method to run the FlowSOM clustering algorithm.
 #' This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.
-#' Output data will be "flowsom.res"
+#' Output data will be "flowsom.res.original" (for clusters) and "flowsom.res.meta" (for metaclusters).
 #' Uses the R packages "FlowSOM" for clustering, "flowCore" for handling .fcs files, "Biobase" for creating a flow frame, "data.table" for handling data.table format.
 #'
 #' @param dat NO DEFAULT. data.frame. Input sample.
@@ -16,7 +16,7 @@
 #' @param meta.clust.name DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
 #' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
-#' @usage run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
+#' @usage run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
 #'
 #' @examples
 #' # Run FlowSOM on demonstration dataset

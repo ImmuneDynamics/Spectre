@@ -2,15 +2,18 @@
 #'
 #' This function allows you to read in sample files (.csv or .fcs) into a list, where each file is saved as a data.table.
 #'
-#' @usage read.files(file.loc, file.type, do.embed.file.names)
+#' @usage read.files(file.loc, file.type, do.embed.file.names, header)
 #'
 #' @param file.loc DEFAULT = getwd(). What is the location of your files?
 #' @param file.type DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".
 #' @param do.embed.file.names DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?
+#' @param header DEFAULT = TRUE. Does the first line of data contain column names?
 #'
 #' @return Returns a list of data.tables -- one per CSV file.
 #'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' @author
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
@@ -21,7 +24,8 @@
 
 read.files <- function(file.loc = getwd(),
                        file.type = ".csv",
-                       do.embed.file.names = TRUE)
+                       do.embed.file.names = TRUE,
+                       header = TRUE)
 {
 
     ## For testing
@@ -62,7 +66,7 @@ read.files <- function(file.loc = getwd(),
           file.names <- list.files(path=file.loc, pattern = file.type)
 
           for (file in file.names) { # Loop to read files into the list
-            tempdata <- data.table::fread(file, check.names = FALSE)
+            tempdata <- data.table::fread(file, check.names = FALSE, header = header)
             file <- gsub(".csv", "", file)
             data.list[[file]] <- tempdata
           }
