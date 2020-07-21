@@ -53,7 +53,7 @@
 #' 
 #' # Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
 #' dat <- data.table::as.data.table(dat)
-#' dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
+#' dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
 #' 
 #' # Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
 #' 
