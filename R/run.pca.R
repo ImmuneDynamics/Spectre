@@ -141,11 +141,21 @@ run.pca <- function(dat,
                          "PCA-contributions.csv",
                          row.names = TRUE)
       
-      # Extract eigenvalues
+      # Extract raw eigenvalues
       pca_eig <- factoextra::get_eig(pca_out)
       
       data.table::fwrite(pca_eig,
                          "PCA-eigenvalues.csv",
+                         row.names = TRUE)
+      
+      # Extract corrected contributions
+      pca_eig_contrib <- facto_summarize(pca_out,
+                                 element = "var",
+                                 result = "contrib",
+                                 axes = 1:elbow.point)
+      
+      data.table::fwrite(pca_eig_contrib,
+                         paste0("PCA-eig-contrib_", elbow.point, "-dim.csv"),
                          row.names = TRUE)
       
     }
