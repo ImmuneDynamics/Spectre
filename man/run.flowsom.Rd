@@ -24,6 +24,8 @@ run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clu
 \item{clust.name}{DEFAULT = "FlowSOM_cluster". Character. Name of the resulting 'cluster' parameter.}
 
 \item{meta.clust.name}{DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.}
+
+\item{mem.ctrl}{DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.}
 }
 \description{
 Method to run the FlowSOM clustering algorithm.

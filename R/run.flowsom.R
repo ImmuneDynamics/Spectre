@@ -14,6 +14,7 @@
 #' @param meta.seed DEFAULT = 42 Numeric. Metaclustering seed for reproducibility.
 #' @param clust.name DEFAULT = "FlowSOM_cluster". Character. Name of the resulting 'cluster' parameter.
 #' @param meta.clust.name DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
+#' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
 #' @usage run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
 #'
@@ -21,8 +22,8 @@
 #' # Run FlowSOM on demonstration dataset
 #' Spectre::run.flowsom(Spectre::demo.start,
 #'                      use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
-#' 
-#' @author 
+#'
+#' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
@@ -35,7 +36,8 @@ run.flowsom <- function(dat,
                         clust.seed = 42,
                         meta.seed = 42,
                         clust.name = "FlowSOM_cluster",
-                        meta.clust.name = "FlowSOM_metacluster"){
+                        meta.clust.name = "FlowSOM_metacluster",
+                        mem.ctrl = TRUE){
 
   #### TEST VALUES
       # dat <- demo.start
@@ -76,7 +78,9 @@ run.flowsom <- function(dat,
   require(data.table)
 
   ## Setup
-  clustering.cols <- use.cols
+
+      message("Preparing data")
+      clustering.cols <- use.cols
 
   ## Remove non-numeric
       head
@@ -85,6 +89,10 @@ run.flowsom <- function(dat,
       nums <- unlist(lapply(dat, is.numeric))
       dat <- as.data.frame(dat)[ , nums]
       dat[clustering.cols]
+
+      # New
+      dat <- as.data.table(dat)
+      dat <- dat[,clustering.cols,with = FALSE]
 
   ## Create FCS file metadata - column names with descriptions
   metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
@@ -98,10 +106,22 @@ run.flowsom <- function(dat,
 
   dat_FlowSOM <- dat.ff
 
+  rm(dat)
+  rm(dat.ff)
+
+  if(mem.ctrl == TRUE){
+    gc()
+  }
+
   # choose markers for FlowSOM analysis
   FlowSOM_cols <- clustering.cols
 
   ### 4.3. - Run FlowSOM
+  message("Starting FlowSOM")
+
+  if(mem.ctrl == TRUE){
+    gc()
+  }
 
   ## set seed for reproducibility
   set.seed(clust.seed)
@@ -120,7 +140,11 @@ run.flowsom <- function(dat,
   labels_pre <- FlowSOM_out$map$mapping[, 1]
   labels_pre
   length(labels_pre)
-  nrow(dat)
+  nrow(dat.start)
+
+  if(mem.ctrl == TRUE){
+    gc()
+  }
 
   flowsom.res.original <- labels_pre
 
@@ -139,29 +163,36 @@ run.flowsom <- function(dat,
     flowsom.res.meta <- data.frame("labels" = labels)
     colnames(flowsom.res.meta)[grepl('labels',colnames(flowsom.res.meta))] <- meta.clust.name
 
-    dim(dat)
-    dim(flowsom.res.meta)
-    head(flowsom.res.meta)
+    # dim(dat)
+    # dim(flowsom.res.meta)
+    # head(flowsom.res.meta)
 
-    assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
-
+    #assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
+    message("Binding metacluster labels to starting dataset")
     dat.start <- cbind(dat.start, flowsom.res.meta)       # Add results to dat
+
+    rm(flowsom.res.meta)
+
+    if(mem.ctrl == TRUE){
+      gc()
+    }
+
   }
 
   ## save ORIGINAL cluster labels
   flowsom.res.original <- data.frame("labels_pre" = labels_pre)
   colnames(flowsom.res.original)[grepl('labels_pre',colnames(flowsom.res.original))] <- clust.name
 
-  dim(dat)
-  dim(flowsom.res.original)
-  head(flowsom.res.original)
+  # dim(dat.start)
+  # dim(flowsom.res.original)
+  # head(flowsom.res.original)
 
-  assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
+  #assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
+
+  message("Binding cluster labels to starting dataset")
 
   dat.start <- cbind(dat.start, flowsom.res.original)   # Add results to dat
 
   dat.start <- data.table::as.data.table(dat.start) # Make dat a data.table for future manipulation
-  
   return(dat.start)
-
 }

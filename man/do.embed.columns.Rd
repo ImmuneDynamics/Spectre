@@ -16,6 +16,8 @@ do.embed.columns(dat, base.col, add.dat, add.by, rmv.ext)
 \item{add.by}{NO DEFAULT. Character, name of the column in add.dat that is used for matching to the taret dataset.}
 
 \item{rmv.ext}{DEFAULTS TO TRUE. Logical, can be TRUE or FALSE. Removes the ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.}
+
+\item{mem.ctrl}{DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.}
 }
 \value{
 Returns the data.table with new columns embedded..

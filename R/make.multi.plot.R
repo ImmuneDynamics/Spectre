@@ -130,8 +130,8 @@ make.multi.plot <- function(dat,
                                             col.type = col.type,
 
                                             title = plot.nme,
-                                            align.xy.by = dat, ###
-                                            align.col.by = dat, ###
+                                            align.xy.by = align.xy.by, ###
+                                            align.col.by = align.col.by, ###
                                             colours = colours,
                                             col.min.threshold = col.min.threshold,
                                             col.max.threshold = col.max.threshold,
@@ -152,7 +152,7 @@ make.multi.plot <- function(dat,
                                                         colours = colours,
                                                         dot.size = dot.size,
                                                         title = "Density",
-                                                        align.xy.by = dat,
+                                                        align.xy.by = align.xy.by,
                                                         save.to.disk = save.each.plot,
                                                         path = path,
                                                         plot.width = plot.width,
@@ -170,7 +170,7 @@ make.multi.plot <- function(dat,
                                                                  colours = colours,
                                                                  dot.size = dot.size,
                                                                  title = paste0(a, "_Density"),
-                                                                 align.xy.by = dat,
+                                                                 align.xy.by = align.xy.by,
                                                                  save.to.disk = save.each.plot,
                                                                  path = path,
                                                                  plot.width = plot.width,

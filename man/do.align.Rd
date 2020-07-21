@@ -28,6 +28,8 @@ do.align(ref.dat, target.dat, batch.col, align.cols, method, goal, nQ, Qmin, Qma
 \item{write.ref.fcs}{DEFAULT = TRUE. Logical, do you want a quick copy of the reference sample FCS files.}
 
 \item{write.target.fcs}{DEFAULT = TRUE. Logical, do you want a quick copy of the ALIGNED target sample FCS files.}
+
+\item{mem.ctrl}{DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.}
 }
 \value{
 Returns a data.table with selected columns (align.cols) replaced with aligned data.

@@ -7,6 +7,7 @@
 #' @param add.dat NO DEFAULT. A data table of new values to embed as a new columns, with one column containing values used for matching with the target data.table.
 #' @param add.by NO DEFAULT. Character, name of the column in add.dat that is used for matching to the taret dataset.
 #' @param rmv.ext DEFAULTS TO TRUE. Logical, can be TRUE or FALSE. Removes the ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.
+#' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
 #' @return Returns the data.table with new columns embedded..
 #'
@@ -23,7 +24,8 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
 
                              add.dat,
                              add.by,
-                             rmv.ext = TRUE)
+                             rmv.ext = TRUE,
+                             mem.ctrl = TRUE)
 {
 
   ## Packages
@@ -82,6 +84,10 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
     }
   }
 
+  if(mem.ctrl == TRUE){
+    gc()
+  }
+
   dat <- as.data.table(dat)
   add.dat <- as.data.table(add.dat)
 
@@ -94,6 +100,10 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
 
   rm(p1)
   rm(p2)
+
+  if(mem.ctrl == TRUE){
+    gc()
+  }
 
   names(add.dat)[c(1)] <- base.col
 
@@ -114,6 +124,10 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   res.1 = merge(dat, add.dat, by = base.col, sort = FALSE)
   res.1 <- as.data.table(res.1)
   res.2 <- res.1[,c(dat.names,added.names), with = FALSE]
+
+  if(mem.ctrl == TRUE){
+    gc()
+  }
 
   #res.2 <- res.1[,add.dat.names[c(2:length(add.dat.names))], with = FALSE]
 

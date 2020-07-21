@@ -15,6 +15,7 @@
 #' @param Qmax DEFAULT = 0.99. For method = "Quantiles". Numeric, the maximum value for the upper threshold.
 #' @param write.ref.fcs DEFAULT = TRUE. Logical, do you want a quick copy of the reference sample FCS files.
 #' @param write.target.fcs DEFAULT = TRUE. Logical, do you want a quick copy of the ALIGNED target sample FCS files.
+#' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
 #' @return Returns a data.table with selected columns (align.cols) replaced with aligned data.
 #'
@@ -50,7 +51,8 @@ do.align <- function(ref.dat,
 
                      ## Writing result files
                      write.ref.fcs = TRUE,
-                     write.target.fcs = TRUE
+                     write.target.fcs = TRUE,
+                     mem.ctrl = TRUE
 ){
 
   ###########################################################################################
@@ -361,6 +363,10 @@ do.align <- function(ref.dat,
     model <- named.list(fsom, clusterRes) ###### mismatch
     model
 
+    if(mem.ctrl == TRUE){
+      gc()
+    }
+
     ###########################################################################################
     ### APPLY THE MODEL -- Align datasets (apply to all samples)
     ###########################################################################################
@@ -541,6 +547,9 @@ do.align <- function(ref.dat,
                                                           paste0(prefix,gsub(".*/","",file)))))
     }
 
+    if(mem.ctrl == TRUE){
+      gc()
+    }
 
     ###########################################################################################
     ### Read FCS files back in and create merged DT
@@ -564,8 +573,15 @@ do.align <- function(ref.dat,
       all.clust[[b]][["FileName"]] <- a
     }
 
-    aligned.dat <- do.merge.files(all.clust)
-    aligned.dat
+    if(mem.ctrl == TRUE){
+      gc()
+    }
+
+    aligned.dat <- data.table::rbindlist(all.clust, fill = TRUE)
+
+    if(mem.ctrl == TRUE){
+      gc()
+    }
 
     aligned.dat[, channels, with=FALSE]
 
@@ -573,6 +589,10 @@ do.align <- function(ref.dat,
     mod.dat <- target.dat
 
     aligned.dat <- aligned.dat[order(aligned.dat[['temp-pre-alignment-barcode']]),]
+
+    if(mem.ctrl == TRUE){
+      gc()
+    }
 
     for(a in channels){
       # mod.dat[[a]] <- aligned.dat[[a]]
@@ -585,7 +605,10 @@ do.align <- function(ref.dat,
 
     mod.dat[["temp-post-alignment-barcode"]] <- aligned.dat[['temp-pre-alignment-barcode']]
 
-    mod.dat
+    if(mem.ctrl == TRUE){
+      gc()
+    }
+
     names(mod.dat)
 
     ###########################################################################################
@@ -614,6 +637,10 @@ do.align <- function(ref.dat,
       setwd(starting.dir)
     }
 
+    if(mem.ctrl == TRUE){
+      gc()
+    }
+
     if(write.target.fcs == TRUE){
       setwd(starting.dir)
       dir.create("CytoNorm_target_output")
@@ -633,6 +660,10 @@ do.align <- function(ref.dat,
                     write.fcs = TRUE)
       }
       setwd(starting.dir)
+    }
+
+    if(mem.ctrl == TRUE){
+      gc()
     }
 
     return(mod.dat)
