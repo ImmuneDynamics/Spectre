@@ -47,6 +47,29 @@ If the package is sucessfully installed, you can load the library using:
 library("Spectre")
 ```
 
+Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre.
+
+```
+## Install BiocManager to download packages from Bioconductor
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+ 
+## Download additional BioConductor packages
+if(!require('flowCore')) {BiocManager::install('flowCore')}
+if(!require('Biobase')) {BiocManager::install('Biobase')}
+if(!require('flowViz')) {BiocManager::install('flowViz')}
+if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+```
+
+You can then check for whether all of the packages for Spectre have been loaded correctly using the following commands
+```
+## Check if all required packages have been installed
+Spectre::package.check()
+ 
+## Load all required packages
+Spectre::package.load()
+```
+
 Alternatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
 
 Once installed, usage instructions and vignettes can be found here: https://wiki.centenary.org.au/display/SPECTRE
