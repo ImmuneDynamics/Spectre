@@ -33,7 +33,7 @@ do.align <- function(ref.dat,
 
                      ## Columns
                      #sample.col, # used to divide 'ref' and 'target' data into 'samples'
-                        # @param sample.col NO DEFAULT. Character, column that denotes samples
+                     # @param sample.col NO DEFAULT. Character, column that denotes samples
 
                      batch.col, # Column denoting batches
                      align.cols, # Channels to align
@@ -127,10 +127,9 @@ do.align <- function(ref.dat,
 
     message("do.align -- Step 1/5. Setup started")
 
-    sample.col <- batch.col
-
     ### Initial stuff
 
+    sample.col <- batch.col
     starting.dir <- getwd()
 
     labels <- align.cols
@@ -179,6 +178,13 @@ do.align <- function(ref.dat,
       warning("It seems the column names you have specified are not all present in the 'target' dataset. Please check your entries and try again.")
     }
 
+    rm(test)
+    rm(test2)
+
+    if(mem.ctrl == TRUE){
+      gc()
+    }
+
     #### Cell barcodes for target.dat
     target.dat[["temp-pre-alignment-barcode"]] <- c(1:nrow(target.dat))
 
@@ -187,17 +193,24 @@ do.align <- function(ref.dat,
 
     ### Reference samples
     fsom$files
+    fsom$filenums
     fsom$batches
 
-    if(length(fsom$files) != length(fsom$batches)){
-      stop("The files in your fsom prep file do not have corresponding batch entries")
+    if(is.unsorted(fsom$filenums) == TRUE){
+      stop("Error -- your files (check $fsom$filenums and $fsom$files) are not in order, and may cause a batch mismatch")
     }
 
-    if(length(unique(ref.dt[["File"]])) != length(fsom$files)){
-      stop("The files in your ref.dt file and fsom file do not match")
+    if(all(unique(ref.dt[["File"]]) == unique(fsom$filenums)) == FALSE){
+      stop("Error -- your reference files appear to have been ordered incorrectly in the prep.fsom() function, and may not match their corresponding batches")
     }
 
-    ref.list <- unique(ref.dt[["File"]])
+    if(length(fsom$files) != length(unique(fsom$batches))){
+      stop("Error -- you have a different number of 'files' compared to 'batches'. Please check your prep.fsom() arguments and try again.")
+    }
+
+    # ref.list <- unique(ref.dt[["File"]]) ##### Causes a mis-match based on ordering
+
+    ref.list <- fsom$files # ordering based on the fsom.prep file -- disk file order, which is required here
     ref.list
 
     # ref.labels <- vector()
@@ -209,8 +222,7 @@ do.align <- function(ref.dat,
     #
     # ref.labels <- as.numeric(factor(ref.labels))
 
-    ref.labels <- fsom$batches
-
+    ref.labels <- fsom$batches # ordering based on the fsom.prep file -- disk file order, which is required here
 
 
     fsom$files
@@ -220,7 +232,68 @@ do.align <- function(ref.dat,
     ref.labels
 
     ### Target samples
+
     target.list <- unique(target.dat[[sample.col]])
+    target.list <- as.character(target.list)
+
+    # Check if target list already contains "___"
+    # if('___' %in% target.list){
+    #   stop('Error -- it seems your file names contain three underscores in at least one name, which is not compatible with this function (as we use three underscores to add file order information to the file names. Please rename the files and re-run the function.')
+    # }
+
+    ### ### ### ### ###
+    target.list <- target.list[order(target.list)] ######################## Order it so that it matches the file order when they are made into FCS files
+    target.list
+
+    starting.target.list <- target.list
+
+    nr.before <- nrow(target.dat)
+
+    for(i in c(1:length(target.list))){
+      # i <- 1
+
+      a <- target.list[[i]]
+
+      if(nchar(i) == 1){
+        o <- paste0(0, 0, 0)
+      }
+
+      if(nchar(i) == 2){
+        o <- paste0(0, 0)
+      }
+
+      if(nchar(i) == 3){
+        o <- paste0(0)
+      }
+
+      if(nchar(i) == 4){
+        o <- paste0(i)
+      }
+
+      if(nchar(i) == 5){
+        stop("Error -- the current function configuration is not designed for managing over 9999 batches. How did you even do that? Get in touch at thomas.ashhurst@sydneycytometry.org.au for help.")
+      }
+
+      temp <- target.list[[i]]
+      temp <- paste0("TARGETFILE", o, i, "___", temp)
+      target.list[[i]] <- temp
+    }
+
+    d <- data.table("Start" = starting.target.list, "ORDEREDFILE" = target.list)
+
+    target.dat <- do.embed.columns(target.dat, sample.col, add.dat = d, add.by = "Start", rmv.ext = FALSE)
+
+    # target.dat[target.dat[[sample.col]] == a, "ORDEREDFILE"] <- temp
+    #  target.dat[target.dat[[sample.col]] == temp,sample.col, with = FALSE]
+
+    start.sample.col <- sample.col
+    sample.col <- "ORDEREDFILE"
+
+    nr.after <- nrow(target.dat)
+
+    if(nr.before != nr.after){
+      stop("Error -- something has gone wrong in renaming the file/batches in the target dataset")
+    }
 
     target.labels <- vector()
 
@@ -229,10 +302,14 @@ do.align <- function(ref.dat,
       nme <- target.list[i]
       temp <- target.dat[target.dat[[sample.col]] == nme,]
       tmp <- temp[[batch.col]][1]
-      target.labels[i] <- tmp
+      target.labels[i] <- as.character(tmp)
     }
 
     target.labels
+
+    if(all(gsub(".*___", "", target.list) == target.labels) == FALSE){
+      stop("Error -- your list of target batches has mixed batch labels.")
+    }
 
     ###########################################################################################
     ### TRAIN THE MODEL -- Create quantile conversion model (using ref samples)
@@ -260,14 +337,59 @@ do.align <- function(ref.dat,
     dir.create("tmp-train")
     setwd("tmp-train")
 
-    for(i in ref.list){
-      write.files(dat = ref.dt[ref.dt[["File"]] == i,],
-                  file.prefix = i,
+    ref.list
+    ref.labels
+    ref.fsom$fsom$filenums
+
+    ordr.check <- list()
+
+    for(i in ref.fsom$fsom$filenums){
+
+      a <- ref.list[[i]]
+      ordr.check[[i]] <- a
+
+      if(nchar(i) == 1){
+        o <- paste0(0, 0, 0, i)
+      }
+
+      if(nchar(i) == 2){
+        o <- paste0(0, 0, i)
+      }
+
+      if(nchar(i) == 3){
+        o <- paste0(0, i)
+      }
+
+      if(nchar(i) == 4){
+        o <- paste0(i)
+      }
+
+      if(nchar(i) == 5){
+        stop("Error -- the current function configuration is not designed for managing over 9999 batches. How did you even do that? Get in touch at thomas.ashhurst@sydneycytometry.org.au for help.")
+      }
+
+      temp <- ref.dt[ref.dt[["File"]] == i,]
+
+      write.files(temp,
+                  file.prefix = paste0("File_", o, "_Batch_", a),
                   write.csv = FALSE,
                   write.fcs = TRUE)
+
+      # write.files(dat = ref.dt[ref.dt[["File"]] == i,],
+      #             file.prefix = i,
+      #             write.csv = FALSE,
+      #             write.fcs = TRUE)
     }
 
     train.files <- list.files(getwd(), ".fcs")
+
+    train.files
+    ref.list
+
+    if(length(train.files) != length(ref.list)){
+      stop("Error -- somehow the number of files generated is larger than your batches.")
+    }
+
 
     ### Split files by clusters
 
@@ -307,9 +429,7 @@ do.align <- function(ref.dat,
     }
 
 
-
-
-    # Learn quantiles for each cluster
+    ### Learn quantiles for each cluster
     clusterRes <- list()
 
     for (cluster in unique(fsom$metaclustering)) {
@@ -345,7 +465,7 @@ do.align <- function(ref.dat,
     }
 
 
-
+    ### Cleanup
 
     if(clean){
       for(cluster in unique(fsom$metaclustering)){
@@ -360,8 +480,10 @@ do.align <- function(ref.dat,
       }
     }
 
+    ### Establish model
+
     model <- named.list(fsom, clusterRes) ###### mismatch
-    model
+    #model
 
     if(mem.ctrl == TRUE){
       gc()
@@ -373,7 +495,8 @@ do.align <- function(ref.dat,
 
     message("do.align -- Step 3/5. Alignment started")
 
-    ## Write 'training' list samples to FCS files
+    ### Write 'training' list samples to FCS files
+
     getwd()
 
     setwd(starting.dir)
@@ -388,6 +511,42 @@ do.align <- function(ref.dat,
     }
 
     target.files <- list.files(getwd(), ".fcs")
+    # trg.test <- gsub(".fcs", "", target.files)
+
+    target.files <- target.files[order(target.files)]
+    # trg.test <- trg.test[order(trg.test)]
+
+    # if(all(target.list == trg.test) == FALSE){
+    #   stop("Error -- the target files (batches) have become dis-ordered when writing to/reading from disk.")
+    # }
+
+    if(all(gsub(".*___", "", target.list) == target.labels) == FALSE){
+      stop("Error -- the target files (batches) and corresponding batches don't match.")
+    }
+
+
+    # QUICKTEST <- list()
+    #
+    # for(file in target.files) { # Loop to read files into the list
+    #   tempdata <- exprs(flowCore::read.FCS(file, transformation = FALSE))
+    #   tempdata <- tempdata[1:nrow(tempdata),1:ncol(tempdata)]
+    #   tempdata <- as.data.table(tempdata)
+    #   file <- gsub(".fcs", "", file)
+    #   QUICKTEST[[file]] <- tempdata
+    #   rm(tempdata)
+    # }
+    #
+    # QUICKTEST[[1]]
+    # QUICKTEST[[2]]
+    # QUICKTEST[[3]]
+    # QUICKTEST[[4]]
+    # QUICKTEST[[5]]
+    # QUICKTEST[[6]]
+    # QUICKTEST[[7]]
+    # QUICKTEST[[8]]
+    # QUICKTEST[[9]]
+    # QUICKTEST[[10]]
+
 
     ## Align data
     # CytoNorm.normalize(model = model,
@@ -401,8 +560,7 @@ do.align <- function(ref.dat,
     #                    clean = TRUE,
     #                    verbose = TRUE)
 
-
-    #####
+    ### Run model
 
     model = model
     files = target.files
@@ -415,12 +573,10 @@ do.align <- function(ref.dat,
     clean = TRUE
     verbose = TRUE
 
-
-
     if(is.null(model$fsom) |
        is.null(model$clusterRes)){
       stop("The 'model' paramter should be the result of using the
-           trainQuantiles function.")
+               trainQuantiles function.")
     }
 
     if(length(labels) != length(files)){
@@ -435,7 +591,8 @@ do.align <- function(ref.dat,
     fsom <- model$fsom
     clusterRes <- model$clusterRes
 
-    # Split files by clusters
+    ### Split files by clusters
+
     cellClusterIDs <- list()
     meta <- list()
     cluster_files <- list()
@@ -468,10 +625,10 @@ do.align <- function(ref.dat,
           )
         }
       }
+      rm(ff)
     }
 
-
-    # Apply normalization on each cluster
+    ### Apply normalization on each cluster
     for(cluster in unique(fsom$metaclustering)){
       if(verbose) message("Processing cluster ",cluster)
       files_tmp <- file.path(outputDir,
@@ -481,8 +638,11 @@ do.align <- function(ref.dat,
                                     "_fsom",
                                     cluster,
                                     ".fcs"))
+
+      ### ### ### ### ###
+
       labels_tmp <- labels[file.exists(files_tmp)]
-      files_tmp <- files_tmp[file.exists(files_tmp)]
+      files_tmp <- files_tmp[file.exists(files_tmp)] #### different order
       normMethod.normalize(model = clusterRes[[cluster]],
                            files = files_tmp,
                            labels = labels_tmp,
@@ -494,20 +654,65 @@ do.align <- function(ref.dat,
                            verbose = verbose)
     }
 
-
-    ######
+    ###
 
     strt <- getwd()
     setwd("Target_Normalized/")
 
-    all.clust <- read.files(getwd(), file.type = ".fcs")
+    #list.files(getwd(), ".fcs")
+    #all.clust <- read.files(getwd(), file.type = ".fcs", do.embed.file.names = FALSE)
+
+    all.clust <- list()
+    fl.nms <- list.files(path=getwd(), pattern = ".fcs")
+    fl.nms
+
+    fl.nrws <- list()
+    fl.ncls <- list()
+
+    for(file in fl.nms) { # Loop to read files into the list
+      tempdata <- exprs(flowCore::read.FCS(file, transformation = FALSE))
+
+      if(nrow(tempdata) == 1){
+        tempdata <- tempdata[1:nrow(tempdata),1:ncol(tempdata)]
+        tempdata <- as.data.table(t(tempdata))
+        tempdata
+      }
+
+      if(nrow(tempdata) > 1){
+        tempdata <- tempdata[1:nrow(tempdata),1:ncol(tempdata)]
+        tempdata <- as.data.table(tempdata)
+      }
+
+      file <- gsub(".fcs", "", file)
+      all.clust[[file]] <- tempdata
+      fl.ncls[[file]] <- ncol(tempdata)
+      fl.nrws[[file]] <- nrow(tempdata)
+      rm(tempdata)
+    }
+
+    if(length(unique(unlist(fl.ncls))) > 1){
+      stop("Error -- when combining the 'file-cluster' FCS files back into 'file' datasets, differenting number of columns were found in one 'file-cluster' FCS file.")
+    }
+
+    # all.clust[[18]]
+
     names(all.clust)
+    names(all.clust[[1]])
+
+    for(i in c(1:length(all.clust))){
+      a <- names(all.clust)[[i]]
+      all.clust[[i]]$NORM_TARGET_FILENAME <- a
+      all.clust[[i]]$NORM_TARGET_FILENUM <- i
+    }
+
+    names(all.clust)
+    names(all.clust[[1]])
 
     setwd(strt)
     getwd()
 
 
-    # Combine clusters into one final fcs file
+    ### Combine clusters into one final fcs file
     for(file in files){
       if(verbose) message("Rebuilding ",file)
 
@@ -555,7 +760,9 @@ do.align <- function(ref.dat,
     ### Read FCS files back in and create merged DT
     ###########################################################################################
 
-    message("do.align -- Step 4/5. Re-import files and creating 'modified' data.table")
+    message("do.align -- Step 4/5. Re-import aligned files and creating 'modified' aligned data.table")
+
+    ###
 
     setwd(starting.dir)
     setwd("tmp-target/")
@@ -565,16 +772,35 @@ do.align <- function(ref.dat,
     # all.clust <- all.clust.strt
     names(all.clust[[1]])
 
+    sve <- all.clust
+
     for(a in names(all.clust)){
-      # a <- "Norm_01_Air_01_fsom1"]
+      # a <- names(all.clust)[[1]]
       b <- a
-      colnames(all.clust[[a]])[colnames(all.clust[[a]]) %in% c("FileName")] <- c("RawFile")
+      colnames(all.clust[[a]])[colnames(all.clust[[a]]) %in% c("NORM_TARGET_FILENAME")] <- c("RAWFILENAME")
       a <- gsub('\\_fsom.*', '', a, perl=TRUE)
-      all.clust[[b]][["FileName"]] <- a
+      all.clust[[b]][["NORM_TARGET_FILENAME"]] <- a
     }
+
+    #all.clust
+    #names(all.clust)
+    #names(all.clust[[1]])
+    #names(all.clust[[70]])
 
     if(mem.ctrl == TRUE){
       gc()
+    }
+
+    nme.list <- list()
+
+    for(i in c(1:length(all.clust))){
+      temp <- all.clust[[i]]
+      nme.list[[i]] <- ncol(temp)
+      rm(temp)
+    }
+
+    if(length(unique(unlist(nme.list))) < 1){
+      stop("Error -- differing number of column names in each file")
     }
 
     aligned.dat <- data.table::rbindlist(all.clust, fill = TRUE)
@@ -585,10 +811,15 @@ do.align <- function(ref.dat,
 
     aligned.dat[, channels, with=FALSE]
 
-    ## Replace target.dat with aligned.dat -- just the channels aligned
+    ### Replace target.dat with aligned.dat -- just the channels aligned
     mod.dat <- target.dat
 
     aligned.dat <- aligned.dat[order(aligned.dat[['temp-pre-alignment-barcode']]),]
+
+    if(is.unsorted(aligned.dat[['temp-pre-alignment-barcode']])){
+      stop("Error -- pre-alignment cellular barcodes not in correct order")
+    }
+
 
     if(mem.ctrl == TRUE){
       gc()
@@ -603,6 +834,10 @@ do.align <- function(ref.dat,
       mod.dat[[i]] <- aligned.dat[[a]]
     }
 
+    if(nrow(mod.dat) != nrow(aligned.dat)){
+      stop("Error -- differing rows in 'mod.dat' and 'aligned.dat'")
+    }
+
     mod.dat[["temp-post-alignment-barcode"]] <- aligned.dat[['temp-pre-alignment-barcode']]
 
     if(mem.ctrl == TRUE){
@@ -615,7 +850,9 @@ do.align <- function(ref.dat,
     ### Return mod.dat and cleanup
     ###########################################################################################
 
-    message("do.align -- Step 5/5. Cleanup and returning aligned data")
+    message("do.align -- Step 5/5. Cleanup, writing FCS files, and returning aligned data")
+
+    ## WD and Directory stuff
 
     setwd(starting.dir)
     list.dirs(getwd(), full.names = FALSE, recursive = FALSE)
@@ -623,14 +860,55 @@ do.align <- function(ref.dat,
     unlink("tmp-train", recursive = TRUE)
     unlink("tmp-target", recursive = TRUE)
 
+    ### Replacing batch names with originals
+
+    mod.target.list <- target.list
+    target.list <- starting.target.list
+
+
+    mod.sample.col <- sample.col
+    sample.col <- start.sample.col
+
+
+    target.dat$ORDEREDFILE <- NULL
+    mod.dat$ORDEREDFILE <- NULL
+
+    # final.target.list <- gsub(".*___", "", starting.target.list)
+    #
+    # if(all(starting.target.list == final.target.list) == FALSE){
+    #   stop("Error -- somehow the list of target files (batches) has become mixed up")
+    # }
+    #
+    # if(all(unique(target.dat$ORDEREDFILE) == unique(mod.dat$ORDEREDFILE)) == FALSE){
+    #   stop("Error")
+    # }
+    #
+    # #
+    #
+    # for(i in c(1:length(target.list))){
+    #   a <- target.list[[i]]
+    #   b <- starting.target.list[[i]]
+    #
+    #   target.dat$ORDEREDFILE <- NULL
+    #   mod.dat$ORDEREDFILE <- NULL
+    # }
+    #
+    # target.list <- final.target.list
+
+
+    ### Write reference FCS files
+
     if(write.ref.fcs == TRUE){
       setwd(starting.dir)
       dir.create("CytoNorm_ref_output")
       setwd("CytoNorm_ref_output")
 
-      for(i in ref.list){
+      ref.fsom$fsom$filenums
+
+      for(i in ref.fsom$fsom$filenums){
+        a <- ref.fsom$fsom$files[[i]]
         write.files(dat = ref.dt[ref.dt[["File"]] == i,],
-                    file.prefix = paste0("Raw_", i),
+                    file.prefix = paste0("Raw_RefFile_", i, "_", a),
                     write.csv = FALSE,
                     write.fcs = TRUE)
       }
@@ -640,6 +918,8 @@ do.align <- function(ref.dat,
     if(mem.ctrl == TRUE){
       gc()
     }
+
+    ### Write target FCS files
 
     if(write.target.fcs == TRUE){
       setwd(starting.dir)
@@ -665,6 +945,8 @@ do.align <- function(ref.dat,
     if(mem.ctrl == TRUE){
       gc()
     }
+
+    ### Return
 
     return(mod.dat)
     message("do.align complete")

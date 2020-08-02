@@ -13,18 +13,24 @@ do.subsample(dat, targets, samp.col, min.per, seed)
 
 \item{divide.by}{DEFAULT = NULL. Character. Name of the column that reflects groupings of cells (sample names, group names etc) if you want to subsample by each.}
 
-\item{min.per}{DEFAULT = FALSE. If TRUE, and samp.col is specified, each sample contributes the same amount of data based on sample with lowest count.}
+\item{min.per}{DEFAULT = FALSE. If TRUE, and divide.by is specified, each sample contributes the same amount of data based on sample with lowest count.}
 
 \item{seed}{DEFAULT = 42. Numeric. Seed for reproducibility.}
 }
 \description{
 Method to subsample data.
-Can subsample by randomly selecting a desired number of cells from all samples (method = "random"), subsample by specifying the exact number of cells for each sample (method= "per.sample"), or by subsampling the same number of cells from each sample based on the sample with the lowest count (method = "min.per.sample").
+Can subsample by randomly selecting a desired number of cells from all samples (DEFAULT), subsample by specifying the exact number of cells for each sample (specify divide.by), or by subsampling the same number of cells from each sample based on the sample with the lowest count (specify divide.by and min.per).
 Useful to decrease total cells for generating dimensionality reduction plots (tSNE/UMAP).
 }
 \examples{
-Spectre::do.subsample(dat = Spectre::demo.start,
-                      targets = 10000)
+# Subsample 10,000 cells randomly from the total dataset
+sub.dat <- Spectre::do.subsample(dat = Spectre::demo.start,
+                                 targets = 10000)
+                                 
+# Subsample based on the sample with the smallest number of cells
+sub.dat.sample <- Spectre::do.subsample(dat = Spectre::demo.start,
+                                        divide.by = "FileName",
+                                        min.per = TRUE)
 
 }
 \author{

@@ -15,11 +15,11 @@ make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order,
 
 \item{colour.by}{NO DEFAULT. Character or numeric. Selects column that will determine differentiator of colour in plots.}
 
-\item{colours}{NO DEFAULT. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.}
-
 \item{y.axis.label}{NO DEFAULT. Character. Specify y-axis label. Can be "" if one is not desired.}
 
 \item{grp.order}{DEFAULT = NULL. String of characters or numbers. Specify order of group for x-axis.}
+
+\item{colours}{NO DEFAULT. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.}
 
 \item{title}{DEFAULT = paste0(y.axis.label, " - ", y.axis). Character. Specify title of plot on graph. Default combines 'y.axis.label' and 'y.axis'.}
 

@@ -87,9 +87,18 @@ do.prep.fsom <- function(dat,
   dat.list <- unique(dat[[sample.col]])
   dat.list
 
-  for(i in dat.list){
-    write.files(dat = dat[dat[[sample.col]] == i,],
-                file.prefix = i,
+  # dat.list <- dat.list[order(dat.list)]
+  # dat.list
+
+  for(i in c(1:length(dat.list))){
+    # i <- 1
+
+    a <- dat.list[[i]]
+
+    temp <- dat[dat[[sample.col]] == a,]
+
+    write.files(temp,
+                file.prefix = a,
                 write.csv = FALSE,
                 write.fcs = TRUE)
   }
@@ -106,37 +115,34 @@ do.prep.fsom <- function(dat,
     a <- gsub(".fcs", "", a)
     temp <- dat[dat[[sample.col]] == a,]
     res <- temp[[batch.col]][1]
+
+    ## Should add a test to check for multiple batch entries per sample
+
     batches <- cbind(batches, res)
   }
 
   batches <- as.vector(batches)
+  batches
 
   ### Run FlowSOM on ref data (--> save as ref.ff, also save as ref.dat)
 
   message("Step 2/4 - Running FlowSOM")
 
-  ## With nCells downsampling
-  if(!is.null(nCells)){
-    fsom <- prepareFlowSOM(files,
-                           colsToUse = use.cols,
-                           nCells = nCells, #########################
-                           FlowSOM.params = list(xdim = xdim,
-                                                 ydim = ydim,
-                                                 nClus = nClus,
-                                                 scale = scale),
-                           seed = seed)
+  fsom <- prepareFlowSOM(files,
+                         colsToUse = use.cols,
+                         nCells = nCells, #########################
+                         FlowSOM.params = list(xdim = xdim,
+                                               ydim = ydim,
+                                               nClus = nClus,
+                                               scale = scale),
+                         seed = seed)
+
+  if(nrow(fsom$FlowSOM$data) != nrow(dat)){
+    stop("Error - the numer of rows (cells) is different in the starting dataset and the FlowSOM prepared dataset")
   }
 
-  ## Without downsampling
-  if(is.null(nCells)){
-    fsom <- prepareFlowSOM(files,
-                           colsToUse = use.cols,
-                           FlowSOM.params = list(xdim = xdim,
-                                                 ydim = ydim,
-                                                 nClus = nClus,
-                                                 scale = scale),
-                           seed = seed)
-  }
+  #nrow(fsom$FlowSOM$data)
+  #nrow(dat)
 
   setwd(starting.dir)
 
@@ -157,6 +163,18 @@ do.prep.fsom <- function(dat,
   B <- fsom$FlowSOM$map$mapping[,1]
   C <- fsom$metaclustering[fsom$FlowSOM$map$mapping[,1]]
 
+  if(nrow(A) != length(B)){
+    stop("Error - the numer of rows (cells) is different in the data, clusters, and/or metaclusters")
+  }
+
+  if(nrow(A) != length(C)){
+    stop("Error - the numer of rows (cells) is different in the data, clusters, and/or metaclusters")
+  }
+
+  if(length(B) != length(C)){
+    stop("Error - the numer of rows (cells) is different in the data, clusters, and/or metaclusters")
+  }
+
   # nrow(A)
   # length(B)
   # length(C)
@@ -175,11 +193,14 @@ do.prep.fsom <- function(dat,
   files <- gsub(".fcs", "", files)
 
   fsom$files <- files
+  fsom$filenums <- unique(fsom.dt$File)
   fsom$batches <- batches
+  fsom$features <- use.cols
 
   res <- named.list(fsom, fsom.dt)
 
   message("Step 4/4 - FlowSOM complete")
   return(res)
 }
+
 

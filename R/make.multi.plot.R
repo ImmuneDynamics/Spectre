@@ -14,8 +14,8 @@
 #'
 #' @param col.type DEFAULT = "continuous". Can also be "factor".
 #' @param figure.title DEFAULT = "Multi plot". Also used as the prefix for the saved file name.
-#' @param align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
-#' @param align.col.by DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.
+#' @param global.xy DEFAULT = TRUE. Defines the limits for the X and Y based on the whole dataset. If FALSE, then each plot X & Y limits scale individually.
+#' @param global.col DEFAULT = TRUE. Defines the limits for the colour axis based on the whole dataset. If FALSE, then each plot colour limit scales individually.
 #' @param colours DEFAULTS to 'spectral'. What colour scheme do you want to use. Only used if type = 'colour', ignored if type = 'factor'. Can be 'jet', 'spectral', 'viridis', 'inferno', 'magma', or "BuPu".
 #' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
 #' @param col.min.threshold DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.
@@ -41,6 +41,9 @@
 #'
 #' @export
 
+# align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
+# align.col.by DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.
+
 make.multi.plot <- function(dat,
                             x.axis,
                             y.axis,
@@ -51,8 +54,13 @@ make.multi.plot <- function(dat,
 
                             col.type = "continuous",
                             figure.title = 'Multi plot',
+
+                            global.xy = TRUE,
+                            global.col = TRUE,
+
                             align.xy.by = dat, # alignment for X and Y
                             align.col.by = dat, # alignment for colours
+
                             colours = 'spectral',
                             dot.size = 1,
                             col.min.threshold = 0.01,
@@ -123,6 +131,14 @@ make.multi.plot <- function(dat,
         plot.nme <- paste0(a, " - ", i)
       }
 
+      if(global.xy == FALSE){
+        align.xy.by <- plot.dat
+      }
+
+      if(global.col == FALSE){
+        align.col.by <- plot.dat
+      }
+
       plots[[plot.nme]] <- make.colour.plot(dat = plot.dat, #instead, use d[d[$Sample][plot.by] == to.plot[i], ] ## Spectre::
                                             x.axis = x.axis,
                                             y.axis = y.axis,
@@ -146,6 +162,14 @@ make.multi.plot <- function(dat,
     ## Add density plot (if desired)
     if(length(dat.list) == 1){
       if(add.density == TRUE){
+
+
+        if(global.xy == TRUE){
+          align.xy.by <- dat
+        } else {
+          align.xy.by <- plot.dat
+        }
+
         plots[[length(plots) + 1]] <- make.colour.plot(dat = plot.dat,
                                                         x.axis = x.axis,
                                                         y.axis = y.axis,
@@ -164,6 +188,13 @@ make.multi.plot <- function(dat,
 
     if(length(dat.list) > 1){
       if(add.density == TRUE){
+
+        if(global.xy == TRUE){
+          align.xy.by <- dat
+        } else {
+          align.xy.by <- plot.dat
+        }
+
         plots[[length(plots) + 1]] <- make.colour.plot(dat = plot.dat,
                                                                  x.axis = x.axis,
                                                                  y.axis = y.axis,

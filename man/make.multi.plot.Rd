@@ -4,7 +4,7 @@
 \alias{make.multi.plot}
 \title{Make multiple plots for multiple columns and/or multiple sample/group/clusters}
 \usage{
-make.multi.plot(dat, x.axis, y.axis, plot.by)
+make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, col.min.threshold, col.max.threshold, path, plot.width, plot.height, blank.axis, save.each.plot)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A data frame containing all the data you wish to plot}
@@ -23,9 +23,9 @@ make.multi.plot(dat, x.axis, y.axis, plot.by)
 
 \item{figure.title}{DEFAULT = "Multi plot". Also used as the prefix for the saved file name.}
 
-\item{align.xy.by}{NO DEFAULT. Align X and Y to a dataset}
+\item{global.xy}{DEFAULT = TRUE. Defines the limits for the X and Y based on the whole dataset. If FALSE, then each plot X & Y limits scale individually.}
 
-\item{align.col.by}{NO DEFAULT. Align colour to a dataset}
+\item{global.col}{DEFAULT = TRUE. Defines the limits for the colour axis based on the whole dataset. If FALSE, then each plot colour limit scales individually.}
 
 \item{colours}{DEFAULTS to 'spectral'. What colour scheme do you want to use. Only used if type = 'colour', ignored if type = 'factor'. Can be 'jet', 'spectral', 'viridis', 'inferno', 'magma', or "BuPu".}
 
@@ -35,15 +35,15 @@ make.multi.plot(dat, x.axis, y.axis, plot.by)
 
 \item{col.max.threshold}{DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.}
 
-\item{path}{DEFAULTS TO getwd() -- i.e. the current working directory. Path to the desired output directory}
+\item{path}{DEFAULT = getwd() -- i.e. the current working directory. Path to the desired output directory}
 
-\item{plot.width}{DEFAULTS to 9.}
+\item{plot.width}{DEFAULT = 9.}
 
-\item{plot.height}{DEFAULTS to 7.}
+\item{plot.height}{DEFAULT = 7.}
 
-\item{blank.axis}{DEFAULT = FALSE. Logical, do you want a minimalist graph?}
+\item{blank.axis}{DEFAULT = FALSE. Logical. Do you want a minimalist graph?}
 
-\item{save.each.plot}{DEFAULT = FALSE. Do you want to save each plot?}
+\item{save.each.plot}{DEFAULT = FALSE. Logical. Do you want to save each plot?}
 }
 \description{
 Method to create multiple plots for each marker.

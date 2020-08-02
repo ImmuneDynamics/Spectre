@@ -8,7 +8,7 @@
 #' @param suffix DEFAULT = blank.
 #'
 #' This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.
-#' 
+#'
 #' @usage run.umap(dat, use.cols, umap.x.name, umap.y.name, umap.seed, suffix, ...)
 #'
 #' @export
@@ -18,6 +18,7 @@ run.umap <- function(dat,
                      umap.x.name = "UMAP_X",
                      umap.y.name = "UMAP_Y",
                      umap.seed = 42,
+                     neighbours = 15,
                      suffix = NULL
                      )
 {
@@ -26,16 +27,18 @@ run.umap <- function(dat,
       # dat <- iris
       # umap.seed <- 42
       # use.cols <- c(1:4)
-  
+
   ## Check that necessary packages are installed
   if(!is.element('umap', installed.packages()[,1])) stop('umap is required but not installed')
-  
+
   ## Require packages
   require(umap)
 
   ###
   custom.config <- umap::umap.defaults
   custom.config$random_state <- umap.seed
+
+  custom.config$n_neighbors <- neighbours
 
   res <- umap::umap(d = dat[use.cols],
               condif = custom.config)

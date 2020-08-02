@@ -5,8 +5,8 @@
 do.convert.to.fold <- function(x,
                                 sample.col,
                                 group.col,
-                                ctrl.grp,
                                 convert.cols,
+                                ctrl.grp = NULL,
                                 log2 = TRUE)
 {
 
@@ -32,7 +32,13 @@ do.convert.to.fold <- function(x,
       # annot <- x[-c(convert.cols)]
       # temp <- x[c(convert.cols)]
 
-      ctrl.dat <- x[x[[group.col]] == ctrl.grp,]
+      if(is.null(ctrl.grp)){
+        ctrl.dat <- x
+      }
+
+      if(!is.null(ctrl.grp)){
+        ctrl.dat <- x[x[[group.col]] == ctrl.grp,]
+      }
 
       #ctrl.grp <- subset(x, x[group.col] == ctrl.grp)
           #ctrl.grp <- ctrl.grp[,unlist(lapply(ctrl.grp, is.numeric))]

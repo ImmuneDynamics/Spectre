@@ -8,8 +8,8 @@ do.convert.to.fold(
   x,
   sample.col,
   group.col,
-  ctrl.grp,
   convert.cols,
+  ctrl.grp = NULL,
   log2 = TRUE
 )
 }

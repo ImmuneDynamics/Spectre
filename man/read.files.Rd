@@ -4,7 +4,7 @@
 \alias{read.files}
 \title{read.files - Function to read data from CSV or FCS files into a list.}
 \usage{
-read.files(file.loc, file.type, do.embed.file.names)
+read.files(file.loc, file.type, do.embed.file.names, header)
 }
 \arguments{
 \item{file.loc}{DEFAULT = getwd(). What is the location of your files?}
@@ -12,6 +12,8 @@ read.files(file.loc, file.type, do.embed.file.names)
 \item{file.type}{DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".}
 
 \item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?}
+
+\item{header}{DEFAULT = TRUE. Does the first line of data contain column names?}
 }
 \value{
 Returns a list of data.tables -- one per CSV file.
@@ -28,4 +30,5 @@ Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/3107710
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

@@ -70,6 +70,8 @@ make.pheatmap <- function(dat,
                           is.fold = FALSE,
                           fold.range = NULL, # c(3,-3)
                           dendrograms = "both",
+                          cutree_rows = 1,
+                          cutree_cols = 1,
                           row.sep = c(),
                           col.sep = c(),
                           cell.size = 15,
@@ -339,6 +341,10 @@ make.pheatmap <- function(dat,
                #scale = "column",
 
                breaks = my.breaks,
+
+               cutree_rows = cutree_rows,
+               cutree_cols = cutree_cols,
+
                gaps_row = row.sep,
                gaps_col = col.sep,
 

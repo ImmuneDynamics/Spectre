@@ -44,6 +44,10 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
       #                       NewColA = c('A','B','C','D','E','F','G','H','I','J','K', 'L'),
       #                       NewColB = c(1,2,3,4,5,6,7,8,9,10,11,12))
       #
+      # add.dat <- data.table(Filename = unique(dat$FileName)[c(1:11)],
+      #                       NewColA = c('A','B','C','D','E','F','G','H','I','J','K'),
+      #                       NewColB = c(1,2,3,4,5,6,7,8,9,10,11))
+      #
       # add.by <- "Filename"
       # rmv.ext = TRUE
 
@@ -74,14 +78,14 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
 
   if(rmv.ext == TRUE){
     message("Removing '.csv' or '.fcs' extension")
-    for(i in c(1:length(names(add.dat)))){
-      if(is.numeric(add.dat[[i]]) == FALSE){
-        temp <- add.dat[[i]]
+
+      if(is.numeric(add.dat[[add.by]]) == FALSE){
+        temp <- add.dat[[add.by]]
         temp <- gsub("*.csv", "", temp)
         temp <- gsub("*.fcs", "", temp)
-        add.dat[[i]] <- temp
+        add.dat[[add.by]] <- temp
       }
-    }
+
   }
 
   if(mem.ctrl == TRUE){
@@ -121,7 +125,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
   added.names
 
   message("Step 2/3. Merging data")
-  res.1 = merge(dat, add.dat, by = base.col, sort = FALSE)
+  res.1 = merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
   res.1 <- as.data.table(res.1)
   res.2 <- res.1[,c(dat.names,added.names), with = FALSE]
 

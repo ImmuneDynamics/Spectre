@@ -4,7 +4,7 @@
 \alias{run.flowsom}
 \title{Run the FlowSOM algorithm}
 \usage{
-run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
+run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame. Input sample.}
@@ -30,7 +30,7 @@ run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clu
 \description{
 Method to run the FlowSOM clustering algorithm.
 This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.
-Output data will be "flowsom.res"
+Output data will be "flowsom.res.original" (for clusters) and "flowsom.res.meta" (for metaclusters).
 Uses the R packages "FlowSOM" for clustering, "flowCore" for handling .fcs files, "Biobase" for creating a flow frame, "data.table" for handling data.table format.
 }
 \examples{

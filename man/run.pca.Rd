@@ -4,7 +4,7 @@
 \alias{run.pca}
 \title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, component.loading = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, path = getwd())
+run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -14,8 +14,6 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, component.loading = TRUE
 \item{scale}{DEFAULT = TRUE. A logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place.}
 
 \item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.}
-
-\item{component.loading}{DEFAULT = TRUE. Option to create plots for each component. Requires scree.plot = TRUE.}
 
 \item{variable.contribution}{DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.}
 
@@ -35,6 +33,8 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, component.loading = TRUE
 
 \item{repel}{DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.}
 
+\item{var.numb}{DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.}
+
 \item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
 \description{
@@ -44,7 +44,7 @@ This function will run a PCA calculation (extremely fast) and generate plots (ta
 For individuals (such as samples or patients), a PCA can group them based on their similarities.
 A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
 In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
-Uses the base R package "stats" for PCA, "factoextra" for PCA, scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
+Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
 More information on PCA plots can be found here http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/.
 }
 \examples{
@@ -66,6 +66,16 @@ Spectre::run.pca(dat = Spectre::demo.start,
                  )
         
 # When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
+
+## Possible issues ##
+# Remove any NA present
+na.omit(dat)
+
+# Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
+dat <- data.table::as.data.table(dat)
+dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
+
+# Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
 
 }
 \author{

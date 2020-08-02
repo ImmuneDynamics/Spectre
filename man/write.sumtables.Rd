@@ -25,7 +25,7 @@ make.sumtables(dat, sample.col, pop.col, measure.col, annot.col, group.col, do.p
 
 \item{do.mfi.per.sample}{DEFAULT = TRUE. Do you wish to generate MFI data (markers vs clusters) for each sample?}
 
-\item{do.mfi.per.marker}{Currently inactive, set to FALSE.}
+\item{do.mfi.per.marker}{DEFAULT = FALSE. Do you wish to generate MFI data (sample vs clusters) for each marker?}
 
 \item{perc.pos.markers}{DEFAULT = NULL. A vector of column names of calculating percent positive summary stats.}
 
