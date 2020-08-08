@@ -17,7 +17,7 @@
 #' @param plot.individuals DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).
 #' @param plot.ind.label DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.
 #' @param row.names DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.
-#' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses. Must specify column that groups individuals with group.ind.
+#' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.
 #' @param group.ind DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.
 #' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
 #' @param plot.combined DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.
