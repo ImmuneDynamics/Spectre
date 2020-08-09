@@ -57,14 +57,23 @@
 #' @references
 #' \url{https://sydneycytometry.org.au/spectre}.
 #' Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
+#'
+#' @import data.table
+#'
 #' @export
 
 make.pheatmap <- function(dat,
-                          file.name,
-                          plot.title,
+
                           sample.col,
                           plot.cols,
+
                           annot.cols = NULL,
+                          feature.annots = NULL,
+                          annotation_colors = NULL,
+
+                          file.name = paste0("Pheatmap by ", sample.col, ".png"),
+                          plot.title = paste0(sample.col, " heatmap"),
+
                           transpose = FALSE,
                           normalise = TRUE,
                           is.fold = FALSE,
@@ -349,6 +358,8 @@ make.pheatmap <- function(dat,
                gaps_col = col.sep,
 
                annotation_row = annot,
+               annotation_col = feature.annots,
+               annotation_colors = annotation_colors,
 
                color = map.colour,
                filename = file.name)

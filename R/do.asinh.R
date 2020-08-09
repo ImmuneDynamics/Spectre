@@ -13,6 +13,8 @@
 #'
 #' @return A data.table with new columns added, that contain the asinh transformed data.
 #'
+#' @import data.table
+#'
 #' @export
 
 do.asinh <- function(dat,

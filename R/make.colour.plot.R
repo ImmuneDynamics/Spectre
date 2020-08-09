@@ -60,6 +60,8 @@
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
 #'
+#' @import data.table
+#'
 #' @export
 
 make.colour.plot <- function(dat,
@@ -77,7 +79,12 @@ make.colour.plot <- function(dat,
                              col.max.threshold = 0.995,
                              align.xy.by = dat,
                              align.col.by = dat,
+
+                             regression.line = FALSE,
+
                              title = col.axis,
+                             filename = NULL,
+
                              dot.size = 1,
                              plot.width = 9,
                              plot.height = 7,
@@ -293,6 +300,12 @@ make.colour.plot <- function(dat,
           }
       }
 
+  ### Regression lione
+
+      if(regression.line == TRUE){
+        p <- p + geom_smooth(method="lm")
+      }
+
   ### Add title
 
       if(is.null(title)){
@@ -426,7 +439,11 @@ make.colour.plot <- function(dat,
           lb <- "Density plot"
         }
 
-        ggsave(filename = paste0(lb, " plot - ", title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
+        if(is.null(filename)){
+          filename <- paste0(lb, " plot - ", title, " - plotted on ", x.axis, " by ", y.axis, ".png")
+        }
+
+        ggsave(filename = filename,
                plot = p,
                path = path,
                width = plot.width,

@@ -9,15 +9,15 @@ make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, tra
 \arguments{
 \item{dat}{NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers).}
 
-\item{file.name}{NO DEFAULT. Character. What do you want to call the file, including the extension.}
-
-\item{plot.title}{NO DEFAULT. Character.}
-
 \item{sample.col}{NO DEFAULT. Character. Specify the name of the column that indicates samples.}
 
 \item{plot.cols}{NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.}
 
 \item{annot.cols}{NO DEFAULT. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.}
+
+\item{file.name}{NO DEFAULT. Character. What do you want to call the file, including the extension.}
+
+\item{plot.title}{NO DEFAULT. Character.}
 
 \item{transpose}{DEFAULT = FALSE. Logical. Do you want to transpose the heatmap.}
 

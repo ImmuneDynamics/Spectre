@@ -17,6 +17,8 @@
 #'
 #' @examples
 #'
+#' @import data.table
+#'
 #' @export
 
 do.embed.columns <- function(dat, # the list of dataframes (samples) where each dataframe will have the columns embedded

@@ -1,13 +1,13 @@
 #' Statistical analysis
 #'
+#' @import data.table
+#'
 #' @export
 
 do.stats <- function(dat,
                      use.cols,
                      sample.col,
                      grp.col,
-                     #ctrl.grp, # necessary?
-                     #col.append,
 
                      comparisons, # make a tool to create a factorial comparison design -- for now just specify manually
 
@@ -18,15 +18,13 @@ do.stats <- function(dat,
   ### Test data
       # dat <- merged.dat
       # names(merged.dat)
-      # use.cols <- names(dat)[c(7:114)]
+      # use.cols <- names(dat)[c(2:147)]
       # sample.col <- "Sample"
       # grp.col <- "DiseaseSeverity"
-      # ctrl.grp <- "Healthy_NP"
       # variance.test = "kruskal.test"
       # pairwise.test = "wilcox.text"
-      # corrections = NULL
-      # comparisons = list(c("COVID_ward", "COVID_ICU"),
-      #                    c("COVID_ICU", "COVID_hospital"))
+      # corrections = 'fdr'
+      # comparisons = list(c("COVID_ward", "COVID_ICU"))
 
   ### Setup
 
@@ -87,6 +85,40 @@ do.stats <- function(dat,
 
       names(final.res)[c(1:2)] <- c("Comparison", "Type")
       final.res
+
+      if(!is.null(corrections)){
+
+        nms.save <- names(final.res)
+        init.cols <- final.res[,c(1:2)]
+
+        for(a in c(1:(length(names(init.cols))))){
+          init.cols[[a]] <- gsub("p-value", paste0("p-value_", corrections), init.cols[[a]])
+        }
+
+        adjust.res.list <- list()
+
+        for(i in c(1:nrow(final.res))){
+          temp <- final.res[i,c(3:length(names(final.res))), with = FALSE]
+          temp <- unlist(temp)
+          temp <- unname(temp)
+
+          p.adj <- p.adjust(temp,
+                            method = corrections,
+                            n = length(temp))
+
+          #plot(temp, p.fdr)
+          adjust.res.list[[i]] <- p.adj
+        }
+
+        adjust.res <- do.call(rbind, adjust.res.list)
+        adjust.res <- as.data.table(adjust.res)
+
+        adjust.res <- cbind(init.cols, adjust.res)
+        names(adjust.res) <- nms.save
+
+        final.res <- adjust.res
+      }
+
 
       #final.res <- list(dat, new.rows)
       #final.res <- rbindlist(final.res, fill = TRUE)
@@ -173,7 +205,14 @@ do.stats <- function(dat,
       rtn.other <- rtn[rtn[["Comparison"]] != "Kruskal",]
 
       rtn.fc <- rtn.other[rtn.other[["Type"]] == "FClog2",]
-      rtn.p <- rtn.other[rtn.other[["Type"]] == "p-value",]
+
+      if(is.null(corrections)){
+        rtn.p <- rtn.other[rtn.other[["Type"]] == "p-value",]
+      }
+
+      if(!is.null(corrections)){
+        rtn.p <- rtn.other[rtn.other[["Type"]] == paste0("p-value_", corrections),]
+      }
 
       rtn.fc$Comparison.numbers <- c(1:nrow(rtn.fc))
       rtn.p$Comparison.numbers <- c(1:nrow(rtn.p))
@@ -194,7 +233,7 @@ do.stats <- function(dat,
   #
   # n <- 5
   # r <- 2
-  #
+  #s
   # n.comp <- factorial(n)/(factorial(r)*factorial(n-r))
   #
   # n.feat <- ncol()
