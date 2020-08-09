@@ -23,7 +23,7 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 
 \item{row.names}{DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.}
 
-\item{plot.ind.group}{DEFAULT = FALSE. Option to group inidividuals with ellipses. Must specify column that groups individuals with group.ind.}
+\item{plot.ind.group}{DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.}
 
 \item{group.ind}{DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.}
 

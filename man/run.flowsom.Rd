@@ -11,11 +11,11 @@ run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name
 
 \item{use.cols}{NO DEFAULT. Vector of column names to use for clustering.}
 
-\item{meta.k}{DEFAULT = 20. Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created.}
+\item{xdim}{DEFAULT = 14. Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters.}
 
-\item{xdim}{DEFAULT = 10. Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters.}
+\item{ydim}{DEFAULT = 14. Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters.}
 
-\item{ydim}{DEFAULT = 10. Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters.}
+\item{meta.k}{DEFAULT = 'auto'. If set to 'auto', then number of metaclusters will be determined automatically. Alternatively, can specify the desired number of metaclusters to create. If set to zero (0), no metaclusters will be created.}
 
 \item{clust.seed}{DEFAULT = 42 Numeric. Clustering seed for reproducibility.}
 
