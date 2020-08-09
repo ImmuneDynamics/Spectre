@@ -58,9 +58,9 @@ make.autograph <- function(dat,
                            Variance_test = NULL,
                            Pairwise_test = NULL,
 
-                           title = paste0(y.axis.label, " - ", y.axis),
+                           title = paste0(y.axis),
                            subtitle = NULL,
-                           filename = paste0(y.axis.label, " - ", y.axis, ".pdf"),
+                           filename = paste0(y.axis, ".pdf"),
 
                            violin = TRUE,
                            scale = "lin", # can be "lin" or "sci"

@@ -11,6 +11,8 @@
 #'
 #' @usage run.umap(dat, use.cols, umap.x.name, umap.y.name, umap.seed, suffix, ...)
 #'
+#' @import data.table
+#'
 #' @export
 
 run.umap <- function(dat,
@@ -30,9 +32,11 @@ run.umap <- function(dat,
 
   ## Check that necessary packages are installed
   if(!is.element('umap', installed.packages()[,1])) stop('umap is required but not installed')
+  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
 
   ## Require packages
   require(umap)
+  require(data.table)
 
   ###
   custom.config <- umap::umap.defaults
@@ -40,7 +44,11 @@ run.umap <- function(dat,
 
   custom.config$n_neighbors <- neighbours
 
-  res <- umap::umap(d = dat[use.cols],
+  dat.start <- dat
+
+  dat <- dat[,..use.cols]
+
+  res <- umap::umap(d = dat,
               condif = custom.config)
 
   umap.res <- res$layout
@@ -60,6 +68,6 @@ run.umap <- function(dat,
   }
 
   #assign("umap.res", umap.res, envir = globalenv())
-  dat <- cbind(dat, umap.res) # Merge UMAP results with data
-  return(dat)
+  res <- cbind(dat.start, umap.res) # Merge UMAP results with data
+  return(res)
 }

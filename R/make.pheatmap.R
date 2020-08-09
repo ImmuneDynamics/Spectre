@@ -162,7 +162,9 @@ make.pheatmap <- function(dat,
       }
 
       ## Fold-change colour options
-      fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
+
+          fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
+          #fold.palette <- colorRampPalette(brewer.pal(11, "RdBu"))
 
       ## Grouping colour options
         # group.palette <- (colorRampPalette(brewer.pal(11, "Spectral")))

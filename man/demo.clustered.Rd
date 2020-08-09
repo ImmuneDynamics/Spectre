@@ -3,9 +3,9 @@
 \docType{data}
 \name{demo.clustered}
 \alias{demo.clustered}
-\title{demo.clustered - Demo dataset.}
+\title{demo.clustered - Demo data.table with cells (rows) x markers (columns), with clusters, populations, and UMAP values added}
 \format{
-A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice, including FlowSOM cluster assignments.
+Demo data.table with cells (rows) x markers (columns), with clusters, populations, and UMAP values added.
 }
 \source{
 Thomas M Ashhurst.
@@ -14,7 +14,7 @@ Thomas M Ashhurst.
 demo.clustered
 }
 \description{
-demo.clustered - Demo dataset.
+demo.clustered - Demo data.table with cells (rows) x markers (columns), with clusters, populations, and UMAP values added
 }
 \examples{
 demo.clustered
