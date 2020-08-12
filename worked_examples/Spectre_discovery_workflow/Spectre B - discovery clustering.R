@@ -104,7 +104,7 @@
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", prefs$cellular.cols)
 
         for(i in prefs$cellular.cols){
-          make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", i, group.col, figure.title = paste0('Multiplot - ', i, '.png'))
+          make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", i, prefs$group.col, figure.title = paste0('Multiplot - ', i, '.png'))
         }
 
 ##########################################################################################################
