@@ -1,5 +1,5 @@
 #' Run the tSNE algorithm (using Rtsne::Rtsne())
-#' 
+#'
 #' Method to run a tSNE dimensionality reduction algorithm.
 #' A tSNE (t-distributed stochastic neighbor embedding) plot is a useful means to visualise data.
 #' As it is a dimensionality reduction algorithm, some data will be lost.
@@ -28,13 +28,15 @@
 #' @param final_momentum DEFAULT = 0.8. Momentum of spread at 'final_momentum'.
 #' @param eta DEFAULT = 200. Learning rate.
 #' @param exaggeration_factor DEFAULT = 12.0. Factor used during early exaggeration.
-#' 
+#'
 #' @usage run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
 #'
 #' @examples
-#' # Run tSNE on demonstration dataset
-#' Spectre::run.tsne(dat = Spectre::demo.start,
-#'                   use.cols = c(2:10))
+#' # Run tSNE on a subset of the  demonstration dataset
+#'
+#' cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
+#' cell.dat <- Spectre::run.tsne(dat = cell.dat,
+#'                               use.cols = names(demo.asinh)[c(2:10)])
 #'
 #' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
@@ -61,13 +63,13 @@ run.tsne <- function(dat,
                  eta = 200,
                  exaggeration_factor = 12.0
                  ){
-  
+
   ## Check that necessary packages are installed
   if(!is.element('Rtsne', installed.packages()[,1])) stop('Rtsne is required but not installed')
-  
+
   ## Require packages
   require(Rtsne)
-  
+
   ## Run tSNE
   tsne_out <- Rtsne::Rtsne(as.matrix(dat[use.cols]),
         dims = dims,
@@ -87,11 +89,11 @@ run.tsne <- function(dat,
         eta = eta,
         exaggeration_factor = exaggeration_factor
   )
-  
+
   tsne_out_Y <- tsne_out$Y
   colnames(tsne_out_Y) <- c(tsne.x.name, tsne.y.name)
-  
+
   tsne.res <- cbind(dat, tsne_out_Y)
-  
+
   assign("tsne.res", tsne.res, envir = globalenv())
 }

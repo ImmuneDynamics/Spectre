@@ -6,6 +6,26 @@
 \usage{
 do.list.switch(dat)
 }
+\arguments{
+\item{dat}{NO DEFAULT. A list of vectors that you wish to switch/invert}
+}
+\value{
+Returns a data.table of the switched/inverted li
+}
 \description{
 List switch or inversion
+}
+\examples{
+lst <- list("A" = c(1,2,3), "B" = c(4,5,6), "C" = c(7,8,9))
+lst
+
+res <- do.list.switch(lst)
+res
+
+}
+\references{
+\url{https://sydneycytometry.org.au/spectre}.
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }

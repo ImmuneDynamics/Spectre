@@ -36,7 +36,7 @@ Uses the R packages "FlowSOM" for clustering, "flowCore" for handling .fcs files
 \examples{
 # Run FlowSOM on demonstration dataset
 Spectre::run.flowsom(Spectre::demo.start,
-                     use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+                     use.cols = c(2:10))
 
 }
 \author{

@@ -1,5 +1,22 @@
 #' List switch or inversion
 #'
+#' @usage do.list.switch(dat)
+#'
+#' @param dat NO DEFAULT. A list of vectors that you wish to switch/invert
+#'
+#' @return Returns a data.table of the switched/inverted li
+#'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://sydneycytometry.org.au/spectre}.
+#'
+#' @examples
+#' lst <- list("A" = c(1,2,3), "B" = c(4,5,6), "C" = c(7,8,9))
+#' lst
+#'
+#' res <- do.list.switch(lst)
+#' res
+#'
 #' @import data.table
 #'
 #' @export

@@ -58,9 +58,11 @@ Output data will be "tsne.res".
 Uses the R package "Rtsne" to calculate plots.
 }
 \examples{
-# Run tSNE on demonstration dataset
-Spectre::run.tsne(dat = Spectre::demo.start,
-                  use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+# Run tSNE on a subset of the  demonstration dataset
+
+cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
+cell.dat <- Spectre::run.tsne(dat = cell.dat,
+                              use.cols = names(demo.asinh)[c(2:10)])
 
 }
 \author{

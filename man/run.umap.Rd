@@ -2,9 +2,9 @@
 % Please edit documentation in R/run.umap.R
 \name{run.umap}
 \alias{run.umap}
-\title{run.umap - ...}
+\title{Run the UMAP algorithm (using umap::umap())}
 \usage{
-run.umap(dat, use.cols, umap.x.name, umap.y.name, umap.seed, suffix, ...)
+run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, suffix = NULL)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input data.table or data.frame.}
@@ -17,10 +17,23 @@ run.umap(dat, use.cols, umap.x.name, umap.y.name, umap.seed, suffix, ...)
 
 \item{umap.seed}{DEFAULT = 42. Numeric. Seed value for reproducibility.}
 
-\item{suffix}{DEFAULT = blank.
-
-This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.}
+\item{suffix}{DEFAULT = NULL}
 }
 \description{
-run.umap - ...
+Method to run a UMAP dimensionality reduction algorithm.
+A UMAP (uniform manifold approximation and projection) plot is a useful means to visualise data.
+As it is a dimensionality reduction algorithm, some data will be lost.
+It is good practice to validate any populations (namely through manual gating).
+Uses the R package "umap" to calculate plots and "data.table" to handle data.
+}
+\examples{
+# Run UMAP on a subset of the  demonstration dataset
+
+cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
+cell.dat <- Spectre::run.umap(dat = cell.dat,
+                              use.cols = names(demo.asinh)[c(2:10)])
+}
+\author{
+Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

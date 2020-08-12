@@ -4,7 +4,7 @@
 \alias{run.pca}
 \title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -26,6 +26,10 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 \item{plot.ind.group}{DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.}
 
 \item{group.ind}{DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.}
+
+\item{ellipse.type}{DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.}
+
+\item{ellipse.level}{DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).}
 
 \item{plot.variables}{DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).}
 

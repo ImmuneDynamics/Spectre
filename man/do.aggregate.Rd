@@ -2,10 +2,37 @@
 % Please edit documentation in R/do.aggregate.R
 \name{do.aggregate}
 \alias{do.aggregate}
-\title{Aggregate data using data.table functions}
+\title{Aggregate data using data.table functions -- summarises the mean, median, or sum expression of each marker on each cluster/population}
 \usage{
-do.aggregate(dat, use.cols, by, func = "median", dt = TRUE)
+do.aggregate(dat, use.cols, by, func, dt)
+}
+\arguments{
+\item{dat}{NO DEFAULT. A data.table (or data.frame) containing the data to be aggregated.}
+
+\item{use.cols}{NO DEFAULT. The columns to be used for aggregation.}
+
+\item{by}{NO DEFAULT. The column that contains the cluster/population identities.}
+
+\item{func}{DEFAULT = 'median'. Character, method of aggregation. Can be 'median', 'mean', or 'sum'.}
+
+\item{dt}{DEFAULT = TRUE. If TRUE returns data.table with observations and the use.cols, if false returns data.frame with use.cols, and rownames as the observations}
+}
+\value{
+Returns a new data.table with values of use.cols aggregated per cluster/population.
 }
 \description{
-Aggregate data using data.table functions
+Aggregate data using data.table functions -- summarises the mean, median, or sum expression of each marker on each cluster/population
+}
+\examples{
+exp <- do.aggregate(dat = Spectre::demo.clustered,
+                    use.cols = names(demo.clustered)[c(11:19)],
+                    by = "Population")
+
+# Typically followed up by making an expression heatmap
+Spectre::make.pheatmap(dat = exp,
+                       file.name = "Pheatmap.png",
+                       plot.title = "Pheatmap",
+                       sample.col = "Population",
+                       plot.cols = names(exp)[c(2:10)])
+
 }
