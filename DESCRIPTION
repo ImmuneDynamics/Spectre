@@ -27,6 +27,7 @@ Imports:
     ggpubr,
     caret,
     class,
-    ggpointdensity
+    ggpointdensity,
+    factoextra
 Suggests:
 RoxygenNote: 7.1.1
