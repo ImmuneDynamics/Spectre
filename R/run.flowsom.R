@@ -26,6 +26,9 @@
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
+#'
+#' @import data.table
+#'
 #' @export
 
 run.flowsom <- function(dat,
@@ -52,17 +55,31 @@ run.flowsom <- function(dat,
       require(Biobase)
       require(FlowSOM)
       require(data.table)
-  
+
+  ### Test
+      # dat <- Spectre::demo.asinh
+      # use.cols <- names(demo.asinh)[c(11:19)]
+      # xdim = 14
+      # ydim = 14
+      # meta.k = 'auto'
+      # clust.seed = 42
+      # meta.seed = 42
+      # clust.name = "FlowSOM_cluster"
+      # meta.clust.name = "FlowSOM_metacluster"
+      # mem.ctrl = TRUE
+
+  ### Prepare starting and using data
+      message("Preparing data")
+
+      dat.start <- dat
+      clustering.cols <- use.cols
+
   ### Check selected columns are numeric
       if(any(unlist(lapply(dat[, use.cols, with = FALSE], is.numeric)) == FALSE)) {
         stop('Non-numeric column selected for analysis. Check use.cols parameter.')
-        }
+      }
 
-  ### Setup
-      message("Preparing data")
-      clustering.cols <- use.cols
-
-      dat.start <- dat
+      dat <- dat[,use.cols, with = FALSE]
 
   ### Create flowFrame metadata (column names with descriptions) plus flowFrame
       metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
@@ -71,7 +88,6 @@ run.flowsom <- function(dat,
                      parameters=Biobase::AnnotatedDataFrame(metadata))
 
       head(flowCore::exprs(dat.ff))
-
       dat_FlowSOM <- dat.ff
 
       rm(dat)
@@ -133,12 +149,12 @@ run.flowsom <- function(dat,
         message("Binding metacluster labels to starting dataset")
         dat.start <- cbind(dat.start, flowsom.res.meta)       # Add results to dat
         rm(flowsom.res.meta)
-
-        if(mem.ctrl == TRUE){gc()}
       }
 
-  message("Binding cluster labels to starting dataset")
+  ### Return
+      if(mem.ctrl == TRUE){gc()}
+      message("Binding cluster labels to starting dataset")
+      dat.start <- data.table::as.data.table(dat.start) # Make dat a data.table for future manipulation
 
-  dat.start <- data.table::as.data.table(dat.start) # Make dat a data.table for future manipulation
-  return(dat.start)
+      return(dat.start)
 }
