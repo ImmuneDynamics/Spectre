@@ -21,7 +21,7 @@
 #' @examples
 #' # Run FlowSOM on demonstration dataset
 #' Spectre::run.flowsom(Spectre::demo.start,
-#'                      use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+#'                      use.cols = c(2:10))
 #'
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
@@ -39,30 +39,6 @@ run.flowsom <- function(dat,
                         meta.clust.name = "FlowSOM_metacluster",
                         mem.ctrl = TRUE){
 
-  #### TEST VALUES
-      # dat <- demo.start
-      #
-      # ##
-      # ColumnNames <- as.matrix(unname(colnames(dat))) # assign reporter and marker names (column names) to 'ColumnNames'
-      # ColumnNames
-      # ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
-      # ClusteringCols <- ColumnNames[ClusteringColNos]
-      #
-      # clustering.cols <- ClusteringCols
-      #
-      # xdim <- 10
-      # ydim <- 10
-      # meta.k <- 40
-      #
-      # clust.seed <- 42
-      # meta.seed <- 42
-      # clust.name <- "FlowSOM_cluster"
-      # meta.clust.name <- "FlowSOM_metacluster"
-
-  ##
-      #head(dat)
-      #dimnames(dat)[[2]]
-
   ### Check that necessary packages are installed
       if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
       if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
@@ -76,18 +52,17 @@ run.flowsom <- function(dat,
       require(Biobase)
       require(FlowSOM)
       require(data.table)
+  
+  ### Check selected columns are numeric
+      if(any(unlist(lapply(dat[, use.cols, with = FALSE], is.numeric)) == FALSE)) {
+        stop('Non-numeric column selected for analysis. Check use.cols parameter.')
+        }
 
   ### Setup
       message("Preparing data")
       clustering.cols <- use.cols
 
       dat.start <- dat
-
-      ## Remove non-numeric for calculations
-      nums <- unlist(lapply(dat, is.numeric))
-      dat <- as.data.frame(dat)[ , nums]
-      dat <- as.data.table(dat)
-      dat <- dat[,clustering.cols,with = FALSE]
 
   ### Create flowFrame metadata (column names with descriptions) plus flowFrame
       metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
