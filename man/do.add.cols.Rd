@@ -20,12 +20,19 @@ do.add.cols(dat, base.col, add.dat, add.by, rmv.ext)
 \item{mem.ctrl}{DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.}
 }
 \value{
-Returns the data.table with new columns embedded..
+Returns the data.table with new columns embedded.
 }
 \description{
 do.add.cols
 }
 \examples{
+add.dt <- data.table('Files' = unique(Spectre::demo.asinh$FileName),
+                     'SampleNumber' = c(1:12))
+
+cell.dat <- do.add.cols(dat = Spectre::demo.asinh,
+                        base.col = "FileName",
+                        add.dat = add.dt,
+                        add.by = "Files")
 
 }
 \references{

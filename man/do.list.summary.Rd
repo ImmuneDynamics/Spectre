@@ -6,6 +6,18 @@
 \usage{
 do.list.summary(dat)
 }
+\arguments{
+\item{dat}{NO DEFAULT. A list of data.tables that you wish to create some summary information for}
+}
+\value{
+Returns a new list summarising the data.tables in your list.
+}
 \description{
 Summarise the column names and row numbers for elements of a list
+}
+\references{
+\url{https://sydneycytometry.org.au/spectre}.
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }

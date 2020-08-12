@@ -2,7 +2,7 @@
 % Please edit documentation in R/do.normalise.R
 \name{do.normalise}
 \alias{do.normalise}
-\title{do.normalise - Normalise data in selected columns between 0 and 1}
+\title{do.normalise - Normalise data in selected columns between two values, usually 0 and 1.}
 \usage{
 do.normalise(dat, use.cols, new.min = 0, new.max = 1, zero.drops = NULL)
 }

@@ -29,6 +29,10 @@ make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, tra
 
 \item{dendrograms}{DEFAULT = "both". Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none.}
 
+\item{cutree_rows}{DEFAULT = 1 (i.e. no divisions). Divides rows based on the level of dendrogram branches, if dendrograms = 'both' or 'row'.}
+
+\item{cutree_cols}{DEFAULT = 1 (i.e. no divisions). Divides columns based on the level of dendrogram branches, if dendrograms = 'both' or 'column'}
+
 \item{row.sep}{DEFAULT = c(). Numeric. Only used if not clustering rows.}
 
 \item{col.sep}{DEFAULT = c(). Numeric. Only used if not clustering columns}
@@ -46,26 +50,23 @@ make.pheatmap is a wrapper around the pheatmap function from pheatmap.
 Also uses the packages 'RColorBrewer' and 'scales' for colour customisation.
 }
 \examples{
-# MFI cluster vs marker heatmap
-Spectre::make.pheatmap(dat = Spectre::hmap.mfi,
-                       file.name = "test.png",
-                       plot.title = "Test plot",
-                       sample.col = "FlowSOM_metacluster",
-                       plot.cols = c(8,11,15,16,32),
-                       annot.cols = 2,
-                       fold.range = c(3,-3)
-                       )
+## MFI cluster vs marker heatmap
+Spectre::make.pheatmap(dat = Spectre::demo.exp,
+                       file.name = "Expression pheatmap.png",
+                       plot.title = "Expression",
+                       sample.col = "Population",
+                       plot.cols = names(Spectre::demo.exp)[c(2:10)])
 
-# Fold change heatmap
-dat <- Spectre::hmap.foldcell
-dat$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2) # Add variable that will be annotated on heatmap
+## Z-scrore of fold-change type heatmap
+z.dat <- do.zscore(dat = Spectre::demo.sum,
+                   use.cols = names(Spectre::demo.sum)[c(4:15)])
 
-Spectre::make.pheatmap(dat = dat,
-                       file.name = "test.png",
-                       plot.title = "Test plot",
+Spectre::make.pheatmap(dat = z.dat,
+                       file.name = "z-score.png",
+                       plot.title = "z-score",
                        sample.col = "Sample",
-                       plot.cols = c(4:43),
-                       annot.cols = c(3,44),
+                       plot.cols = names(z.dat)[c(4:15)],
+                       annot.cols = names(z.dat)[c(2:3)],
                        is.fold = TRUE,
                        fold.range = c(3,-3)
                        )

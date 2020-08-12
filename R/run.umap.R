@@ -1,5 +1,5 @@
 #' Run the UMAP algorithm (using umap::umap())
-#' 
+#'
 #' Method to run a UMAP dimensionality reduction algorithm.
 #' A UMAP (uniform manifold approximation and projection) plot is a useful means to visualise data.
 #' As it is a dimensionality reduction algorithm, some data will be lost.
@@ -16,9 +16,11 @@
 #' @usage run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, suffix = NULL)
 #'
 #' @examples
-#' # Run UMAP on demonstration dataset
-#' Spectre::run.umap(dat = Spectre::demo.start,
-#'                   use.cols = c(2:10))
+#' # Run UMAP on a subset of the  demonstration dataset
+#'
+#' cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
+#' cell.dat <- Spectre::run.umap(dat = cell.dat,
+#'                               use.cols = names(demo.asinh)[c(2:10)])
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
@@ -66,15 +68,8 @@ run.umap <- function(dat,
   umap.res <- as.data.frame(umap.res)
   head(umap.res)
 
-  if(is.null(suffix) == TRUE){ # if suffix = NULL
-    names(umap.res)[names(umap.res) == "V1"] <- umap.x.name
-    names(umap.res)[names(umap.res) == "V2"] <- umap.y.name
-  }
-
-  if(is.null(suffix) == FALSE){ # if suffix = anything other than NULL
-    names(umap.res)[names(umap.res) == "V1"] <- paste0("UMAP_X", "_", suffix)
-    names(umap.res)[names(umap.res) == "V2"] <- paste0("UMAP_Y", "_", suffix)
-  }
+  names(umap.res)[names(umap.res) == "V1"] <- umap.x.name
+  names(umap.res)[names(umap.res) == "V2"] <- umap.y.name
 
   #assign("umap.res", umap.res, envir = globalenv())
   res <- cbind(dat.start, umap.res) # Merge UMAP results with data

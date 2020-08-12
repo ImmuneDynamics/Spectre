@@ -1,4 +1,4 @@
-#' do.normalise - Normalise data in selected columns between 0 and 1
+#' do.normalise - Normalise data in selected columns between two values, usually 0 and 1.
 #'
 #' This function allows you to normalise the data in selected columns between two values, usually 0 and 1.
 #'
