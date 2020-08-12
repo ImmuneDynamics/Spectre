@@ -38,11 +38,9 @@ do.subsample <- function(dat,
                          seed = 42){
 
   ## Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
 
   ## Require packages
-  require(Spectre)
   require(data.table)
 
   dat <- as.data.table(dat)
@@ -89,8 +87,8 @@ do.subsample <- function(dat,
     ## IF min.per.sample
     if(min.per == TRUE){
       # Create list of unique sample names
-      sample.list <- unique(dat[divide.by])
-      sample.list <- sample.list[,1]
+      sample.list <- unique(dat[,divide.by,with = FALSE])
+      sample.list <- sample.list[[1]]
       sample.list
 
       #nrow.check = list()

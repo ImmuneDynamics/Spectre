@@ -20,12 +20,14 @@
 #' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.
 #' @param group.ind DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.
 #' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
+#' @param ellipse.type DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.
+#' @param ellipse.level DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).
 #' @param plot.combined DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.
 #' @param repel DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.
 #' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
@@ -70,6 +72,8 @@ run.pca <- function(dat,
                  row.names = NULL,
                  plot.ind.group = FALSE,
                  group.ind = NULL,
+                 ellipse.type = "confidence",
+                 ellipse.level = 0.95,
                  plot.variables = TRUE,
                  plot.combined = TRUE,
                  repel = FALSE,
@@ -189,7 +193,8 @@ run.pca <- function(dat,
                              col.ind = col.factor, # color by groups
                              # palette = c("#00AFBB",  "#FC4E07"),
                              addEllipses = TRUE, # Concentration ellipses
-                             ellipse.type = "confidence",
+                             ellipse.type = ellipse.type,
+                             ellipse.level = ellipse.level,
                              legend.title = "Groups",
                              repel = repel,
                              geom = plot.ind.label
