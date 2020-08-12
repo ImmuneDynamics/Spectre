@@ -211,13 +211,29 @@
         new.dat.ref <- new.dat[new.dat[[reference.col]] == TRUE,]
         new.dat.ref
 
-        aligned.cluster.cols <- names(new.dat.ref)[cluster.cols.nums] # Channels to align
+        aligned.cluster.cols <- cluster.cols
+        for(i in c(1:length(aligned.cluster.cols))){
+          a <- aligned.cluster.cols[[i]]
+          a <- paste0(a, "_aligned")
+          aligned.cluster.cols[[i]] <- a
+        }
+
+        aligned.align.cols <- cluster.cols
+        for(i in c(1:length(aligned.align.cols))){
+          a <- aligned.align.cols[[i]]
+          a <- paste0(a, "_aligned")
+          aligned.align.cols[[i]] <- a
+        }
+
+        aligned.all.cols <- cluster.cols
+        for(i in c(1:length(aligned.all.cols))){
+          a <- aligned.all.cols[[i]]
+          a <- paste0(a, "_aligned")
+          aligned.all.cols[[i]] <- a
+        }
+
         aligned.cluster.cols
-
-        aligned.align.cols <- names(new.dat.ref)[align.cols.nums]
         aligned.align.cols
-
-        aligned.all.cols <- names(new.dat.ref)[all.cols.nums]
         aligned.all.cols
 
     ### Plots

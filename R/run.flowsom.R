@@ -1,154 +1,144 @@
-#' run.flowsom - ...
+#' Run the FlowSOM algorithm
 #'
-#' @usage run.flowsom(dat, clustering.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name, ...)
+#' Method to run the FlowSOM clustering algorithm.
+#' This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.
+#' Output data will be "flowsom.res.original" (for clusters) and "flowsom.res.meta" (for metaclusters).
+#' Uses the R packages "FlowSOM" for clustering, "flowCore" for handling .fcs files, "Biobase" for creating a flow frame, "data.table" for handling data.table format.
 #'
 #' @param dat NO DEFAULT. data.frame. Input sample.
 #' @param use.cols NO DEFAULT. Vector of column names to use for clustering.
-#' @param meta.k DEFAULT = 20. Numeric. Number of clusters to create. If set to zero (0), no metaclusters will be created.
-#' @param xdim DEFAULT = 10. Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters.
-#' @param ydim DEFAULT = 10. Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters.
+#' @param xdim DEFAULT = 14. Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters.
+#' @param ydim DEFAULT = 14. Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters.
+#' @param meta.k DEFAULT = 'auto'. If set to 'auto', then number of metaclusters will be determined automatically. Alternatively, can specify the desired number of metaclusters to create. If set to zero (0), no metaclusters will be created.
 #' @param clust.seed DEFAULT = 42 Numeric. Clustering seed for reproducibility.
 #' @param meta.seed DEFAULT = 42 Numeric. Metaclustering seed for reproducibility.
 #' @param clust.name DEFAULT = "FlowSOM_cluster". Character. Name of the resulting 'cluster' parameter.
 #' @param meta.clust.name DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
+#' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
-#' This function runs FlowSOM on a data.table with cells (rows) vs markers (columns) with new columns for FlowSOM clusters and metaclusters.
+#' @usage run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
 #'
+#' @examples
+#' # Run FlowSOM on demonstration dataset
+#' Spectre::run.flowsom(Spectre::demo.start,
+#'                      use.cols = c(2:10))
+#'
+#' @author
+#' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
 run.flowsom <- function(dat,
                         use.cols, # names of columns to cluster
-                        meta.k = 20,
-                        xdim = 10,
-                        ydim = 10,
+                        xdim = 14,
+                        ydim = 14,
+                        meta.k = 'auto',
                         clust.seed = 42,
                         meta.seed = 42,
                         clust.name = "FlowSOM_cluster",
-                        meta.clust.name = "FlowSOM_metacluster"){
+                        meta.clust.name = "FlowSOM_metacluster",
+                        mem.ctrl = TRUE){
 
-  #### TEST VALUES
-      # dat <- demo.start
-      #
-      # ##
-      # ColumnNames <- as.matrix(unname(colnames(dat))) # assign reporter and marker names (column names) to 'ColumnNames'
-      # ColumnNames
-      # ClusteringColNos <- c(5,6,8,9,11,13,17:19,21:29,32)
-      # ClusteringCols <- ColumnNames[ClusteringColNos]
-      #
-      # clustering.cols <- ClusteringCols
-      #
-      # xdim <- 10
-      # ydim <- 10
-      # meta.k <- 40
-      #
-      # clust.seed <- 42
-      # meta.seed <- 42
-      # clust.name <- "FlowSOM_cluster"
-      # meta.clust.name <- "FlowSOM_metacluster"
+  ### Check that necessary packages are installed
+      if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+      if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
+      if(!is.element('Biobase', installed.packages()[,1])) stop('Biobase is required but not installed')
+      if(!is.element('FlowSOM', installed.packages()[,1])) stop('FlowSOM is required but not installed')
+      if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
 
-  ##
-      #head(dat)
-      #dimnames(dat)[[2]]
+  ### Require packages
+      require(Spectre)
+      require(flowCore)
+      require(Biobase)
+      require(FlowSOM)
+      require(data.table)
+  
+  ### Check selected columns are numeric
+      if(any(unlist(lapply(dat[, use.cols, with = FALSE], is.numeric)) == FALSE)) {
+        stop('Non-numeric column selected for analysis. Check use.cols parameter.')
+        }
 
-  ## Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
-  if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
-  if(!is.element('Biobase', installed.packages()[,1])) stop('Biobase is required but not installed')
-  if(!is.element('FlowSOM', installed.packages()[,1])) stop('FlowSOM is required but not installed')
-  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+  ### Setup
+      message("Preparing data")
+      clustering.cols <- use.cols
 
-  ## Require packages
-  require(Spectre)
-  require(flowCore)
-  require(Biobase)
-  require(FlowSOM)
-  require(data.table)
-
-  ## Setup
-  clustering.cols <- use.cols
-
-  ## Remove non-numeric
-      head
       dat.start <- dat
 
-      nums <- unlist(lapply(dat, is.numeric))
-      dat <- as.data.frame(dat)[ , nums]
-      dat[clustering.cols]
+  ### Create flowFrame metadata (column names with descriptions) plus flowFrame
+      metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
+      dat.ff <- new("flowFrame",
+                     exprs=as.matrix(dat), # in order to create a flow frame, data needs to be read as matrix
+                     parameters=Biobase::AnnotatedDataFrame(metadata))
 
-  ## Create FCS file metadata - column names with descriptions
-  metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
+      head(flowCore::exprs(dat.ff))
 
-  ## Create flowframe with data
-  dat.ff <- new("flowFrame",
-                 exprs=as.matrix(dat), # in order to create a flow frame, data needs to be read as matrix
-                 parameters=Biobase::AnnotatedDataFrame(metadata))
+      dat_FlowSOM <- dat.ff
 
-  head(flowCore::exprs(dat.ff))
+      rm(dat)
+      rm(dat.ff)
 
-  dat_FlowSOM <- dat.ff
+      if(mem.ctrl == TRUE){
+        gc()
+      }
 
-  # choose markers for FlowSOM analysis
-  FlowSOM_cols <- clustering.cols
+  ### Run FlowSOM clustering
+      message("Starting FlowSOM")
 
-  ### 4.3. - Run FlowSOM
+      FlowSOM_cols <- clustering.cols # clustering cols
+      set.seed(clust.seed) # set seed for reproducibility
 
-  ## set seed for reproducibility
-  set.seed(clust.seed)
+      ## run FlowSOM (initial steps prior to meta-clustering)
+      FlowSOM_out <- FlowSOM::ReadInput(dat_FlowSOM, transform = FALSE, scale = FALSE)
 
-  ## run FlowSOM (initial steps prior to meta-clustering)
-  FlowSOM_out <- FlowSOM::ReadInput(dat_FlowSOM, transform = FALSE, scale = FALSE)
+      FlowSOM_out <- FlowSOM::BuildSOM(FlowSOM_out,
+                                       colsToUse = FlowSOM_cols,
+                                       xdim = xdim,
+                                       ydim = ydim)
 
-  FlowSOM_out <- FlowSOM::BuildSOM(FlowSOM_out,
-                                   colsToUse = FlowSOM_cols,
-                                   xdim = xdim,
-                                   ydim = ydim)
+      FlowSOM_out <- FlowSOM::BuildMST(FlowSOM_out)
 
-  FlowSOM_out <- FlowSOM::BuildMST(FlowSOM_out)
+      ## extract cluster labels (pre meta-clustering) from output object
+      labels_pre <- FlowSOM_out$map$mapping[, 1]
 
-  ## extract cluster labels (pre meta-clustering) from output object
-  labels_pre <- FlowSOM_out$map$mapping[, 1]
-  labels_pre
-  length(labels_pre)
-  nrow(dat)
+      if(mem.ctrl == TRUE){
+        gc()
+      }
 
-  flowsom.res.original <- labels_pre
+      flowsom.res.original <- labels_pre
 
-  if (meta.k != 0) {
-    ## run meta-clustering
-    FlowSOM_out_meta <- FlowSOM::metaClustering_consensus(FlowSOM_out$map$codes, k = meta.k, seed = meta.seed)
+      ## save ORIGINAL cluster labels
+      flowsom.res.original <- data.frame("labels_pre" = labels_pre)
+      colnames(flowsom.res.original)[grepl('labels_pre',colnames(flowsom.res.original))] <- clust.name
 
-    ## extract META (?) cluster labels from output object
-    labels <- FlowSOM_out_meta[labels_pre]
+      dat.start <- cbind(dat.start, flowsom.res.original)   # Add results to dat
 
-    ## summary of cluster sizes and number of clusters
-    table(labels)
-    length(table(labels))
+  ### Metaclustering
 
-    ## save META cluster labels
-    flowsom.res.meta <- data.frame("labels" = labels)
-    colnames(flowsom.res.meta)[grepl('labels',colnames(flowsom.res.meta))] <- meta.clust.name
+      if(meta.k != 0) {
 
-    dim(dat)
-    dim(flowsom.res.meta)
-    head(flowsom.res.meta)
+        ## Auto number of MCs
+        if(meta.k == 'auto'){
+          FlowSOM_out_meta <- FlowSOM::metaClustering_consensus(FlowSOM_out$map$codes, seed = meta.seed)
+        }
 
-    assign("flowsom.res.meta", flowsom.res.meta, envir = globalenv())
+        ## Define number of MCs
+        if(meta.k != 'auto'){
+          FlowSOM_out_meta <- FlowSOM::metaClustering_consensus(FlowSOM_out$map$codes, k = meta.k, seed = meta.seed)
+        }
 
-    dat.start <- cbind(dat.start, flowsom.res.meta)       # Add results to dat
-  }
+        labels <- FlowSOM_out_meta[labels_pre]
+        flowsom.res.meta <- data.frame("labels" = labels)
+        colnames(flowsom.res.meta)[grepl('labels',colnames(flowsom.res.meta))] <- meta.clust.name
 
-  ## save ORIGINAL cluster labels
-  flowsom.res.original <- data.frame("labels_pre" = labels_pre)
-  colnames(flowsom.res.original)[grepl('labels_pre',colnames(flowsom.res.original))] <- clust.name
+        message("Binding metacluster labels to starting dataset")
+        dat.start <- cbind(dat.start, flowsom.res.meta)       # Add results to dat
+        rm(flowsom.res.meta)
 
-  dim(dat)
-  dim(flowsom.res.original)
-  head(flowsom.res.original)
+        if(mem.ctrl == TRUE){gc()}
+      }
 
-  assign("flowsom.res.original", flowsom.res.original, envir = globalenv())
-
-  dat.start <- cbind(dat.start, flowsom.res.original)   # Add results to dat
+  message("Binding cluster labels to starting dataset")
 
   dat.start <- data.table::as.data.table(dat.start) # Make dat a data.table for future manipulation
-
+  return(dat.start)
 }

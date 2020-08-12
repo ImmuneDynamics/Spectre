@@ -2,14 +2,14 @@
 % Please edit documentation in R/run.tsne.R
 \name{run.tsne}
 \alias{run.tsne}
-\title{run.tsne - ...}
+\title{Run the tSNE algorithm (using Rtsne::Rtsne())}
 \usage{
-run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor, ...)
+run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
 
-\item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for clustering.}
+\item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction.}
 
 \item{tsne.x.name}{DEFAULT = "tSNE_X". Character. Name of tSNE x-axis.}
 
@@ -47,10 +47,24 @@ run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims,
 
 \item{eta}{DEFAULT = 200. Learning rate.}
 
-\item{exaggeration_factor}{DEFAULT = 12.0. Factor used during early exaggeration.
-
-This function runs tSNE on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns. Uses the Rtsne package. For more information on parameter choices and effects, check out https://distill.pub/2016/misread-tsne/.}
+\item{exaggeration_factor}{DEFAULT = 12.0. Factor used during early exaggeration.}
 }
 \description{
-run.tsne - ...
+Method to run a tSNE dimensionality reduction algorithm.
+A tSNE (t-distributed stochastic neighbor embedding) plot is a useful means to visualise data.
+As it is a dimensionality reduction algorithm, some data will be lost.
+It is good practice to validate any populations (namely through manual gating).
+Output data will be "tsne.res".
+Uses the R package "Rtsne" to calculate plots.
+}
+\examples{
+# Run tSNE on a subset of the  demonstration dataset
+
+cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
+cell.dat <- Spectre::run.tsne(dat = cell.dat,
+                              use.cols = names(demo.asinh)[c(2:10)])
+
+}
+\author{
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

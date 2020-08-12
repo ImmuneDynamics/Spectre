@@ -13,9 +13,9 @@ write.files(dat, file.prefix, divide.by, write.csv, write.fcs)
 
 \item{divide.by}{Character. Do you want to write the whole dataset (use NULL) or split it by sample/group/cluster etc (etner the name of the column to divide by, e.g. "SampleName"). Default NULL. .}
 
-\item{write.csv}{Logical. TRUE to write CSV files, FALSE to not. Defaults to TRUE.}
+\item{write.csv}{Defaults to TRUE. Logical. TRUE to write CSV files, FALSE to not.}
 
-\item{write.fcs}{Logical. TRUE to write FCS files, FALSE to not. Defaults to FALSE
+\item{write.fcs}{Defaults to FALSE. Logical. TRUE to write FCS files, FALSE to not.
 
 This function writes CSV files from your data using fwrite. Can also write FCS files.}
 }

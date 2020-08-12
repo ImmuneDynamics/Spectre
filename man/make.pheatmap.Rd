@@ -4,65 +4,79 @@
 \alias{make.pheatmap}
 \title{make.pheatmap - Create a 'pretty' heatmap (pheatmap)}
 \usage{
-make.pheatmap(dat, ...)
+make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
 }
 \arguments{
-\item{dat}{NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.}
+\item{dat}{NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers).}
+
+\item{sample.col}{NO DEFAULT. Character. Specify the name of the column that indicates samples.}
+
+\item{plot.cols}{NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.}
+
+\item{annot.cols}{NO DEFAULT. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.}
 
 \item{file.name}{NO DEFAULT. Character. What do you want to call the file, including the extension.}
 
 \item{plot.title}{NO DEFAULT. Character.}
 
-\item{sample.col}{NO DEFAULT. Character. Specify the name of the column that indicates samples. No default.}
+\item{transpose}{DEFAULT = FALSE. Logical. Do you want to transpose the heatmap.}
 
-\item{plot.cols}{NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.}
+\item{normalise}{DEFAULT = TRUE. Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values.}
 
-\item{annot.cols}{Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.}
+\item{is.fold}{DEFAULT = FALSE. Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap.}
 
-\item{transpose}{Logical. Do you want to transpose the heatmap. Defaults to FALSE.}
+\item{fold.range}{DEFAULT = NULL. Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset).}
 
-\item{normalise}{Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values. Defaults to TRUE.}
+\item{dendrograms}{DEFAULT = "both". Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none.}
 
-\item{is.fold}{Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap. Defaults to FALSE.}
+\item{cutree_rows}{DEFAULT = 1 (i.e. no divisions). Divides rows based on the level of dendrogram branches, if dendrograms = 'both' or 'row'.}
 
-\item{fold.range}{Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset)}
+\item{cutree_cols}{DEFAULT = 1 (i.e. no divisions). Divides columns based on the level of dendrogram branches, if dendrograms = 'both' or 'column'}
 
-\item{dendrograms}{Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none. Defaults to "both.}
+\item{row.sep}{DEFAULT = c(). Numeric. Only used if not clustering rows.}
 
-\item{n.row.groups}{Numeric.}
+\item{col.sep}{DEFAULT = c(). Numeric. Only used if not clustering columns}
 
-\item{n.col.groups}{Numeric.}
+\item{cell.size}{DEFAULT = 15. Numeric.}
 
-\item{row.sep}{Numeric. Only used if not clustering rows.}
+\item{standard.colours}{DEFAULT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".}
 
-\item{col.sep}{Numeric. Only used if not clustering columns}
-
-\item{cell.size}{Numeric. Defaults to 15.}
-
-\item{standard.colours}{Character. DEFAULTS to "YlGnBu", can also be "viridis", "magma", "inferno", "spectral".}
-
-\item{fold.colours}{Character.}
-
-\item{colour.scheme}{Character. Only one option currently.}
-
-\item{y.margin}{Numeric.}
-
-\item{x.margin}{Numeric.}
-}
-\value{
-prints a 'pretty' heatmap with dendrograms.
+\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
 \description{
-This function allows you to create a coloured heatmap for clusters vs markers (coloured by MFI) or clusters vs samples (coloured by MFI or cell counts). Can be set to plot 'fold-change' values that are provided in log2.
+This function allows you to create a coloured heatmap for clusters vs markers (coloured by MFI) or clusters vs samples (coloured by MFI or cell counts).
+Can be set to plot 'fold-change' values (with is.fold = TRUE) that are provided in log2.
 make.pheatmap is a wrapper around the pheatmap function from pheatmap.
+Also uses the packages 'RColorBrewer' and 'scales' for colour customisation.
 }
 \examples{
-make.pheatmap()
+## MFI cluster vs marker heatmap
+Spectre::make.pheatmap(dat = Spectre::demo.exp,
+                       file.name = "Expression pheatmap.png",
+                       plot.title = "Expression",
+                       sample.col = "Population",
+                       plot.cols = names(Spectre::demo.exp)[c(2:10)])
+
+## Z-scrore of fold-change type heatmap
+z.dat <- do.zscore(dat = Spectre::demo.sum,
+                   use.cols = names(Spectre::demo.sum)[c(4:15)])
+
+Spectre::make.pheatmap(dat = z.dat,
+                       file.name = "z-score.png",
+                       plot.title = "z-score",
+                       sample.col = "Sample",
+                       plot.cols = names(z.dat)[c(4:15)],
+                       annot.cols = names(z.dat)[c(2:3)],
+                       is.fold = TRUE,
+                       fold.range = c(3,-3)
+                       )
 
 }
 \references{
-\url{https://sydneycytometry.org.au/spectre}. Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
+\url{https://sydneycytometry.org.au/spectre}.
+Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

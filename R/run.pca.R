@@ -1,37 +1,85 @@
-#' run.pca - ...
-#'
-#' @param dat data.frame. No default.
-#' @param use.cols Vector of numbers, reflecting the columns to use for clustering. No default.
-#' @param cor A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.). Default = TRUE.
-#' @param scores A logical value indicating whether the score on each principal component should be calculated. Default = TRUE.
-#' @param scree.plot Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot. Default = TRUE.
-#' @param component.loading Option to create plots for each component. Requires scree.plot = TRUE. Default = TRUE.
-#' @param marker.contribution Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE. Default = TRUE.
-#' @param loading.plot Option to create scree plots. Will save generated loading plot. Default = TRUE.
-#' @param individual.samples Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included. Default = FALSE.
-#' @param sample.code Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".Default = "FileName"
-#' @param top.tally Number of top markers that contributed to PCA across each sample. Used for "individual.samples". Defalut = 10.
-#' @param path Location to save plots. Default = getwd() (working directory)
-#'
-#' This function runs a principal component analysis (PCA) on a dataframe with cells (rows) vs markers (columns), returning chosen figures. Uses the base R package "stats" for PCA, "factoextra" for scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.
+#' Run the PCA algorithm (using stats::prcomp)
 #' 
-#' @usage run.pca(dat, use.cols, cor, scores, scree.plot, component.loading, marker.contribution, loading.plot, individual.samples, sample.code, top.tally, path, ...)
+#' Method to run a PCA dimensionality reduction algorithm.
+#' A principal component analysis (PCA) is capable of reducing the number of dimensions (i.e. parameters) with minimal effect on the variation of the given dataset.
+#' This function will run a PCA calculation (extremely fast) and generate plots (takes time).
+#' For individuals (such as samples or patients), a PCA can group them based on their similarities.
+#' A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
+#' In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
+#' Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
+#' More information on PCA plots can be found here http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/.
 #'
+#' @param dat NO DEFAULT. data.frame.
+#' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").
+#' @param scale DEFAULT = TRUE. A logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place.
+#' @param scree.plot DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.
+#' @param variable.contribution DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.
+#' @param plot.individuals DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).
+#' @param plot.ind.label DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.
+#' @param row.names DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.
+#' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.
+#' @param group.ind DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.
+#' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
+#' @param ellipse.type DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.
+#' @param ellipse.level DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).
+#' @param plot.combined DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.
+#' @param repel DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.
+#' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
+#' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
+#' 
+#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+#'
+#' @examples
+#' # Set directory to save files. By default it will save files at get()
+#' setwd("/Users/felixmarsh-wakefield/Desktop")
+#' 
+#' # Run PCA on demonstration dataset
+#' Spectre::run.pca(dat = Spectre::demo.start,
+#'                 use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+#'                 repel = TRUE
+#'                 )
+#' 
+#' # Compare between groups
+#' Spectre::run.pca(dat = Spectre::demo.start,
+#'                  use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+#'                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
+#'                  plot.ind.group = TRUE,
+#'                  group.ind = "Group"
+#'                  )
+#'         
+#' # When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
+#' 
+#' ## Possible issues ##
+#' # Remove any NA present
+#' na.omit(dat)
+#' 
+#' # Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
+#' dat <- data.table::as.data.table(dat)
+#' dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
+#' 
+#' # Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
+#' 
+#' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
 run.pca <- function(dat,
                  use.cols,
-                 cor = TRUE,
-                 scores = TRUE,
+                 scale = TRUE,
                  scree.plot = TRUE,
-                 component.loading = TRUE,
-                 marker.contribution = TRUE,
-                 loading.plot = TRUE,
-                 individual.samples = FALSE,
-                 sample.code = "FileName",
-                 top.tally = 10,
+                 variable.contribution = TRUE,
+                 plot.individuals = TRUE,
+                 plot.ind.label = "point",
+                 row.names = NULL,
+                 plot.ind.group = FALSE,
+                 group.ind = NULL,
+                 ellipse.type = "confidence",
+                 ellipse.level = 0.95,
+                 plot.variables = TRUE,
+                 plot.combined = TRUE,
+                 repel = FALSE,
+                 var.numb = 20,
                  path = getwd()
-                 ){
+                 ) {
   
   ## Check that necessary packages are installed
   if(!is.element('stats', installed.packages()[,1])) stop('stats is required but not installed')
@@ -39,7 +87,6 @@ run.pca <- function(dat,
   if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
   if(!is.element('gtools', installed.packages()[,1])) stop('gtools is required but not installed')
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-  if(!is.element('dplyr', installed.packages()[,1])) stop('dplyr is required but not installed')
   if(!is.element('ggpubr', installed.packages()[,1])) stop('ggpubr is required but not installed')
   
   ## Require packages
@@ -48,23 +95,22 @@ run.pca <- function(dat,
   require(ggplot2)
   require(gtools)
   require(data.table)
-  require(dplyr)
   require(ggpubr)
   
-  ## Run PCA
-  pca_out <- stats::princomp(as.matrix(dat[use.cols]),
-                             cor = cor,
-                             scores = scores,
-                             scree.plot = scree.plot,
-                             component.loading = component.loading,
-                             marker.contribution = marker.contribution,
-                             loading.plot = loading.plot,
-                             individual.samples = individual.samples,
-                             sample.code = sample.code,
-                             top.tally = top.tally,
-                             path = path
-                             )
+  # Make sure dat is a dataframe
+  dat <- as.data.frame(dat)
   
+  # Change rownames of dat
+  if (is.null(row.names) == FALSE) {
+    rownames(dat) <- dat[, row.names]
+  }
+  
+  ## Run PCA
+  pca_out <- stats::prcomp(dat[, use.cols],
+                           scale = scale
+                           )
+  
+  # Create scree plot
   if (scree.plot == TRUE) {
     scree_plot <- factoextra::fviz_eig(pca_out, addlabels = TRUE) #creates scree plot; addlabels adds % to plot
     print(scree_plot)
@@ -77,196 +123,127 @@ run.pca <- function(dat,
            filename = "Scree plot.pdf",
            path = path)
     
-    if (component.loading == TRUE) {
-      # Set parameters for plots
-      data.loadings <- unclass(pca_out$loadings)
-      data.load.order <- as.data.frame(data.loadings[gtools::mixedsort(row.names(data.loadings)), ])
-      
-      # Create bargraphs for PC (up to the elbow)
-      max_y_value <- max(data.load.order[,1:elbow.point], na.rm = TRUE)
-      max_y_value_p10 <- max_y_value*1.1
-      
-      min_y_value <- min(data.load.order[,1:elbow.point], na.rm = TRUE)
-      min_y_value_p10 <- min_y_value*1.1
-      
-      # Creates loadings plots for each of the components/dimensions (based on elbow point)
-      for (i in 1:elbow.point) {
-        p_loading <- ggplot2::ggplot(data = data.load.order, ggplot2::aes(dat = rownames(data.load.order), y = data.load.order[,i])) +
-          ggplot2::geom_bar(stat="identity", color = "black", fill = "black") +
-          #theme_minimal() + #includes grids
-          ggplot2::theme_classic() + #removes all grids
-          ggplot2::scale_x_discrete(limits = c(rownames(data.load.order))) + #sets order
-          ggplot2::scale_y_continuous(limits = c(min_y_value_p10, max_y_value_p10)) +
-          ggplot2::labs(title = paste0("PC", i), x = "Marker", y = "Component loading") +
-          ggplot2::theme(legend.position = "none", # can be "left" "right" "top" "bottom" "none
-                axis.text.x = ggplot2::element_text(colour="black",size=12,angle=90,hjust=1,vjust=1,face="bold"),
-                axis.text.y = ggplot2::element_text(colour="black",size=12,angle=0,hjust=1,vjust=0,face="bold"),  
-                axis.title.x = ggplot2::element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-                axis.title.y = ggplot2::element_text(colour="black",size=12,angle=90,hjust=.5,vjust=1,face="bold"),
-                plot.title = ggplot2::element_text(lineheight=.8, face="bold", hjust = 0, size = 18), # hjust = 0.5 to centre
-                axis.line = ggplot2::element_line(colour = 'black', size = 0.5),
-                axis.ticks = ggplot2::element_line(colour = "black", size = 0.5)
-          )
-        
-        ggplot2::ggsave(p_loading,
-                        filename = paste0("PC", i, sep = "_", "loading.pdf"),
-                        width = 12,
-                        height = 5,
-                        path = path)
-      }
-    }
-    
-    if (marker.contribution == TRUE) {
-      # Creates plot with contributions of each marker
+    if (variable.contribution == TRUE) {
+      # Creates plot with contributions of each variable
       pca.contrib <- factoextra::fviz_contrib(pca_out, #red dashed line represents the expected average row contributions if the contributions were uniform: 1/nrow(markers)
                                   choice = "var", #variable ("var") or individual ("ind")
-                                  axes = 1:elbow.point) #axes refer to PCA number
+                                  axes = 1:elbow.point, #axes refer to PCA number
+                                  top = var.numb #top number of variables to be plotted
+                                  )
       
       ggplot2::ggsave(pca.contrib,
-             filename = "pca_contribution.pdf",
+             filename = "PCA plot-contribution.pdf",
+             width = 16,
+             height = 5,
              path = path)
+      
+      # Extract contribution of variables
+      pca_out_var <- factoextra::get_pca_var(pca_out)
+      pca_var_contrib <- as.data.frame(pca_out_var$contrib) #coordinates of each point for PCA plot
+
+      data.table::fwrite(pca_var_contrib,
+                         "PCA-contributions.csv",
+                         row.names = TRUE)
+      
+      # Extract raw eigenvalues
+      pca_eig <- factoextra::get_eig(pca_out)
+      
+      data.table::fwrite(pca_eig,
+                         "PCA-eigenvalues.csv",
+                         row.names = TRUE)
+      
+      # Extract corrected contributions
+      pca_eig_contrib <- facto_summarize(pca_out,
+                                 element = "var",
+                                 result = "contrib",
+                                 axes = 1:elbow.point)
+      
+      data.table::fwrite(pca_eig_contrib,
+                         paste0("PCA-eig-contrib_", elbow.point, "-dim.csv"),
+                         row.names = TRUE)
+      
     }
     
   }
   
-  if (loading.plot == TRUE) {
+  # Create PCA plot with individuals
+  if (plot.individuals == TRUE) {
+    pca_plot_ind <- factoextra::fviz_pca_ind(pca_out,
+                                             repel = repel,
+                                             geom = plot.ind.label)
+    
+    ggplot2::ggsave(pca_plot_ind,
+                    filename = "PCA plot-individuals.pdf",
+                    path = path)
+    
+    # Extract coordinates of individuals
+    pca_out_ind <- factoextra::get_pca_ind(pca_out)
+    pca_ind_coord <- data.table::as.data.table(pca_out_ind$coord) #coordinates of each point for PCA plot
+    
+    dat.merge.ind <- cbind(dat, pca_ind_coord)
+    data.table::fwrite(dat.merge.ind,
+                       "PCA-individuals.csv")
+  }
+  
+  # Create PCA plot with individuals (with groups)
+  if (plot.ind.group == TRUE && !is.null(group.ind)) {
+    col.factor <- as.factor(dat[, group.ind])
+    
+    pca_out_ind_group <- factoextra::fviz_pca_ind(pca_out,
+                             col.ind = col.factor, # color by groups
+                             # palette = c("#00AFBB",  "#FC4E07"),
+                             addEllipses = TRUE, # Concentration ellipses
+                             ellipse.type = ellipse.type,
+                             ellipse.level = ellipse.level,
+                             legend.title = "Groups",
+                             repel = repel,
+                             geom = plot.ind.label
+                             )
+    
+    ggplot2::ggsave(pca_out_ind_group,
+                    filename = "PCA plot-ind-groups.pdf",
+                    path = path)
+    
+  }
+  
+  # Create PCA plot with variables
+  if (plot.variables == TRUE) {
     loading_plot <- factoextra::fviz_pca_var(pca_out,
                                       col.var = "contrib",
-                                      gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+                                      gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                                      repel = repel,
+                                      select.var = list(contrib = var.numb) #plots the top number of contributors
+                                      )
     
-    # Saves loadings plot
+    # Save loadings plot
     ggplot2::ggsave(loading_plot,
-           filename = "Loading plot.pdf",
+           filename = "PCA plot-variables.pdf",
            path = path)
     
-    data.loadings <- unclass(pca_out$loadings) #shows the loadings values for everything!
-    data.table::fwrite(x = as.data.frame(data.loadings),
-           file = "loadings.csv",
-           row.names = TRUE)
+    # Extract coordinates of variables
+    pca_out_var <- factoextra::get_pca_var(pca_out)
+    pca_var_coord <- as.data.frame(pca_out_var$coord) #coordinates of each point for PCA plot
+    rownames(pca_var_coord) <- colnames(dat[, use.cols])
+    
+    data.table::fwrite(pca_var_coord,
+                       "PCA-variables.csv",
+                       row.names = TRUE)
+    
   }
   
-  if (individual.samples == TRUE) {
-    # Create folder
-    dir.create(paste0(path, "/samples"), showWarnings = FALSE)
-    setwd(paste0(path, "/samples"))
-    PrimaryDirectory <- getwd()
+  # Create combined PCA plot with individuals and variables
+  if (plot.combined == TRUE) {
+    pca_out_comb <- factoextra::fviz_pca_biplot(pca_out,
+                                col.var = "Grey", # Variables color
+                                col.ind = "Black",  # Individuals color
+                                repel = repel,
+                                geom = plot.ind.label,
+                                select.var = list(contrib = var.numb) #plots the top number of contributors
+                                )
     
-    # Define sample differentiator
-    sample.name <- unique(dat[[sample.code]])
-    
-    # Create list that will hold contribution data for each sample
-    contrib.list <- list()
-    
-    for (a in sample.name) {
-      data.sample <- dat[dat[[sample.code]] == a,]
-      
-      data.sample.select <- data.sample[,..use.cols]
-      as.matrix(colnames(data.sample.select))
-      
-      if (nrow(data.sample.select) > ncol(data.sample.select)) { #PCA cannot run if there are more markers/columns than cells/rows
-        # Run PCA on a single sample
-        data.pca.sample <- princomp(data.sample.select, cor = TRUE, scores = TRUE)
-        
-        setwd(PrimaryDirectory)
-        dir.create(paste0(PrimaryDirectory, "/", a), showWarnings = FALSE)
-        setwd(paste0(PrimaryDirectory, "/", a))
-        OutputDirectory <- getwd()
-        
-        ## Scree plots
-            scree_plot_sample <- factoextra::fviz_eig(data.pca.sample, addlabels = TRUE) #creates scree plot; addlabels adds % to plot
-        
-            # Saves scree plot
-            ggplot2::ggsave(scree_plot_sample,
-                            filename = "Scree plot.pdf",
-                            path = OutputDirectory)
-            
-        ## Loading plots
-            loading_plot_sample <- factoextra::fviz_pca_var(data.pca.sample,
-                                                     col.var = "contrib",
-                                                     gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
-            
-            # Saves loadings plot
-            ggplot2::ggsave(loading_plot_sample,
-                            filename = "Loading plot.pdf",
-                            path = OutputDirectory)
-            
-            data.loadings.sample <- unclass(data.pca.sample$loadings) #shows the loadings values for everything!
-            data.table::fwrite(x = as.data.frame(data.loadings.sample),
-                               file = "loadings.csv",
-                               row.names = TRUE)
-            
-        ## Component loading plots
-            # Set parameters for plots
-            data.loadings.sample <- unclass(data.pca.sample$loadings)
-            data.load.order.sample <- as.data.frame(data.loadings.sample[gtools::mixedsort(row.names(data.loadings.sample)), ])
-            
-            # Create bargraphs for PC (up to the elbow)
-            max_y_value <- max(data.load.order.sample[,1:elbow.point], na.rm = TRUE)
-            max_y_value_p10 <- max_y_value*1.1
-            
-            min_y_value <- min(data.load.order.sample[,1:elbow.point], na.rm = TRUE)
-            min_y_value_p10 <- min_y_value*1.1
-            
-            # Creates loadings plots for each of the components/dimensions (based on elbow point)
-            for (i in 1:elbow.point) {
-              p_loading_sample <- ggplot2::ggplot(data = data.load.order.sample, ggplot2::aes(x = rownames(data.load.order.sample), y = data.load.order.sample[,i])) +
-                ggplot2::geom_bar(stat="identity", color = "black", fill = "black") +
-                #theme_minimal() + #includes grids
-                ggplot2::theme_classic() + #removes all grids
-                ggplot2::scale_x_discrete(limits = c(rownames(data.load.order.sample))) + #sets order
-                ggplot2::scale_y_continuous(limits = c(min_y_value_p10, max_y_value_p10)) +
-                ggplot2::labs(title = paste0("PC", i), x = "Marker", y = "Component loading") +
-                ggplot2::theme(legend.position = "none", # can be "left" "right" "top" "bottom" "none
-                               axis.text.x = ggplot2::element_text(colour="black",size=12,angle=90,hjust=1,vjust=1,face="bold"),
-                               axis.text.y = ggplot2::element_text(colour="black",size=12,angle=0,hjust=1,vjust=0,face="bold"),  
-                               axis.title.x = ggplot2::element_text(colour="black",size=12,angle=0,hjust=.5,vjust=0,face="bold"),
-                               axis.title.y = ggplot2::element_text(colour="black",size=12,angle=90,hjust=.5,vjust=1,face="bold"),
-                               plot.title = ggplot2::element_text(lineheight=.8, face="bold", hjust = 0, size = 18), # hjust = 0.5 to centre
-                               axis.line = ggplot2::element_line(colour = 'black', size = 0.5),
-                               axis.ticks = ggplot2::element_line(colour = "black", size = 0.5)
-                )
-              
-              ggplot2::ggsave(p_loading_sample,
-                              filename = paste0("PC", i, sep = "_", "loading.pdf"),
-                              width = 12,
-                              height = 5,
-                              path = OutputDirectory)
-            }
-            
-        ## Variables (i.e. markers)
-            var <- factoextra::get_pca_var(data.pca.sample) #gets data for variables
-            
-            data.table::fwrite(x = as.data.frame(var$contrib),
-                   file = "contributions.csv",
-                   row.names = TRUE)
-            
-            # Visualisation
-            pca.contrib.sample <- factoextra::fviz_contrib(data.pca.sample, #red dashed line represents the expected average row contributions if the contributions were uniform: 1/nrow(markers) (1/34 = 2.9%)
-                                        choice = "var", #variable ("var") or individual ("ind")
-                                        axes = 1:elbow.point) #axes refer to PCA number
-            
-            ggplot2::ggsave(pca.contrib.sample, filename = "pca_contribution.pdf")
-            
-        ## Save contribution for later use
-            contrib.list[[a]] <- pca.contrib.sample$data
-      }
-      
-      ## Calculate tally for top contributing markers
-      setwd(PrimaryDirectory)
-      
-      contrib.list.top <- lapply(contrib.list, dplyr::top_n, top.tally) #select top n markers that contribute to variation across select PCA/dimensions
-      contrib.freq <- as.data.frame(table(data.table::rbindlist(contrib.list.top)$name)) #calculates frequency of markers that were in the top n contributors of variation
-      
-      p.contrib <- ggpubr::ggbarplot(contrib.freq, x = "Var1", y = "Freq", fill = "steelblue", 
-                                     color = "steelblue", sort.val = "desc", top = Inf, main = "Occurrences in top 10 contributions", 
-                                     xlab = "Marker", ylab = paste0("Occurrence (out of ", length(contrib.list.top), ")"), xtickslab.rt = 45, 
-                                     ggtheme = ggplot2::theme_minimal(), sort.by.groups = FALSE) +
-        ggplot2::geom_text(ggplot2::aes(label = Freq), vjust = -0.5) #adds values on top of bar
-      
-      ggplot2::ggsave(p.contrib,
-                      filename = paste0("Top ", top.tally, " contributors tally.pdf"),
-                      path = PrimaryDirectory)
-    }
+    ggplot2::ggsave(pca_out_comb,
+                    filename = "PCA plot-combined.pdf",
+                    path = path)
   }
   
 }

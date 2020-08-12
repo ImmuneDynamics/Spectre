@@ -2,37 +2,86 @@
 % Please edit documentation in R/run.pca.R
 \name{run.pca}
 \alias{run.pca}
-\title{run.pca - ...}
+\title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, cor, scores, scree.plot, component.loading, marker.contribution, loading.plot, individual.samples, sample.code, top.tally, path, ...)
+run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 }
 \arguments{
-\item{dat}{data.frame. No default.}
+\item{dat}{NO DEFAULT. data.frame.}
 
-\item{use.cols}{Vector of numbers, reflecting the columns to use for clustering. No default.}
+\item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").}
 
-\item{cor}{A logical value indicating whether the calculation should use the correlation matrix or the covariance matrix. (The correlation matrix can only be used if there are no constant variables.). Default = TRUE.}
+\item{scale}{DEFAULT = TRUE. A logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place.}
 
-\item{scores}{A logical value indicating whether the score on each principal component should be calculated. Default = TRUE.}
+\item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.}
 
-\item{scree.plot}{Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot. Default = TRUE.}
+\item{variable.contribution}{DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.}
 
-\item{component.loading}{Option to create plots for each component. Requires scree.plot = TRUE. Default = TRUE.}
+\item{plot.individuals}{DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).}
 
-\item{marker.contribution}{Option to create plot showing the contribution of each marker. Horizontal red line represents the average marker contribution if all markers contributed equally. Requires scree.plot = TRUE. Default = TRUE.}
+\item{plot.ind.label}{DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.}
 
-\item{loading.plot}{Option to create scree plots. Will save generated loading plot. Default = TRUE.}
+\item{row.names}{DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.}
 
-\item{individual.samples}{Option to run above plots on a per sample basis. Only samples that have a cell number greater than the number of parameters/markers will be included. Default = FALSE.}
+\item{plot.ind.group}{DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.}
 
-\item{sample.code}{Parameter to define column that will differentiate between samples. Must be quoted. Requires scree.plot = TRUE.  Used for "individual.samples".Default = "FileName"}
+\item{group.ind}{DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.}
 
-\item{top.tally}{Number of top markers that contributed to PCA across each sample. Used for "individual.samples". Defalut = 10.}
+\item{ellipse.type}{DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.}
 
-\item{path}{Location to save plots. Default = getwd() (working directory)
+\item{ellipse.level}{DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).}
 
-This function runs a principal component analysis (PCA) on a dataframe with cells (rows) vs markers (columns), returning chosen figures. Uses the base R package "stats" for PCA, "factoextra" for scree and loading plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, "dplyr" for selecting top n values.}
+\item{plot.variables}{DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).}
+
+\item{plot.combined}{DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.}
+
+\item{repel}{DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.}
+
+\item{var.numb}{DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.}
+
+\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
 \description{
-run.pca - ...
+Method to run a PCA dimensionality reduction algorithm.
+A principal component analysis (PCA) is capable of reducing the number of dimensions (i.e. parameters) with minimal effect on the variation of the given dataset.
+This function will run a PCA calculation (extremely fast) and generate plots (takes time).
+For individuals (such as samples or patients), a PCA can group them based on their similarities.
+A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
+In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
+Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
+More information on PCA plots can be found here http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/.
+}
+\examples{
+# Set directory to save files. By default it will save files at get()
+setwd("/Users/felixmarsh-wakefield/Desktop")
+
+# Run PCA on demonstration dataset
+Spectre::run.pca(dat = Spectre::demo.start,
+                use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+                repel = TRUE
+                )
+
+# Compare between groups
+Spectre::run.pca(dat = Spectre::demo.start,
+                 use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+                 plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
+                 plot.ind.group = TRUE,
+                 group.ind = "Group"
+                 )
+        
+# When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
+
+## Possible issues ##
+# Remove any NA present
+na.omit(dat)
+
+# Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
+dat <- data.table::as.data.table(dat)
+dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
+
+# Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
+
+}
+\author{
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

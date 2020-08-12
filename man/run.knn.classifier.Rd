@@ -2,19 +2,20 @@
 % Please edit documentation in R/run.knn.classifier.R
 \name{run.knn.classifier}
 \alias{run.knn.classifier}
-\title{run.knn.classifier - ...}
+\title{run.knn.classifier - Run KNN classifier}
 \usage{
-run.knn.classifier(x, ...)
+run.knn.classifier(train.dat, unlabelled.dat, use.cols, label.col, num.neighbours)
 }
 \arguments{
-\item{train.data}{NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) to be used to train classifier. 
-Only include columns/features/markers to be used to train the classifier i.e. the ones that are useful in identifying cells (which population it belongs to).}
+\item{train.dat}{NO DEFAULT. data.frame. A dataframe containing cells (rows) vs features/markers (columns) to be used to train classifier.}
 
-\item{train.label}{NO DEFAULT. A character vector containing the label (population name) for each cell in the train.data. Must be "CHARACTER" vector.}
+\item{unlabelled.dat}{NO DEFAULT. data.frame. A dataframe containing cells (rows) vs features/markers (columns) that is the data classified.}
 
-\item{unlabelled.data}{NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) that is the data classified.}
+\item{use.cols}{NO DEFAULT. Vector of column names to use for training k-nearest neighbour (KNN) classifier.}
 
-\item{num.neighbours}{DEFAULTS to 1. When using a k-nearest neighbour classifier, then this parameter specifies the number of nearest neighbours.
+\item{label.col}{NO DEFAULT. Character. Name of the column representing the population name of the cells in dat.}
+
+\item{num.neighbours}{DEFAULTS to 1. Numeric. When using a k-nearest neighbour classifier, then this parameter specifies the number of nearest neighbours.
 
 Train a k-NN classifier on a training data, and use it to classify an unlabelled data. 
 Note that for the classifier to work as intended, the unlabelled.data has to be normalised to the range of the train.data.
@@ -24,5 +25,11 @@ Note make sure that train.data and unlabelled.data has exactly the same features
 The predicted label for the unlabelled data.
 }
 \description{
-run.knn.classifier - ...
+run.knn.classifier - Run KNN classifier
+}
+\references{
+\url{https://sydneycytometry.org.au/spectre}.
+}
+\author{
+Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
 }

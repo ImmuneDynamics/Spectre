@@ -1,32 +1,59 @@
-#' run.knn.classifier - ...
+#' run.knn.classifier - Run KNN classifier
 #'
-#' @usage run.knn.classifier(x, ...)
+#' @usage run.knn.classifier(train.dat, unlabelled.dat, use.cols, label.col, num.neighbours)
 #'
-#' @param train.data NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) to be used to train classifier. 
-#' Only include columns/features/markers to be used to train the classifier i.e. the ones that are useful in identifying cells (which population it belongs to).
-#' @param train.label NO DEFAULT. A character vector containing the label (population name) for each cell in the train.data. Must be "CHARACTER" vector.
-#' @param unlabelled.data NO DEFAULT. A dataframe containing cells (rows) vs features/markers (columns) that is the data classified.
-#' @param num.neighbours DEFAULTS to 1. When using a k-nearest neighbour classifier, then this parameter specifies the number of nearest neighbours.
+#' @param train.dat NO DEFAULT. data.frame. A dataframe containing cells (rows) vs features/markers (columns) to be used to train classifier. 
+#' @param unlabelled.dat NO DEFAULT. data.frame. A dataframe containing cells (rows) vs features/markers (columns) that is the data classified.
+#' @param use.cols NO DEFAULT. Vector of column names to use for training k-nearest neighbour (KNN) classifier.
+#' @param label.col NO DEFAULT. Character. Name of the column representing the population name of the cells in dat.
+#' @param num.neighbours DEFAULTS to 1. Numeric. When using a k-nearest neighbour classifier, then this parameter specifies the number of nearest neighbours.
 #' 
 #' Train a k-NN classifier on a training data, and use it to classify an unlabelled data. 
 #' Note that for the classifier to work as intended, the unlabelled.data has to be normalised to the range of the train.data.
 #' Note make sure that train.data and unlabelled.data has exactly the same features/markers.
 #'
 #' @return The predicted label for the unlabelled data.
+#' 
+#'
+#'
+#' @author Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
+#'
+#' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
 #' @export
-run.knn.classifier <- function(train.data, 
-                               train.label,
-                               unlabelled.data,
+
+run.knn.classifier <- function(train.dat,
+                               unlabelled.dat,
+                               use.cols,
+                               label.col,
                                num.neighbours = 1){
+  
+  if(!is.element('caret', installed.packages()[,1])) stop('caret is required but not installed')
+  if(!is.element('class', installed.packages()[,1])) stop('class is required but not installed')
+  
+  require(caret)
+  require(class)
+  
+  # isolate the features
+  train.dat.features <- train.dat[, ..use.cols]
+  unlabelled.dat.features <- unlabelled.dat[, ..use.cols]
+  
+  # isolate the label
+  train.dat.labels <- as.character(train.dat[[label.col]])
   
   # normalised the training and unlabelled data so each column is in range 0 to 1
   # the unlabelled data will be normalised using the model built on the training data
-  preprocess.model <- caret::preProcess(train.data, method = "range")
-  norm.train.data <- as.data.table(predict(preprocess.model, train.data))
-  norm.unlab.data <- as.data.table(predict(preprocess.model, unlabelled.data))
+  preprocess.model <- caret::preProcess(train.dat.features, method = "range")
+  norm.train.data <- as.data.table(predict(preprocess.model, train.dat.features))
+  norm.unlab.data <- as.data.table(predict(preprocess.model, unlabelled.dat.features))
   
-  pr <- knn(norm.train.data, norm.unlab.data, cl=train.label,k=num.neighbours)
+  pr <- class::knn(norm.train.data, norm.unlab.data, cl=train.label,k=num.neighbours)
   
-  return(pr)
+  # append the predicted class
+  predicted.cell.dat <- data.table(unlabelled.dat)
+  
+  # don't just use as.numeric as it will mess up the order.
+  predicted.cell.dat[, ('Prediction') := as.numeric(levels(predicted.label))[predicted.label]]
+  
+  return(predicted.cell.dat)
 }

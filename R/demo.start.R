@@ -1,10 +1,10 @@
-#' demo.start - Demo dataset.
+#' demo.start - Starting demo dataset.
 #'
 #' @docType data
 #'
 #' @usage demo.start
 #'
-#' @format A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice.
+#' @format A data.table containing immune cells extracted from brains of 6x mock-infected mice and 6x WNV-infected mice.
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'

@@ -1,10 +1,10 @@
-#' demo.clustered - Demo dataset.
+#' demo.clustered - Demo data.table with cells (rows) x markers (columns), with clusters, populations, and UMAP values added
 #'
 #' @docType data
 #'
 #' @usage demo.clustered
 #'
-#' @format A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice, including FlowSOM cluster assignments.
+#' @format Demo data.table with cells (rows) x markers (columns), with clusters, populations, and UMAP values added.
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'

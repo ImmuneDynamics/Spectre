@@ -2,30 +2,63 @@
 % Please edit documentation in R/make.autograph.R
 \name{make.autograph}
 \alias{make.autograph}
-\title{make.autograph}
+\title{make.autograph - Creates plots using ggplot2}
 \usage{
-make.autograph(
-  x,
-  x.axis,
-  y.axis,
-  colour.by,
-  colours,
-  y.axis.label,
-  my_comparisons = NULL,
-  grp.order = NULL,
-  title = paste0(y.axis.label, " - ", y.axis),
-  filename = paste0(y.axis.label, " - ", y.axis, ".pdf"),
-  path = getwd(),
-  scale = "lin",
-  dot.size = 5,
-  width = 5,
-  height = 5,
-  y.first.level = 1.2,
-  y.second.level = 1.5,
-  Variance_test = "kruskal.test",
-  Pairwise_test = "wilcox.test"
-)
+make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
+}
+\arguments{
+\item{dat}{NO DEFAULT. data.frame.}
+
+\item{x.axis}{NO DEFAULT. Character or numeric. Selects column that will specify x-axis.}
+
+\item{y.axis}{NO DEFAULT. Character or numeric. Selects column that will specify y-axis.}
+
+\item{colour.by}{NO DEFAULT. Character or numeric. Selects column that will determine differentiator of colour in plots.}
+
+\item{y.axis.label}{NO DEFAULT. Character. Specify y-axis label. Can be "" if one is not desired.}
+
+\item{grp.order}{DEFAULT = NULL. String of characters or numbers. Specify order of group for x-axis.}
+
+\item{colours}{NO DEFAULT. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.}
+
+\item{title}{DEFAULT = paste0(y.axis.label, " - ", y.axis). Character. Specify title of plot on graph. Default combines 'y.axis.label' and 'y.axis'.}
+
+\item{filename}{DEFAULT = paste0(y.axis.label, " - ", y.axis, ".pdf"). Character. Specify name plot will be exported as. Default combines 'y.axis.label' and 'y.axis'. Make sure to end with ".pdf" so file is correctly saved.}
+
+\item{scale}{DEFAULT = "lin". Character. Select y-axis scale. Can also be "sci".}
+
+\item{dot.size}{DEFAULT = 5. Numeric. Specify size of dots on plot.}
+
+\item{width}{DEFAULT = 5. Numeric. Specify width of plot.}
+
+\item{height}{DEFAULT = 5. Numeric. Specify height of plot.}
+
+\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
 \description{
-make.autograph
+This function allows you to generate quantitative plots of your data.
+Creates scatter plots.
+If interested in generating other plots (bar graphs) or adding statistics, we recommend reading more on using 'ggplot2' (for more info https://ggplot2.tidyverse.org/).
+Uses the package 'ggplot2' to generate plots, 'data.table' to manipulate data.
+}
+\examples{
+dat <- data.frame(Samples = c("Mock_01", "Mock_02", "Mock_03", "WNV_01", "WNV_02", "WNV_03"),
+                  Group = c(rep("Mock", 3), rep("WNV", 3)),
+                  Tcells = c(20, 40, 30, 60, 70, 80),
+                  Bcells = c(90, 95, 70, 20, 15, 30),
+                  Batch = c(1,2,1,3,2,1)
+                  )
+
+Spectre::make.autograph(dat = dat,
+                        x.axis = "Group",
+                        y.axis = "Tcells",
+                        colour.by = "Batch",
+                        colours = c("Black", "Red", "Blue"),
+                        y.axis.label = "Proportion"
+                        )
+
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

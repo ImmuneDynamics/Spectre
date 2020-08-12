@@ -2,40 +2,64 @@
 % Please edit documentation in R/run.chronoclust.R
 \name{run.chronoclust}
 \alias{run.chronoclust}
-\title{run.chronoclust - ...}
+\title{Run the ChronoClust algorithm}
 \usage{
-run.chronoclust(x, ...)
+run.chronoclust(dat, timepoint.col, use.cols, config=NULL, clust.name = "ChronoClust_cluster")
 }
 \arguments{
-\item{data.files}{NO DEFAULT. A vector containing the location of csv file containing the time series datasets. 
-Make sure that each 1 csv file is data for only 1 time point. 
-Thus if you have 3 time points, this vector have 3 elements in it.}
+\item{dat}{NO DEFAULT. Data.frame. Data to be clustered.}
 
-\item{output.dir}{NO DEFAULT. The directory for Chronoclust to write its result to.}
+\item{timepoint.col}{NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.}
 
-\item{conda.env.name}{NO DEFAULT. The conda virtual environment name where Chronoclust wil run.}
+\item{use.cols}{NO DEFAULT. Vector of column names to use for clustering.}
 
-\item{conda.env.location}{DEFAULT NULL. Specify where anaconda is installed. If nothing is given, 
-then reticulate will look at where it's normally installed /Users/<yourname>/anaconda.}
+\item{config}{DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
+\emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.}
 
-\item{config}{DEFAULT NULL. Specify the parameter for ChronoClust as a list. If none is given, ChronoClust will
-run on a default config. Only specify the parameter that you do not wish to use the default value for.
-
-
-This function run a time-series clustering and cluster tracking algorithm Chronoclust.
-ChronoClust was originally written in Python 3. It'll be run using Reticulate.
-Only anaconda/miniconda virtual environment is supported by this function. This environment need to be setup before running the function.
-Please visit the various guide in the following link to install anaconda/miniconda and setup an environment:
-https://docs.conda.io/projects/conda/en/latest/user-guide/index.html
-ChronoClust requires the following python package to run: numpy, pandas, scikit-learn, tqdm, numba.
-
-ChronoClust package is available for download through Github: https://github.com/ghar1821/chronoclust.
-To install ChronoClust in your environment, please visit the Github page and follow the instruction:
-"How do I use Chronoclust".
-
-Please make sure that your environment is running Python 3.7.
-ChronoClust is not supported for Python 2.}
+\item{clust.name}{DEFAULT = "ChronoClust_cluster". Character. Name of the resulting 'cluster'}
 }
 \description{
-run.chronoclust - ...
+Method to run ChronoClust clustering algorithm.
+For this to work properly, a Python session must already be embedded within the currently running R session.
+This is because ChronoClust is originally written in Python 3.
+Spectre includes a function \code{\link{run.prepare.chronoclust}} that uses Reticulate to prepare and embed Python session within R session.
+}
+\examples{
+# Read data
+data.list <- Spectre::read.files(file.loc = PrimaryDirectory, file.type = ".csv", do.embed.file.names = TRUE)
+cell.dat <- Spectre::do.merge.files(dat = data.list)
+
+# Specify clustering column
+ColumnNames <- as.matrix(unname(colnames(cell.dat)))
+ClusteringColNos <- c(1:3)
+ClusteringCols <- ColumnNames[ClusteringColNos]
+
+# Specify time point column
+timepoint.col <- 'day'
+
+# Prepare Python session
+run.prepare.chronoclust(environment_name = "chronoclust-R",
+                        create_environment = TRUE,
+                        install_dependencies = TRUE)
+
+
+# Specify the parameters that need to be overriden
+config <- list(beta = 0.2,
+               delta = 0.05,
+               epsilon = 0.03,
+               mu = 0.01)
+
+cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
+                                     timepoint.col=timepoint.col,
+                                     use.cols=ClusteringCols,
+                                     config=config)
+
+}
+\seealso{
+\url{https://github.com/ghar1821/Chronoclust} for ChronoClust's Python implementation.
+
+\code{\link{run.prepare.chronoclust}} for how to embed Python session within R session.
+}
+\author{
+Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
 }

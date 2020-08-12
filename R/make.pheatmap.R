@@ -1,199 +1,169 @@
 #' make.pheatmap - Create a 'pretty' heatmap (pheatmap)
 #'
-#' This function allows you to create a coloured heatmap for clusters vs markers (coloured by MFI) or clusters vs samples (coloured by MFI or cell counts). Can be set to plot 'fold-change' values that are provided in log2.
+#' This function allows you to create a coloured heatmap for clusters vs markers (coloured by MFI) or clusters vs samples (coloured by MFI or cell counts).
+#' Can be set to plot 'fold-change' values (with is.fold = TRUE) that are provided in log2.
 #' make.pheatmap is a wrapper around the pheatmap function from pheatmap.
+#' Also uses the packages 'RColorBrewer' and 'scales' for colour customisation.
 #'
-#' @usage make.pheatmap(dat, ...)
-#'
-#' @param dat NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers). No default.
+#' @param dat NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers).
 #' @param file.name NO DEFAULT. Character. What do you want to call the file, including the extension.
 #' @param plot.title NO DEFAULT. Character.
-#' @param sample.col NO DEFAULT. Character. Specify the name of the column that indicates samples. No default.
+#' @param sample.col NO DEFAULT. Character. Specify the name of the column that indicates samples.
 #' @param plot.cols NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.
 #'
-#' @param annot.cols Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc. No default.
-#' @param transpose Logical. Do you want to transpose the heatmap. Defaults to FALSE.
-#' @param is.fold Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap. Defaults to FALSE.
-#' @param fold.range Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset)
-#' @param normalise Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values. Defaults to TRUE.
-#' @param dendrograms Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none. Defaults to "both.
-#' @param n.row.groups Numeric.
-#' @param n.col.groups Numeric.
-#' @param row.sep Numeric. Only used if not clustering rows.
-#' @param col.sep Numeric. Only used if not clustering columns
-#' @param cell.size Numeric. Defaults to 15.
-#' @param y.margin Numeric.
-#' @param x.margin Numeric.
-#' @param standard.colours Character. DEFAULTS to "YlGnBu", can also be "viridis", "magma", "inferno", "spectral".
-#' @param fold.colours Character.
-#' @param colour.scheme Character. Only one option currently.
+#' @param annot.cols NO DEFAULT. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.
+#' @param transpose DEFAULT = FALSE. Logical. Do you want to transpose the heatmap.
+#' @param is.fold DEFAULT = FALSE. Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap.
+#' @param fold.range DEFAULT = NULL. Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset).
+#' @param normalise DEFAULT = TRUE. Logical. Only applies to standard heatmaps (i.e. when is.fold = FALSE). TRUE to normalise each column between 0 and 1, FALSE to plot the raw values.
+#' @param dendrograms DEFAULT = "both". Character. Do you want to include dendrograms on columns/rows. Can be "both", "row", "column", or "none.
+#' @param cutree_rows DEFAULT = 1 (i.e. no divisions). Divides rows based on the level of dendrogram branches, if dendrograms = 'both' or 'row'.
+#' @param cutree_cols DEFAULT = 1 (i.e. no divisions). Divides columns based on the level of dendrogram branches, if dendrograms = 'both' or 'column'
+#' @param row.sep DEFAULT = c(). Numeric. Only used if not clustering rows.
+#' @param col.sep DEFAULT = c(). Numeric. Only used if not clustering columns
+#' @param cell.size DEFAULT = 15. Numeric.
+#' @param standard.colours DEFAULT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
+#' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
-#' @return prints a 'pretty' heatmap with dendrograms.
-#'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#'
-#' @references \url{https://sydneycytometry.org.au/spectre}. Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
+#' @usage make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
 #'
 #' @examples
-#' make.pheatmap()
+#' ## MFI cluster vs marker heatmap
+#' Spectre::make.pheatmap(dat = Spectre::demo.exp,
+#'                        file.name = "Expression pheatmap.png",
+#'                        plot.title = "Expression",
+#'                        sample.col = "Population",
+#'                        plot.cols = names(Spectre::demo.exp)[c(2:10)])
+#'
+#' ## Z-scrore of fold-change type heatmap
+#' z.dat <- do.zscore(dat = Spectre::demo.sum,
+#'                    use.cols = names(Spectre::demo.sum)[c(4:15)])
+#'
+#' Spectre::make.pheatmap(dat = z.dat,
+#'                        file.name = "z-score.png",
+#'                        plot.title = "z-score",
+#'                        sample.col = "Sample",
+#'                        plot.cols = names(z.dat)[c(4:15)],
+#'                        annot.cols = names(z.dat)[c(2:3)],
+#'                        is.fold = TRUE,
+#'                        fold.range = c(3,-3)
+#'                        )
+#'
+#' @author
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
+#'
+#' @references
+#' \url{https://sydneycytometry.org.au/spectre}.
+#' Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
+#'
+#' @import data.table
 #'
 #' @export
 
 make.pheatmap <- function(dat,
-                          file.name,
-                          plot.title,
 
                           sample.col,
                           plot.cols,
 
                           annot.cols = NULL,
+                          feature.annots = NULL,
+                          annotation_colors = NULL,
+
+                          file.name = paste0("Pheatmap by ", sample.col, ".png"),
+                          plot.title = paste0(sample.col, " heatmap"),
 
                           transpose = FALSE,
                           normalise = TRUE,
+                          is.fold = FALSE,
+                          fold.range = NULL, # c(3,-3)
+                          dendrograms = "both",
+                          cutree_rows = 1,
+                          cutree_cols = 1,
+                          row.sep = c(),
+                          col.sep = c(),
+                          cell.size = 15,
+                          standard.colours = "BuPu",
+                          path = getwd())
 
-                          is.fold          = FALSE,
-                          fold.range    = NULL, # c(3,-3)
-
-                          dendrograms      = "both",
-                          n.row.groups     = 2,
-                          n.col.groups     = 2,
-
-                          row.sep          = c(),
-                          col.sep          = c(),
-                          cell.size        = 15,
-
-                          standard.colours = "YlGnBu",
-                          fold.colours     = "fold.palette",
-                          colour.scheme    = "group.palette")
-
+                        #n.row.groups = 2,
+                        #n.col.groups = 2,
                         #plot.width       = 11.69,    # Default = 11.69 inches, target for A4 landscape. # Default = 8.26 inches, target for A4 landscape.
                         #plot.height      = 8.26)
 {
 
-  ### TESTING for normal (MFI cluster vs marker)
-
-     # library(pheatmap)
-     # library(RColorBrewer)
-     #
-     #  setwd("/Users/Tom/Desktop")
-     #
-     #  dat <- hmap.mfi
-     #
-     #  file.name <- "test.png"
-     #  plot.title <- "Test plot"
-     #  sample.col <- "FlowSOM_metacluster"
-     #
-     #  annot.cols = 2
-     #  rmv.cols = 1
-     #
-     #  transpose = FALSE
-     #  normalise = TRUE
-     #
-     #  is.fold          = FALSE
-     #  fold.max.range    = 3
-     #  fold.min.range    = -3
-     #
-     #  dendrograms      = "both"
-     #  n.row.groups     = 2
-     #  n.col.groups     = 2
-     #
-     #  row.sep          = c()
-     #  col.sep          = c()
-     #  cell.size        = 15
-     #
-     #  standard.colours = "colour.palette"
-     #  fold.colours     = "fold.palette"
-     #  colour.scheme    = "group.palette"
-
-
-  ### TESTING for FOLD-CHANGE
-
-      # library(pheatmap)
-      # library(RColorBrewer)
-      #
-      # setwd("/Users/Tom/Desktop")
-      #
-      # dat <- hmap.foldcell
-      # dat$Batch <- c(1,2,1,2,1,2,1,2,1,2,1,2)
-      #
-      # as.matrix(names(dat))
-      #
-      # sample.col <- "Sample"
-      # file.name <- "test.png"
-      #
-      # annot.cols <- c(3,44)
-      # rmv.cols <- c(1,2)
-      #
-      # plot.title <- "Test"
-      #
-      # transpose        = FALSE
-      # is.fold          = TRUE
-      # normalise        = TRUE
-      # dendrograms      = "both"
-      #
-      # n.row.groups     = 2
-      # n.col.groups     = 2
-      #
-      # fold.max.range    = 3
-      # fold.min.range    = -3
-      #
-      # y.margin = 8
-      # x.margin = 8
-      #
-      # cell.size        = 15
-      #
-      # row.sep          = c(6)
-      # col.sep          = c()
-      # standard.colours = "colour.palette"
-      # fold.colours     = "fold.palette"
-      # colour.scheme    = "group.palette"
-      #
-      # plot.width       = 11.69
-      # plot.height      = 8.26
-
   ### Check that necessary packages are installed
-      if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+  if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
+  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
+  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
 
   ### Require packages
-      require(pheatmap)
+  require(Spectre)
+  require(pheatmap)
+  require(RColorBrewer)
+  require(scales)
 
   ### Setup color scheme
 
       ## Standard colour options
 
+      if(standard.colours == "BuPu"){
+        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
+      }
+
       if(standard.colours == "RdYlBu"){
-        colour.palette <- (colorRampPalette(brewer.pal(9, "RdYlBu"))(31)) # 256
+        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdYlBu"))(31)) # 256
         colour.palette <- rev(colour.palette)
       }
 
+      if(standard.colours == "rev(RdBu)"){
+        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(31)) # 256
+        colour.palette <- rev(colour.palette)
+      }
+
+      if(standard.colours == "Blues"){
+        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(31)) # 256
+      }
+
+      if(standard.colours == "Reds"){
+        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Reds"))(31)) # 256
+      }
+
+      if(standard.colours == "Greys"){
+        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Greys"))(31)) # 256
+      }
+
       if(standard.colours == "YlGnBu"){
-        colour.palette <- (colorRampPalette(brewer.pal(9, "YlGnBu"))(31)) # 256
+        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "YlGnBu"))(31)) # 256
       }
 
       if(standard.colours == "viridis"){
-        colour.palette <- colorRampPalette(c(viridis_pal(option = "viridis")(50)))
+        colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "viridis")(50)))
         colour.palette <- colour.palette(31)
       }
 
       if(standard.colours == "spectral"){
-        spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
+        spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)
         spectral.list <- rev(spectral.list)
         colour.palette <- colorRampPalette(c(spectral.list))
         colour.palette <- colour.palette(31)
       }
 
       if(standard.colours == "magma"){
-        colour.palette <- colorRampPalette(c(viridis_pal(option = "magma")(50)))
+        colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "magma")(50)))
         colour.palette <- colour.palette(31)
       }
 
       if(standard.colours == "inferno"){
-        colour.palette <- colorRampPalette(c(viridis_pal(option = "inferno")(50)))
+        colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "inferno")(50)))
         colour.palette <- colour.palette(31)
       }
 
       ## Fold-change colour options
-      fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
+
+          fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
+          #fold.palette <- colorRampPalette(brewer.pal(11, "RdBu"))
 
       ## Grouping colour options
         # group.palette <- (colorRampPalette(brewer.pal(11, "Spectral")))
@@ -367,7 +337,10 @@ make.pheatmap <- function(dat,
 
   ### Plot heatmap and dendrograms
 
-      pheatmap(mat = as.matrix(heatmap.data),
+      # Specify directory heatmap will be saved
+      setwd(path)
+
+      pheatmap::pheatmap(mat = as.matrix(heatmap.data),
                main = title.text,
 
                cellwidth = cell.size,
@@ -378,10 +351,16 @@ make.pheatmap <- function(dat,
                #scale = "column",
 
                breaks = my.breaks,
+
+               cutree_rows = cutree_rows,
+               cutree_cols = cutree_cols,
+
                gaps_row = row.sep,
                gaps_col = col.sep,
 
                annotation_row = annot,
+               annotation_col = feature.annots,
+               annotation_colors = annotation_colors,
 
                color = map.colour,
                filename = file.name)

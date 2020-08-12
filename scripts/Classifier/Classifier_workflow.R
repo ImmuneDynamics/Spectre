@@ -38,7 +38,7 @@ as.matrix(names(cell.dat))
 ClusterCols <- names(cell.dat)[c(11,13,17,18,19,21,22,23,24,27,28,32)]
 ClusterCols
 
-cell.dat <- run.flowsom(cell.dat, clustering.cols = ClusterCols, meta.clust.name = "FlowSOM_metacluster", clust.name = "FlowSOM_cluster", meta.k = 10)
+cell.dat <- run.flowsom(cell.dat, use.cols = ClusterCols, meta.clust.name = "FlowSOM_metacluster", clust.name = "FlowSOM_cluster", meta.k = 10)
 cell.dat <- run.umap(cell.dat, use.cols = ClusterCols)
 cell.dat <- run.tsne(cell.dat, use.cols = ClusterCols)
 
@@ -75,7 +75,7 @@ train.data.features <- train.dat[, ..ClusterCols]
 train.data.label <- as.character(train.dat[["FlowSOM_metacluster"]])
 
 # train classifier using various number of neighbours
-knn.stats <- train.knn.classifier(train.data = train.data.features, label = train.data.label)
+knn.stats <- run.train.knn.classifier(dat = train.data.features, label.col = train.data.label)
 
 knn.stats
 

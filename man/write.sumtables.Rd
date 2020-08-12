@@ -2,12 +2,12 @@
 % Please edit documentation in R/write.sumtables.R
 \name{write.sumtables}
 \alias{write.sumtables}
-\title{write.sumtables}
+\title{write.sumtables - Export generated data as a .csv file}
 \usage{
-make.sumtables(x, ...)
+make.sumtables(dat, sample.col, pop.col, measure.col, annot.col, group.col, do.proportions, cell.counts, do.mfi.per.sample, do.mfi.per.marker, perc.pos.markers, perc.pos.cutoff, mfi.type, path)
 }
 \arguments{
-\item{x}{NO DEFAULT. A data.table containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.}
+\item{dat}{NO DEFAULT. A data.table containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.}
 
 \item{sample.col}{NO DEFAULT. Character. Name of the sample column (e.g. "Sample").}
 
@@ -15,34 +15,44 @@ make.sumtables(x, ...)
 
 \item{measure.col}{NO DEFAULT. A character or numeric vector indicating the columns to be measured (e.g. cellular columns -- c("CD45", "CD3e") etc).}
 
-\item{annot.col}{DEFAULTS TO NULL. A character or numeric vector indicating the columns to be included as annotation columns (e.g. cellular columns -- c("Batch", "Group") etc). If groups are present, this column must be present here also.}
+\item{annot.col}{DEFAULT = NULL. A character or numeric vector indicating the columns to be included as annotation columns (e.g. cellular columns -- c("Batch", "Group") etc). If groups are present, this column must be present here also.}
 
-\item{group.col}{DEFAULTS TO NULL. Character. Which column represent groups (e.g. "Group"). This is for dividing data within the function. If you wish for groups to be included in the annotations, you will need to also include it in the annot.col argument.}
+\item{group.col}{DEFAULT = NULL. Character. Which column represent groups (e.g. "Group"). This is for dividing data within the function. If you wish for groups to be included in the annotations, you will need to also include it in the annot.col argument.}
 
-\item{do.frequencies}{DEFAULTS TO TRUE. Do you wish to create cell proportion and/or cell count results?}
+\item{do.proportions}{DEFAULT = TRUE. Do you wish to create cell proportion and/or cell count results?}
 
-\item{cell.counts}{DEFAULTS TO NULL. If you wish to generate cell.count results, a vector of cell counts (e.g. c(1000, 1500, 2439,)) representing the cell counts in each of the samples. Must be entered in the order the that unique sample names appear in the dataset.}
+\item{cell.counts}{DEFAULT = NULL. If you wish to generate cell.count results, a vector of cell counts (e.g. c(1000, 1500, 2439,)) representing the cell counts in each of the samples. Must be entered in the order the that unique sample names appear in the dataset.}
 
-\item{do.mfi.per.sample}{DEFAULTS TO TRUE. Do you wish to generate MFI data (markers vs clusters) for each sample?}
+\item{do.mfi.per.sample}{DEFAULT = TRUE. Do you wish to generate MFI data (markers vs clusters) for each sample?}
 
-\item{do.mfi.per.marker}{Currently inactive, set to FALSE.}
+\item{do.mfi.per.marker}{DEFAULT = FALSE. Do you wish to generate MFI data (sample vs clusters) for each marker?}
 
-\item{perc.pos.markers}{DEFAULTS to NULL. A vector of column names of calculating percent positive summary stats.}
+\item{perc.pos.markers}{DEFAULT = NULL. A vector of column names of calculating percent positive summary stats.}
 
-\item{perc.pos.cutoff}{DEFAULTS to NULL. A vector of 'positive' cut-off values for the markers defined in perc.pos.markers. Must be in same order.}
+\item{perc.pos.cutoff}{DEFAULT = NULL. A vector of 'positive' cut-off values for the markers defined in perc.pos.markers. Must be in same order.}
 
-\item{mfi.type}{DEFAULTS TO "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.}
+\item{mfi.type}{DEFAULT = "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.}
 
-\item{path}{DEFAULTS TO getwd(). Defines the directory for write CSV files.}
-}
-\value{
-...
+\item{path}{DEFAULT = getwd(). Defines the directory for write CSV files.}
 }
 \description{
-write.sumtables
+This function summarises generated results and exports them as a .csv file.
+It can include the calculation of median fluorescence intensity (or equivalent), proportion (%) or cell counts for clusters/subsets of interest.
+Makes use of the packages 'data.table' and 'tidyr' to handle the data.
 }
 \examples{
-make.sumtables()
+# Calculate and export results from demonstration data
+Spectre::write.sumtables(dat = Spectre::demo.clustered,
+                         sample.col = "Sample",
+                         pop.col = "FlowSOM_metacluster",
+                         measure.col = c(2,5:6,8:9,11:13,16:19,21:30,32),
+                         annot.col = c(33:34,36:37),
+                         group.col = "Group",
+                         cell.counts = c(rep(2.0e+07, 6), rep(1.8e+07, 6)),
+                         do.mfi.per.marker = TRUE,
+                         perc.pos.markers = c("BV711.SCA.1","APC.BrdU"),
+                         perc.pos.cutoff = c(580, 450)
+                         )
 
 }
 \references{
@@ -50,4 +60,5 @@ make.sumtables()
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

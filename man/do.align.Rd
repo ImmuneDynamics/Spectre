@@ -4,14 +4,12 @@
 \alias{do.align}
 \title{do.align - Function to align multiple batches of a dataset.}
 \usage{
-do.align(ref.dat, target.dat, sample.col, batch.col, align.cols, method, goal, nQ, Qmin, Qmax, write.ref.fcs, write.target.fcs)
+do.align(ref.dat, target.dat, batch.col, align.cols, method, goal, nQ, Qmin, Qmax, write.ref.fcs, write.target.fcs)
 }
 \arguments{
 \item{ref.dat}{NO DEFAULT. If using method = "CytoNorm", this must be a FlowSOM object created by Spectre::do.prep.fsom. If using "Quantiles", then this must be}
 
 \item{target.dat}{NO DEFAULT. A data.table of data you wish to align}
-
-\item{sample.col}{NO DEFAULT. Character, column that denotes samples}
 
 \item{batch.col}{NO DEFAULT. Character, column that denotes batches}
 
@@ -30,6 +28,8 @@ do.align(ref.dat, target.dat, sample.col, batch.col, align.cols, method, goal, n
 \item{write.ref.fcs}{DEFAULT = TRUE. Logical, do you want a quick copy of the reference sample FCS files.}
 
 \item{write.target.fcs}{DEFAULT = TRUE. Logical, do you want a quick copy of the ALIGNED target sample FCS files.}
+
+\item{mem.ctrl}{DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.}
 }
 \value{
 Returns a data.table with selected columns (align.cols) replaced with aligned data.

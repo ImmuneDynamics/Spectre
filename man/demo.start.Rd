@@ -3,9 +3,9 @@
 \docType{data}
 \name{demo.start}
 \alias{demo.start}
-\title{demo.start - Demo dataset.}
+\title{demo.start - Starting demo dataset.}
 \format{
-A dataframe containing bone marrow cells from 6x mock-infected mice and 6x WNV-infected mice.
+A data.table containing immune cells extracted from brains of 6x mock-infected mice and 6x WNV-infected mice.
 }
 \source{
 Thomas M Ashhurst.
@@ -14,7 +14,7 @@ Thomas M Ashhurst.
 demo.start
 }
 \description{
-demo.start - Demo dataset.
+demo.start - Starting demo dataset.
 }
 \examples{
 demo.start

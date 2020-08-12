@@ -88,23 +88,22 @@
 ##########################################################################################################
 
     ### Embed population name columns in cell.dat
-        cell.dat <- Spectre::do.embed.columns(x = cell.dat,
-                                              type = "data.table",
-                                              base.name = cluster.name,
-                                              col.name = population.name,
-                                              match.to = as.vector(annotations[,1]),
-                                              new.cols = as.vector(annotations[,2]))
+
+        cell.dat <- do.embed.columns(dat = cell.dat,
+                                     base.col = "FlowSOM_metacluster",
+                                     add.dat = annotations,
+                                     add.by = "Cluster")
+
 
         cell.dat
 
     ### Embed population name columns in cell.dat.sub
 
-        cell.dat.sub <- Spectre::do.embed.columns(x = cell.dat.sub,
-                                                  type = "data.table",
-                                                  base.name = cluster.name,
-                                                  col.name = population.name,
-                                                  match.to = as.vector(annotations[,1]),
-                                                  new.cols = as.vector(annotations[,2]))
+        cell.dat.sub <- do.embed.columns(dat = cell.dat.sub,
+                                         base.col = "FlowSOM_metacluster",
+                                         add.dat = annotations,
+                                         add.by = "Cluster")
+
 
         cell.dat.sub
 
@@ -157,35 +156,34 @@
         as.matrix(names(cell.dat.sub))
 
     ### All data
-        make.factor.plot(dat = cell.dat.sub,
+        make.colour.plot(dat = cell.dat.sub,
                          x.axis = Xdim.name,
                          y.axis = Ydim.name,
                          col.axis = population.name,
+                         col.type = 'factor',
                          add.label = TRUE)
 
     ### Group multi plots
         make.multi.plot(dat = cell.dat.sub,
                         x.axis = Xdim.name,
                         y.axis = Ydim.name,
-                        col.axis = population.name,
-                        type = "factor",
-                        plot.by = group.col,
-                        align.xy.by = cell.dat.sub,
-                        align.col.by = cell.dat.sub)
+                        plot.by = population.name,
+                        divide.by = group.col,
+                        col.type = "factor")
 
 ##########################################################################################################
 #### Make an expression heatmap
 ##########################################################################################################
 
     ### Summary data (cluster x marker)
-        Spectre::write.sumtables(x = cell.dat,
+        Spectre::write.sumtables(dat = cell.dat,
                                  sample.col = sample.col,
                                  pop.col = population.name,
                                  measure.col = to.measure,
                                  annot.col = to.annotate,
                                  group.col = group.col,
 
-                                 do.frequencies = FALSE,
+                                 do.proportions = FALSE,
                                  cell.counts = NULL,
                                  do.mfi.per.sample = TRUE, ###
                                  do.mfi.per.marker = FALSE)
