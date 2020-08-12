@@ -46,11 +46,6 @@ data.list <- Spectre::read.files(file.loc = InputDirectory,
                                  file.type = ".csv",
                                  do.embed.file.names = TRUE)
 
-## Some checks
-ncol.check    # Review number of columns (features, markers) in each sample
-nrow.check    # Review number of rows (cells) in each sample
-name.table    # Review column names and their subsequent values
-
 head(data.list)
 head(data.list[[1]])
 
@@ -61,22 +56,15 @@ meta.dat <- read.csv(file = "sample.details.csv")
 meta.dat
 setwd(PrimaryDirectory)
 
-## Embed sample metadata
-for(i in c(2:length(names(meta.dat)))){
-  data.list <- Spectre::do.embed.columns(x = data.list,
-                                         type = "list",
-                                         match.to = meta.dat[c(1)],
-                                         new.cols = meta.dat[c(i)],
-                                         col.name = names(meta.dat[c(i)]))
-}
-head(data.list)
+cell.dat <- rbindlist(data.list, fill = TRUE)
+head(cell.dat)
 
-### Merge files
-## Merge files and review
-cell.dat <- Spectre::do.merge.files(dat = data.list)
+## Embed sample metadata
+to.add <- meta.dat[,c(1:4)]
+to.add
+cell.dat <- do.add.cols(cell.dat, "FileName", to.add, "FileName", rmv.ext = TRUE)
 
 head(cell.dat)
-dim(cell.dat)
 
 # There should be 1 file per time point. IF you have 2 time points, you should have 2 items printed out!
 # In this example, the time point is indicated by the Sample column.
@@ -119,27 +107,26 @@ ColumnNames[-ClusteringColNos] # Check which columns are being EXCLUDED!
 # environment_path = "/opt/conda/bin"
 # NOTE: when running this in Docker, make sure you pass environment_path = "/opt/conda/bin"
 # in addition to the 3 parameters.
-Spectre::run.prepare.chronoclust(environment_name = "chronoclust-R",
-                            create_environment = FALSE,
-                            install_dependencies = FALSE)
+Spectre::run.prepare.chronoclust(environment_name = "r-chronoclust",
+                                 create_environment = FALSE,
+                                 install_dependencies = FALSE)
 
 # Set config for Chronoclust.
 # We leave out k, lambda, pi, omicron, upsilon to default value.
 config <- list(mu=0.01, beta=0.5, epsilon=0.03, upsilon=2, k=15, delta=1, lambda=0.9, omicron=0.0000901)
 
 ## Subsample for testing.
-# cell.dat.sub <- Spectre::do.subsample(dat = cell.dat,
-#                                       method = 'random',
-#                                       samp.col = timepoint.col,
-#                                       targets = 10000)
+cell.dat.full <- cell.dat
+cell.dat <- Spectre::do.subsample(dat = cell.dat,
+                                      targets = 100)
 
 # if the following fail with the following error message:
 # Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named
 # please manually restart your R-session and try again.
 cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
-                            timepoint.col=timepoint.col,
-                            use.cols=ClusteringCols,
-                            config=config)
+                                     timepoint.col=timepoint.col,
+                                     use.cols=ClusteringCols,
+                                     config=config)
 
 # Check data
 head(cell.dat)
