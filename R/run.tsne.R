@@ -34,7 +34,7 @@
 #' @examples
 #' # Run tSNE on demonstration dataset
 #' Spectre::run.tsne(dat = Spectre::demo.start,
-#'                   use.cols = c(5:6,8:9,11:13,16:19,21:30,32))
+#'                   use.cols = c(2:10))
 #'
 #' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
