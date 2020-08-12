@@ -1,18 +1,27 @@
-#' run.umap - ...
+#' Run the UMAP algorithm (using umap::umap())
+#' 
+#' Method to run a UMAP dimensionality reduction algorithm.
+#' A UMAP (uniform manifold approximation and projection) plot is a useful means to visualise data.
+#' As it is a dimensionality reduction algorithm, some data will be lost.
+#' It is good practice to validate any populations (namely through manual gating).
+#' Uses the R package "umap" to calculate plots and "data.table" to handle data.
 #'
 #' @param dat NO DEFAULT. Input data.table or data.frame.
 #' @param use.cols NO DEFAULT. Vector of column names or numbers for clustering.
 #' @param umap.x.name DEFAULT = "UMAP_X". Character. Name of UMAP x-axis.
 #' @param umap.y.name DEFAULT = "UMAP_Y". Character. Name of UMAP y-axis.
 #' @param umap.seed DEFAULT = 42. Numeric. Seed value for reproducibility.
-#' @param suffix DEFAULT = blank.
+#' @param suffix DEFAULT = NULL
 #'
-#' This function runs UMAP on a dataframe with cells (rows) vs markers (columns), and returns 'res' with result columns.
+#' @usage run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, suffix = NULL)
 #'
-#' @usage run.umap(dat, use.cols, umap.x.name, umap.y.name, umap.seed, suffix, ...)
-#'
-#' @import data.table
-#'
+#' @examples
+#' # Run UMAP on demonstration dataset
+#' Spectre::run.umap(dat = Spectre::demo.start,
+#'                   use.cols = c(2:10))
+#' @author
+#' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
 run.umap <- function(dat,
@@ -46,7 +55,7 @@ run.umap <- function(dat,
 
   dat.start <- dat
 
-  dat <- dat[,..use.cols]
+  dat <- dat[, use.cols, with = FALSE]
 
   res <- umap::umap(d = dat,
               condif = custom.config)
