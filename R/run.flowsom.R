@@ -20,8 +20,8 @@
 #'
 #' @examples
 #' # Run FlowSOM on demonstration dataset
-#' Spectre::run.flowsom(Spectre::demo.start,
-#'                      use.cols = c(2:10))
+#' res <- Spectre::run.flowsom(Spectre::demo.asih,
+#'                             use.cols = names(demo.asinh)[c(11:19)])
 #'
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
