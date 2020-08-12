@@ -62,7 +62,7 @@ head(cell.dat)
 ## Embed sample metadata
 to.add <- meta.dat[,c(1:4)]
 to.add
-cell.dat <- do.add.cols(cell.dat, "FileName", to.add, "FileName", rmv.ext = TRUE)
+cell.dat <- do.add.cols(cell.dat, "FileName", to.add, "Filename", rmv.ext = TRUE)
 
 head(cell.dat)
 
@@ -113,12 +113,20 @@ Spectre::run.prepare.chronoclust(environment_name = "r-chronoclust",
 
 # Set config for Chronoclust.
 # We leave out k, lambda, pi, omicron, upsilon to default value.
-config <- list(mu=0.01, beta=0.5, epsilon=0.03, upsilon=2, k=15, delta=1, lambda=0.9, omicron=0.0000901)
+config <- list(beta= 0.0,
+               delta= 1.0,
+               epsilon= 0.3,
+               lambda= 0,
+               k= 1,
+               mu= 0.001,
+               pi= 0,
+               omicron= 0.0,
+               upsilon= 1)
 
 ## Subsample for testing.
 cell.dat.full <- cell.dat
 cell.dat <- Spectre::do.subsample(dat = cell.dat,
-                                      targets = 100)
+                                      targets = 10000)
 
 # if the following fail with the following error message:
 # Error in py_module_import(module, convert = convert) : ModuleNotFoundError: No module named
