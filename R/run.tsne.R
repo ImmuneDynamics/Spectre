@@ -71,7 +71,7 @@ run.tsne <- function(dat,
   require(Rtsne)
 
   ## Run tSNE
-  tsne_out <- Rtsne::Rtsne(as.matrix(dat[use.cols]),
+  tsne_out <- Rtsne::Rtsne(as.matrix(dat[,..use.cols]),
         dims = dims,
         initial_dims = initial_dims,
         perplexity = perplexity,
