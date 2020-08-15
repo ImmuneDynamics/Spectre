@@ -2,7 +2,7 @@
 A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
 
 ### Current version
-`v0.3.4`
+`v0.3.5`
 
 ### About
 Core developers of the Spectre package are Thomas Ashhurst, Felix Marsh-Wakefield, and Givanna Putri. The Spectre package is designed to allow for data analaysis workflows that simplify and streamline data manipulation and annotation, population identification (clustering, classificaiton), and dimensionality reduction (tSNE, UMAP) etc in high-dimensional cytometry data. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. 
