@@ -54,8 +54,7 @@ run.knn.classifier <- function(train.dat,
   # append the predicted class
   predicted.cell.dat <- data.table(unlabelled.dat)
   
-  # don't just use as.numeric as it will mess up the order.
-  predicted.cell.dat[, ('Prediction') := as.numeric(levels(pr))[pr]]
+  predicted.cell.dat$Prediction <- pr
   
   return(predicted.cell.dat)
 }
