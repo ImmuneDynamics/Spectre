@@ -97,13 +97,13 @@
 
         as.matrix(names(cell.dat))
 
-        to.norm <- names(cell.dat)[c()]
+        # to.norm <- names(cell.dat)[c()]
         to.asinh <- names(cell.dat)[c(2:10)]
 
         sub <- do.subsample(cell.dat, 10000)
 
-        sub <- do.normalise(sub, use.cols = to.norm, new.min = 0, new.max = 5)
-        sub
+        # sub <- do.normalise(sub, use.cols = to.norm, new.min = 0, new.max = 5)
+        # sub
 
         sub <- do.asinh(sub, use.cols = to.asinh, cofactor = 1000)
         sub
@@ -121,7 +121,7 @@
 
     ### Apply to sample
 
-        cell.dat <- do.normalise(cell.dat, use.cols = to.norm, new.min = 0, new.max = 5)
+        # cell.dat <- do.normalise(cell.dat, use.cols = to.norm, new.min = 0, new.max = 5)
         cell.dat <- do.asinh(cell.dat, use.cols = to.asinh, cofactor = 1000)
 
         cell.dat

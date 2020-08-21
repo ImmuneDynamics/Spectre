@@ -47,13 +47,14 @@ run.knn.classifier <- function(train.dat,
   norm.train.data <- as.data.table(predict(preprocess.model, train.dat.features))
   norm.unlab.data <- as.data.table(predict(preprocess.model, unlabelled.dat.features))
   
-  pr <- class::knn(norm.train.data, norm.unlab.data, cl=train.label,k=num.neighbours)
+  pr <- class::knn(norm.train.data, norm.unlab.data, 
+                   cl=train.dat.labels,
+                   k=num.neighbours)
   
   # append the predicted class
   predicted.cell.dat <- data.table(unlabelled.dat)
   
-  # don't just use as.numeric as it will mess up the order.
-  predicted.cell.dat[, ('Prediction') := as.numeric(levels(predicted.label))[predicted.label]]
+  predicted.cell.dat$Prediction <- pr
   
   return(predicted.cell.dat)
 }
