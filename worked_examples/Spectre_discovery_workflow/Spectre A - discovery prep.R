@@ -161,7 +161,7 @@
         as.matrix(unique(cell.dat$Group))
 
         prefs$sub.by <- "Group"
-        prefs$sub.targets <- c(2000, 20000)
+        prefs$sub.targets <- c(2000, 18380)
 
     ### Clustering preferences
 
