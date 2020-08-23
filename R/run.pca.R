@@ -6,7 +6,7 @@
 #' For individuals (such as samples or patients), a PCA can group them based on their similarities.
 #' A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
 #' In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
-#' Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
+#' Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, 'RColorBrewer' and 'viridis' for colour schemes.
 #' More information on PCA plots can be found here http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/.
 #'
 #' @param dat NO DEFAULT. data.frame.
@@ -19,35 +19,37 @@
 #' @param row.names DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.
 #' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.
 #' @param group.ind DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.
-#' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
+#' @param colour.group DEFAULT = "viridis". Colour scheme for each group. Options include "jet", "spectral", "viridis", "inferno", "magma".
 #' @param ellipse.type DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.
 #' @param ellipse.level DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).
+#' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
+#' @param colour.var DEFAULT = "solid". Colour scheme for PCA plot with variables. Options include "solid", "jet", "spectral", "viridis", "inferno", "magma", "BuPu". Note some colours are pale and may not appear clearly on plot.
 #' @param plot.combined DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.
 #' @param repel DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.
 #' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
 #' setwd("/Users/felixmarsh-wakefield/Desktop")
 #' 
 #' # Run PCA on demonstration dataset
-#' Spectre::run.pca(dat = Spectre::demo.start,
-#'                 use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+#' Spectre::run.pca(dat = Spectre::demo.clustered,
+#'                 use.cols = c(11:19),
 #'                 repel = TRUE
 #'                 )
 #' 
 #' # Compare between groups
-#' Spectre::run.pca(dat = Spectre::demo.start,
-#'                  use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+#' Spectre::run.pca(dat = Spectre::demo.clustered,
+#'                  use.cols = c(11:19),
 #'                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
 #'                  plot.ind.group = TRUE,
 #'                  group.ind = "Group"
 #'                  )
 #'         
-#' # When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
+#' # When prompted, type in "5" and click enter to continue function (this selects the elbow point based off the scree plot)
 #' 
 #' ## Possible issues ##
 #' # Remove any NA present
@@ -72,9 +74,11 @@ run.pca <- function(dat,
                  row.names = NULL,
                  plot.ind.group = FALSE,
                  group.ind = NULL,
+                 colour.group = "viridis",
                  ellipse.type = "confidence",
                  ellipse.level = 0.95,
                  plot.variables = TRUE,
+                 colour.var  = "solid",
                  plot.combined = TRUE,
                  repel = FALSE,
                  var.numb = 20,
@@ -87,7 +91,8 @@ run.pca <- function(dat,
   if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
   if(!is.element('gtools', installed.packages()[,1])) stop('gtools is required but not installed')
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-  if(!is.element('ggpubr', installed.packages()[,1])) stop('ggpubr is required but not installed')
+  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
+  if(!is.element('viridis', installed.packages()[,1])) stop('viridis is required but not installed')
   
   ## Require packages
   require(stats)
@@ -95,7 +100,8 @@ run.pca <- function(dat,
   require(ggplot2)
   require(gtools)
   require(data.table)
-  require(ggpubr)
+  require(RColorBrewer)
+  require(viridis)
   
   # Make sure dat is a dataframe
   dat <- as.data.frame(dat)
@@ -154,9 +160,10 @@ run.pca <- function(dat,
       
       # Extract corrected contributions
       pca_eig_contrib <- facto_summarize(pca_out,
-                                 element = "var",
-                                 result = "contrib",
-                                 axes = 1:elbow.point)
+                                         element = "var",
+                                         result = "contrib",
+                                         axes = 1:elbow.point
+                                         )
       
       data.table::fwrite(pca_eig_contrib,
                          paste0("PCA-eig-contrib_", elbow.point, "-dim.csv"),
@@ -189,16 +196,37 @@ run.pca <- function(dat,
   if (plot.ind.group == TRUE && !is.null(group.ind)) {
     col.factor <- as.factor(dat[, group.ind])
     
+    # Set group colours
+    if (colour.group == "jet") {
+      group.colour.scheme <- c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
+    }
+    
+    if (colour.group == "spectral") {
+      group.colour.scheme <- rev(RColorBrewer::brewer.pal(length(levels(col.factor)),"Spectral"))
+    }
+    
+    if (colour.group == "viridis") {
+      group.colour.scheme <- c(viridis::viridis_pal(option = "viridis")(length(levels(col.factor))))
+    }
+    
+    if (colour.group == "inferno") {
+      group.colour.scheme <- c(viridis::viridis_pal(option = "inferno")(length(levels(col.factor))))
+    }
+    
+    if (colour.group == "magma") {
+      group.colour.scheme <- c(viridis::viridis_pal(option = "magma")(length(levels(col.factor))))
+    }
+    
     pca_out_ind_group <- factoextra::fviz_pca_ind(pca_out,
-                             col.ind = col.factor, # color by groups
-                             # palette = c("#00AFBB",  "#FC4E07"),
-                             addEllipses = TRUE, # Concentration ellipses
-                             ellipse.type = ellipse.type,
-                             ellipse.level = ellipse.level,
-                             legend.title = "Groups",
-                             repel = repel,
-                             geom = plot.ind.label
-                             )
+                                                  col.ind = col.factor, # color by groups
+                                                  palette = group.colour.scheme,
+                                                  addEllipses = TRUE, # Concentration ellipses
+                                                  ellipse.type = ellipse.type,
+                                                  ellipse.level = ellipse.level,
+                                                  legend.title = "Groups",
+                                                  repel = repel,
+                                                  geom = plot.ind.label
+                                                  )
     
     ggplot2::ggsave(pca_out_ind_group,
                     filename = "PCA plot-ind-groups.pdf",
@@ -208,9 +236,38 @@ run.pca <- function(dat,
   
   # Create PCA plot with variables
   if (plot.variables == TRUE) {
+    # Set colour scheme for variables
+    if (colour.var == "solid") {
+      var.colour.scheme <- c("#00AFBB", "#E7B800", "#FC4E07")
+    }
+    
+    if (colour.var == "jet") {
+      var.colour.scheme <- c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
+    }
+    
+    if (colour.var == "spectral") {
+      var.colour.scheme <- rev(RColorBrewer::brewer.pal(11,"Spectral"))
+    }
+    
+    if (colour.var == "viridis") {
+      var.colour.scheme <- c(viridis::viridis_pal(option = "viridis")(50))
+    }
+    
+    if (colour.var == "inferno") {
+      var.colour.scheme <- c(viridis::viridis_pal(option = "inferno")(50))
+    }
+    
+    if (colour.var == "magma") {
+      var.colour.scheme <- c(viridis::viridis_pal(option = "magma")(50))
+    }
+    
+    if (colour.var == "BuPu") {
+      var.colour.scheme <- c(colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31))
+    }
+    
     loading_plot <- factoextra::fviz_pca_var(pca_out,
                                       col.var = "contrib",
-                                      gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+                                      gradient.cols = var.colour.scheme,
                                       repel = repel,
                                       select.var = list(contrib = var.numb) #plots the top number of contributors
                                       )
