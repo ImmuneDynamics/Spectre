@@ -134,7 +134,9 @@ run.flowsom <- function(dat,
 
         ## Auto number of MCs
         if(meta.k == 'auto'){
-          FlowSOM_out_meta <- FlowSOM::metaClustering_consensus(FlowSOM_out$map$codes, seed = meta.seed)
+          FlowSOM_out_meta <- FlowSOM::MetaClustering(FlowSOM_out$map$codes,
+                                                      method="metaClustering_consensus", 
+                                                      seed=meta.seed)
         }
 
         ## Define number of MCs
