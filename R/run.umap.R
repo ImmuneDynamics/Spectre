@@ -60,7 +60,7 @@ run.umap <- function(dat,
   dat <- dat[, use.cols, with = FALSE]
 
   res <- umap::umap(d = dat,
-              condif = custom.config)
+              config = custom.config)
 
   umap.res <- res$layout
   head(umap.res)
