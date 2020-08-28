@@ -203,7 +203,7 @@ make.pheatmap <- function(dat,
           norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
           heatmap.data.norm <- as.data.frame(lapply(heatmap.data, norm.fun)) # by default, removes the names of each row
           max(heatmap.data.norm)
-          max(heatmap.data.norm[,5])
+          # max(heatmap.data.norm[,5])
           heatmap.data.norm <- as.matrix(heatmap.data.norm)
           heatmap.data <- heatmap.data.norm
           rownames(heatmap.data) <- row.nam # add row names back
