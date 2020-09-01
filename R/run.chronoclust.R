@@ -10,6 +10,7 @@
 #'
 #' @param dat NO DEFAULT. Data.frame. Data to be clustered.
 #' @param timepoint.col NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.
+#' @param timepoints NO DEFAULT. Vector storing the time point in order e.g. Mock, WNV-01, WNV-02, etc. These values must exists in the timepoint.col column, and must be in order i.e. the 1st element is the 1st time point, etc.
 #' @param use.cols NO DEFAULT. Vector of column names to use for clustering.
 #' @param config DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
 #' \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.
@@ -26,12 +27,11 @@
 #' cell.dat <- Spectre::do.merge.files(dat = data.list)
 #'
 #' # Specify clustering column
-#' ColumnNames <- as.matrix(unname(colnames(cell.dat)))
-#' ClusteringColNos <- c(1:3)
-#' ClusteringCols <- ColumnNames[ClusteringColNos]
+#' cluster.cols <- names(cell.dat)[c(1:8,10:20)]
 #'
 #' # Specify time point column
-#' timepoint.col <- 'day'
+#' timepoint.col <- "Group"
+#' timepoints <- c("Mock", "WNV-01", "WNV-02", "WNV-03", "WNV-04", "WNV-05")
 #'
 #' # Prepare Python session
 #' run.prepare.chronoclust(environment_name = "chronoclust-R",
@@ -47,57 +47,58 @@
 #'
 #' cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
 #'                                      timepoint.col=timepoint.col,
-#'                                      use.cols=ClusteringCols,
+#'                                      timepoints=timepoints,
+#'                                      use.cols=cluster.cols,
 #'                                      config=config)
 #'
-#' @author Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
+#' @author Givanna Putri, \email{givanna.haryonoputri@@sydney.edu.au}
 #' @export
 
 run.chronoclust <- function(dat,
                             timepoint.col,
+                            timepoints,
                             use.cols,
                             config=NULL,
                             clust.name = "ChronoClust_cluster") {
-
+  
   if(!is.element('reticulate', installed.packages()[,1])) stop('reticulate is required but not installed')
   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-
+  
   require(reticulate)
   require(Spectre)
   require(data.table)
-
+  
   ## Backup the data first
   dat.bk <- data.table::data.table(dat)
-
+  
   ## Store this and remember to change working directory after the function finishes
   current.work.dir <- getwd()
-
+  
   ## Create directory to store input file for ChronoClust. It requires each time point to be stored in separate csv file.
   ## Each csv file must also contain markers to be used for clustering.
   input.cc.dir <- paste(current.work.dir, 'input_chronoclust', sep = '/')
   dir.create(input.cc.dir, showWarnings = FALSE)
   setwd(input.cc.dir)
-
+  
   ## Split the data into different csv files based on time point and columns for clustering.
-  timepoints <- unique(dat.bk[[timepoint.col]])
   for (time.point in timepoints) {
     dat.subset <- dat.bk[dat.bk[[timepoint.col]] == time.point,]
     dat.subset <- dat.subset[, use.cols, with = FALSE]
-
+    
     Spectre::write.files(dat.subset, time.point)
   }
-
+  
   ## Store the files in a vector
   input.cc.files <- list.files(input.cc.dir, ".csv")
   input.cc.files <- paste(input.cc.dir, input.cc.files, sep="/")
-
+  
   ## Setup Chronoclust
   # Create output directory
   output.cc.dir <- paste(current.work.dir, 'output_chronoclust', sep = '/')
   dir.create(output.cc.dir, showWarnings = FALSE)
   chronoclust <- import("chronoclust")
-
+  
   # Run ChronoClust
   # TODO update the python version to reflect this
   default.cc.params <- list(beta= 0.2,
@@ -138,10 +139,10 @@ run.chronoclust <- function(dat,
                       param_pi=config.copy[['pi']],
                       param_omicron=config.copy[['omicron']],
                       param_upsilon=config.copy[['upsilon']])
-
+  
   # Read the result files and merge that into the dat as cluster
   setwd(output.cc.dir)
-  timepoints.from.0 <-c(0: (length(timepoints)-1))
+  timepoints.from.0 <- c(0: (length(timepoints)-1))
   clusters <- lapply(timepoints.from.0, function(tp) {
     cluster.dat <- read.csv(paste0("cluster_points_D", tp, ".csv"))
     return(cluster.dat$cluster_id)
@@ -167,7 +168,7 @@ run.chronoclust <- function(dat,
     return(cluster.assoc)
   })
   names(clusters.assoc) <- timepoints
-
+  
   # Prepare to append as column
   # First, convert the list into vector
   cluster.col <- unlist(clusters, use.names=FALSE)
@@ -175,14 +176,14 @@ run.chronoclust <- function(dat,
   
   dat.bk[,paste0(clust.name, '_lineage')] <- cluster.col
   dat.bk[,paste0(clust.name, '_assoc')] <- cluster.assoc.col
-
+  
   ## Clean up
   # Delete the input file directory and the output directory
   unlink(input.cc.dir, recursive = TRUE)
   unlink(output.cc.dir, recursive = TRUE)
   # Set the working directory back to where it was
   setwd(current.work.dir)
-
+  
   return(dat.bk)
-
+  
 }
