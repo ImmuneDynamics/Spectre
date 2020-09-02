@@ -10,7 +10,6 @@
 #'
 #' @param dat NO DEFAULT. Data.frame. Data to be clustered.
 #' @param timepoint.col NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.
-#' @param timepoints NO DEFAULT. Vector storing the time point in order e.g. Mock, WNV-01, WNV-02, etc. These values must exists in the timepoint.col column, and must be in order i.e. the 1st element is the 1st time point, etc.
 #' @param use.cols NO DEFAULT. Vector of column names to use for clustering.
 #' @param config DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
 #' \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.
@@ -68,6 +67,8 @@ run.chronoclust <- function(dat,
   require(reticulate)
   require(Spectre)
   require(data.table)
+  
+  message("Preparing data")
   
   ## Backup the data first
   dat.bk <- data.table::data.table(dat)
@@ -127,6 +128,7 @@ run.chronoclust <- function(dat,
     config.copy[[missing.param]] <- default.cc.params[[missing.param]]
   }
   
+  message("Running ChronoClust")
   # run chronoclust
   chronoclust$app$run(data=input.cc.files,
                       output_directory=output.cc.dir,
@@ -140,8 +142,12 @@ run.chronoclust <- function(dat,
                       param_omicron=config.copy[['omicron']],
                       param_upsilon=config.copy[['upsilon']])
   
+  message("Stitching results back to data frame")
+  
   # Read the result files and merge that into the dat as cluster
   setwd(output.cc.dir)
+  
+  message("Inferring lineage ID")
   timepoints.from.0 <- c(0: (length(timepoints)-1))
   clusters <- lapply(timepoints.from.0, function(tp) {
     cluster.dat <- read.csv(paste0("cluster_points_D", tp, ".csv"))
@@ -149,6 +155,7 @@ run.chronoclust <- function(dat,
   })
   names(clusters) <- timepoints
   
+  message("Inferring association ID")
   # Get the tracking association
   result.df <- read.csv("result.csv")
   clusters.assoc <- lapply(timepoints.from.0, function(tp) {
@@ -169,6 +176,7 @@ run.chronoclust <- function(dat,
   })
   names(clusters.assoc) <- timepoints
   
+  message("Appending IDs as columns")
   # Prepare to append as column
   # First, convert the list into vector
   cluster.col <- unlist(clusters, use.names=FALSE)
@@ -177,6 +185,7 @@ run.chronoclust <- function(dat,
   dat.bk[,paste0(clust.name, '_lineage')] <- cluster.col
   dat.bk[,paste0(clust.name, '_assoc')] <- cluster.assoc.col
   
+  message("Cleaning up")
   ## Clean up
   # Delete the input file directory and the output directory
   unlink(input.cc.dir, recursive = TRUE)
