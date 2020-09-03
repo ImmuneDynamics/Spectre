@@ -14,7 +14,7 @@
 #' @param config DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
 #' \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.
 #' @param clust.name DEFAULT = "ChronoClust_cluster". Character. Name of the resulting 'cluster'
-#' @param parallelise DEFAULT = FALSE. NOT ACTIVE YET.
+#' @param clean.up DEFAULT = FALSE. Whether to remove the files chronoclust produces
 #'
 #'
 #'@usage
@@ -60,7 +60,7 @@ run.chronoclust <- function(dat,
                             use.cols,
                             config = NULL,
                             clust.name = "ChronoClust_cluster",
-                            parallelise = FALSE) {
+                            clean.up = FALSE) {
   
   if(!is.element('reticulate', installed.packages()[,1])) stop('reticulate is required but not installed')
   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
@@ -69,6 +69,11 @@ run.chronoclust <- function(dat,
   require(reticulate)
   require(Spectre)
   require(data.table)
+  
+  # testing
+  # timepoint.col = 'Group'
+  # timepoints = c('Mock', 'WNV-01', 'WNV-02', 'WNV-03', 'WNV-04', 'WNV-05')
+  # use.cols = c(1:8,10:20)
   
   message("Preparing data")
   
@@ -88,10 +93,10 @@ run.chronoclust <- function(dat,
   for (time.point in timepoints) {
     dat.subset <- dat.bk[dat.bk[[timepoint.col]] == time.point,]
     dat.subset <- dat.subset[, use.cols, with = FALSE]
-    
+
     Spectre::write.files(dat.subset, time.point)
   }
-  
+
   ## Store the files in a vector
   input.cc.files <- list.files(input.cc.dir, ".csv")
   input.cc.files <- paste(input.cc.dir, input.cc.files, sep="/")
@@ -149,87 +154,54 @@ run.chronoclust <- function(dat,
   # Read the result files and merge that into the dat as cluster
   setwd(output.cc.dir)
   
-  message("Inferring lineage ID")
   timepoints.from.0 <- c(0: (length(timepoints)-1))
-  clusters <- lapply(timepoints.from.0, function(tp) {
-    cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
-    return(cluster.dat$cluster_id)
-  })
-  names(clusters) <- timepoints
   
-  message("Inferring association ID")
+  message("Inferring lineage ID and association ID")
   # Get the tracking association
   result.df <- fread("result.csv")
-  clusters.assoc <- lapply(timepoints.from.0, function(tp) {
+  cluster.dat.with.assoc <- lapply(timepoints.from.0, function(tp) {
     cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
-    cluster.id <- as.vector(cluster.dat$cluster_id)
     
     # filter out the result file and extract the association id as element,
     # and the lineage id as the name of the vector
     cols <- c('tracking_by_lineage', 'tracking_by_association')
     result.df.fil <- data.table(result.df[result.df$timepoint == tp, ])
     result.df.fil <- result.df.fil[, ..cols]
+    # if a cell have no cluster, then the association should have no cluster as well.
     result.df.fil <- rbind(result.df.fil, list('None','None'))
+    colnames(result.df.fil) <- c('cluster_id', 'cluster_id_association')
     
-    cluster.assoc <- sapply(cluster.id, function(cl) {
-      return(result.df.fil[tracking_by_lineage == cl, 'tracking_by_association'])
-    })
-    return(cluster.assoc)
+    # join but keep the details in cluster.dat
+    result.df.fil <- data.table(result.df.fil, key='cluster_id')
+    cluster.dat <- data.table(cluster.dat, key='cluster_id')
+    cluster.dat <- result.df.fil[cluster.dat]
+    
+    return(cluster.dat)
   })
-  names(clusters.assoc) <- timepoints
-  
-  # if (parallelise) {
-  #   require(parallel)
-  #   par.nodes <- makeCluster(detectCores())
-  #   
-  #   message("Inferring lineage ID")
-  #   timepoints.from.0 <- c(0: (length(timepoints)-1))
-  #   
-  #   clusters <- parLapply(par.nodes, timepoints.from.0, function(tp) {
-  #     cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
-  #     return(cluster.dat$cluster_id)
-  #   })
-  #   names(clusters) <- timepoints
-  #   
-  #   message("Inferring association ID")
-  #   # Get the tracking association
-  #   
-  #   clusters.assoc <- parLapply(par.nodes, timepoints.from.0, function(tp) {
-  #     require(data.table)
-  #     result.df <- fread("result.csv")
-  #     cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
-  #     cluster.id <- as.vector(cluster.dat$cluster_id)
-  #     
-  #     # filter out the result file and extract the association id as element,
-  #     # and the lineage id as the name of the vector
-  #     cols <- c('tracking_by_lineage', 'tracking_by_association')
-  #     result.df.fil <- data.table(result.df[result.df$timepoint == tp, ])
-  #     result.df.fil <- result.df.fil[, ..cols]
-  #     result.df.fil <- rbind(result.df.fil, list('None','None'))
-  #     
-  #     cluster.assoc <- sapply(cluster.id, function(cls.id) {
-  #       return(result.df.fil[tracking_by_lineage == cls.id, 'tracking_by_association'])
-  #     })
-  #     return(cluster.assoc)
-  #   })
-  #   stopCluster(par.nodes)
-  #   names(clusters.assoc) <- timepoints
-  # }
+  names(cluster.dat.with.assoc) <- timepoints
   
   message("Appending IDs as columns")
+  
   # Prepare to append as column
   # First, convert the list into vector
-  cluster.col <- unlist(clusters, use.names=FALSE)
-  cluster.assoc.col <- unlist(clusters.assoc, use.names=FALSE)
+  cluster.col <- unlist(lapply(cluster.dat.with.assoc, function(cl.dat) {
+    return(as.vector(cl.dat$cluster_id))
+  }), use.names=FALSE)
+  cluster.assoc.col <- unlist(lapply(cluster.dat.with.assoc, function(cl.dat) {
+    return(as.vector(cl.dat$cluster_id_association))
+  }), use.names=FALSE)
   
   dat.bk[,paste0(clust.name, '_lineage')] <- cluster.col
   dat.bk[,paste0(clust.name, '_assoc')] <- cluster.assoc.col
   
-  message("Cleaning up")
-  ## Clean up
-  # Delete the input file directory and the output directory
-  unlink(input.cc.dir, recursive = TRUE)
-  unlink(output.cc.dir, recursive = TRUE)
+  if (clean.up) {
+    message("Cleaning up")
+    ## Clean up
+    # Delete the input file directory and the output directory
+    unlink(input.cc.dir, recursive = TRUE)
+    unlink(output.cc.dir, recursive = TRUE)
+  }
+  
   # Set the working directory back to where it was
   setwd(current.work.dir)
   
