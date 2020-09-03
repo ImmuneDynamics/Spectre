@@ -93,10 +93,10 @@ run.chronoclust <- function(dat,
   for (time.point in timepoints) {
     dat.subset <- dat.bk[dat.bk[[timepoint.col]] == time.point,]
     dat.subset <- dat.subset[, use.cols, with = FALSE]
-
+    
     Spectre::write.files(dat.subset, time.point)
   }
-
+  
   ## Store the files in a vector
   input.cc.files <- list.files(input.cc.dir, ".csv")
   input.cc.files <- paste(input.cc.dir, input.cc.files, sep="/")
@@ -105,7 +105,6 @@ run.chronoclust <- function(dat,
   # Create output directory
   output.cc.dir <- paste(current.work.dir, 'output_chronoclust', sep = '/')
   dir.create(output.cc.dir, showWarnings = FALSE)
-  chronoclust <- import("chronoclust")
   
   # Run ChronoClust
   # TODO update the python version to reflect this
@@ -137,6 +136,7 @@ run.chronoclust <- function(dat,
   
   message("Running ChronoClust")
   # run chronoclust
+  chronoclust <- import("chronoclust")
   chronoclust$app$run(data=input.cc.files,
                       output_directory=output.cc.dir,
                       param_beta=config.copy[['beta']],
