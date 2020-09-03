@@ -14,6 +14,7 @@
 #' @param config DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
 #' \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.
 #' @param clust.name DEFAULT = "ChronoClust_cluster". Character. Name of the resulting 'cluster'
+#' @param parallelise DEFAULT = FALSE. NOT ACTIVE YET.
 #'
 #'
 #'@usage
@@ -57,8 +58,9 @@ run.chronoclust <- function(dat,
                             timepoint.col,
                             timepoints,
                             use.cols,
-                            config=NULL,
-                            clust.name = "ChronoClust_cluster") {
+                            config = NULL,
+                            clust.name = "ChronoClust_cluster",
+                            parallelise = FALSE) {
   
   if(!is.element('reticulate', installed.packages()[,1])) stop('reticulate is required but not installed')
   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
@@ -150,16 +152,16 @@ run.chronoclust <- function(dat,
   message("Inferring lineage ID")
   timepoints.from.0 <- c(0: (length(timepoints)-1))
   clusters <- lapply(timepoints.from.0, function(tp) {
-    cluster.dat <- read.csv(paste0("cluster_points_D", tp, ".csv"))
+    cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
     return(cluster.dat$cluster_id)
   })
   names(clusters) <- timepoints
   
   message("Inferring association ID")
   # Get the tracking association
-  result.df <- read.csv("result.csv")
+  result.df <- fread("result.csv")
   clusters.assoc <- lapply(timepoints.from.0, function(tp) {
-    cluster.dat <- read.csv(paste0("cluster_points_D", tp, ".csv"))
+    cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
     cluster.id <- as.vector(cluster.dat$cluster_id)
     
     # filter out the result file and extract the association id as element,
@@ -175,6 +177,44 @@ run.chronoclust <- function(dat,
     return(cluster.assoc)
   })
   names(clusters.assoc) <- timepoints
+  
+  # if (parallelise) {
+  #   require(parallel)
+  #   par.nodes <- makeCluster(detectCores())
+  #   
+  #   message("Inferring lineage ID")
+  #   timepoints.from.0 <- c(0: (length(timepoints)-1))
+  #   
+  #   clusters <- parLapply(par.nodes, timepoints.from.0, function(tp) {
+  #     cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
+  #     return(cluster.dat$cluster_id)
+  #   })
+  #   names(clusters) <- timepoints
+  #   
+  #   message("Inferring association ID")
+  #   # Get the tracking association
+  #   
+  #   clusters.assoc <- parLapply(par.nodes, timepoints.from.0, function(tp) {
+  #     require(data.table)
+  #     result.df <- fread("result.csv")
+  #     cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
+  #     cluster.id <- as.vector(cluster.dat$cluster_id)
+  #     
+  #     # filter out the result file and extract the association id as element,
+  #     # and the lineage id as the name of the vector
+  #     cols <- c('tracking_by_lineage', 'tracking_by_association')
+  #     result.df.fil <- data.table(result.df[result.df$timepoint == tp, ])
+  #     result.df.fil <- result.df.fil[, ..cols]
+  #     result.df.fil <- rbind(result.df.fil, list('None','None'))
+  #     
+  #     cluster.assoc <- sapply(cluster.id, function(cls.id) {
+  #       return(result.df.fil[tracking_by_lineage == cls.id, 'tracking_by_association'])
+  #     })
+  #     return(cluster.assoc)
+  #   })
+  #   stopCluster(par.nodes)
+  #   names(clusters.assoc) <- timepoints
+  # }
   
   message("Appending IDs as columns")
   # Prepare to append as column
