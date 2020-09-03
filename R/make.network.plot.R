@@ -1,22 +1,30 @@
 make.network.plot <- function(dat, 
                               timepoint.col,
-                              timpoints,
+                              timepoints,
                               cluster.col,
                               marker.cols,
                               node.size = 13,
-                              standard.colours = 'spectral',
-                              save.to.disk = TRUE) {
+                              arrow.length = 3,
+                              arrow.head.gap = 4,
+                              standard.colours = 'Spectral') {
   require(Spectre)
   require(gtools)
   require(tidygraph)
   require(ggraph)
   require(RColorBrewer)
   require(viridis)
+  require(stringr)
   
-  # Function to find the position of round brackets in cluster id
-  get.idx.roundclsbracket <- function(cl) {
-    tail(gregexpr("\\)", cl)[[1]], n=1)
-  }
+  ## for testing
+  timepoint.col = 'Group'
+  timepoints = c('Mock', 'WNV-01', 'WNV-02', 'WNV-03', 'WNV-04', 'WNV-05')
+  # cluster.col = "ChronoClust_cluster_lineage"
+  cluster.col = "cluster_id"
+  marker.cols = c(1:8,10:20)
+  node.size = 8
+  arrow.length = 3
+  arrow.head.gap = 4
+  standard.colours = 'Spectral'
   
   # To store transitions
   edge.df <- data.frame(from=character(),
@@ -28,16 +36,27 @@ make.network.plot <- function(dat,
     prev.tp.clust <- mixedsort(unique(prev.tp.dat[[cluster.col]]))
     
     complex.clusters <- prev.tp.clust[lapply(prev.tp.clust, get.idx.roundclsbracket) > -1]
-    simple.clusters <- setdiff(prev.tp.clust, complex.clusters)
+    # simple.clusters  <- setdiff(prev.tp.clust, complex.clusters)
+    simple.n.pipe.clusters <- setdiff(prev.tp.clust, complex.clusters)
+    pipe.clusters <- simple.n.pipe.clusters[sapply(simple.n.pipe.clusters, get.idx.pipe) > -1]
+    simple.clusters <- setdiff(simple.n.pipe.clusters, pipe.clusters)
     
     # Order the vector based on the length of each element. 
-    # Need to use rev as whatever is in it order it in order it in increasing manner. STUPID!
-    simple.clusters <- rev(simple.clusters[order(sapply(simple.clusters,length))])
+    simple.clusters <- simple.clusters[order(nchar(simple.clusters), simple.clusters, decreasing = TRUE)]
     
     curr.tp.dat <- dat[dat[[timepoint.col]] == timepoints[tp.idx], ]
     curr.tp.clust <- mixedsort(unique(curr.tp.dat[[cluster.col]]))
     
-    for (cl in curr.tp.clust) {
+    # this filter out clusters that only exist in current time point.
+    # these are new clusters and have no predecessors.
+    curr.tp.clust.existing <- lapply(curr.tp.clust, function(cl) {
+      if (grepl(",", cl, fixed = TRUE) || grepl("|", cl, fixed = TRUE) || cl %in% simple.clusters) {
+        return(cl)
+      } 
+    })
+    curr.tp.clust.existing <- unlist(curr.tp.clust.existing)
+    
+    for (cl in curr.tp.clust.existing) {
       clean.cl <- cl
       ## Match the complex clusters first
       for (cls in complex.clusters) {
@@ -46,9 +65,21 @@ make.network.plot <- function(dat,
           df <- data.frame(paste0(tp.idx-1,'_', cls), paste0(tp.idx, '_', cl))
           names(df) <- c("from","to")
           edge.df <- rbind(edge.df, df)
-          clean.cl <- gsub(cls, "", clean.cl)
+          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
         }
       }
+      
+      ## Match the split simple clusters first
+      for (cls in pipe.clusters) {
+        cls.found <- grepl(cls, clean.cl, fixed = TRUE)
+        if (cls.found) {
+          df <- data.frame(paste0(tp.idx-1,'_', cls), paste0(tp.idx, '_', cl))
+          names(df) <- c("from","to")
+          edge.df <- rbind(edge.df, df)
+          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
+        }
+      }
+      
       ## Then simple clusters
       for (cls in simple.clusters) {
         cls.found <- grepl(cls, clean.cl, fixed = TRUE)
@@ -56,7 +87,7 @@ make.network.plot <- function(dat,
           df <- data.frame(paste0(tp.idx-1,'_',cls), paste0(tp.idx,'_',cl))
           names(df) <- c("from","to")
           edge.df <- rbind(edge.df, df)
-          clean.cl <- gsub(cls, "", clean.cl)
+          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
         }
       }
     }
@@ -113,10 +144,21 @@ make.network.plot <- function(dat,
   }
   
   #### Add an extra option which will colour just the node using the very first cluster ####
-  cluster.tp1 <- node.dat[node.dat$timepoints == 1,]$clusterId
+  # We only want clusters which is alphabetical, the very first cluster
+  cluster.origins <- sapply(as.vector(unique(node.dat$clusterId)), function(cl.id) {
+    alphabet.only <- grepl('^[A-Z]+$', cl.id)
+    if (alphabet.only) {
+      return(cl.id)
+    }
+    return("NotOrigin")
+  })
+  # remove the cluster which is not alphabet only (as above function assign it to null)
+  cluster.origins <- cluster.origins[cluster.origins != 'NotOrigin']
+  
+  # cluster.origins <- node.dat[node.dat$timepoints == 1,]$clusterId
   cluster.colours <- sapply(c(1:nrow(node.dat)), function(i) {
     row <- node.dat[i,]
-    cluster.remain <- row$clusterId %in% cluster.tp1
+    cluster.remain <- row$clusterId %in% cluster.origins
 
     if (cluster.remain) {
       return(as.character(row$clusterId))
@@ -135,12 +177,14 @@ make.network.plot <- function(dat,
                            directed = TRUE)
   
   #### Draw plot coloured by timepoints ####
+  
+  colour.palette <- get.colour.pallete(n.col = length(timepoints),
+                                       factor = as.character(mixedsort(unique(node.dat$timepoints))))
+  
   ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
-    geom_edge_link(arrow = arrow(length = unit(1, 'mm')), end_cap = circle(2, 'mm')) +
+    geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
     geom_node_point(aes(colour = timepoints), size=node.size) +
-    scale_colour_manual(values = rev(
-      colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(length(timepoints))),
-      breaks = as.character(timepoints) +
+    colour.palette +
     theme(text = element_text(size=20),
           panel.background = element_rect(fill = 'white'),
           aspect.ratio = 1) + 
@@ -154,11 +198,16 @@ make.network.plot <- function(dat,
   
   #### Colour plot based on the origin cluster ####
   ## +1 for the colour brewer because we have NA
+  
+  colour.palette <- get.colour.pallete(n.col = length(cluster.origins) + 1,
+                                       factor = as.character(mixedsort(unique(node.dat$origin))))
+  
   ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
-    geom_edge_link(arrow = arrow(length = unit(1, 'mm')), end_cap = circle(2, 'mm')) +
+    geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
     geom_node_point(aes(colour = origin), size=node.size) +
-    scale_colour_manual(values = rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(length(cluster.tp1) + 1)),
-                        breaks = as.character(unique(node.dat$origin))) +
+    colour.palette +
+    # scale_colour_manual(values = rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(length(cluster.tp1) + 1)),
+    #                     breaks = as.character(unique(node.dat$origin))) +
     theme(text = element_text(size=20),
           panel.background = element_rect(fill = 'white'),
           aspect.ratio = 1) +
@@ -171,23 +220,21 @@ make.network.plot <- function(dat,
          limitsize = FALSE)
   
   #### Colour plot by markers ####
-  
-  if(standard.colours == "spectral"){
-    spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50))
-    colour.palette <- scale_colour_gradientn(colours = spectral.list)
-  } else if(standard.colours == "inferno"){
-    colour.palette <- scale_colour_viridis_c(option='inferno')
-  }
-  
-  
-  
+  colour.palette <- get.colour.pallete()
+  # if(standard.colours == "Spectral"){
+  #   spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50))
+  #   colour.palette <- scale_colour_gradientn(colours = spectral.list)
+  # } else if(standard.colours == "Inferno"){
+  #   colour.palette <- scale_colour_viridis_c(option='inferno')
+  # }
   
   for (idx in marker.cols) {
     marker <- names(dat)[idx]
     
     ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
-      geom_edge_link(arrow = arrow(length = unit(1, 'mm')), end_cap = circle(2, 'mm')) +
-      geom_node_point(aes_string(colour = marker), size=node.size) +
+      geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), 
+                     end_cap = circle(arrow.head.gap, 'mm')) +
+      geom_node_point(aes(colour = marker), size=node.size) +
       colour.palette +
       theme(text = element_text(size=20),
             panel.background = element_rect(fill = 'white'))
@@ -199,5 +246,29 @@ make.network.plot <- function(dat,
            limitsize = FALSE)
   }
   
+}
+
+# Function to find the position of round brackets in cluster id
+get.idx.roundclsbracket <- function(cl) {
+  tail(gregexpr("\\)", cl)[[1]], n=1)
+}
+
+get.idx.pipe <- function(cl) {
+  tail(gregexpr("\\|", cl)[[1]], n=1)
+}
+
+get.colour.pallete <- function(n.col=50, factor=NULL) {
+  if(tolower(standard.colours) == "spectral"){
+    spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(n.col))
+    if (is.null(factor)) {
+      colour.palette <- scale_colour_gradientn(colours = spectral.list)
+    } else {
+      colour.palette <- scale_colour_manual(values = spectral.list,
+                                            breaks = factor)
+    }
+  } else if(tolower(standard.colours) == "inferno"){
+    colour.palette <- scale_colour_viridis_c(option='inferno')
+  }
+  return(colour.palette)
 }
 
