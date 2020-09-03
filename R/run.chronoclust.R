@@ -10,6 +10,7 @@
 #'
 #' @param dat NO DEFAULT. Data.frame. Data to be clustered.
 #' @param timepoint.col NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.
+#' @param timepoints NO DEFAULT. The time points (in order).
 #' @param use.cols NO DEFAULT. Vector of column names to use for clustering.
 #' @param config DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
 #' \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.

@@ -1,3 +1,26 @@
+#' Draw network diagram
+#'
+#' Method to draw a network diagram.
+#' This rely on a clustering performed by ChronoClust.
+#' 
+#' @param dat NO DEFAULT. Data.frame. Data to be clustered.
+#' @param timepoint.col NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.
+#' @param timepoints NO DEFAULT. The time points (in order).
+#' @param cluster.col NO DEFAULT. Column denoting the cluster id.
+#' @param marker.cols NO DEFAULT. Vector of column names denoting the markers to plot.
+#' @param node.size DEFAULT = 13. Size of the node of the diagram.
+#' @param arrow.length DEFAULT = 3. Length of the arrow connecting nodes.
+#' @param arrow.head.gap DEFAULT = 4. The gap between head of the arrow and node.
+#' @param standard.colours DEFAULT = "Spectral". Colour scheme for the markers. Spectral or Inferno.
+#' 
+#'@usage
+#'make.network.plot(dat, timepoint.col, timepoints, cluster.col, marker.cols,
+#'node.size = 13, arrow.length = 3, arrow.head.gap = 4, standard.colours = 'Spectral')
+#'
+#'
+#' @author Givanna Putri, \email{givanna.haryonoputri@@sydney.edu.au}
+#' @export
+
 make.network.plot <- function(dat, 
                               timepoint.col,
                               timepoints,
@@ -16,15 +39,15 @@ make.network.plot <- function(dat,
   require(stringr)
   
   ## for testing
-  timepoint.col = 'Group'
-  timepoints = c('Mock', 'WNV-01', 'WNV-02', 'WNV-03', 'WNV-04', 'WNV-05')
+  # timepoint.col = 'Group'
+  # timepoints = c('Mock', 'WNV-01', 'WNV-02', 'WNV-03', 'WNV-04', 'WNV-05')
   # cluster.col = "ChronoClust_cluster_lineage"
-  cluster.col = "cluster_id"
-  marker.cols = c(1:8,10:20)
-  node.size = 8
-  arrow.length = 3
-  arrow.head.gap = 4
-  standard.colours = 'Spectral'
+  # cluster.col = "cluster_id"
+  # marker.cols = c(6:8)
+  # node.size = 8
+  # arrow.length = 3
+  # arrow.head.gap = 4
+  # standard.colours = 'Spectral'
   
   # To store transitions
   edge.df <- data.frame(from=character(),
@@ -136,8 +159,8 @@ make.network.plot <- function(dat,
     marker.mean <- sapply(as.vector(node.dat$nodeId), function(id) {
       id_split <- strsplit(id, '_')[[1]]
       timepoint <- timepoints[as.numeric(id_split[1])]
-      cluster_id <- id_split[2]
-      sub.dat <- dat[dat[[timepoint.col]] == timepoint & dat[[cluster.col]] == cluster_id,]
+      cl_id <- id_split[2]
+      sub.dat <- dat[dat[[timepoint.col]] == timepoint & dat[[cluster.col]] == cl_id,]
       mean(sub.dat[[marker]])
     })
     node.dat[[marker]] <- marker.mean
@@ -168,6 +191,9 @@ make.network.plot <- function(dat,
   })
   node.dat$origin <- cluster.colours
   
+  colnames(node.dat) <- gsub(" ","_",colnames(node.dat))
+  
+  
   #### Start plotting ####
   img.height <- 15
   img.width <- 15
@@ -178,7 +204,8 @@ make.network.plot <- function(dat,
   
   #### Draw plot coloured by timepoints ####
   
-  colour.palette <- get.colour.pallete(n.col = length(timepoints),
+  colour.palette <- get.colour.pallete(standard.colours,
+                                       n.col = length(timepoints),
                                        factor = as.character(mixedsort(unique(node.dat$timepoints))))
   
   ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
@@ -188,7 +215,7 @@ make.network.plot <- function(dat,
     theme(text = element_text(size=20),
           panel.background = element_rect(fill = 'white'),
           aspect.ratio = 1) + 
-    labs(color='DPO bin')
+    labs(color='Timepoint')
   
   ggsave(paste0("network_colBy_timepoints.pdf"),
          width = img.width,
@@ -198,8 +225,8 @@ make.network.plot <- function(dat,
   
   #### Colour plot based on the origin cluster ####
   ## +1 for the colour brewer because we have NA
-  
-  colour.palette <- get.colour.pallete(n.col = length(cluster.origins) + 1,
+  colour.palette <- get.colour.pallete(standard.colours,
+                                       n.col = length(cluster.origins) + 1,
                                        factor = as.character(mixedsort(unique(node.dat$origin))))
   
   ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
@@ -220,21 +247,17 @@ make.network.plot <- function(dat,
          limitsize = FALSE)
   
   #### Colour plot by markers ####
-  colour.palette <- get.colour.pallete()
-  # if(standard.colours == "Spectral"){
-  #   spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50))
-  #   colour.palette <- scale_colour_gradientn(colours = spectral.list)
-  # } else if(standard.colours == "Inferno"){
-  #   colour.palette <- scale_colour_viridis_c(option='inferno')
-  # }
+  colour.palette <- get.colour.pallete(standard.colours)
   
   for (idx in marker.cols) {
     marker <- names(dat)[idx]
     
+    marker <- gsub(" ","_",marker)
+    
     ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
       geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), 
                      end_cap = circle(arrow.head.gap, 'mm')) +
-      geom_node_point(aes(colour = marker), size=node.size) +
+      geom_node_point(aes_string(colour = marker), size=node.size) +
       colour.palette +
       theme(text = element_text(size=20),
             panel.background = element_rect(fill = 'white'))
@@ -257,7 +280,7 @@ get.idx.pipe <- function(cl) {
   tail(gregexpr("\\|", cl)[[1]], n=1)
 }
 
-get.colour.pallete <- function(n.col=50, factor=NULL) {
+get.colour.pallete <- function(standard.colours, n.col=50, factor=NULL) {
   if(tolower(standard.colours) == "spectral"){
     spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(n.col))
     if (is.null(factor)) {
