@@ -93,13 +93,11 @@ make.pheatmap <- function(dat,
 {
 
   ### Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
   if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
   if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
 
   ### Require packages
-  require(Spectre)
   require(pheatmap)
   require(RColorBrewer)
   require(scales)
