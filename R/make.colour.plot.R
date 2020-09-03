@@ -97,7 +97,6 @@ make.colour.plot <- function(dat,
                              blank.axis = FALSE){
 
   ### Check for packages
-      if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
       if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
       if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
       if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
@@ -105,7 +104,6 @@ make.colour.plot <- function(dat,
       if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
 
   ### Load packages
-      require(Spectre)
       require(ggplot2)
       require(scales)
       require(colorRamps)
