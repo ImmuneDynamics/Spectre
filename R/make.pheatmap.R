@@ -6,12 +6,11 @@
 #' Also uses the packages 'RColorBrewer' and 'scales' for colour customisation.
 #'
 #' @param dat NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers).
-#' @param file.name NO DEFAULT. Character. What do you want to call the file, including the extension.
-#' @param plot.title NO DEFAULT. Character.
-#' @param sample.col NO DEFAULT. Character. Specify the name of the column that indicates samples.
-#' @param plot.cols NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.
-#'
-#' @param annot.cols NO DEFAULT. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.
+#' @param sample.col NO DEFAULT. Character. Specify the name of the column that indicates samples. Will be rows on heatmap.
+#' @param plot.cols NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap. Will be columns on heatmap.
+#' @param annot.cols DEFAULT = NULL. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.
+#' @param file.name DEFAULT = paste0("Pheatmap by ", sample.col, ".png"). Character. What do you want to call the file, including the extension.
+#' @param plot.title DEFAULT = paste0(sample.col, " heatmap"). Character.
 #' @param transpose DEFAULT = FALSE. Logical. Do you want to transpose the heatmap.
 #' @param is.fold DEFAULT = FALSE. Logical. TRUE for fold-change heatmap, FALSE for normal values heatmap.
 #' @param fold.range DEFAULT = NULL. Numeric vector. For fold-change heatmaps, what is the maxium and minimum values that should be plotted. Example: for a max of 3, and a minimum of -3 would b c(3,-3). Defaults to NULL (which will use the max and min within the dataset).
@@ -25,7 +24,7 @@
 #' @param standard.colours DEFAULT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
-#' @usage make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
+#' @usage make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
 #'
 #' @examples
 #' ## MFI cluster vs marker heatmap
