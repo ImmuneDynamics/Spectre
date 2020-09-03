@@ -78,7 +78,11 @@ run.chronoclust <- function(dat,
   message("Preparing data")
   
   ## Backup the data first
-  dat.bk <- data.table::data.table(dat)
+  dat.bk <- data.table(dat)
+  
+  ## Order the data based on the timepoints given
+  dat.bk <- dat.bk[order(match(dat.bk[[timepoint.col]], as.character(timepoints)))]
+  
   
   ## Store this and remember to change working directory after the function finishes
   current.work.dir <- getwd()
@@ -181,18 +185,10 @@ run.chronoclust <- function(dat,
   names(cluster.dat.with.assoc) <- timepoints
   
   message("Appending IDs as columns")
+  clust.dat.complete <- rbindlist(cluster.dat.with.assoc)
   
-  # Prepare to append as column
-  # First, convert the list into vector
-  cluster.col <- unlist(lapply(cluster.dat.with.assoc, function(cl.dat) {
-    return(as.vector(cl.dat$cluster_id))
-  }), use.names=FALSE)
-  cluster.assoc.col <- unlist(lapply(cluster.dat.with.assoc, function(cl.dat) {
-    return(as.vector(cl.dat$cluster_id_association))
-  }), use.names=FALSE)
-  
-  dat.bk[,paste0(clust.name, '_lineage')] <- cluster.col
-  dat.bk[,paste0(clust.name, '_assoc')] <- cluster.assoc.col
+  dat.bk[,paste0(clust.name, '_lineage')] <- as.vector(clust.dat.complete$cluster_id)
+  dat.bk[,paste0(clust.name, '_assoc')] <- as.vector(clust.dat.complete$cluster_id_association)
   
   if (clean.up) {
     message("Cleaning up")
