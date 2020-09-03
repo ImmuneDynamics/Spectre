@@ -72,7 +72,6 @@ make.multi.plot <- function(dat,
                             save.each.plot = FALSE){
 
   ### Check packages
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
   if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
   if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
   if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
@@ -81,7 +80,6 @@ make.multi.plot <- function(dat,
   if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
 
   ### Load packages
-  require(Spectre)
   require(ggplot2)
   require(scales)
   require(colorRamps)
