@@ -8,10 +8,10 @@
 #' @param timepoints NO DEFAULT. The time points (in order).
 #' @param cluster.col NO DEFAULT. Column denoting the cluster id.
 #' @param marker.cols NO DEFAULT. Vector of column names denoting the markers to plot.
-#' @param node.size DEFAULT = auto Size of the node of the diagram. If set to auto, the nodes will be sized based on the proportion (per timepoint) of cells in the cluster. Otherwise, pass a number and that will be the node size.
+#' @param node.size DEFAULT = 13. Size of the node of the diagram.
 #' @param arrow.length DEFAULT = 3. Length of the arrow connecting nodes.
 #' @param arrow.head.gap DEFAULT = 4. The gap between head of the arrow and node.
-#' @param standard.colours DEFAULT = "Spectral". Colour scheme for the markers. Spectral or Inferno.
+#' @param standard.colours DEFAULT = "Spectral". Colour scheme for the markers. Spectral or Inferno or Viridis.
 #' 
 #'@usage
 #'make.network.plot(dat, timepoint.col, timepoints, cluster.col, marker.cols,
@@ -284,7 +284,6 @@ get.idx.roundclsbracket <- function(cl) {
   tail(gregexpr("\\)", cl)[[1]], n=1)
 }
 
-# Function to find the position of | in cluster id
 get.idx.pipe <- function(cl) {
   tail(gregexpr("\\|", cl)[[1]], n=1)
 }
@@ -299,12 +298,22 @@ get.colour.pallete <- function(standard.colours, n.col=50, factor=NULL) {
                                             breaks = factor)
     }
   } else if(tolower(standard.colours) == "inferno"){
-    colour.palette <- scale_colour_viridis_c(option='inferno')
+    if (is.null(factor)) {
+      colour.palette <- scale_color_viridis(option='B')
+    } else {
+      colour.palette <- scale_color_viridis(discrete = TRUE, option = "B")
+    }
+  } else if(tolower(standard.colours) == "viridis"){
+    if (is.null(factor)) {
+      colour.palette <- scale_color_viridis(option='D')
+    } else {
+      colour.palette <- scale_color_viridis(discrete = TRUE, option = "D")
+    }
+    
   }
   return(colour.palette)
 }
 
-# Compute origin of clusters
 get.cluster.origins <- function(node.dat) {
   cluster.origins <- sapply(as.vector(unique(node.dat$clusterId)), function(cl.id) {
     alphabet.only <- grepl('^[A-Z]+$', cl.id)
@@ -329,7 +338,6 @@ get.cluster.origins <- function(node.dat) {
   })
 }
 
-# Compute proportion of cells in cluster
 get.cluster.proportions <- function(node.dat, dat, timepoint.col, timepoints, cluster.col) {
   
   # count cell per time point
@@ -347,7 +355,6 @@ get.cluster.proportions <- function(node.dat, dat, timepoint.col, timepoints, cl
   return(proportions)
 }
 
-# Get the geompoint option for plotting.
 get.geompoint <- function(node.size, col.by) {
   if (node.size == 'auto') {
     geompoint <- geom_node_point(aes_string(colour = col.by, size='ProportionOfCells')) 
