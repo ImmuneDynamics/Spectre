@@ -13,6 +13,8 @@
 #' @param add.density DEFAULT = FALSE. Can specify to add a density plot at the end the series of colour plots
 #'
 #' @param col.type DEFAULT = "continuous". Can also be "factor".
+#' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently does not work with density plots, only for those features in the plot.by.
+#' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
 #' @param figure.title DEFAULT = "Multi plot". Also used as the prefix for the saved file name.
 #' @param global.xy DEFAULT = TRUE. Defines the limits for the X and Y based on the whole dataset. If FALSE, then each plot X & Y limits scale individually.
 #' @param global.col DEFAULT = TRUE. Defines the limits for the colour axis based on the whole dataset. If FALSE, then each plot colour limit scales individually.
@@ -51,6 +53,9 @@ make.multi.plot <- function(dat,
 
                             divide.by = NULL,
                             add.density = FALSE,
+                            
+                            hex = FALSE,
+                            hex.bins = 30,
 
                             col.type = "continuous",
                             figure.title = 'Multi plot',
@@ -142,7 +147,8 @@ make.multi.plot <- function(dat,
                                             y.axis = y.axis,
                                             col.axis = i,
                                             col.type = col.type,
-
+                                            hex = hex,
+                                            hex.bins = hex.bins,
                                             title = plot.nme,
                                             align.xy.by = align.xy.by, ###
                                             align.col.by = align.col.by, ###
