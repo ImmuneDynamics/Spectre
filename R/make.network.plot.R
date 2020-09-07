@@ -8,7 +8,7 @@
 #' @param timepoints NO DEFAULT. The time points (in order).
 #' @param cluster.col NO DEFAULT. Column denoting the cluster id.
 #' @param marker.cols NO DEFAULT. Vector of column names denoting the markers to plot.
-#' @param node.size DEFAULT = 13. Size of the node of the diagram.
+#' @param node.size DEFAULT = auto Size of the node of the diagram. If set to auto, the nodes will be sized based on the proportion (per timepoint) of cells in the cluster. Otherwise, pass a number and that will be the node size.
 #' @param arrow.length DEFAULT = 3. Length of the arrow connecting nodes.
 #' @param arrow.head.gap DEFAULT = 4. The gap between head of the arrow and node.
 #' @param standard.colours DEFAULT = "Spectral". Colour scheme for the markers. Spectral or Inferno.
@@ -26,7 +26,7 @@ make.network.plot <- function(dat,
                               timepoints,
                               cluster.col,
                               marker.cols,
-                              node.size = 13,
+                              node.size = 'auto',
                               arrow.length = 3,
                               arrow.head.gap = 4,
                               standard.colours = 'Spectral') {
@@ -139,12 +139,16 @@ make.network.plot <- function(dat,
   cluster.ids <- sapply(all.clust, function(c) {
     strsplit(c, '_')[[1]][2]
   })
-  timepoints.col <- sapply(all.clust, function(c) {
+  timepoints.idx <- sapply(all.clust, function(c) {
     strsplit(c, '_')[[1]][1]
+  })
+  timepoints.actual <- sapply(timepoints.idx, function(c) {
+    timepoints[as.numeric(c)]
   })
   node.dat <- data.frame(nodeId = all.clust,
                          clusterId = cluster.ids,
-                         timepoints = timepoints.col)
+                         timepointIdx = timepoints.idx,
+                         timepoint = timepoints.actual)
   node.dat$id <- seq.int(nrow(node.dat))
   
   #### Convert edges so it's to and from the numeric id of the node ####
@@ -179,6 +183,129 @@ make.network.plot <- function(dat,
   
   #### Add an extra option which will colour just the node using the very first cluster ####
   # We only want clusters which is alphabetical, the very first cluster
+  cluster.origins <- get.cluster.origins(node.dat)
+  node.dat$origin <- cluster.origins
+  
+  #colnames(node.dat) <- gsub(" ","_",colnames(node.dat))
+  
+  if (node.size == 'auto') {
+    node.sizes <- get.cluster.proportions(node.dat = node.dat,
+                                          dat = dat,
+                                          timepoint.col = timepoint.col,
+                                          timepoints = timepoints,
+                                          cluster.col = cluster.col)
+    
+    node.dat$ProportionOfCells <- node.sizes
+  }
+  
+  
+  #### Start plotting ####
+  img.height <- 15
+  img.width <- 15
+  
+  routes_tidy <- tbl_graph(nodes = as.data.frame(node.dat),
+                           edges = as.data.frame(edges),
+                           directed = TRUE)
+  
+  geompoint.prop <- get.geompoint(node.size, 'timepoint')
+  
+  #### Draw plot coloured by timepoints ####
+  
+  colour.palette <- get.colour.pallete(standard.colours,
+                                       n.col = length(timepoints),
+                                       factor = as.character(mixedsort(unique(node.dat$timepoint))))
+  
+  
+  
+  ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
+    geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
+    geompoint.prop +
+    colour.palette +
+    theme(text = element_text(size=20),
+          panel.background = element_rect(fill = 'white'),
+          aspect.ratio = 1) + 
+    labs(color='Timepoint')
+  
+  ggsave(paste0("network_colBy_timepoints.pdf"),
+         width = img.width,
+         height = img.height,
+         dpi = 1000,
+         limitsize = FALSE)
+  
+  #### Colour plot based on the origin cluster ####
+  ## +1 for the colour brewer because we have NA
+  colour.palette <- get.colour.pallete(standard.colours,
+                                       n.col = length(unique(cluster.origins)) + 1,
+                                       factor = as.character(mixedsort(unique(node.dat$origin))))
+  geompoint.prop <- get.geompoint(node.size, 'origin')
+  
+  ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
+    geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
+    geompoint.prop +
+    colour.palette +
+    theme(text = element_text(size=20),
+          panel.background = element_rect(fill = 'white'),
+          aspect.ratio = 1) +
+    labs(color='Cluster origin')
+  
+  ggsave(paste0("network_colBy_origin.pdf"),
+         width = img.width,
+         height = img.height,
+         dpi = 1000,
+         limitsize = FALSE)
+  
+  #### Colour plot by markers ####
+  colour.palette <- get.colour.pallete(standard.colours)
+  
+  for (idx in marker.cols) {
+    marker <- names(dat)[idx]
+    
+    geompoint.prop <- get.geompoint(node.size, marker)
+    
+    ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
+      geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), 
+                     end_cap = circle(arrow.head.gap, 'mm')) +
+      geompoint.prop +
+      colour.palette +
+      theme(text = element_text(size=20),
+            panel.background = element_rect(fill = 'white'))
+    
+    ggsave(paste0("network_colBy_", marker, '.pdf'),
+           width = img.width,
+           height = img.height,
+           dpi = 1000,
+           limitsize = FALSE)
+  }
+  
+}
+
+# Function to find the position of round brackets in cluster id
+get.idx.roundclsbracket <- function(cl) {
+  tail(gregexpr("\\)", cl)[[1]], n=1)
+}
+
+# Function to find the position of | in cluster id
+get.idx.pipe <- function(cl) {
+  tail(gregexpr("\\|", cl)[[1]], n=1)
+}
+
+get.colour.pallete <- function(standard.colours, n.col=50, factor=NULL) {
+  if(tolower(standard.colours) == "spectral"){
+    spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(n.col))
+    if (is.null(factor)) {
+      colour.palette <- scale_colour_gradientn(colours = spectral.list)
+    } else {
+      colour.palette <- scale_colour_manual(values = spectral.list,
+                                            breaks = factor)
+    }
+  } else if(tolower(standard.colours) == "inferno"){
+    colour.palette <- scale_colour_viridis_c(option='inferno')
+  }
+  return(colour.palette)
+}
+
+# Compute origin of clusters
+get.cluster.origins <- function(node.dat) {
   cluster.origins <- sapply(as.vector(unique(node.dat$clusterId)), function(cl.id) {
     alphabet.only <- grepl('^[A-Z]+$', cl.id)
     if (alphabet.only) {
@@ -200,102 +327,34 @@ make.network.plot <- function(dat,
       return("NA")
     }
   })
-  node.dat$origin <- cluster.colours
+}
+
+# Compute proportion of cells in cluster
+get.cluster.proportions <- function(node.dat, dat, timepoint.col, timepoints, cluster.col) {
   
-  #### Start plotting ####
-  img.height <- 15
-  img.width <- 15
+  # count cell per time point
+  cell.count.per.tp <- dat[, .N, by=dat[[timepoint.col]]]
   
-  routes_tidy <- tbl_graph(nodes = as.data.frame(node.dat),
-                           edges = as.data.frame(edges),
-                           directed = TRUE)
+  proportions <- sapply(c(1:nrow(node.dat)), function(i) {
+    node.row <- node.dat[i,]
+    sub.dat <- dat[dat[[timepoint.col]] == node.row$timepoint &
+                     dat[[cluster.col]] == node.row$clusterId, ]
+    cell.cnt <- cell.count.per.tp[cell.count.per.tp$dat == node.row$timepoint, N]
+    return(nrow(sub.dat)/cell.cnt)
+  })
   
-  #### Draw plot coloured by timepoints ####
   
-  colour.palette <- get.colour.pallete(standard.colours,
-                                       n.col = length(timepoints),
-                                       factor = as.character(mixedsort(unique(node.dat$timepoints))))
-  
-  ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
-    geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
-    geom_node_point(aes(colour = timepoints), size=node.size) +
-    colour.palette +
-    theme(text = element_text(size=20),
-          panel.background = element_rect(fill = 'white'),
-          aspect.ratio = 1) + 
-    labs(color='Timepoint')
-  
-  ggsave(paste0("network_colBy_timepoints.pdf"),
-         width = img.width,
-         height = img.height,
-         dpi = 1000,
-         limitsize = FALSE)
-  
-  #### Colour plot based on the origin cluster ####
-  ## +1 for the colour brewer because we have NA
-  colour.palette <- get.colour.pallete(standard.colours,
-                                       n.col = length(cluster.origins) + 1,
-                                       factor = as.character(mixedsort(unique(node.dat$origin))))
-  
-  ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
-    geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
-    geom_node_point(aes(colour = origin), size=node.size) +
-    colour.palette +
-    theme(text = element_text(size=20),
-          panel.background = element_rect(fill = 'white'),
-          aspect.ratio = 1) +
-    labs(color='Cluster origin')
-  
-  ggsave(paste0("network_colBy_origin.pdf"),
-         width = img.width,
-         height = img.height,
-         dpi = 1000,
-         limitsize = FALSE)
-  
-  #### Colour plot by markers ####
-  colour.palette <- get.colour.pallete(standard.colours)
-  
-  for (idx in marker.cols) {
-    marker <- names(dat)[idx]
-    
-    ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
-      geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), 
-                     end_cap = circle(arrow.head.gap, 'mm')) +
-      geom_node_point(aes_string(colour = marker), size=node.size) +
-      colour.palette +
-      theme(text = element_text(size=20),
-            panel.background = element_rect(fill = 'white'))
-    
-    ggsave(paste0("network_colBy_", marker, '.pdf'),
-           width = img.width,
-           height = img.height,
-           dpi = 1000,
-           limitsize = FALSE)
+  return(proportions)
+}
+
+# Get the geompoint option for plotting.
+get.geompoint <- function(node.size, col.by) {
+  if (node.size == 'auto') {
+    geompoint <- geom_node_point(aes_string(colour = col.by, size='ProportionOfCells')) 
   }
-  
-}
-
-# Function to find the position of round brackets in cluster id
-get.idx.roundclsbracket <- function(cl) {
-  tail(gregexpr("\\)", cl)[[1]], n=1)
-}
-
-get.idx.pipe <- function(cl) {
-  tail(gregexpr("\\|", cl)[[1]], n=1)
-}
-
-get.colour.pallete <- function(standard.colours, n.col=50, factor=NULL) {
-  if(tolower(standard.colours) == "spectral"){
-    spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(n.col))
-    if (is.null(factor)) {
-      colour.palette <- scale_colour_gradientn(colours = spectral.list)
-    } else {
-      colour.palette <- scale_colour_manual(values = spectral.list,
-                                            breaks = factor)
-    }
-  } else if(tolower(standard.colours) == "inferno"){
-    colour.palette <- scale_colour_viridis_c(option='inferno')
+  else {
+    geompoint <- geom_node_point(aes_string(colour = col.by), size=node.size)
   }
-  return(colour.palette)
+  return(geompoint)
 }
 
