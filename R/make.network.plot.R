@@ -42,13 +42,21 @@ make.network.plot <- function(dat,
   # timepoint.col = 'Group'
   # timepoints = c('Mock', 'WNV-01', 'WNV-02', 'WNV-03', 'WNV-04', 'WNV-05')
   # cluster.col = "ChronoClust_cluster_lineage"
-  # cluster.col = "cluster_id"
-  # marker.cols = c(6:8)
-  # node.size = 8
-  # arrow.length = 3
-  # arrow.head.gap = 4
+  # #cluster.col = "cluster_id"
+  # marker.cols = cluster.cols.nos
+  # node.size = 4
+  # arrow.length = 1
+  # arrow.head.gap = 2
   # standard.colours = 'Spectral'
   
+  ## Have to make sure column header have no hyphen
+  if (TRUE %in% stringr::str_detect(colnames(dat), '-')) {
+    message("Some column headers have hyphen (-) in it. Please rename them first!.")
+    message("No plots are created.")
+    return()
+  }
+  
+  message("Calculating edges")
   # To store transitions
   edge.df <- data.frame(from=character(),
                         to=character())
@@ -116,6 +124,7 @@ make.network.plot <- function(dat,
     }
   }
   
+  message("Computing node details")
   #### Then get extra details on the nodes ####
   all.clust <- lapply(c(1:length(timepoints)), function(tp.idx) {
     tp.dat <- dat[dat[[timepoint.col]] == timepoints[tp.idx], ]
@@ -153,6 +162,8 @@ make.network.plot <- function(dat,
   
   node.ids <- as.vector(node.dat$nodeId)
   
+  message("Calculating marker's average per node")
+  
   #### Compute each cluster's mean expression ####
   for (idx in marker.cols) {
     marker <- names(dat)[idx]
@@ -182,7 +193,7 @@ make.network.plot <- function(dat,
   cluster.colours <- sapply(c(1:nrow(node.dat)), function(i) {
     row <- node.dat[i,]
     cluster.remain <- row$clusterId %in% cluster.origins
-
+    
     if (cluster.remain) {
       return(as.character(row$clusterId))
     } else {
@@ -190,9 +201,6 @@ make.network.plot <- function(dat,
     }
   })
   node.dat$origin <- cluster.colours
-  
-  colnames(node.dat) <- gsub(" ","_",colnames(node.dat))
-  
   
   #### Start plotting ####
   img.height <- 15
@@ -233,13 +241,11 @@ make.network.plot <- function(dat,
     geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
     geom_node_point(aes(colour = origin), size=node.size) +
     colour.palette +
-    # scale_colour_manual(values = rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(length(cluster.tp1) + 1)),
-    #                     breaks = as.character(unique(node.dat$origin))) +
     theme(text = element_text(size=20),
           panel.background = element_rect(fill = 'white'),
           aspect.ratio = 1) +
     labs(color='Cluster origin')
-
+  
   ggsave(paste0("network_colBy_origin.pdf"),
          width = img.width,
          height = img.height,
@@ -251,8 +257,6 @@ make.network.plot <- function(dat,
   
   for (idx in marker.cols) {
     marker <- names(dat)[idx]
-    
-    marker <- gsub(" ","_",marker)
     
     ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
       geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), 
