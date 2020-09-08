@@ -215,15 +215,6 @@ make.network.plot <- function(dat,
   
 }
 
-# Function to find the position of round brackets in cluster id
-get.idx.roundclsbracket <- function(cl) {
-  tail(gregexpr("\\)", cl)[[1]], n=1)
-}
-
-get.idx.pipe <- function(cl) {
-  tail(gregexpr("\\|", cl)[[1]], n=1)
-}
-
 get.colour.pallete <- function(standard.colours, n.col=50, factor=NULL) {
   if(tolower(standard.colours) == "spectral"){
     spectral.list <- rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(n.col))
@@ -299,6 +290,15 @@ get.geompoint <- function(node.size, col.by) {
     geompoint <- geom_node_point(aes_string(colour = col.by), size=node.size)
   }
   return(geompoint)
+}
+
+# Function to find the position of round brackets in cluster id
+get.idx.roundclsbracket <- function(cl) {
+  tail(gregexpr("\\)", cl)[[1]], n=1)
+}
+
+get.idx.pipe <- function(cl) {
+  tail(gregexpr("\\|", cl)[[1]], n=1)
 }
 
 get.transitions.as.edges <- function(dat, timepoints, timepoint.col,
