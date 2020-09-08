@@ -15,11 +15,9 @@ Spectre::package.check()
 Spectre::package.load() # If you do not have anaconda installed in your system, reticulate will prompt you to install one when you run this function.
 
 primary.dir <- 'M:/givanna/spectre_paper/WNV CNS timecourse (channel value)/'
-source(paste0(primary.dir, 'run.chronoclust.R'))
-source(paste0(primary.dir, 'make.network.plot.R'))
 
 ## Create output directory
-output.dir <- paste0(primary.dir, "/Output_Spectre_cc_5")
+output.dir <- paste0(primary.dir, "/Output_Spectre_cc")
 dir.create(output.dir, showWarnings = FALSE)
 
 ##########################################################################################################
@@ -97,12 +95,16 @@ Spectre::run.prepare.chronoclust(environment_name = "r-chronoclust",
 
 # subsample the data if need be
 # cell.dat[, .N, by=.(Group)]
-cell.dat <- Spectre::do.subsample(cell.dat,
-                                  rep(462803, 6),
-                                  divide.by = 'Group')
+# cell.dat <- Spectre::do.subsample(cell.dat,
+#                                   rep(462803, 6),
+#                                   divide.by = 'Group')
+
+# compute the suitable epsilon. find the kink and convert to between 0 and 1.
+# TODO: beta version. use and interpret with caution!
+#dat.sub.mat <- as.matrix(sapply(dat.sub, as.numeric))
+#dbscan::kNNdistplot(dat.sub.mat, k=1)
 
 # Set config for Chronoclust.
-# We leave out k, lambda, pi, omicron, upsilon to default value.
 config <- list(beta= 0.8,
                delta= 0.0,
                epsilon= 0.20,
@@ -137,21 +139,34 @@ sink(paste0("param_", exp.name, ".txt"))
 print(config)
 sink()
 
-getwd()
+#### Draw plot ####
+cell.dat.plot <- cell.dat[cell.dat$ChronoClust_cluster_lineage != 'None',]
 
-list.files()
+colnames(cell.dat.plot) <- gsub(" ","_",colnames(cell.dat.plot))
+colnames(cell.dat.plot) <- gsub("-","_",colnames(cell.dat.plot))
 
-colnames(cell.dat) <- gsub(" ","_",colnames(cell.dat))
-colnames(cell.dat) <- gsub("-","_",colnames(cell.dat))
-timepoint.col <- "Group"
-timepoints <- c("Mock", "WNV-01", "WNV-02", "WNV-03", "WNV-04", "WNV-05")
-cluster.cols.nos <- c(1:8,10:20)
+setwd(output.dir)
+dir.create("spectral")
+setwd("spectral")
+make.network.plot(dat = cell.dat.plot,
+                  timepoint.col = timepoint.col,
+                  timepoints = timepoints,
+                  cluster.col = 'ChronoClust_cluster_lineage',
+                  marker.cols = cluster.cols.nos,
+                  node.size = 'auto',
+                  arrow.length = 3,
+                  arrow.head.gap = 2)
 
-make.network.plot(dat = cell.dat,
+### Draw plot where the node size is the proportion of cells ###
+setwd(primary.dir)
+dir.create("inferno_static")
+setwd("inferno_static")
+make.network.plot(dat = cell.dat.plot,
                   timepoint.col = timepoint.col,
                   timepoints = timepoints,
                   cluster.col = 'ChronoClust_cluster_lineage',
                   marker.cols = cluster.cols.nos,
                   node.size = 6,
-                  arrow.length = 2,
-                  arrow.head.gap = 3)
+                  arrow.length = 3,
+                  arrow.head.gap = 2,
+                  standard.colours = 'inferno')

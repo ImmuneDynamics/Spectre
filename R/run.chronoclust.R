@@ -113,15 +113,15 @@ run.chronoclust <- function(dat,
   
   # Run ChronoClust
   # TODO update the python version to reflect this
-  default.cc.params <- list(beta= 0.2,
-                            delta= 0.05,
-                            epsilon= 0.03,
-                            lambda= 2,
-                            k= 15,
-                            mu= 0.005,
+  default.cc.params <- list(beta= 0.8,
+                            delta= 0.0,
+                            epsilon= 0.30,
+                            lambda= 0,
+                            k= 1,
+                            mu= 0.0001,
                             pi= 0,
-                            omicron= 0.00001,
-                            upsilon= 2)
+                            omicron= 0.0,
+                            upsilon= 1)
   if (is.null(config)) {
     config.copy <- default.cc.params
   } else {
