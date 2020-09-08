@@ -58,71 +58,7 @@ make.network.plot <- function(dat,
   
   message("Calculating edges")
   # To store transitions
-  edge.df <- data.frame(from=character(),
-                        to=character())
-  
-  #### Find all the transitions ####
-  for (tp.idx in c(2:length(timepoints))) {
-    prev.tp.dat <- dat[dat[[timepoint.col]] == timepoints[tp.idx-1], ]
-    prev.tp.clust <- mixedsort(unique(prev.tp.dat[[cluster.col]]))
-    
-    complex.clusters <- prev.tp.clust[lapply(prev.tp.clust, get.idx.roundclsbracket) > -1]
-    # simple.clusters  <- setdiff(prev.tp.clust, complex.clusters)
-    simple.n.pipe.clusters <- setdiff(prev.tp.clust, complex.clusters)
-    pipe.clusters <- simple.n.pipe.clusters[sapply(simple.n.pipe.clusters, get.idx.pipe) > -1]
-    simple.clusters <- setdiff(simple.n.pipe.clusters, pipe.clusters)
-    
-    # Order the vector based on the length of each element. 
-    simple.clusters <- simple.clusters[order(nchar(simple.clusters), simple.clusters, decreasing = TRUE)]
-    
-    curr.tp.dat <- dat[dat[[timepoint.col]] == timepoints[tp.idx], ]
-    curr.tp.clust <- mixedsort(unique(curr.tp.dat[[cluster.col]]))
-    
-    # this filter out clusters that only exist in current time point.
-    # these are new clusters and have no predecessors.
-    curr.tp.clust.existing <- lapply(curr.tp.clust, function(cl) {
-      if (grepl(",", cl, fixed = TRUE) || grepl("|", cl, fixed = TRUE) || cl %in% simple.clusters) {
-        return(cl)
-      } 
-    })
-    curr.tp.clust.existing <- unlist(curr.tp.clust.existing)
-    
-    for (cl in curr.tp.clust.existing) {
-      clean.cl <- cl
-      ## Match the complex clusters first
-      for (cls in complex.clusters) {
-        cls.found <- grepl(cls, clean.cl, fixed = TRUE)
-        if (cls.found) {
-          df <- data.frame(paste0(tp.idx-1,'_', cls), paste0(tp.idx, '_', cl))
-          names(df) <- c("from","to")
-          edge.df <- rbind(edge.df, df)
-          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
-        }
-      }
-      
-      ## Match the split simple clusters first
-      for (cls in pipe.clusters) {
-        cls.found <- grepl(cls, clean.cl, fixed = TRUE)
-        if (cls.found) {
-          df <- data.frame(paste0(tp.idx-1,'_', cls), paste0(tp.idx, '_', cl))
-          names(df) <- c("from","to")
-          edge.df <- rbind(edge.df, df)
-          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
-        }
-      }
-      
-      ## Then simple clusters
-      for (cls in simple.clusters) {
-        cls.found <- grepl(cls, clean.cl, fixed = TRUE)
-        if (cls.found) {
-          df <- data.frame(paste0(tp.idx-1,'_',cls), paste0(tp.idx,'_',cl))
-          names(df) <- c("from","to")
-          edge.df <- rbind(edge.df, df)
-          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
-        }
-      }
-    }
-  }
+  edge.df <- get.transitions.as.edges(dat, timepoints, timepoint.col, cluster.col)
   
   message("Computing node details")
   #### Then get extra details on the nodes ####
@@ -363,5 +299,78 @@ get.geompoint <- function(node.size, col.by) {
     geompoint <- geom_node_point(aes_string(colour = col.by), size=node.size)
   }
   return(geompoint)
+}
+
+get.transitions.as.edges <- function(dat, timepoints, timepoint.col,
+                                     cluster.col) {
+  
+  require(gtools)
+  
+  edge.df <- data.frame(from=character(),
+                        to=character())
+  
+  #### Find all the transitions ####
+  for (tp.idx in c(2:length(timepoints))) {
+    prev.tp.dat <- dat[dat[[timepoint.col]] == timepoints[tp.idx-1], ]
+    prev.tp.clust <- mixedsort(unique(prev.tp.dat[[cluster.col]]))
+    
+    complex.clusters <- prev.tp.clust[lapply(prev.tp.clust, get.idx.roundclsbracket) > -1]
+    # simple.clusters  <- setdiff(prev.tp.clust, complex.clusters)
+    simple.n.pipe.clusters <- setdiff(prev.tp.clust, complex.clusters)
+    pipe.clusters <- simple.n.pipe.clusters[sapply(simple.n.pipe.clusters, get.idx.pipe) > -1]
+    simple.clusters <- setdiff(simple.n.pipe.clusters, pipe.clusters)
+    
+    # Order the vector based on the length of each element. 
+    simple.clusters <- simple.clusters[order(nchar(simple.clusters), simple.clusters, decreasing = TRUE)]
+    
+    curr.tp.dat <- dat[dat[[timepoint.col]] == timepoints[tp.idx], ]
+    curr.tp.clust <- mixedsort(unique(curr.tp.dat[[cluster.col]]))
+    
+    # this filter out clusters that only exist in current time point.
+    # these are new clusters and have no predecessors.
+    curr.tp.clust.existing <- lapply(curr.tp.clust, function(cl) {
+      if (grepl(",", cl, fixed = TRUE) || grepl("|", cl, fixed = TRUE) || cl %in% simple.clusters) {
+        return(cl)
+      } 
+    })
+    curr.tp.clust.existing <- unlist(curr.tp.clust.existing)
+    
+    for (cl in curr.tp.clust.existing) {
+      clean.cl <- cl
+      ## Match the complex clusters first
+      for (cls in complex.clusters) {
+        cls.found <- grepl(cls, clean.cl, fixed = TRUE)
+        if (cls.found) {
+          df <- data.frame(paste0(tp.idx-1,'_', cls), paste0(tp.idx, '_', cl))
+          names(df) <- c("from","to")
+          edge.df <- rbind(edge.df, df)
+          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
+        }
+      }
+      
+      ## Match the split simple clusters first
+      for (cls in pipe.clusters) {
+        cls.found <- grepl(cls, clean.cl, fixed = TRUE)
+        if (cls.found) {
+          df <- data.frame(paste0(tp.idx-1,'_', cls), paste0(tp.idx, '_', cl))
+          names(df) <- c("from","to")
+          edge.df <- rbind(edge.df, df)
+          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
+        }
+      }
+      
+      ## Then simple clusters
+      for (cls in simple.clusters) {
+        cls.found <- grepl(cls, clean.cl, fixed = TRUE)
+        if (cls.found) {
+          df <- data.frame(paste0(tp.idx-1,'_',cls), paste0(tp.idx,'_',cl))
+          names(df) <- c("from","to")
+          edge.df <- rbind(edge.df, df)
+          clean.cl <- gsub(cls, "", clean.cl, fixed = TRUE)
+        }
+      }
+    }
+  }
+  return(edge.df)
 }
 
