@@ -28,6 +28,10 @@ Imports:
     caret,
     class,
     ggpointdensity,
-    factoextra
+    factoextra,
+    gtools,
+    tidygraph,
+    ggraph,
+    stringr
 Suggests:
 RoxygenNote: 7.1.1

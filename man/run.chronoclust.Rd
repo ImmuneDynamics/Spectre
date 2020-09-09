@@ -11,12 +11,16 @@ run.chronoclust(dat, timepoint.col, use.cols, config=NULL, clust.name = "ChronoC
 
 \item{timepoint.col}{NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.}
 
+\item{timepoints}{NO DEFAULT. The time points (in order).}
+
 \item{use.cols}{NO DEFAULT. Vector of column names to use for clustering.}
 
 \item{config}{DEFAULT = NULL. A named numeric list. List containing the value of ChronoClust's hyper-parameter. The name of the element must correspond to one of ChronoClust's parameter name such as epsilon, upsilon, etc. The numeric value must correspond to the value assigned for the corresponding parameter.
 \emph{Only include parameters that you want to override.} Those you prefer to set to default value need not be included in the list.}
 
 \item{clust.name}{DEFAULT = "ChronoClust_cluster". Character. Name of the resulting 'cluster'}
+
+\item{clean.up}{DEFAULT = FALSE. Whether to remove the files chronoclust produces}
 }
 \description{
 Method to run ChronoClust clustering algorithm.
@@ -30,12 +34,11 @@ data.list <- Spectre::read.files(file.loc = PrimaryDirectory, file.type = ".csv"
 cell.dat <- Spectre::do.merge.files(dat = data.list)
 
 # Specify clustering column
-ColumnNames <- as.matrix(unname(colnames(cell.dat)))
-ClusteringColNos <- c(1:3)
-ClusteringCols <- ColumnNames[ClusteringColNos]
+cluster.cols <- names(cell.dat)[c(1:8,10:20)]
 
 # Specify time point column
-timepoint.col <- 'day'
+timepoint.col <- "Group"
+timepoints <- c("Mock", "WNV-01", "WNV-02", "WNV-03", "WNV-04", "WNV-05")
 
 # Prepare Python session
 run.prepare.chronoclust(environment_name = "chronoclust-R",
@@ -51,7 +54,8 @@ config <- list(beta = 0.2,
 
 cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
                                      timepoint.col=timepoint.col,
-                                     use.cols=ClusteringCols,
+                                     timepoints=timepoints,
+                                     use.cols=cluster.cols,
                                      config=config)
 
 }
@@ -61,5 +65,5 @@ cell.dat <- Spectre::run.chronoclust(dat=cell.dat,
 \code{\link{run.prepare.chronoclust}} for how to embed Python session within R session.
 }
 \author{
-Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
+Givanna Putri, \email{givanna.haryonoputri@sydney.edu.au}
 }
