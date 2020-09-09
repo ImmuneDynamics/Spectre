@@ -229,8 +229,7 @@ make.network.plot <- function(dat,
             panel.background = element_rect(fill = 'white'))
     
     if (node.size == 'auto') {
-      plt <- plt + scale_size_continuous(range = c(min.node.size, max.node.size)) + 
-        guides(colour = guide_legend(override.aes = list(size=min.node.size)))
+      plt <- plt + scale_size_continuous(range = c(min.node.size, max.node.size))
     }
     
     ggsave(paste0("network_colBy_", marker, '.pdf'),
