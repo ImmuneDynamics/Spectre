@@ -8,7 +8,9 @@
 #' @param timepoints NO DEFAULT. The time points (in order).
 #' @param cluster.col NO DEFAULT. Column denoting the cluster id.
 #' @param marker.cols NO DEFAULT. Vector of column names denoting the markers to plot.
-#' @param node.size DEFAULT = 13. Size of the node of the diagram.
+#' @param node.size DEFAULT = 'auto'. By default, set the size of the node to proportion of cells in the cluster. Set this to specific number if you want the node size to be the same regardless.
+#' @param min.node.size DEFAULT = 6. Minimum node size if node size is scaled to proportion of cells in cluster. Otherwise not used.
+#' @param max.node.size DEFAULT = 12. Maximum node size if node size is scaled to proportion of cells in cluster. Otherwise not used.
 #' @param arrow.length DEFAULT = 3. Length of the arrow connecting nodes.
 #' @param arrow.head.gap DEFAULT = 4. The gap between head of the arrow and node.
 #' @param standard.colours DEFAULT = "Spectral". Colour scheme for the markers. Spectral or Inferno or Viridis.
@@ -27,6 +29,8 @@ make.network.plot <- function(dat,
                               cluster.col,
                               marker.cols,
                               node.size = 'auto',
+                              min.node.size = 6, 
+                              max.node.size = 20,
                               arrow.length = 3,
                               arrow.head.gap = 4,
                               standard.colours = 'Spectral') {
@@ -59,6 +63,7 @@ make.network.plot <- function(dat,
   message("Calculating edges")
   # To store transitions
   edge.df <- get.transitions.as.edges(dat, timepoints, timepoint.col, cluster.col)
+  
   
   message("Computing node details")
   #### Then get extra details on the nodes ####
@@ -122,8 +127,6 @@ make.network.plot <- function(dat,
   cluster.origins <- get.cluster.origins(node.dat)
   node.dat$origin <- cluster.origins
   
-  #colnames(node.dat) <- gsub(" ","_",colnames(node.dat))
-  
   if (node.size == 'auto') {
     node.sizes <- get.cluster.proportions(node.dat = node.dat,
                                           dat = dat,
@@ -139,6 +142,8 @@ make.network.plot <- function(dat,
   img.height <- 15
   img.width <- 15
   
+  message("Start drawing plots")
+  
   routes_tidy <- tbl_graph(nodes = as.data.frame(node.dat),
                            edges = as.data.frame(edges),
                            directed = TRUE)
@@ -151,9 +156,9 @@ make.network.plot <- function(dat,
                                        n.col = length(timepoints),
                                        factor = as.character(mixedsort(unique(node.dat$timepoint))))
   
+  message("Drawing plots coloured by time point")
   
-  
-  ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
+  plt <- ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
     geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
     geompoint.prop +
     colour.palette +
@@ -162,7 +167,12 @@ make.network.plot <- function(dat,
           aspect.ratio = 1) + 
     labs(color='Timepoint')
   
+  if (node.size == 'auto') {
+    plt <- plt + scale_size_continuous(range = c(min.node.size, max.node.size))
+  }
+  
   ggsave(paste0("network_colBy_timepoints.pdf"),
+         plot = plt,
          width = img.width,
          height = img.height,
          dpi = 1000,
@@ -170,12 +180,15 @@ make.network.plot <- function(dat,
   
   #### Colour plot based on the origin cluster ####
   ## +1 for the colour brewer because we have NA
+  
+  message("Drawing plots coloured by origin")
+  
   colour.palette <- get.colour.pallete(standard.colours,
                                        n.col = length(unique(cluster.origins)) + 1,
                                        factor = as.character(mixedsort(unique(node.dat$origin))))
   geompoint.prop <- get.geompoint(node.size, 'origin')
   
-  ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
+  plt <- ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
     geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), end_cap = circle(arrow.head.gap, 'mm')) +
     geompoint.prop +
     colour.palette +
@@ -184,7 +197,12 @@ make.network.plot <- function(dat,
           aspect.ratio = 1) +
     labs(color='Cluster origin')
   
+  if (node.size == 'auto') {
+    plt <- plt + scale_size_continuous(range = c(min.node.size, max.node.size))
+  }
+  
   ggsave(paste0("network_colBy_origin.pdf"),
+         plot = plt,
          width = img.width,
          height = img.height,
          dpi = 1000,
@@ -196,9 +214,11 @@ make.network.plot <- function(dat,
   for (idx in marker.cols) {
     marker <- names(dat)[idx]
     
+    message(paste0("Drawing plots coloured by ", marker))
+    
     geompoint.prop <- get.geompoint(node.size, marker)
     
-    ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
+    plt <- ggraph(routes_tidy, layout = 'kk', maxiter = 10000) +
       geom_edge_link(arrow = arrow(length = unit(arrow.length, 'mm')), 
                      end_cap = circle(arrow.head.gap, 'mm')) +
       geompoint.prop +
@@ -206,7 +226,12 @@ make.network.plot <- function(dat,
       theme(text = element_text(size=20),
             panel.background = element_rect(fill = 'white'))
     
+    if (node.size == 'auto') {
+      plt <- plt + scale_size_continuous(range = c(min.node.size, max.node.size))
+    }
+    
     ggsave(paste0("network_colBy_", marker, '.pdf'),
+           plot = plt,
            width = img.width,
            height = img.height,
            dpi = 1000,
