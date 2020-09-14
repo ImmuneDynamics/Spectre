@@ -16,10 +16,12 @@
 #' @param variable.contribution DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.
 #' @param plot.individuals DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).
 #' @param plot.ind.label DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.
+#' @param pointsize.ind DEFAULT = 1.5. Numeric. Size of dots of individuals on PCA plot.
 #' @param row.names DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.
 #' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.
 #' @param group.ind DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.
 #' @param colour.group DEFAULT = "viridis". Colour scheme for each group. Options include "jet", "spectral", "viridis", "inferno", "magma".
+#' @param pointsize.group DEFAULT = 1.5. Numeric. Size of shapes of group individuals on PCA plot.
 #' @param ellipse.type DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.
 #' @param ellipse.level DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).
 #' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
@@ -29,7 +31,7 @@
 #' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
@@ -71,10 +73,12 @@ run.pca <- function(dat,
                  variable.contribution = TRUE,
                  plot.individuals = TRUE,
                  plot.ind.label = "point",
+                 pointsize.ind = 1.5,
                  row.names = NULL,
                  plot.ind.group = FALSE,
                  group.ind = NULL,
                  colour.group = "viridis",
+                 pointsize.group = 1.5,
                  ellipse.type = "confidence",
                  ellipse.level = 0.95,
                  plot.variables = TRUE,
@@ -177,7 +181,9 @@ run.pca <- function(dat,
   if (plot.individuals == TRUE) {
     pca_plot_ind <- factoextra::fviz_pca_ind(pca_out,
                                              repel = repel,
-                                             geom = plot.ind.label)
+                                             geom = plot.ind.label,
+                                             pointsize = pointsize.ind
+                                             )
     
     ggplot2::ggsave(pca_plot_ind,
                     filename = "PCA plot-individuals.pdf",
@@ -225,7 +231,8 @@ run.pca <- function(dat,
                                                   ellipse.level = ellipse.level,
                                                   legend.title = "Groups",
                                                   repel = repel,
-                                                  geom = plot.ind.label
+                                                  geom = plot.ind.label,
+                                                  pointsize = pointsize.group
                                                   )
     
     ggplot2::ggsave(pca_out_ind_group,
@@ -266,11 +273,11 @@ run.pca <- function(dat,
     }
     
     loading_plot <- factoextra::fviz_pca_var(pca_out,
-                                      col.var = "contrib",
-                                      gradient.cols = var.colour.scheme,
-                                      repel = repel,
-                                      select.var = list(contrib = var.numb) #plots the top number of contributors
-                                      )
+                                             col.var = "contrib",
+                                             gradient.cols = var.colour.scheme,
+                                             repel = repel,
+                                             select.var = list(contrib = var.numb) #plots the top number of contributors
+                                             )
     
     # Save loadings plot
     ggplot2::ggsave(loading_plot,
@@ -295,6 +302,7 @@ run.pca <- function(dat,
                                 col.ind = "Black",  # Individuals color
                                 repel = repel,
                                 geom = plot.ind.label,
+                                pointsize = pointsize.ind,
                                 select.var = list(contrib = var.numb) #plots the top number of contributors
                                 )
     
