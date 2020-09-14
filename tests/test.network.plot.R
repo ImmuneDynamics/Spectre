@@ -104,7 +104,7 @@ test_that("merge_split_found_3", {
               rep('A|1', 2),
               rep('(A,B)', 2),
               rep('(A,B)|1', 1),
-              rep('A|1', 1))
+              rep('A|1', 2))
   )
   edge.df <- get.transitions.as.edges(dat, c(1,2,3), 'timepoint', 'lineage')
   expect_true(helper.found.edge(edge.df, '1_A', '2_(A,B)'))

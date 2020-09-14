@@ -3,7 +3,7 @@
 #' Method to draw a network diagram.
 #' This rely on a clustering performed by ChronoClust.
 #' 
-#' @param dat NO DEFAULT. Data.frame. Data to be clustered.
+#' @param dat NO DEFAULT. Data table. Dataset.
 #' @param timepoint.col NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.
 #' @param timepoints NO DEFAULT. The time points (in order).
 #' @param cluster.col NO DEFAULT. Column denoting the cluster id.
