@@ -131,7 +131,8 @@ run.pca <- function(dat,
     # Saves scree plot
     ggplot2::ggsave(scree_plot,
            filename = "Scree plot.pdf",
-           path = path)
+           path = path,
+           useDingbats = FALSE)
     
     if (variable.contribution == TRUE) {
       # Creates plot with contributions of each variable
@@ -145,7 +146,8 @@ run.pca <- function(dat,
              filename = "PCA plot-contribution.pdf",
              width = 16,
              height = 5,
-             path = path)
+             path = path,
+             useDingbats = FALSE)
       
       # Extract contribution of variables
       pca_out_var <- factoextra::get_pca_var(pca_out)
@@ -187,7 +189,8 @@ run.pca <- function(dat,
     
     ggplot2::ggsave(pca_plot_ind,
                     filename = "PCA plot-individuals.pdf",
-                    path = path)
+                    path = path,
+                    useDingbats = FALSE)
     
     # Extract coordinates of individuals
     pca_out_ind <- factoextra::get_pca_ind(pca_out)
@@ -237,7 +240,8 @@ run.pca <- function(dat,
     
     ggplot2::ggsave(pca_out_ind_group,
                     filename = "PCA plot-ind-groups.pdf",
-                    path = path)
+                    path = path,
+                    useDingbats = FALSE)
     
   }
   
@@ -282,7 +286,8 @@ run.pca <- function(dat,
     # Save loadings plot
     ggplot2::ggsave(loading_plot,
            filename = "PCA plot-variables.pdf",
-           path = path)
+           path = path,
+           useDingbats = FALSE)
     
     # Extract coordinates of variables
     pca_out_var <- factoextra::get_pca_var(pca_out)
@@ -308,7 +313,8 @@ run.pca <- function(dat,
     
     ggplot2::ggsave(pca_out_comb,
                     filename = "PCA plot-combined.pdf",
-                    path = path)
+                    path = path,
+                    useDingbats = FALSE)
   }
   
 }
