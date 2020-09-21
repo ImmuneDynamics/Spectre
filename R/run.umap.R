@@ -112,11 +112,11 @@ run.umap <- function(dat,
   custom.config$verbose <- verbose
   custom.config$umap_learn_args <- umap_learn_args
 
-  dat.start <- dat
+  dat.start <- data.table(dat)
 
-  dat <- dat[, use.cols]
+  dat.start <- dat.start[, ..use.cols]
 
-  res <- umap::umap(d = dat,
+  res <- umap::umap(d = dat.start,
               config = custom.config)
 
   umap.res <- res$layout
