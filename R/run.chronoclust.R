@@ -113,15 +113,15 @@ run.chronoclust <- function(dat,
   
   # Run ChronoClust
   # TODO update the python version to reflect this
-  default.cc.params <- list(beta= 0.8,
-                            delta= 0.0,
-                            epsilon= 0.30,
-                            lambda= 0,
-                            k= 1,
-                            mu= 0.0001,
+  default.cc.params <- list(beta= 0.2,
+                            delta= 0.05,
+                            epsilon= 0.03,
+                            lambda= 2,
+                            k= 15,
+                            mu= 0.005,
                             pi= 0,
-                            omicron= 0.0,
-                            upsilon= 1)
+                            omicron= 0.00001,
+                            upsilon= 2)
   if (is.null(config)) {
     config.copy <- default.cc.params
   } else {
@@ -154,42 +154,37 @@ run.chronoclust <- function(dat,
                       param_omicron=config.copy[['omicron']],
                       param_upsilon=config.copy[['upsilon']])
   
-  message("Stitching results back to data frame")
   
-  # Read the result files and merge that into the dat as cluster
   setwd(output.cc.dir)
-  
-  timepoints.from.0 <- c(0: (length(timepoints)-1))
-  
   message("Inferring lineage ID and association ID")
-  # Get the tracking association
-  result.df <- fread("result.csv")
-  cluster.dat.with.assoc <- lapply(timepoints.from.0, function(tp) {
-    cluster.dat <- fread(paste0("cluster_points_D", tp, ".csv"))
-    
-    # filter out the result file and extract the association id as element,
-    # and the lineage id as the name of the vector
-    cols <- c('tracking_by_lineage', 'tracking_by_association')
-    result.df.fil <- data.table(result.df[result.df$timepoint == tp, ])
-    result.df.fil <- result.df.fil[, ..cols]
-    # if a cell have no cluster, then the association should have no cluster as well.
-    result.df.fil <- rbind(result.df.fil, list('None','None'))
-    colnames(result.df.fil) <- c('cluster_id', 'cluster_id_association')
-    
-    # join but keep the details in cluster.dat
-    result.df.fil <- data.table(result.df.fil, key='cluster_id')
-    cluster.dat <- data.table(cluster.dat, key='cluster_id')
-    cluster.dat <- result.df.fil[cluster.dat]
-    
-    return(cluster.dat)
-  })
-  names(cluster.dat.with.assoc) <- timepoints
   
-  message("Appending IDs as columns")
-  clust.dat.complete <- rbindlist(cluster.dat.with.assoc)
+  cell_dat_list = list()
+  result_dat <- fread("result.csv")
+  timepoints.from.0 <- c(0: (length(timepoints)-1))
+  for (i in timepoints.from.0) {
+    time.point <- timepoints[i+1]
+    dat.subset <- dat.bk[dat.bk[[timepoint.col]] == time.point,]
+    
+    # read cluster points
+    cluster.dat <- fread(paste0("cluster_points_D", i, ".csv"))
+    dat.subset[[paste0(clust.name, '_lineage')]] <- cluster.dat$cluster_id
+    
+    result_dat_sub <- result_dat[result_dat$timepoint == i,]
+    
+    res <- result_dat_sub$tracking_by_association
+    names(res) <- result_dat_sub$tracking_by_lineage
+    res['None'] <- 'None'
+    
+    assoc <- sapply(cluster.dat$cluster_id, function(cl) {
+      res[cl]
+    })
+    
+    dat.subset[[paste0(clust.name, '_association')]] <- as.vector(assoc)
+    cell_dat_list[[time.point]] <- dat.subset
+  }
   
-  dat.bk[,paste0(clust.name, '_lineage')] <- as.vector(clust.dat.complete$cluster_id)
-  dat.bk[,paste0(clust.name, '_assoc')] <- as.vector(clust.dat.complete$cluster_id_association)
+  message("Stitching results back to data frame")
+  cell_dat <- rbindlist(cell_dat_list)
   
   if (clean.up) {
     message("Cleaning up")
@@ -202,6 +197,6 @@ run.chronoclust <- function(dat,
   # Set the working directory back to where it was
   setwd(current.work.dir)
   
-  return(dat.bk)
+  return(cell_dat)
   
 }
