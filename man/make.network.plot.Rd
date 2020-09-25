@@ -8,7 +8,7 @@ make.network.plot(dat, timepoint.col, timepoints, cluster.col, marker.cols,
 node.size = 13, arrow.length = 3, arrow.head.gap = 4, standard.colours = 'Spectral')
 }
 \arguments{
-\item{dat}{NO DEFAULT. Data.frame. Data to be clustered.}
+\item{dat}{NO DEFAULT. Data table. Dataset.}
 
 \item{timepoint.col}{NO DEFAULT. Column name which represents the time point of each cell (data point) in dat.}
 

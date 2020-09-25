@@ -4,7 +4,7 @@
 \alias{run.pca}
 \title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -21,6 +21,8 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 
 \item{plot.ind.label}{DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.}
 
+\item{pointsize.ind}{DEFAULT = 1.5. Numeric. Size of dots of individuals on PCA plot.}
+
 \item{row.names}{DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.}
 
 \item{plot.ind.group}{DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.}
@@ -28,6 +30,8 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 \item{group.ind}{DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.}
 
 \item{colour.group}{DEFAULT = "viridis". Colour scheme for each group. Options include "jet", "spectral", "viridis", "inferno", "magma".}
+
+\item{pointsize.group}{DEFAULT = 1.5. Numeric. Size of shapes of group individuals on PCA plot.}
 
 \item{ellipse.type}{DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.}
 
