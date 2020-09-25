@@ -20,7 +20,6 @@
 
 package.load <- function(type = "general")
 {
-  if(type == "general"){
     require('devtools')
     require('data.table')
     require('plyr')
@@ -44,12 +43,15 @@ package.load <- function(type = "general")
     require('Biobase')
     require('flowViz')
     require('FlowSOM')
-  }
 
   if(type == "spatial"){
     require('raster')
     require('tiff')
     require('rgeos')
+    require('velox')
+    require('sp')
+    require('sf')
+    require('stars')
   }
 
   if(type == "ML"){

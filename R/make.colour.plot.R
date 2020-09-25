@@ -80,7 +80,7 @@ make.colour.plot <- function(dat,
                              align.xy.by = dat,
                              align.col.by = dat,
 
-                             regression.line = FALSE,
+                             regression.line = NULL, # "lm" # "loess"
 
                              title = col.axis,
                              filename = NULL,
@@ -302,8 +302,8 @@ make.colour.plot <- function(dat,
 
   ### Regression lione
 
-      if(regression.line == TRUE){
-        p <- p + geom_smooth(method="lm")
+      if(!is.null(regression.line)){
+        p <- p + geom_smooth(method=regression.line)
       }
 
   ### Add title

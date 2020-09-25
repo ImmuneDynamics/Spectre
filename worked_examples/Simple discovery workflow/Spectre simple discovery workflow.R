@@ -75,10 +75,10 @@
         to.asinh <- names(cell.dat)[c(1:9)]
         to.asinh
 
-        cofactor <- 1000
+        cofactor <- 500
         plot.against <- "Ly6C_asinh"
 
-        cell.dat <- do.asinh(cell.dat, to.asinh, cofactor = 1000)
+        cell.dat <- do.asinh(cell.dat, to.asinh, cofactor = cofactor)
         transformed.cols <- paste0(to.asinh, "_asinh")
 
         setwd(OutputDirectory)
@@ -145,6 +145,7 @@
 
         cell.sub <- do.subsample(cell.dat, sub.targets, group.col)
         cell.sub <- run.umap(cell.sub, cluster.cols)
+
         fwrite(cell.dat, "clustered.data.DR.csv")
 
     ### DR plots
