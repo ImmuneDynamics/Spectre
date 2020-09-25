@@ -19,6 +19,10 @@ make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, 
 
 \item{add.density}{DEFAULT = FALSE. Can specify to add a density plot at the end the series of colour plots}
 
+\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently does not work with density plots, only for those features in the plot.by.}
+
+\item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
+
 \item{col.type}{DEFAULT = "continuous". Can also be "factor".}
 
 \item{figure.title}{DEFAULT = "Multi plot". Also used as the prefix for the saved file name.}

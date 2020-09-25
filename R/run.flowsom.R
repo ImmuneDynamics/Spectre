@@ -10,6 +10,7 @@
 #' @param xdim DEFAULT = 14. Numeric. Number of first level clusters across the x-axis. xdim x ydim = total number of first level FlowSOM clusters.
 #' @param ydim DEFAULT = 14. Numeric. Number of first level clusters across the y-axis. xdim x ydim = total number of first level FlowSOM clusters.
 #' @param meta.k DEFAULT = 'auto'. If set to 'auto', then number of metaclusters will be determined automatically. Alternatively, can specify the desired number of metaclusters to create. If set to zero (0), no metaclusters will be created.
+#' @param max.meta DEFAULT = 20. Only used if meta.k is set to 'auto'. This parameter indicates the maximum number of metaclusters FlowSOM will try out when determining the optimal number of metaclusters for the dataset.
 #' @param clust.seed DEFAULT = 42 Numeric. Clustering seed for reproducibility.
 #' @param meta.seed DEFAULT = 42 Numeric. Metaclustering seed for reproducibility.
 #' @param clust.name DEFAULT = "FlowSOM_cluster". Character. Name of the resulting 'cluster' parameter.
@@ -36,6 +37,7 @@ run.flowsom <- function(dat,
                         xdim = 14,
                         ydim = 14,
                         meta.k = 'auto',
+                        max.meta = 20,
                         clust.seed = 42,
                         meta.seed = 42,
                         clust.name = "FlowSOM_cluster",
@@ -134,7 +136,10 @@ run.flowsom <- function(dat,
 
         ## Auto number of MCs
         if(meta.k == 'auto'){
-          FlowSOM_out_meta <- FlowSOM::metaClustering_consensus(FlowSOM_out$map$codes, seed = meta.seed)
+          FlowSOM_out_meta <- FlowSOM::MetaClustering(FlowSOM_out$map$codes,
+                                                      method="metaClustering_consensus",
+                                                      max=max.meta,
+                                                      seed=meta.seed)
         }
 
         ## Define number of MCs

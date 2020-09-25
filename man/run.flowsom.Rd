@@ -17,6 +17,8 @@ run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name
 
 \item{meta.k}{DEFAULT = 'auto'. If set to 'auto', then number of metaclusters will be determined automatically. Alternatively, can specify the desired number of metaclusters to create. If set to zero (0), no metaclusters will be created.}
 
+\item{max.meta}{DEFAULT = 20. Only used if meta.k is set to 'auto'. This parameter indicates the maximum number of metaclusters FlowSOM will try out when determining the optimal number of metaclusters for the dataset.}
+
 \item{clust.seed}{DEFAULT = 42 Numeric. Clustering seed for reproducibility.}
 
 \item{meta.seed}{DEFAULT = 42 Numeric. Metaclustering seed for reproducibility.}

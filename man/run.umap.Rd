@@ -4,7 +4,7 @@
 \alias{run.umap}
 \title{Run the UMAP algorithm (using umap::umap())}
 \usage{
-run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, suffix = NULL)
+run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, n_components = 2, metric = "euclidean", n_epochs = 200, input = "data", init = "spectral", min_dist = 0.1, set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, b_gradient = NA, spread = 1, transform_state = 42, knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input data.table or data.frame.}
@@ -17,13 +17,52 @@ run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.see
 
 \item{umap.seed}{DEFAULT = 42. Numeric. Seed value for reproducibility.}
 
-\item{suffix}{DEFAULT = NULL}
+\item{neighbours}{DEFAULT = 15. Numeric. Number of nearest neighbours.}
+
+\item{n_components}{DEFAULT = 2. Numeric. Number of dimensions for output results.}
+
+\item{metric}{DEFAULT = "euclidean". Character or function. Determines how distances between data points are computed. Can also be "manhattan".}
+
+\item{n_epochs}{DEFAULT = 200. Numeric. Number of iterations performed during layout optimisation.}
+
+\item{input}{DEFAULT = "data". Character. Determines whether primary input argument is a data or distance matrix. Can also be "dist".}
+
+\item{init}{DEFAULT = "spectral". Character or matrix. Deafult "spectral" computes an initial embedding using eigenvectors of the connectivity graph matrix. Can also use "random" (creates an initial layout based on random coordinates).}
+
+\item{min_dist}{DEFAULT = 0.1. Numeric. Determines how close points appear in final layout.}
+
+\item{set_op_mix_ratio}{DEFAULT = 1. Numeric in range [0,1]. Determines who the knn-graph is used to create a fuzzy simplicial graph.}
+
+\item{local_connectivity}{DEFAULT = 1. Numeric. Used during construction of fuzzy simplicial set.}
+
+\item{bandwidth}{DEFAULT = 1. Numeric. Used during construction of fuzzy simplicial set.}
+
+\item{alpha}{DEFAULT = 1. Numeric. Initial value of "learning rate" of layout optimisation.}
+
+\item{gamma}{DEFAULT = 1. Numeric. Together with alpha, it determines the learning rate of layout optimisation.}
+
+\item{negative_sample_rate}{DEFAULT = 5. Numeric. Determines how many non-neighbour points are used per point and per iteration during layout optimisation.}
+
+\item{a_gradient}{DEFAULT = NA. Numeric. Contributes to gradient calculations during layout optimisation. When left at NA, a suitable value will be estimated automatically.}
+
+\item{b_gradient}{DEFAULT = NA. Numeric. Contributes to gradient calculations during layout optimisation. When left at NA, a suitable value will be estimated automatically.}
+
+\item{spread}{DEFAULT = 1. Numeric. Used during automatic estimation of a_gradient/b_gradient parameters.}
+
+\item{transform_state}{DEFAULT = 42. Numeric. Seed for random number generation used during predict().}
+
+\item{knn.repeats}{DEFAULT = 1. Numeric. Number of times to restart knn search.}
+
+\item{verbose}{DEFAULT = TRUE. Logical. Determines whether to show progress messages.}
+
+\item{umap_learn_args}{DEFAULT = NA. Vector. Vector of arguments to python package umap-learn.}
 }
 \description{
 Method to run a UMAP dimensionality reduction algorithm.
 A UMAP (uniform manifold approximation and projection) plot is a useful means to visualise data.
 As it is a dimensionality reduction algorithm, some data will be lost.
 It is good practice to validate any populations (namely through manual gating).
+For more information on parameter choices, see ?umap::umap.defaults.
 Uses the R package "umap" to calculate plots and "data.table" to handle data.
 }
 \examples{

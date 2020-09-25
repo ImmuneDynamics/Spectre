@@ -69,6 +69,9 @@ run.tsne <- function(dat,
 
   ## Require packages
   require(Rtsne)
+  
+  ## Set the seed
+  set.seed(tsne.seed)
 
   ## Run tSNE
   tsne_out <- Rtsne::Rtsne(as.matrix(dat[use.cols]),

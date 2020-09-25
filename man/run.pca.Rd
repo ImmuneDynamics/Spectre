@@ -4,7 +4,7 @@
 \alias{run.pca}
 \title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -27,11 +27,15 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 
 \item{group.ind}{DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.}
 
+\item{colour.group}{DEFAULT = "viridis". Colour scheme for each group. Options include "jet", "spectral", "viridis", "inferno", "magma".}
+
 \item{ellipse.type}{DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.}
 
 \item{ellipse.level}{DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).}
 
 \item{plot.variables}{DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).}
+
+\item{colour.var}{DEFAULT = "solid". Colour scheme for PCA plot with variables. Options include "solid", "jet", "spectral", "viridis", "inferno", "magma", "BuPu". Note some colours are pale and may not appear clearly on plot.}
 
 \item{plot.combined}{DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.}
 
@@ -48,7 +52,7 @@ This function will run a PCA calculation (extremely fast) and generate plots (ta
 For individuals (such as samples or patients), a PCA can group them based on their similarities.
 A PCA is also capable of ranking variables/parameters (such as markers or cell counts) based on their contribution to the variability across a dataset in an extremely fast manner.
 In cytometry, this can be useful to identify marker(s) that can be used to differentiate between subset(s) of cells.
-Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order.
+Uses the base R package "stats" for PCA, "factoextra" for PCA and scree plots, "data.table" for saving .csv files, "ggplot2" for saving plots, "gtools" for rearranging data order, 'RColorBrewer' and 'viridis' for colour schemes.
 More information on PCA plots can be found here http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/.
 }
 \examples{
@@ -56,20 +60,20 @@ More information on PCA plots can be found here http://www.sthda.com/english/art
 setwd("/Users/felixmarsh-wakefield/Desktop")
 
 # Run PCA on demonstration dataset
-Spectre::run.pca(dat = Spectre::demo.start,
-                use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+Spectre::run.pca(dat = Spectre::demo.clustered,
+                use.cols = c(11:19),
                 repel = TRUE
                 )
 
 # Compare between groups
-Spectre::run.pca(dat = Spectre::demo.start,
-                 use.cols = c(5:6,8:9,11:13,16:19,21:30,32),
+Spectre::run.pca(dat = Spectre::demo.clustered,
+                 use.cols = c(11:19),
                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
                  plot.ind.group = TRUE,
                  group.ind = "Group"
                  )
         
-# When prompted, type in "4" and click enter to continue function (this selects the elbow point based off the scree plot)
+# When prompted, type in "5" and click enter to continue function (this selects the elbow point based off the scree plot)
 
 ## Possible issues ##
 # Remove any NA present

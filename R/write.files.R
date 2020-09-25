@@ -76,8 +76,8 @@ write.files <- function(dat,      # data to save
           metadata$minRange <- apply(dat.for.fcs,2,min)
           metadata$maxRange <- apply(dat.for.fcs,2,max)
 
-          ## Create flowframe with tSNE data
-          dat.ff <- new("flowFrame", exprs=as.matrix(dat.for.fcs), parameters=AnnotatedDataFrame(metadata))
+      ## Create flowframe with tSNE data
+      dat.ff <- new("flowFrame", exprs=as.matrix(dat.for.fcs), parameters=Biobase::AnnotatedDataFrame(metadata))
 
           ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
           write.FCS(dat.ff, paste0(file.prefix, ".fcs"))
@@ -124,7 +124,7 @@ write.files <- function(dat,      # data to save
             metadata$minRange <- apply(data_subset_fcs,2,min)
             metadata$maxRange <- apply(data_subset_fcs,2,max)
 
-            data_subset.ff <- new("flowFrame", exprs=as.matrix(data_subset_fcs), parameters=AnnotatedDataFrame(metadata))
+        data_subset.ff <- new("flowFrame", exprs=as.matrix(data_subset_fcs), parameters=Biobase::AnnotatedDataFrame(metadata))
 
             ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
             if(isTRUE(exists("file.prefix"))){write.FCS(data_subset.ff,  paste0(file.prefix, "_", divide.by, "_", nme, ".fcs"))}
