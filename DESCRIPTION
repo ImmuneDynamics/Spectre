@@ -1,7 +1,7 @@
 Package: Spectre
 Type: Package
 Title: A Toolbox for the Analysis of High-Dimensional Cytometry and Single-Cell Data
-Version: 0.3.5
+Version: 0.3.5-0
 Author: Thomas Ashhurst, Felix Marsh-Wakefield, Givanna Putri
 Maintainer: Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>
 Description: A computational toolkit for analysis of high-dimensional single-cell cytometry data.
