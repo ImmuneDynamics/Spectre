@@ -9,7 +9,7 @@
 #' @param sample.col NO DEFAULT. Character, name of the column denoting samples
 #' @param xdim DEFAULT = 5. Size of X-axis of FlowSOM grid.
 #' @param xdim DEFAULT = 5. Size of Y-axis of FlowSOM grid.
-#' @param nClus DEFAULT = 10. Number of metaclusters.
+#' @param nClus DEFAULT = 10. Number of metaclusters. If set to 1, will map all cells to a single metacluster
 #' @param nCells DEFAULT = NULL. Number of cells to downsample to, otherwise 'NULL' will use all available cells
 #' @param scale DEFAULT = FALSE. Do features need to be scaled?
 #' @param seed DEFAULT = 42. Seed for reproducibility.
@@ -37,41 +37,46 @@ do.prep.fsom <- function(dat,
                          seed = 42){
 
   ### Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
-  if(!is.element('CytoNorm', installed.packages()[,1])) stop('CytoNorm is required but not installed')
+      if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+      if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+      if(!is.element('CytoNorm', installed.packages()[,1])) stop('CytoNorm is required but not installed')
+      if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
+      if(!is.element('Biobase', installed.packages()[,1])) stop('Biobase is required but not installed')
 
   ### Require packages
-  require(Spectre)
-  require(CytoNorm)
+      require(Spectre)
+      require(data.table)
+      require(CytoNorm)
+      require(flowCore)
+      require(Biobase)
 
   ### Test data
 
-  # setwd("/Users/thomasa/Desktop/Batch alignment/")
-  # getwd()
-  #
-  # dat <- fread("Clustered_HnsB.csv")
-  #
-  # dat$FlowSOM_cluster <- NULL
-  # dat$FlowSOM_metacluster <- NULL
-  #
-  # as.matrix(names(dat))
-  # as.matrix(unique(dat[["SampleName"]]))
-  #
-  # sample.col <- "SampleName"
-  #
-  # dat <- dat[dat[["SampleName"]] == "01_Air_01" |
-  #         dat[["SampleName"]] == "04_Air_04",]
-  # dat
-  #
-  # cols <- names(dat)[c(5:14,16:17,19:22,25:26,28:35,37:38,45:48,50:57)] # Channels to align
-  #
-  # xdim = 5
-  # ydim = 5
-  # nClus = 10
-  # scale = FALSE
-  # seed = 1
-  #
-  # setwd("/Users/thomasa/Desktop/Batch alignment/")
+      # dat <- Spectre::demo.clustered
+      # dat$FlowSOM_cluster <- NULL
+      # dat$FlowSOM_metacluster <- NULL
+      #
+      # as.matrix(names(dat))
+      # use.cols <- names(dat)[c(11:19)]
+      #
+      # sample.col <- "Sample"
+      # batch.col <- "Batch"
+      #
+      # xdim = 5
+      # ydim = 5
+      # nClus = 1
+      # nCells = NULL
+      # scale = FALSE
+      # seed = 1
+
+  ### Single cluster preferences
+
+      if(nClus == 1){
+        nClus <- 5
+        one.clust <- TRUE
+      } else {
+        one.clust <- FALSE
+      }
 
   ### Create 'temp' folder
   starting.dir <- getwd()
@@ -159,6 +164,11 @@ do.prep.fsom <- function(dat,
 
   message("Step 3/4 - Preparing FlowSOM object and results data.table")
 
+  if(one.clust == TRUE){
+    length(fsom$metaclustering)
+    fsom$metaclustering <- rep(1, length(fsom$metaclustering))
+  }
+
   A <- fsom$FlowSOM$data
   B <- fsom$FlowSOM$map$mapping[,1]
   C <- fsom$metaclustering[fsom$FlowSOM$map$mapping[,1]]
@@ -202,5 +212,4 @@ do.prep.fsom <- function(dat,
   message("Step 4/4 - FlowSOM complete")
   return(res)
 }
-
 

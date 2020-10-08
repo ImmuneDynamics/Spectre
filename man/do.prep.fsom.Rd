@@ -15,7 +15,7 @@ do.prep.fsom(dat, use.cols, sample.col, xdim, ydim, nClus, nCells, scale, seed)
 
 \item{xdim}{DEFAULT = 5. Size of Y-axis of FlowSOM grid.}
 
-\item{nClus}{DEFAULT = 10. Number of metaclusters.}
+\item{nClus}{DEFAULT = 10. Number of metaclusters. If set to 1, will map all cells to a single metacluster}
 
 \item{nCells}{DEFAULT = NULL. Number of cells to downsample to, otherwise 'NULL' will use all available cells}
 

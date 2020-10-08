@@ -69,9 +69,12 @@ run.tsne <- function(dat,
 
   ## Require packages
   require(Rtsne)
+  
+  ## Set the seed
+  set.seed(tsne.seed)
 
   ## Run tSNE
-  tsne_out <- Rtsne::Rtsne(as.matrix(dat[,..use.cols]),
+  tsne_out <- Rtsne::Rtsne(as.matrix(dat[, use.cols, with = FALSE]),
         dims = dims,
         initial_dims = initial_dims,
         perplexity = perplexity,

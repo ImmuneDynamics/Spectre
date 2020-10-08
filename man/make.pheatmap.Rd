@@ -4,20 +4,20 @@
 \alias{make.pheatmap}
 \title{make.pheatmap - Create a 'pretty' heatmap (pheatmap)}
 \usage{
-make.pheatmap(dat, file.name, plot.title, sample.col, plot.cols, annot.cols, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
+make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers).}
 
-\item{sample.col}{NO DEFAULT. Character. Specify the name of the column that indicates samples.}
+\item{sample.col}{NO DEFAULT. Character. Specify the name of the column that indicates samples. Will be rows on heatmap.}
 
-\item{plot.cols}{NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap.}
+\item{plot.cols}{NO DEFAULT. Character vector. Name of columns you wish to plot on the heatmap. Will be columns on heatmap.}
 
-\item{annot.cols}{NO DEFAULT. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.}
+\item{annot.cols}{DEFAULT = NULL. Character. Columns which contain values that you do NOT want to plot in the heatmap, e.g. sample name, group name, Live/Dead etc.}
 
-\item{file.name}{NO DEFAULT. Character. What do you want to call the file, including the extension.}
+\item{file.name}{DEFAULT = paste0("Pheatmap by ", sample.col, ".png"). Character. What do you want to call the file, including the extension.}
 
-\item{plot.title}{NO DEFAULT. Character.}
+\item{plot.title}{DEFAULT = paste0(sample.col, " heatmap"). Character.}
 
 \item{transpose}{DEFAULT = FALSE. Logical. Do you want to transpose the heatmap.}
 

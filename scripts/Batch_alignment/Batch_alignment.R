@@ -63,19 +63,15 @@
         meta.dat <- read.csv("sample.details.csv")
         meta.dat
 
+
+
+
     ### Embed metadata and merge files
 
-        for(i in c(2:ncol(meta.dat))){
-          dat.list <- Spectre::do.embed.columns(x = dat.list,
-                                                type = "list",
-                                                match.to = meta.dat[c(1)],
-                                                new.cols = meta.dat[c(i)],
-                                                col.name = names(meta.dat[c(i)]))
-        }
-
-        dat.list
-
         cell.dat <- do.merge.files(dat.list)
+        cell.dat
+
+        cell.dat <- do.add.cols(cell.dat, "FileName", meta.dat, "Filename", rmv.ext = TRUE)
         cell.dat
 
 ##########################################################################################################
@@ -115,9 +111,9 @@
         make.multi.plot(dat = cell.dat,
                         x.axis = "DL800.SA.Bio.Ly6G",
                         y.axis = "BV605.Ly6C",
-                        col.axis = batch.col,
-                        type = "factor",
-                        plot.by = sample.col)
+                        plot.by = batch.col,
+                        col.type = "factor",
+                        divide.by = sample.col)
 
     ### Specify target data
 
@@ -135,7 +131,7 @@
                                  batch.col = batch.col,
                                  xdim = 5,
                                  ydim = 5,
-                                 nClus = 10,
+                                 nClus = 15,
                                  scale = FALSE,
                                  seed = 2)
 
@@ -161,18 +157,15 @@
 
     ### Make some plots, to determine suitability of the FlowSOM clustering
 
-        temp <- do.subsample(ref.fsom$fsom.dt, method = "random", targets = rep(10000))
+        temp <- do.subsample(ref.fsom$fsom.dt, targets = 10000)
         nrow(temp)
 
         temp <- run.umap(temp, cluster.cols)
 
-        make.factor.plot(temp, "UMAP_X", "UMAP_Y", col.axis = "prep.fsom.metacluster", dot.size = 0.5, title = "Raw - metaclusters", add.label = TRUE)
-        make.factor.plot(temp, "UMAP_X", "UMAP_Y", col.axis = "prep.fsom.cluster", dot.size = 0.5, title = "Raw - clusters", add.label = TRUE)
-        make.factor.plot(temp, "UMAP_X", "UMAP_Y", col.axis = "FileNo", dot.size = 0.5, title = "Raw - sample")
-
-        make.multi.marker.plot(temp, "UMAP_X", "UMAP_Y",plot.by = align.cols, figure.title = "Raw - markers (to align)")
-        make.multi.marker.plot(temp, "UMAP_X", "UMAP_Y",plot.by = cluster.cols, figure.title = "Raw - markers (for clustering)")
-        make.multi.marker.plot(temp, "UMAP_X", "UMAP_Y",plot.by = all.cols, figure.title = "Raw - markers (all)")
+        make.colour.plot(temp, "UMAP_X", "UMAP_Y", col.axis = "prep.fsom.metacluster", col.type = 'factor', dot.size = 0.5, title = "Raw - metaclusters", add.label = TRUE)
+        make.colour.plot(temp, "UMAP_X", "UMAP_Y", col.axis = "prep.fsom.cluster", col.type = 'factor', dot.size = 0.5, title = "Raw - clusters", add.label = TRUE)
+        make.colour.plot(temp, "UMAP_X", "UMAP_Y", col.axis = "FileNo", col.type = 'factor', dot.size = 0.5, title = "Raw - sample")
+        make.multi.plot(temp, "UMAP_X", "UMAP_Y",plot.by = all.cols, figure.title = "Raw - markers (all)")
 
 
 ##########################################################################################################
@@ -185,7 +178,7 @@
                             target.dat = target.dat,
 
                             ## Columns
-                            sample.col = sample.col, # used to divide 'ref' and 'target' data into 'samples'
+                            #sample.col = sample.col, # used to divide 'ref' and 'target' data into 'samples'
                             batch.col = batch.col, # Column denoting batches
                             align.cols = align.cols, # Channels to align
 
@@ -238,18 +231,15 @@
 
     ### Plots
 
-        new.dat.ref <- do.subsample(new.dat.ref, method = "random", targets = 10000)
+        new.dat.ref <- do.subsample(new.dat.ref, 10000)
         nrow(new.dat.ref)
         new.dat.ref <- run.umap(new.dat.ref, aligned.align.cols)
 
-        make.factor.plot(new.dat.ref, "UMAP_X", "UMAP_Y", col.axis = sample.col, dot.size = 0.5, title = "Aligned - sample")
-
-        make.multi.marker.plot(new.dat.ref, "UMAP_X", "UMAP_Y",plot.by = aligned.align.cols, figure.title = "Aligned - markers (to align)")
-        make.multi.marker.plot(new.dat.ref, "UMAP_X", "UMAP_Y",plot.by = aligned.all.cols, figure.title = "Aligned - markers (all)")
-
+        make.colour.plot(new.dat.ref, "UMAP_X", "UMAP_Y", col.axis = sample.col, dot.size = 0.5, title = "Aligned - sample")
+        make.multi.plot(new.dat.ref, "UMAP_X", "UMAP_Y", plot.by = aligned.all.cols, figure.title = "Aligned - markers (all)")
 
         for(i in unique(new.dat.ref$Sample)){
-          make.factor.plot(new.dat.ref[new.dat.ref[[sample.col]] == i,], "UMAP_X", "UMAP_Y", col.axis = sample.col, dot.size = 0.5, title = paste0("Aligned_Sample_", i), align.xy.by = new.dat.ref, align.col.by = new.dat.ref)
+          make.colour.plot(new.dat.ref[new.dat.ref[[sample.col]] == i,], "UMAP_X", "UMAP_Y", col.axis = sample.col, dot.size = 0.5, title = paste0("Aligned_Sample_", i), align.xy.by = new.dat.ref, align.col.by = new.dat.ref)
         }
 
 
@@ -259,15 +249,15 @@
 ##########################################################################################################
 
         new.dat <- run.flowsom(new.dat, clustering.cols = aligned.cluster.cols)
-        new.dat <- do.subsample(new.dat, method = "random", targets = 10000)
+        new.dat <- do.subsample(new.dat, 10000)
         new.dat <- run.umap(new.dat, aligned.cluster.cols)
 
         new.dat <- as.data.table(new.dat) ##########
 
         ### re-ordered
 
-        make.factor.plot(new.dat, "UMAP_X", "UMAP_Y", col.axis = "FlowSOM_metacluster", title = "All samples - aligned - metaclusters (labelled)", add.label = TRUE)
-        make.factor.plot(new.dat, "UMAP_X", "UMAP_Y", col.axis = "FlowSOM_metacluster", title = "All samples - aligned - metaclusters")
+        make.colour.plot(new.dat, "UMAP_X", "UMAP_Y", col.axis = "FlowSOM_metacluster", title = "All samples - aligned - metaclusters (labelled)", add.label = TRUE)
+        make.colour.plot(new.dat, "UMAP_X", "UMAP_Y", col.axis = "FlowSOM_metacluster", title = "All samples - aligned - metaclusters")
         make.multi.plot(dat = new.dat, type = "factor", x.axis = "UMAP_X", y.axis = "UMAP_Y", col.axis = batch.col, plot.by = sample.col, figure.title = "All samples - aligned - samples")
 
 
