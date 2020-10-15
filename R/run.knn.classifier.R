@@ -26,13 +26,24 @@ run.knn.classifier <- function(train.dat,
                                unlabelled.dat,
                                use.cols,
                                label.col,
-                               num.neighbours = 1){
+                               num.neighbours = 1,
+                               seed=42){
   
   if(!is.element('caret', installed.packages()[,1])) stop('caret is required but not installed')
-  if(!is.element('class', installed.packages()[,1])) stop('class is required but not installed')
+  if(!is.element('FNN', installed.packages()[,1])) stop('FNN is required but not installed')
   
   require(caret)
-  require(class)
+  require(FNN)
+  
+  set.seed(42)
+  
+  # for testing
+  # library(Spectre)
+  # library(data.table)
+  # unlabelled.dat <- do.subsample(demo.clustered, 1000)[,c(11:19)]
+  # train.dat <- do.subsample(demo.clustered, 10000)[,c(11:19,25)]
+  # use.cols <- names(demo.clustered)[c(11:19)]
+  # label.col <- 'Population'
   
   # isolate the features
   train.dat.features <- train.dat[, ..use.cols]
@@ -47,14 +58,23 @@ run.knn.classifier <- function(train.dat,
   norm.train.data <- as.data.table(predict(preprocess.model, train.dat.features))
   norm.unlab.data <- as.data.table(predict(preprocess.model, unlabelled.dat.features))
   
-  pr <- class::knn(norm.train.data, norm.unlab.data, 
-                   cl=train.dat.labels,
-                   k=num.neighbours)
+  pr <- FNN::knn(train=norm.train.data, 
+                 test=norm.unlab.data, 
+                 cl=train.dat.labels,
+                 k=num.neighbours,
+                 prob=TRUE)
   
   # append the predicted class
   predicted.cell.dat <- data.table(unlabelled.dat)
-  
   predicted.cell.dat$Prediction <- pr
+  
+  # this gives the index of the nearest k neighbours data points
+  closest_neighbours_indices <- attr(pr, "nn.index")
+  closest_neighbours_indices <- data.table(closest_neighbours_indices)
+  closest_neighbours_indices[,V1:=NULL]  
+  names(closest_neighbours_indices) <- sapply(c(1:ncol(closest_neighbours_indices)), function(x) paste0("Neighbour_", x))
+  
+  predicted.cell.dat <- cbind(predicted.cell.dat, closest_neighbours_indices)
   
   return(predicted.cell.dat)
 }
