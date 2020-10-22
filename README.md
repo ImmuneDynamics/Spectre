@@ -24,7 +24,7 @@ library('devtools')
 Subsequently, use the 'install_github' function to install and load the Spectre package. By default this will load the 'master' branch, which is the same as the latest stable release version (listed at https://github.com/sydneycytometry/Spectre/releases). To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
 
 ```
-if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+if(!require('Spectre')) {install_github("immunedynamics/spectre")}
 ```
 
 You will see the following returned:
