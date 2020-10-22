@@ -14,7 +14,7 @@ Core developers of the Spectre package are Thomas Ashhurst, Felix Marsh-Wakefiel
 Basic usage instructions, and vignettes are available from https://wiki.centenary.org.au/display/SPECTRE. More comprehensive protocols can be found by signing up to the Sydney Cytometry 'extranet': https://sydneycytometry.org.au/wiki-launch.
 
 ### Installing Spectre
-In R, install and load the 'devtools' library.
+Detailed installation instructions are available on this page: https://wiki.centenary.org.au/display/SPECTRE. Briefly, install and load the 'devtools' library.
 
 ```     
 if(!require('devtools')) {install.packages('devtools')}
