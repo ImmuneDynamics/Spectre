@@ -70,7 +70,7 @@ Spectre::package.check()
 Spectre::package.load()
 ```
 
-Alternatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
+Alternatively, you can go to releases (https://github.com/immunedynamics/spectre/releases) and download the latest stable release -- which can then be installed in R.
 
 Once installed, usage instructions and vignettes can be found here: https://wiki.centenary.org.au/display/SPECTRE
 
