@@ -62,10 +62,48 @@
         cell.dat <- fread('Cellular.data.csv')
         cell.dat
 
-    ### Import preferences
+    ### Initialise preference metadata list
 
-        prefs <- readRDS(file = 'Analysis preferences.rds')
-        prefs
+        prefs <- list()
+
+    ### Sample preferences
+
+        as.matrix(names(cell.dat))
+
+        prefs$sample.col <- "Sample"
+        prefs$group.col <- "Group"
+        prefs$batch.col <- "Batch"
+
+    ### Downsample preferences
+        as.matrix(unique(cell.dat$Group))
+
+        prefs$sub.by <- "Group"
+        prefs$sub.targets <- c(2000, 18380)
+
+    ### Clustering preferences
+
+        ## Cellular cols
+        as.matrix(names(cell.dat))
+
+        prefs$cellular.cols <- names(cell.dat)[c(11:19)]
+        prefs$cellular.cols
+
+        ## Columns for clustering
+        as.matrix(names(cell.dat))
+
+        prefs$clustering.cols <- names(cell.dat)[c(11:19)]
+        prefs$clustering.cols
+
+        ## Cluster numbers etc
+        prefs$metak <- 'auto'
+
+    ### Save preferences
+
+        setwd(OutputDirectory)
+        dir.create("Output - info")
+        setwd("Output - info")
+
+        saveRDS(prefs, "Analysis preferences.rds") # analysis preferences
 
 ##########################################################################################################
 #### Run clustering and DR
@@ -117,12 +155,12 @@
 
     ### Identify cellular populations
 
-        annots <- list("CD4 T cells" = c(6),
-                       "CD8 T cells" = c(5),
-                       "NK cells" = c(4),
+        annots <- list("CD4 T cells" = c(7),
+                       "CD8 T cells" = c(6),
+                       "NK cells" = c(5),
                        "Neutrophils" = c(1),
                        "Infil Macrophages" = c(3),
-                       "Microglia" = c(2,7)
+                       "Microglia" = c(2,4,8)
                        )
 
         annots <- do.list.switch(annots)
