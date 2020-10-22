@@ -105,7 +105,7 @@
         # sub <- do.normalise(sub, use.cols = to.norm, new.min = 0, new.max = 5)
         # sub
 
-        sub <- do.asinh(sub, use.cols = to.asinh, cofactor = 1000)
+        sub <- do.asinh(sub, use.cols = to.asinh, cofactor = 500)
         sub
 
         as.matrix(names(sub))
@@ -149,37 +149,6 @@
         cell.dat <- do.add.cols(cell.dat, "FileName", to.add, "Filename")
         cell.dat
 
-    ### Sample preferences
-
-        as.matrix(names(cell.dat))
-
-        prefs$sample.col <- "Sample"
-        prefs$group.col <- "Group"
-        prefs$batch.col <- "Batch"
-
-    ### Downsample preferences
-        as.matrix(unique(cell.dat$Group))
-
-        prefs$sub.by <- "Group"
-        prefs$sub.targets <- c(2000, 18380)
-
-    ### Clustering preferences
-
-        ## Cellular cols
-        as.matrix(names(cell.dat))
-
-        prefs$cellular.cols <- names(cell.dat)[c(11:19)]
-        prefs$cellular.cols
-
-        ## Columns for clustering
-        as.matrix(names(cell.dat))
-
-        prefs$clustering.cols <- names(cell.dat)[c(11:19)]
-        prefs$clustering.cols
-
-        ## Cluster numbers etc
-        prefs$metak <- 'auto'
-
 ##########################################################################################################
 #### Write data to disk
 ##########################################################################################################
@@ -189,7 +158,6 @@
         setwd(OutputDirectory)
 
         fwrite(cell.dat, "Cellular.data.csv") # data
-        saveRDS(prefs, "Analysis preferences.rds") # analysis preferences
 
     ### Save session info to disk
 

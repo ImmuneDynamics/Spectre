@@ -138,7 +138,7 @@
 
     ### Clustering
 
-        cell.dat <- run.flowsom(cell.dat, cluster.cols)
+        cell.dat <- run.flowsom(cell.dat, cluster.cols, meta.k = 8)
         fwrite(cell.dat, "clustered.data.csv")
 
     ### Dimensionality reduction
@@ -169,13 +169,13 @@
 
     ### Annotate
 
-        annots <- list("Microglia" = c(2,4),
-                       "Macrophages" = c(3),
-                       "Neutrophils" = c(1),
-                       "NK cells" = c(6),
-                       "CD8 T cells" = c(5),
-                       "CD4 T cells" = c(7)
-                       )
+        annots <- list("CD4 T cells" = c(3),
+                       "CD8 T cells" = c(2),
+                       "NK cells" = c(1),
+                       "Neutrophils" = c(8),
+                       "Infil Macrophages" = c(4),
+                       "Microglia" = c(5,6,7)
+        )
 
         annots <- do.list.switch(annots)
         names(annots) <- c("Values", "Population")
