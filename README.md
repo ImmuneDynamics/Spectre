@@ -2,7 +2,7 @@
 A computational toolkit for analysis of high-dimensional single-cell cytometry data. 
 
 ### Current version
-`v0.3.6`
+`v0.3.7`
 
 ### About
 Core developers of the Spectre package are Thomas Ashhurst, Felix Marsh-Wakefield, and Givanna Putri. The Spectre package is designed to allow for data analaysis workflows that simplify and streamline data manipulation and annotation, population identification (clustering, classificaiton), and dimensionality reduction (tSNE, UMAP) etc in high-dimensional cytometry data. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. 
@@ -14,7 +14,7 @@ Core developers of the Spectre package are Thomas Ashhurst, Felix Marsh-Wakefiel
 Basic usage instructions, and vignettes are available from https://wiki.centenary.org.au/display/SPECTRE. More comprehensive protocols can be found by signing up to the Sydney Cytometry 'extranet': https://sydneycytometry.org.au/wiki-launch.
 
 ### Installing Spectre
-In R, install and load the 'devtools' library.
+Detailed installation instructions are available on this page: https://wiki.centenary.org.au/display/SPECTRE. Briefly, install and load the 'devtools' library.
 
 ```     
 if(!require('devtools')) {install.packages('devtools')}
@@ -24,7 +24,7 @@ library('devtools')
 Subsequently, use the 'install_github' function to install and load the Spectre package. By default this will load the 'master' branch, which is the same as the latest stable release version (listed at https://github.com/sydneycytometry/Spectre/releases). To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
 
 ```
-if(!require('Spectre')) {install_github("sydneycytometry/spectre")}
+install_github("immunedynamics/spectre")
 ```
 
 You will see the following returned:
@@ -70,7 +70,7 @@ Spectre::package.check()
 Spectre::package.load()
 ```
 
-Alternatively, you can go to releases (https://github.com/sydneycytometry/Spectre/releases) and download the latest stable release -- which can then be installed in R.
+Alternatively, you can go to releases (https://github.com/immunedynamics/spectre/releases) and download the latest stable release -- which can then be installed in R.
 
 Once installed, usage instructions and vignettes can be found here: https://wiki.centenary.org.au/display/SPECTRE
 
