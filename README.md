@@ -76,5 +76,8 @@ Alternatively, you can go to releases (https://github.com/immunedynamics/spectre
 
 Once installed, usage instructions and vignettes can be found here: https://wiki.centenary.org.au/display/SPECTRE
 
+#### Installing Docker image
+Spectre is also available as a self-contained docker image (https://hub.docker.com/r/givanna/spectre). Instruction on how to setup Spectre docker image is available at: https://wiki.centenary.org.au/display/SPECTRE/Install+from+Docker
+
 ### Acknowledgements
 The Spectre package was constructed on the basis of the CAPX workflow in R (https://sydneycytometry.org.au/capx). Along with the various R packages used within Spectre, we would like to acknowledge the Seurat and cytofkit R packages from providing inspiration for elements of the package design.

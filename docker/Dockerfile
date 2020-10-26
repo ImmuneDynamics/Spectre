@@ -1,6 +1,6 @@
 # Get base image. Tidyverse R studio
 FROM rocker/tidyverse
-LABEL maintainer="Givanna Putri <ghar1821@uni.sydney.edu.au>"
+LABEL maintainer="Givanna Putri <givanna.haryonoputri@sydney.edu.au>"
 
 # Set Locale to utf-8
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -35,13 +35,24 @@ RUN install2.r --error devtools \
                         ggpointdensity \
                         ggpubr \
                         viridis \
-                        BiocManager
+                        BiocManager \
+                        gtools \
+                        tidygraph \
+                        ggraph \
+                        stringr \
+                        caret \
+                        FNN \
+                        factoextra
+
 
 # Install Spectre package. Master branch
-RUN R -e "library(devtools); install_github('sydneycytometry/spectre')"
+RUN R -e "library(devtools); install_github('ImmuneDynamics/Spectre')"
 
 # Install Spectre dependencies from Bioconductor
-RUN R -e "library(BiocManager); BiocManager::install(c('flowCore', 'Biobase', 'flowViz', 'FlowSOM'), dependencies=TRUE)"
+RUN R -e "library(BiocManager); BiocManager::install(c('flowCore', 'Biobase', 'flowViz', 'FlowSOM', 'EnhancedVolcano'), dependencies=TRUE)"
+
+# Install cytonorm package.
+RUN R -e "library(devtools); install_github('saeyslab/CytoNorm')"
 
                    
 # Install miniconda for ChronoClust
