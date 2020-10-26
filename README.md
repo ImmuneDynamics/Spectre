@@ -13,7 +13,7 @@ Core developers of the Spectre package are Thomas Ashhurst, Felix Marsh-Wakefiel
 Basic usage instructions, and vignettes are available from https://wiki.centenary.org.au/display/SPECTRE. More comprehensive protocols can be found by signing up to the Sydney Cytometry 'extranet': https://sydneycytometry.org.au/wiki-launch.
 
 ### Citation
-*If you use Spectre or the CAPX workflows in your work, please consider citing Ashhurst, T. M., et al (2020). Integration, exploration, and analysis of high-dimensional single-cell cytometry data using Spectre. bioRxiv. 2020.10.22.349563. https://doi.org/10.1101/2020.10.22.349563. To continue providing open-source tools such as Spectre, it helps us to be able to demonstrate that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. CytoNorm, FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.*
+*If you use Spectre in your work, please consider citing Ashhurst, T. M., et al (2020). bioRxiv. 2020.10.22.349563. https://doi.org/10.1101/2020.10.22.349563. To continue providing open-source tools such as Spectre, it helps us to be able to demonstrate that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. CytoNorm, FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.*
 
 ### Installing Spectre
 Detailed installation instructions are available on this page: https://wiki.centenary.org.au/display/SPECTRE. 
