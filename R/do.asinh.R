@@ -35,7 +35,8 @@ do.asinh <- function(dat,
       }
   
   ### Optional noise reduction
-  # https://github.com/JinmiaoChenLab/cytofkit/issues/71
+  
+      # https://github.com/JinmiaoChenLab/cytofkit/issues/71
       if(reduce.noise == TRUE){
         message("This noise reduction function is experimental, and should be used with caution")
         value <- value-1
@@ -45,9 +46,12 @@ do.asinh <- function(dat,
       }
 
   ### Arcsinh calculation
+  
       value <- value / cofactor
       value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
 
+  ### Options to append the CF used
+  
       if(append.cf == TRUE){
         if(length(use.cols) > 1){
           names(value) <- paste0(names(value), "_asinh_cf", cofactor)
@@ -56,8 +60,7 @@ do.asinh <- function(dat,
           names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
         }
       }
-  
-  ### Option to append the CF used
+
       if(append.cf == FALSE){
         if(length(use.cols) > 1){
           names(value) <- paste0(names(value), "_asinh")
