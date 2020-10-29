@@ -213,8 +213,10 @@ run.align <- function(dat,
         nme <- sub(".fcs_.*", "", i)
         nme <- sub("Norm_", "", nme)
         
+        align.mc.nme <- paste0("Alignment_MC", append.name)
+        
         dt[[batch.col]] <- nme
-        dt[["Alignment_MC"]] <- mc
+        dt[[align.mc.nme]] <- mc
         norm.dat[[i]] <- dt
       }
       
@@ -243,10 +245,10 @@ run.align <- function(dat,
         stop("Error -- the pre- and post-alignment batch labels")
       }
       
-      align.mc <- norm.dt$Alignment_MC
+      align.mc <- norm.dt[[align.mc.nme]]
       align.mc <- as.data.table(align.mc)
-      names(align.mc) <- "Alignment_MC"
-      align.mc$Alignment_MC <- as.numeric(align.mc$Alignment_MC)
+      names(align.mc) <- align.mc.nme
+      align.mc[[align.mc.nme]] <- as.numeric(align.mc[[align.mc.nme]])
       
       norm.dt <- norm.dt[,c(align.cols),with = FALSE]
       names(norm.dt) <- paste0(names(norm.dt), append.name)

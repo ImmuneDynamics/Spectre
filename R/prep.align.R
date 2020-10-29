@@ -65,6 +65,8 @@ prep.align <- function(dat,
       
   ### Initial checks
       
+      ## Are multiple samples present in each batch ?
+      
       ## Does 'dat' have more than 0 rows
       
       if(nrow(dat) == 0){
