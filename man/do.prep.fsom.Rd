@@ -13,7 +13,9 @@ do.prep.fsom(dat, use.cols, sample.col, xdim, ydim, nClus, nCells, scale, seed)
 
 \item{sample.col}{NO DEFAULT. Character, name of the column denoting samples}
 
-\item{xdim}{DEFAULT = 5. Size of Y-axis of FlowSOM grid.}
+\item{xdim}{DEFAULT = 5. Size of X-axis of FlowSOM grid.}
+
+\item{ydim}{DEFAULT = 5. Size of Y-axis of FlowSOM grid.}
 
 \item{nClus}{DEFAULT = 10. Number of metaclusters. If set to 1, will map all cells to a single metacluster}
 

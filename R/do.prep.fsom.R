@@ -8,7 +8,7 @@
 #' @param use.cols NO DEFAULT. Vector of character etnries. Columns to use to calculate FlowSOM.
 #' @param sample.col NO DEFAULT. Character, name of the column denoting samples
 #' @param xdim DEFAULT = 5. Size of X-axis of FlowSOM grid.
-#' @param xdim DEFAULT = 5. Size of Y-axis of FlowSOM grid.
+#' @param ydim DEFAULT = 5. Size of Y-axis of FlowSOM grid.
 #' @param nClus DEFAULT = 10. Number of metaclusters. If set to 1, will map all cells to a single metacluster
 #' @param nCells DEFAULT = NULL. Number of cells to downsample to, otherwise 'NULL' will use all available cells
 #' @param scale DEFAULT = FALSE. Do features need to be scaled?
