@@ -127,7 +127,7 @@ train.align <- function(model,
           # cluster <- unique(model$fsom$metaclustering)[[1]]
           
           if (sum(FlowSOM::GetMetaclusters(fsom_file,
-                                           fsom$metaclustering) == cluster) > 0) {
+                                           model$fsom$metaclustering) == cluster) > 0) {
             suppressWarnings(
               flowCore::write.FCS(
                 file.ff[cellClusterIDs == cluster,],
