@@ -133,11 +133,23 @@ prep.align <- function(dat,
       setwd(starting.dir)
       
   ### Convert sample.col into a numerical string
-      
+    
       samps <- unique(dat[[sample.col]])
       samps.num <- c(1:length(samps))
-      dat[[sample.col]] <- samps.num
+      
+      smp.tb <- cbind(samps, samps.num)
+      x <- as.data.table(dat[[sample.col]])
+      names(x) <- sample.col
+      
+      x <- do.add.cols(x, sample.col, smp.tb, 'samps')
+      x <- x$samps.num
+      
+      dat[[sample.col]] <- x
       dat[[sample.col]] <- as.numeric(dat[[sample.col]])
+      
+      rm(x)
+      rm(samps)
+      rm(samps.num)
   
   ### Write files (one per batch)
       

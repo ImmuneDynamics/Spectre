@@ -86,10 +86,14 @@ run.align <- function(dat,
       
       dat <- starting.dat
       
+      cellular.cols <- model$cellular.cols
       cluster.cols <- model$cluster.cols
       align.cols <- model$align.cols
       
-      all.cols <- c(unique(cluster.cols, align.cols), 'ALGN_BARCODE')
+      clust.align <- unique(cluster.cols, align.cols)
+      all.cols <- unique(cellular.cols, clust.align)
+      
+      all.cols <- c(all.cols, 'ALGN_BARCODE')
       dat <- dat[,c(batch.col, all.cols), with = FALSE]
       
   ### Split files 
@@ -137,7 +141,7 @@ run.align <- function(dat,
       
       for(file in target.files){
         # file <- target.files[[1]]
-        if(verbose) message("Splitting ",file)
+        if(verbose) message("-- Splitting ",file)
         
         setwd(dir)
         dir.create("tmp-target")
@@ -176,7 +180,7 @@ run.align <- function(dat,
       
       for(cluster in unique(model$fsom$metaclustering)){
         
-        if(verbose) message("Processing cluster ",cluster)
+        if(verbose) message("-- Processing cluster ",cluster)
         files_tmp <- file.path(getwd(),
                                #outputDir,
                                paste0(gsub("[:/]", "_", target.files), "_fsom", cluster, ".fcs")
