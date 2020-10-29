@@ -74,7 +74,7 @@ prep.align <- function(dat,
         stop("Error -- your 'dat' has no rows, please check")
       }
       
-      ## Are all 'cluster.cols' present in 'align.cols'
+      ## Are all 'cluster.cols' present in 'cellular.cols'
       
       
       ## meta.k value
@@ -83,8 +83,7 @@ prep.align <- function(dat,
         stop("Error -- cannot create '2' metaclusters -- please set meta.k to '1' or a value >3")
       }
       
-      ## Numeric values in dat[,align.cols, with = FALSE]
-      all.cols <- unique(c(cluster.cols, align.cols))
+      all.cols <- unique(c(cellular.cols, cluster.cols))
       all.cols          
       
       value <- dat[,all.cols,with = FALSE]
