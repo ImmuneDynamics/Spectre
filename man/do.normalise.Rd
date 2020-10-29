@@ -4,7 +4,7 @@
 \alias{do.normalise}
 \title{do.normalise - Normalise data in selected columns between two values, usually 0 and 1.}
 \usage{
-\method{do}{normalise}(dat, use.cols, new.min = 0, new.max = 1, zero.drops = NULL)
+do.normalise(dat, use.cols, new.min = 0, new.max = 1, zero.drops = NULL)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
