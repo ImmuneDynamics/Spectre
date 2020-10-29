@@ -179,7 +179,7 @@ run.align <- function(dat,
         if(verbose) message("Processing cluster ",cluster)
         files_tmp <- file.path(getwd(),
                                #outputDir,
-                               paste0(gsub("[:/]", "_", files), "_fsom", cluster, ".fcs")
+                               paste0(gsub("[:/]", "_", target.files), "_fsom", cluster, ".fcs")
         )
         
         labels_tmp <- target.labels[file.exists(files_tmp)]
