@@ -28,11 +28,17 @@
 train.align <- function(model,
                         align.cols,
                         
-                        method = 'cytonorm', # CytoNorm
+                        method = 'cytonorm', # cytonorm or quantile 
                         
-                        ## Quantile (CytoNorm) CytoNorm settings
+                        ## CytoNorm settings
                         cytonorm.goal = "mean",
                         cytonorm.nQ = 101,
+                        
+                        ## Quantile settings,
+                        quantile.min = 0.001,
+                        quantile.max = 0.009,
+                        
+                        ## General settings
                         dir = getwd(),
                         mem.ctrl = TRUE){
   
@@ -61,6 +67,22 @@ train.align <- function(model,
       starting.dir<- getwd()
       message("Working directory is '", starting.dir, "'")
   
+#########################################################################################           
+######################################## Quantiles ######################################
+#########################################################################################      
+      
+if(method = 'quantile'){
+
+  stop("Quantile not yet supported")
+  
+}
+      
+#########################################################################################           
+######################################## CytoNorm #######################################
+#########################################################################################      
+     
+if(method = 'quantile'){
+      
   ### Some settings
       
       outputDir = "./tmp"
@@ -186,9 +208,11 @@ train.align <- function(model,
   ### Add conversions to model
   
       model$align.cols <- align.cols
+      model$method <- method
       model$conversions <- clusterRes
       
       if(is.null(model$fsom) |
+         is.null(model$method) | 
          is.null(model$conversions)){
         stop("The 'conversions' have not been added correctly")
       }
@@ -197,8 +221,15 @@ train.align <- function(model,
         gc()
       }
       
+}
+ 
+#########################################################################################           
+######################################## Wrap up ########################################
+#########################################################################################      
+
   ### Return modified FlowSOM object
       message("Training alignment - training complete")
       return(model)
+      
 }
 

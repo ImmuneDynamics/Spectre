@@ -7,8 +7,8 @@
 #' @param dat NO DEFAULT. A data.table consisting of the 'refernece' data you will use to train the alignment algorithm
 #' @param cellular.cols NO DEFAULT. A vector of column names from the data.table that contain 'cellular' markers 
 #' @param cluster.cols NO DEFAULT. A vector of column names from the data.table that contain markers you wish to use for clusteirng
-#' @param sample.col NO DEFAULT. Name of the column that contains sample names
 #' @param batch.col NO DEFAULT. Name of the column that contains batch names
+#' @param sample.col DEFAULT = NULL. Name of the column that contains sample names
 #' @param dir DEFAULT = getwd(). Sets the working directory to operate from. Because this function involves some reading/writing of files, it's best to set this to somewhere static in case the active working directory moves to a subfolder, and then doesn't return because the function runs into an error.
 #' @param xdim DEFAULT = 5. Size of X-axis of FlowSOM grid.
 #' @param ydim DEFAULT = 5. Size of Y-axis of FlowSOM grid.
@@ -32,9 +32,9 @@
 prep.align <- function(dat,
                        cellular.cols,
                        cluster.cols,
-                       sample.col,
                        batch.col,
                        
+                       sample.col = NULL,
                        dir = getwd(),
                        
                        xdim = 5,
@@ -103,9 +103,16 @@ prep.align <- function(dat,
       
   ### Initial preparation
       
-      dat <- as.data.table(dat)
-      dat <- dat[,c(sample.col, batch.col, all.cols), with = FALSE]
+      if(!is.null(sample.col)){
+        dat <- as.data.table(dat)
+        dat <- dat[,c(sample.col, batch.col, all.cols), with = FALSE]
+      }
       
+      if(is.null(sample.col)){
+        dat <- as.data.table(dat)
+        dat <- dat[,c(batch.col, all.cols), with = FALSE]
+      }
+
   ### Metacluster settings
       # Essentially if meta.k = 1, then run with 5 metaclusters and replace the metacluster values at the end. 
       # If meta.k is set to >1, then run as per normal
@@ -134,22 +141,25 @@ prep.align <- function(dat,
       
   ### Convert sample.col into a numerical string
     
-      samps <- unique(dat[[sample.col]])
-      samps.num <- c(1:length(samps))
-      
-      smp.tb <- cbind(samps, samps.num)
-      x <- as.data.table(dat[[sample.col]])
-      names(x) <- sample.col
-      
-      x <- do.add.cols(x, sample.col, smp.tb, 'samps')
-      x <- x$samps.num
-      
-      dat[[sample.col]] <- x
-      dat[[sample.col]] <- as.numeric(dat[[sample.col]])
-      
-      rm(x)
-      rm(samps)
-      rm(samps.num)
+      if(!is.null(sample.col)){
+        samps <- unique(dat[[sample.col]])
+        samps.num <- c(1:length(samps))
+        
+        smp.tb <- cbind(samps, samps.num)
+        x <- as.data.table(dat[[sample.col]])
+        names(x) <- sample.col
+        
+        x <- do.add.cols(x, sample.col, smp.tb, 'samps')
+        x <- x$samps.num
+        
+        dat[[sample.col]] <- x
+        dat[[sample.col]] <- as.numeric(dat[[sample.col]])
+        
+        rm(x)
+        rm(samps)
+        rm(samps.num)
+      }
+
   
   ### Write files (one per batch)
       
@@ -166,7 +176,14 @@ prep.align <- function(dat,
         # i <- 1
         a <- dat.list[[i]]
         temp <- dat[dat[[batch.col]] == a,]
-        temp <- temp[,c(sample.col, all.cols),with = FALSE]
+        
+        if(!is.null(sample.col)){
+          temp <- temp[,c(sample.col, all.cols),with = FALSE]
+        }
+        
+        if(is.null(sample.col)){
+          temp <- temp[,c(all.cols),with = FALSE]
+        }
         
         write.files(temp,
                     file.prefix = a,
@@ -199,7 +216,7 @@ prep.align <- function(dat,
       dir.create("tmp-cytonorm-fsom", showWarnings = FALSE)
       setwd("tmp-cytonorm-fsom")
       
-      list.files(getwd(), '.fcs')
+      #message(paste0(" -- files are :", list.files(getwd(), '.fcs')))
       
       fsom <- prepareFlowSOM(files,
                              colsToUse = cluster.cols,

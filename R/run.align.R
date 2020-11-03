@@ -52,15 +52,36 @@ run.align <- function(dat,
          is.null(model$cellular.cols) |
          is.null(model$cluster.cols) |
          is.null(model$files) |
-         is.null(model$file.nums) |
-         is.null(model$align.cols)){
+         is.null(model$file.nums)){
         stop("The model object has not been setup correctly")
       }
       
-      if(is.null(model$conversions)){
+      if(is.null(model$fsom) |
+         is.null(model$method) | 
+         is.null(model$conversions)){
         stop("The 'conversions' have not been added to the model correctly")
       }
   
+  
+  ### What type of conversion model
+    
+      method <- model$method
+
+#########################################################################################           
+######################################## Quantiles ######################################
+#########################################################################################      
+
+if(method = 'quantile'){
+  stop("Quantile not yet supported")
+}
+    
+      
+#########################################################################################           
+######################################## CytoNorm #######################################
+#########################################################################################      
+ 
+if(method = 'cytonorm'){
+           
   ### Preferences
       
       transformList = NULL
@@ -262,11 +283,17 @@ run.align <- function(dat,
       
       starting.dat$ALGN_BARCODE <- NULL
       final.dat <- cbind(starting.dat, norm.dt, align.mc)
-  
+      
+}
+      
+#########################################################################################           
+######################################## WRAP UP ######################################## 
+#########################################################################################           
+      
   ### Return
       message("Alignment -- complete")
-      
       return(final.dat)
+      
 }
 
 
