@@ -13,9 +13,9 @@ prep.align()
 
 \item{cluster.cols}{NO DEFAULT. A vector of column names from the data.table that contain markers you wish to use for clusteirng}
 
-\item{sample.col}{NO DEFAULT. Name of the column that contains sample names}
-
 \item{batch.col}{NO DEFAULT. Name of the column that contains batch names}
+
+\item{sample.col}{DEFAULT = NULL. Name of the column that contains sample names}
 
 \item{dir}{DEFAULT = getwd(). Sets the working directory to operate from. Because this function involves some reading/writing of files, it's best to set this to somewhere static in case the active working directory moves to a subfolder, and then doesn't return because the function runs into an error.}
 
