@@ -1,8 +1,8 @@
-#' prep.align - Prepare reference data into a FlowSOM object
+#' prep.cytonorm - Prepare reference data into a FlowSOM object
 #'
 #' This function allows you to prepare reference data ahead of performing batch alignment. 
 #' 
-#' @usage prep.align()
+#' @usage prep.cytonorm()
 #'
 #' @param dat NO DEFAULT. A data.table consisting of the 'refernece' data you will use to train the alignment algorithm
 #' @param cellular.cols NO DEFAULT. A vector of column names from the data.table that contain 'cellular' markers 
@@ -23,13 +23,13 @@
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
 #' @examples
-#' align.model <- prep.align()
+#' align.model <- prep.cytonorm()
 #'
 #' @import data.table
 #'
 #' @export
 
-prep.align <- function(dat,
+prep.cytonorm <- function(dat,
                        cellular.cols,
                        cluster.cols,
                        batch.col,

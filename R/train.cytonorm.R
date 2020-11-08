@@ -1,4 +1,4 @@
-#' train.align - Prepare reference data into a FlowSOM object
+#' train.cytonorm - Prepare reference data into a FlowSOM object
 #'
 #' This function allows you to learn the conversions to use for batch alignment.
 #' 
@@ -19,13 +19,13 @@
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
 #' @examples
-#' align.model <- train.align()
+#' align.model <- train.cytonorm()
 #'
 #' @import data.table
 #'
 #' @export
 
-train.align <- function(model,
+train.cytonorm <- function(model,
                         align.cols,
                         
                         method = 'cytonorm', # cytonorm or quantile 
