@@ -11,17 +11,15 @@ do.mn(dat, use.cols)
 
 \item{use.cols}{NO DEFAULT. Vector of column names that you wish to transform}
 
-\item{append.name}{DEFAULT = '_transf'. Text to be appended to resultant column name}
-
 \item{asinh.cf}{DEFAULT = 15. The co-factor to use for arcsinh transformation}
 
-\item{divide.by}{DEFAULT = NULL. Column name to divide data -- where each division is subject to the quantile adjustment, minimum thresholding, and normalisation separately}
-
-\item{Qs}{DEFAULT = NULL. Vector of minimun and maximum quantiles (out of '1') for thresholding (e.g. c(0.005, 0.995)).}
-
-\item{low.threshold}{DEFAULT = NULL. Values below this number will be converted to this number.}
-
 \item{norm}{DEFAULT = c(0,1). New MIN and MAX values for each channel, as c(MIN, MAX).}
+
+\item{lower.threshold}{DEFAULT = 0. Values below this number will be converted to this number.}
+
+\item{upper.Q}{DEFAULT = 0.995. To not utilise the upper quantile function, simply use upper.Q = NULL or upper.Q = 1. When normalising, the new 'maximum' value (defined in the 'norm' argument, typically '1') will be set to this quantile target (for upper.Q = 0.995, this is the 99.5th percentile). As such, any values above the 99.5th percentile will increase above this new maximum value proportionally. Any target between 0 and 1 can be set.}
+
+\item{append.name}{DEFAULT = '_transf'. Text to be appended to resultant column name}
 
 \item{info.dir}{DEFAULT = getwd(). Directory address to save a .txt. file with the settings used for the MRN function.}
 }

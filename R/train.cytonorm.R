@@ -26,21 +26,21 @@
 #' @export
 
 train.cytonorm <- function(model,
-                        align.cols,
-                        
-                        method = 'cytonorm', # cytonorm or quantile 
-                        
-                        ## CytoNorm settings
-                        cytonorm.goal = "mean",
-                        cytonorm.nQ = 101,
-                        
-                        ## Quantile settings,
-                        quantile.min = 0.001,
-                        quantile.max = 0.009,
-                        
-                        ## General settings
-                        dir = getwd(),
-                        mem.ctrl = TRUE){
+                          align.cols,
+                          
+                          method = 'cytonorm', # cytonorm or quantile 
+                          
+                          ## CytoNorm settings
+                          cytonorm.goal = "mean",
+                          cytonorm.nQ = 101,
+                          
+                          ## Quantile settings,
+                          quantile.min = 0.001,
+                          quantile.max = 0.009,
+                          
+                          ## General settings
+                          dir = getwd(),
+                          mem.ctrl = TRUE){
   
   ### Check that necessary packages are installed
       if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')

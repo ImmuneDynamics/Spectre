@@ -6,12 +6,11 @@
 #'
 #' @param dat NO DEFAULT. A data.table
 #' @param use.cols NO DEFAULT. Vector of column names that you wish to transform
-#' @param append.name DEFAULT = '_transf'. Text to be appended to resultant column name
 #' @param asinh.cf DEFAULT = 15. The co-factor to use for arcsinh transformation
-#' @param divide.by DEFAULT = NULL. Column name to divide data -- where each division is subject to the quantile adjustment, minimum thresholding, and normalisation separately
-#' @param Qs DEFAULT = NULL. Vector of minimun and maximum quantiles (out of '1') for thresholding (e.g. c(0.005, 0.995)).
-#' @param low.threshold DEFAULT = NULL. Values below this number will be converted to this number.
 #' @param norm DEFAULT = c(0,1). New MIN and MAX values for each channel, as c(MIN, MAX). 
+#' @param lower.threshold DEFAULT = 0. Values below this number will be converted to this number.
+#' @param upper.Q DEFAULT = 0.995. To not utilise the upper quantile function, simply use upper.Q = NULL or upper.Q = 1. When normalising, the new 'maximum' value (defined in the 'norm' argument, typically '1') will be set to this quantile target (for upper.Q = 0.995, this is the 99.5th percentile). As such, any values above the 99.5th percentile will increase above this new maximum value proportionally. Any target between 0 and 1 can be set. 
+#' @param append.name DEFAULT = '_transf'. Text to be appended to resultant column name
 #' @param info.dir DEFAULT = getwd(). Directory address to save a .txt. file with the settings used for the MRN function.
 #' 
 #' @return Returns a data.table with transformed data added as new columns.
@@ -27,15 +26,14 @@
 
 do.mn <- function(dat,
                   use.cols,
-                  append.name = '_transf',
                    
                   asinh.cf = 15,
-                   
-                  divide.by = NULL,
-                  Qs = NULL, # c(0.005, 0.995)
-                  low.threshold = 0,
                   norm = c(0,1),
-                   
+                  
+                  lower.threshold = 0,
+                  upper.Q = 0.995,
+                  
+                  append.name = '_transf',
                   info.dir = getwd()
 ){
   
@@ -48,14 +46,14 @@ do.mn <- function(dat,
       
       # dat <- Spectre::demo.start
       # use.cols <- names(dat)[c(2:10)]
-      # append.name = '_transf'
       # 
-      # asinh.cf <- 15
-      # 
-      # divide.by = 'FileName'
-      # Qs = c(0.005, 0.995)
-      # low.threshold = 0
+      # asinh.cf <- 1000
       # norm = c(0,1)
+      # 
+      # lower.threshold = 0
+      # upper.Q = 0.995
+      # 
+      # append.name = '_transf'
       # info.dir = getwd()
 
   ### Extract data
@@ -80,147 +78,74 @@ do.mn <- function(dat,
         message("Arcsinh transformation complete")
       }
  
-
-  ##############################################################################    
-  ################################ No divisions  ###############################     
-  ##############################################################################    
+  ### Lower threshold
+      
+      if(!is.null(lower.threshold)){
+        for(a in use.cols){
           
-      if(is.null(divide.by)){ 
-        
-        ### Quantile threhsolding
-        
-            if(!is.null(Qs)){
-                for(a in use.cols){
-                  # a <- use.cols[[1]]
-                  
-                  lower <- quantile(value[[a]], c(Qs[1], Qs[2]))[1]
-                  upper <- quantile(value[[a]], c(Qs[1], Qs[2]))[2]
-                  
-                  value[[a]][value[[a]] < lower] <- lower
-                  value[[a]][value[[a]] > upper] <- upper
-                  
-                  rm(lower)
-                  rm(upper)
-                  rm(a)
-                }
-              message("Quantile adjustment between", Qs[1], " and ", Qs[2], ' complete')
-            }
-        
-        ### Minimum threshold
-            
-            if(!is.null(low.threshold)){
-              for(a in use.cols){
-                
-                b <- low.threshold
-                temp <- value[,a,with = FALSE]
-                temp[temp[[a]] < b,] <- b
-                value[,a] <- temp
-                
-                rm(a)
-                rm(b)
-                rm(temp)
-                
-              }
-              message("Noise reduction complete transformation complete")
-            }
-    
-        ### Normalisation
-        
-            if(!is.null(norm)){
-              norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (norm[2] - norm[1]) + norm[1]}
-              value <- as.data.table(lapply(value, norm.fun)) # by default, removes the names of each row
-              #names(value) <- paste0(names(value), "_norm")
-              
-              message("Normalisation between ", norm[1], " and ", norm[2], " complete")
-            }
-    
+          b <- lower.threshold
+          temp <- value[,a,with = FALSE]
+          temp[temp[[a]] < b,] <- b
+          value[,a] <- temp
+          
+          rm(a)
+          rm(b)
+          rm(temp)
+        }
+        message("Lower value thresholding is complete")
       }
+      
+  ### Normalisation, including upper Q target
+      
+      if(!is.null(norm)){
+        
+        ## No upper Q (upper Q is NULL)
+        if(is.null(upper.Q)){
+          norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (norm[2] - norm[1]) + norm[1]}
+          value <- as.data.table(lapply(value, norm.fun)) # by default, removes the names of each row
           
-      
-  ##############################################################################    
-  ##############################  With divisions  ##############################     
-  ##############################################################################    
-      
-      if(!is.null(divide.by)){ 
+          message("Normalisation between ", norm[1], " and ", norm[2], " complete")
+        }
         
-            all.divs <- value
-            rm(value)
+        ## With upper Q (upper Q is NOT NULL)
+        if(!is.null(upper.Q)){
+          for(a in use.cols){
+            # a <- use.cols[[8]]
             
-            all.divs$DIVISION_BARCODE <- c(1:nrow(all.divs))
-            all.divs$DIVISION_BY <- dat[[divide.by]]
-            divs <- unique(dat[[divide.by]])
+            A <- min(value[[a]])
+            B <- quantile(value[[a]], probs = upper.Q)
+            C <- max(value[[a]])
             
-            res.list <- list()
-        
-            for(d in divs){
-              # d <- divs[[1]]
-              
-              value <- all.divs[all.divs[['DIVISION_BY']] == d,]
-              brcd <- value$DIVISION_BARCODE
-              
-              value$DIVISION_BY <- NULL
-              value$DIVISION_BARCODE <- NULL
+            pt.1 <- (B)-(A) # range from in to upper.Q
+            pt.2 <- pt.1 + (C-B) 
+            mx <- pt.2/pt.1
+            mx <- mx * norm[2]
             
-          ### Quantile threhsolding
-              
-              if(!is.null(Qs)){
-                for(a in use.cols){
-                  # a <- use.cols[[1]]
-                  
-                  lower <- quantile(value[[a]], c(Qs[1], Qs[2]))[1]
-                  upper <- quantile(value[[a]], c(Qs[1], Qs[2]))[2]
-                  
-                  value[[a]][value[[a]] < lower] <- lower
-                  value[[a]][value[[a]] > upper] <- upper
-                  
-                  rm(lower)
-                  rm(upper)
-                  rm(a)
-                }
-              }
-              
-          ### Minimum threshold
-              
-              if(!is.null(low.threshold)){
-                for(a in use.cols){
-                  
-                  b <- low.threshold
-                  temp <- value[,a,with = FALSE]
-                  temp[temp[[a]] < b,] <- b
-                  value[,a] <- temp
-                  
-                  rm(a)
-                  rm(b)
-                  rm(temp)
-                  
-                }
-              }
-              
-          ### Normalisation
-              
-              if(!is.null(norm)){
-                norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (norm[2] - norm[1]) + norm[1]}
-                value <- as.data.table(lapply(value, norm.fun)) # by default, removes the names of each row
-                #names(value) <- paste0(names(value), "_norm")
-              }
-              
-              value$POST_BARCODE <- brcd
-              res.list[[d]] <- value
-              
-            }
-            
-            message("Quantile adjustment between", Qs[1], " and ", Qs[2], ' complete')
-            message("Noise reduction complete transformation complete")
-            message("Normalisation between ", norm[1], " and ", norm[2], " complete")
-            
-            res <- rbindlist(res.list)
-            res <- setorderv(res, "POST_BARCODE")
-            res$POST_BARCODE <- NULL
-  
-            rm(value)
-            value <- res
-          }
+            temp <- value[, a, with = FALSE]
+            temp <- as.data.table(temp)
+            names(temp) <- a
 
+            # norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (mx - norm[1]) + norm[1]}
+            # temp <- as.data.table(norm.fun(temp)) # by default, removes the names of each row
+            
+            res <- do.normalise(temp, a, new.min = norm[1], new.max = mx)
+            res <- res[[paste0(a, "_norm")]]
+            
+            value[[a]] <- res
+
+            rm(a)
+            rm(A)
+            rm(B)
+            rm(C)
+            rm(temp)
+            rm(res)
+            rm(pt.1)
+            rm(pt.2)
+          }
+          message("Normalisation between ", norm[1], " and ", norm[2], " complete, with upper.Q = ", upper.Q)
+        }
+      }
+      
   ### Wrap up
       
       value <- as.data.table(value)
@@ -228,16 +153,19 @@ do.mn <- function(dat,
     
       res <- cbind(dat, value)
       
-      settings <- as.matrix(c(date(),
+      dt <- date()
+      
+      settings <- as.matrix(c(dt,
                               "----------------",
-                              paste0("Arcsinh co-factor: ", asinh.cf),
-                              paste0("Quantile min and max: ", Qs[1], ' and ', Qs[2]),
-                              paste0("Division for quantile thersholding: ", divide.by),
-                              paste0("Low threshold: ", low.threshold),
-                              paste0("Normalise between: ", norm[1], ' and ', norm[2])
+                              paste0("Performed on columns:", use.cols),
+                              paste0("Arcsinh co-factor = ", asinh.cf),
+                              paste0("Low threshold = ", lower.threshold),
+                              paste0("Normalise between = ", norm[1], ' and ', norm[2]),
+                              paste0("Upper Q = ", upper.Q),
+                              paste0("Appended name = ", append.name)
                               ))
 
-      write(settings, file = 'do.mrn settings.txt')
+      write(settings, file = paste0('Multipurpose normaliser (do.mn) settings - ', dt, ".txt"))
       
       return(res)
 }
