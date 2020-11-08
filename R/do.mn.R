@@ -34,6 +34,7 @@ do.mn <- function(dat,
                   upper.Q = 0.995,
                   
                   append.name = '_transf',
+                  save.info = TRUE,
                   info.dir = getwd()
 ){
   
@@ -53,9 +54,10 @@ do.mn <- function(dat,
       # lower.threshold = 0
       # upper.Q = 0.995
       # 
+      # save.info = TRUE
       # append.name = '_transf'
       # info.dir = getwd()
-
+  
   ### Extract data
   
       value <- dat[,use.cols,with = FALSE]
@@ -153,19 +155,21 @@ do.mn <- function(dat,
     
       res <- cbind(dat, value)
       
-      dt <- date()
-      
-      settings <- as.matrix(c(dt,
-                              "----------------",
-                              paste0("Performed on columns:", use.cols),
-                              paste0("Arcsinh co-factor = ", asinh.cf),
-                              paste0("Low threshold = ", lower.threshold),
-                              paste0("Normalise between = ", norm[1], ' and ', norm[2]),
-                              paste0("Upper Q = ", upper.Q),
-                              paste0("Appended name = ", append.name)
-                              ))
-
-      write(settings, file = paste0('Multipurpose normaliser (do.mn) settings - ', dt, ".txt"))
+      if(save.info == TRUE){
+        dt <- date()
+        
+        settings <- as.matrix(c(dt,
+                                "----------------",
+                                paste0("Performed on columns:", use.cols),
+                                paste0("Arcsinh co-factor = ", asinh.cf),
+                                paste0("Low threshold = ", lower.threshold),
+                                paste0("Normalise between = ", norm[1], ' and ', norm[2]),
+                                paste0("Upper Q = ", upper.Q),
+                                paste0("Appended name = ", append.name)
+        ))
+        
+        write(settings, file = paste0('Multipurpose normaliser (do.mn) settings - ', dt, ".txt"))  
+      }
       
       return(res)
 }

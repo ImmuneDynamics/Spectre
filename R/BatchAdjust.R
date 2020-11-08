@@ -493,7 +493,7 @@ BatchAdjust <- function(
   basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
   outdir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=outdir, fixed=TRUE);
   anchorKeyword_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  mkdir_cmd <- sprintf("mkdir -p %s", outdir_escapeSpace);
+  mkdir_cmd <- sprintf(paste("mkdir ", "-p ", "%s"), outdir_escapeSpace);
   mkret <- system(mkdir_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE);
   outputfile <- sprintf("%s/LOG_BatchAdjust.%s.txt", outdir, timestamp);
   
@@ -706,7 +706,7 @@ plotAllAPrePost1ch <- function(ch="CD3", xlim=c(0,8), plotnz=TRUE, postdir=c(), 
   basedir <- postdir;
   basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
   pngoutdir_escaped <- sprintf("%s/DistributionPlots", basedir_escapeSpace);
-  mkdir_cmd <- sprintf("mkdir -p %s", pngoutdir_escaped);
+  mkdir_cmd <- sprintf(paste("mkdir ", "-p ", "%s"), pngoutdir_escaped);
   mkret <- system(mkdir_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE);
   pngoutdir <- sprintf("%s/DistributionPlots", basedir);
   pngname <- sprintf("%s/%s.png", pngoutdir, chname);
