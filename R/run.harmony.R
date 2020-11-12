@@ -5,8 +5,8 @@
 #' @usage run.harmony()
 #' 
 #' @param dat NO DEFAULT. A data.table with all of the data you wish to align
-#' @param align.cols NO default. The columns you wish to align. For cytometry data, this can be the markers themselves or principle components. For single-cell seq data, principle components are recommended.
 #' @param batch.col NO default. The column that denotes the batch or dataset that each cell belongs to
+#' @param align.cols NO default. The columns you wish to align. For cytometry data, this can be the markers themselves or principle components. For single-cell seq data, principle components are recommended.
 #' @param append.name DEFAULT = '_harmony'. Text that will be appended to the new columns containing aligned data
 #' 
 #' @return Returns a data.table with aligned data added in new columns.
@@ -21,8 +21,8 @@
 #' @export
 
 run.harmony <- function(dat,
+                        batch.col,
                         align.cols,
-                        batch.cols,
                         append.name = '_harmony'){
   
   ### Packages
