@@ -9,11 +9,11 @@ run.harmony()
 \arguments{
 \item{dat}{NO DEFAULT. A data.table with all of the data you wish to align}
 
+\item{batch.col}{NO default. The column that denotes the batch or dataset that each cell belongs to}
+
 \item{align.cols}{NO default. The columns you wish to align. For cytometry data, this can be the markers themselves or principle components. For single-cell seq data, principle components are recommended.}
 
 \item{append.name}{DEFAULT = '_harmony'. Text that will be appended to the new columns containing aligned data}
-
-\item{batch.col}{NO default. The column that denotes the batch or dataset that each cell belongs to}
 }
 \value{
 Returns a data.table with aligned data added in new columns.

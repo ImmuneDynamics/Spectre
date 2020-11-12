@@ -15,7 +15,7 @@ run.align()
 
 \item{align.cols}{NO DEFAULT. Vector of column names to align.}
 
-\item{method}{DEFAULT = 'quantile'. Can be 'quantile', 'SD', or a percentile indicated as 50p (50th percentile) or 95p (95th percentile) etc.}
+\item{method}{DEFAULT = 'quantile'. Can be 'quantile', 'SD', or a percentile indicated as '50p' (50th percentile) or '95p' (95th percentile) etc.}
 
 \item{append.name}{DEFAULT = "_aligned". This will be appended to the column names containing the aligned data}
 
