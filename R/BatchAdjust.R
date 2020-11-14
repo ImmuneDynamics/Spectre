@@ -2,6 +2,8 @@
 #' 
 #' @export
 
+######## Version from https://github.com/i-cyto/CytofBatchAdjust/edit/master/BatchAdjust.R to allow on windows
+
 ####         
 #
 # BatchAdjust.R   ## 
@@ -18,8 +20,10 @@
 library("flowCore") # for read.FCS
 
 # Define asinh factor:
-#g_asinh_b <- 1/5; # global asinh factor; transform is asinh(x*b); corresponds to a_b in cytofkit cytof_exprsExtract()
-g_asinh_b <- 1; # global asinh factor; transform is asinh(x*b); corresponds to a_b in cytofkit cytof_exprsExtract()
+# global asinh factor; transform is asinh(x*b); corresponds to a_b in cytofkit cytof_exprsExtract()
+#g_asinh_b <- 1; # default value on Github
+if (!exists("g_asinh_b"))
+  g_asinh_b <- 1/5
 
 # logToFile
 # Maintain a log.
@@ -53,6 +57,13 @@ get80thPercentile <- function(vec, perc=.8){
   return(perc_value);
 }
 
+ls_cmd <- function(basedir, patt) {
+  # basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
+  # grepForAnchor_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
+  # ls_cmd <- sprintf("ls -1 %s/*%s*.fcs", basedir_escapeSpace, grepForAnchor_escapeSpace);
+  # sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
+  dir(path = basedir, pattern = sprintf(".*%s.*\\.fcs", patt), ignore.case = TRUE, full.names = TRUE)
+}
 
 # listBatchesPresent
 # Find all anchor files in basedir,
@@ -62,12 +73,7 @@ get80thPercentile <- function(vec, perc=.8){
 # example: Set10_CTT0.fcs:  anchorKeyword="CTT0"; batchKeyword="Set";
 listBatchesPresent <- function(basedir, batchKeyword="Barcode_", anchorKeyword="anchor stim"){
   batches_present <- c();
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  grepForAnchor_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  
-  ls_cmd <- sprintf("ls -1 %s/*%s*.fcs", basedir_escapeSpace, grepForAnchor_escapeSpace);
-  anchors_list <- sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
-  
+  anchors_list <- sort(ls_cmd(basedir, sprintf("_%s", anchorKeyword)))
   underscore_anchorKeyword <- sprintf("_%s", anchorKeyword);
   for(ananchor in anchors_list){
     first_part <- unlist(strsplit(ananchor, underscore_anchorKeyword, fixed=TRUE));
@@ -81,14 +87,11 @@ listBatchesPresent <- function(basedir, batchKeyword="Barcode_", anchorKeyword="
 
 # getMinEventCount
 # Get the minimum number of events across anchor files.
-getMinEventCount <- function(anchorKeyword="anchor stim", basedir="/Users/ron-home/projects/DATA/SLE_Malaria/Bead_Normalized_Debarcoded_Singlet_JG_unzipped"){
+getMinEventCount <- function(anchorKeyword="anchor stim", basedir){
   
   #T0 <- Sys.time();
   whichlines <- NULL;
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  grepForAnchor_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  ls_cmd <- sprintf("ls -1 %s/*%s*.fcs", basedir_escapeSpace, grepForAnchor_escapeSpace);
-  anchors_list <- sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
+  anchors_list <- sort(ls_cmd(basedir, sprintf("_%s", anchorKeyword)))
   anchor_counter <- 0;
   minCount <- Inf;
   for(ananchor in anchors_list){
@@ -118,12 +121,7 @@ get_cols_to_norm <- function(basedir, anchorKeyword=c()){
   if(is.null(anchorKeyword)){
     anchorKeyword <- "";
   }
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  grepForAnchor_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  
-  ls_cmd <- sprintf("ls -1t %s/*%s*.fcs", basedir_escapeSpace, grepForAnchor_escapeSpace);
-  anchors_list <- sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
-  
+  anchors_list <- sort(ls_cmd(basedir, sprintf("_%s", anchorKeyword)))
   if(length(anchors_list) == 0){
     stop("Found no FCS files, nothing to adjust.");
   }
@@ -186,10 +184,7 @@ getValueMappings <- function(anchorKeyword, batchKeyword, basedir, minCount, bat
   
   mt0 <- Sys.time();
   whichlines <- minCount;
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  grepForAnchor_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  ls_cmd <- sprintf("ls -1 %s/*%s*.fcs", basedir_escapeSpace, grepForAnchor_escapeSpace);
-  anchors_list <- sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
+  anchors_list <- sort(ls_cmd(basedir, patt = sprintf("_%s", anchorKeyword)))
   anchor_counter <- 0;
   
   # Build a 2-level list: anchorDataListList[[col_to_norm]][[batch]]
@@ -229,7 +224,7 @@ getValueMappings <- function(anchorKeyword, batchKeyword, basedir, minCount, bat
   
   
   # Create the reference quantile.
-  nqpoints <- 100000;
+  if (!exists("nqpoints")) nqpoints <- 100000
   qtype <- 8; # Quantile algorithm. type=7 is default. type=8 recommended by Hyndman and Fan (1996)
   refq <- list();
   for(acol in cols_to_norm){
@@ -258,12 +253,81 @@ getValueMappings <- function(anchorKeyword, batchKeyword, basedir, minCount, bat
       spf <- splinefun(x=qx, y=refq[[acol]], method="monoH.FC", ties=min);
       #spf <- approxfun(x=qx, y=refq[[acol]], rule=2, ties=min, yleft=0); # clips
       thisBatchFunctionsList[[acol]] <- spf;
+      
+      ## debug plot @SamGG 20/04/15 ----
+      
+      if (exists("debug_qqplot") && debug_qqplot) {
+        if (!exists("debug_qqplot_prev_batch")) {
+          debug_qqplot_prev_batch <- ""
+          dir_qqplot <- file.path(outdir, "debug_quantile_plot")
+          if (!dir.exists(dir_qqplot)) dir.create(dir_qqplot, recursive = TRUE)
+        }
+        if (thisBatchChar != debug_qqplot_prev_batch) {
+          logToFile(outputfile, sprintf("Diag plot for batch: %s",
+                                        thisBatchChar), timestamp=TRUE)
+          debug_qqplot_prev_batch  <- thisBatchChar
+        }
+        #if (thisBatchChar != "1" && acol == "Er170Di") browser()
+        png(file.path(dir_qqplot, sprintf("%s-Batch_%s.png", acol, thisBatchChar)),
+            width = 1200, height = 500)
+        par(mfrow = c(1,3))  ## split the plotting region in to 1 row 2 columns
+        #  guess the intensity max in order to get the same range across all batches
+        max_plot <- max(qx[nqpoints], ceiling(refq[[acol]][nqpoints]+1))
+        # qqplot
+        idx <- as.integer(seq(1, nqpoints, length.out = min(1001, nqpoints)))
+        plot(refq[[acol]][idx], qx[idx], pch = 19, col = "dodgerblue", main = acol,
+             xlim = c(0, max_plot), ylim = c(0, max_plot),
+             xlab = "Reference", ylab = paste0("Batch ", thisBatchChar))
+        abline(c(0,1), lty = 2)  # diagonal, perfectly reproducible
+        # overlay quantiles
+        qtl <- c(0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 0.98)
+        q_1 <- refq[[acol]][qtl*nqpoints]
+        q_x <- qx[qtl*nqpoints]
+        segments(0, 0, q_1, q_x, col = "grey60")
+        points(q_1, q_x, pch = 19, cex = 1.5)
+        # histograms
+        int1 <- anchorDataListList[[acol]][["1"]]
+        int1[int1 < -.2] <- -.2
+        int1[int1 > +10] <- +10
+        intx <- anchorDataListList[[acol]][[thisBatchChar]]
+        intx[intx < -.2] <- -.2
+        intx[intx > +10] <- +10
+        breaks <- seq(-0.2, 10, length.out = 103)
+        hist1 <- hist(int1, breaks = breaks, plot = FALSE)
+        histx <- hist(intx, breaks = breaks, plot = FALSE)
+        plot(hist1$mids, sqrt(hist1$counts), pch = 19, col = "dodgerblue", 
+             main = paste0("Batch ", thisBatchChar),
+             xlab = acol, ylab =  "sqrt(counts)",
+             xlim = c(0, max_plot),
+             ylim = c(0, sqrt(max(hist1$counts, histx$counts))))
+        points(histx$mids, sqrt(histx$counts), pch = 19, col = "firebrick1")
+        legend("topright", c("Ref", "Batch"), col = c("dodgerblue", "firebrick1"), pch = 19)
+        # overlay quantiles
+        q_1_counts <- spline(hist1$mids, sqrt(hist1$counts), xout = q_1)
+        points(q_1_counts, pch = 21, cex = 1.5)
+        q_x_counts <- spline(histx$mids, sqrt(histx$counts), xout = q_x)
+        points(q_x_counts, pch = 19, cex = 1.5)
+        # quantile plot
+        plot((refq[[acol]][idx]), seq(idx)/10, pch = 19, col = "dodgerblue", 
+             main = paste0("Batch ", thisBatchChar),
+             xlim = c(0, max_plot),
+             xlab = acol, ylab =  "Quantile")
+        points(qx[idx], seq(idx)/10, pch = 19, col = "firebrick1")
+        legend("bottomright", c("Ref", "Batch"), col = c("dodgerblue", "firebrick1"), pch = 19)
+        # overlay quantiles
+        points(q_1, qtl*100, pch = 21, cex = 1.5)
+        points(q_x, qtl*100, pch = 19, cex = 1.5)
+        dev.off()
+      }
+      
+      ## debug plot end ----
+      
     }
     mappingFunctionsList[[thisBatchChar]] <- thisBatchFunctionsList;
     logToFile(outputfile, sprintf("Done mappingFunctionsList[[%s]]", thisBatchChar), timestamp=TRUE, echo=FALSE);
   }
   
-  save(mappingFunctionsList, file=sprintf("%s/mappingFunctionsList.Rdata", dirname(outputfile)));
+  save(mappingFunctionsList, file=file.path(dirname(outputfile), "mappingFunctionsList.Rdata"));
   
   mt1 <- Sys.time();
   logToFile(outputfile, "getValueMappings duration:", timestamp=TRUE, echo=FALSE);
@@ -307,7 +371,7 @@ barplot_scalingFactors <- function(scalingFactorsList, postdir){
   plotRows <- ceiling( Nplots / plotCols )
   pngwidth<-4500; pngheight<-2000;
   pngwidth<-plotCols*500; pngheight<-plotRows*400;
-  png(filename=sprintf("%s/ScalingFactors.png", postdir) , width=pngwidth, height=pngheight);
+  png(filename=file.path(postdir, "ScalingFactors.png") , width=pngwidth, height=pngheight);
   #png(filename=sprintf("%s/ScalingFactorsFlipped.png", postdir) , width=pngwidth, height=pngheight);
   layout(matrix(1:(plotCols*plotRows), ncol=plotCols, byrow=T));
   par(mar=c(2.5,2.5,2.5,1)+0.1); # 'c(bottom, left, top, right)' default is 'c(5, 4, 4, 2) + 0.1'.
@@ -332,10 +396,7 @@ getScalingFactors <- function(anchorKeyword, batchKeyword, basedir, minCount, ba
   mt0 <- Sys.time();
   #whichlines <- minCount;
   whichlines <- NULL;
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  grepForAnchor_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  ls_cmd <- sprintf("ls -1 %s/*%s*.fcs", basedir_escapeSpace, grepForAnchor_escapeSpace);
-  anchors_list <- sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
+  anchors_list <- sort(ls_cmd(basedir, patt = sprintf("_%s", anchorKeyword)))
   anchor_counter <- 0;
   
   # Build a 2-level list: anchorDataListList[[col_to_norm]][[batch]]
@@ -460,7 +521,7 @@ getScalingFactors <- function(anchorKeyword, batchKeyword, basedir, minCount, ba
     logToFile(outputfile, sprintf("Done scalingFactorsList[[%s]]", thisBatchChar), timestamp=TRUE, echo=FALSE);
   }
   
-  save(scalingFactorsList, file=sprintf("%s/scalingFactorsList.Rdata", dirname(outputfile)));
+  save(scalingFactorsList, file=file.path(dirname(outputfile), "scalingFactorsList.Rdata"))
   
   barplot_scalingFactors(scalingFactorsList, postdir=dirname(outputfile));
   mt1 <- Sys.time();
@@ -488,14 +549,16 @@ BatchAdjust <- function(
   
   whichlines <- NULL;
   timestamp <- format(Sys.time(), format="%Y.%m.%d.%H%M%S");
-  # Escape any spaces in file names.
-  # Also enforce that batchKeyword doesn't contain spaces...
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  outdir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=outdir, fixed=TRUE);
-  anchorKeyword_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  mkdir_cmd <- sprintf(paste("mkdir ", "-p ", "%s"), outdir_escapeSpace);
-  mkret <- system(mkdir_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE);
-  outputfile <- sprintf("%s/LOG_BatchAdjust.%s.txt", outdir, timestamp);
+  if (!file.exists(channelsFile)) {
+    cols_to_norm <- get_cols_to_norm(basedir=basedir, anchorKeyword=anchorKeyword);
+    write.table(cols_to_norm, file=channelsFile, quote=FALSE, row.names = FALSE, col.names = FALSE)
+    message("A channelsFile has been created. Edit \'", channelsFile, "\' and rerun batchAdjust.")
+    return()
+  } 
+  if (dir.exists(outdir))
+    stop("outdir \'", outdir, "\' already exists. It cannot be overwritten.")
+  dir.create(outdir, recursive = TRUE)
+  outputfile <- file.path(outdir, sprintf("LOG_BatchAdjust.%s.txt", timestamp))
   
   logToFile(logfilename=outputfile, logmessage="BatchAdjust.R", timestamp=TRUE, echo=TRUE, overwrite=FALSE);
   logToFile(outputfile, sprintf("basedir:%s",basedir));
@@ -588,8 +651,7 @@ BatchAdjust <- function(
     
     # Apply to each file.
     #  Non-Anchor filenaming:   xxx[batchKeyword][##]_xxx.fcs
-    ls_cmd <- sprintf("ls -1 %s/*%s%i_*.fcs", basedir_escapeSpace, batchKeyword, thisbatch);
-    fcs_files <- sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
+    fcs_files <- sort(ls_cmd(basedir, patt = sprintf("%s%i_", batchKeyword, thisbatch)))
     for(fcsfile in fcs_files){
       file_counter <- file_counter + 1;
       logToFile(outputfile, sprintf("file %i", file_counter));
@@ -646,12 +708,12 @@ BatchAdjust <- function(
       # Add an extension to the output file name to distinguish.
       #  addExt <- c(); # or don't
       if(is.null(addExt)){
-        outfilename <- sprintf("%s/%s", outdir, basename(fcsfile));
+        outfilename <- file.path(outdir, basename(fcsfile))
       }else{
         replfcs <- sprintf("%s.fcs", addExt);
         #basenameW_BNext <- gsub(pattern="\\.fcs$", replacement="_BN.fcs", x=basename(fcsfile), fixed=F);
         basenameW_BNext <- gsub(pattern="\\.fcs$", replacement=replfcs, x=basename(fcsfile), fixed=F);
-        outfilename <- sprintf("%s/%s", outdir, basenameW_BNext);
+        outfilename <- file.path(outdir, basenameW_BNext)
       }
       #write.FCS(thisFCSobject, filename=outfilename);
       write.FCS(newFCSobject, filename=outfilename);
@@ -696,23 +758,15 @@ BatchAdjust <- function(
 
 # Plot all anchors for one channel.
 plotAllAPrePost1ch <- function(ch="CD3", xlim=c(0,8), plotnz=TRUE, postdir=c(), anchorKeyword="anchor stim", batchKeyword="Barcode_", predir=c(), colorPre="blue", colorPost="wheat", addExt=c()){
-  grepForAnchor_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=anchorKeyword, fixed=TRUE);
-  predir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=predir, fixed=TRUE);
-  
   chname <- get_ch_name(ch, predir);
   print(sprintf("%s", chname), q=F);
-  anchorKeyword_underscore <- gsub(pattern=" ", replacement="_", x=anchorKeyword, fixed=TRUE);
   
   basedir <- postdir;
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  pngoutdir_escaped <- sprintf("%s/DistributionPlots", basedir_escapeSpace);
-  mkdir_cmd <- sprintf(paste("mkdir ", "-p ", "%s"), pngoutdir_escaped);
-  mkret <- system(mkdir_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE);
-  pngoutdir <- sprintf("%s/DistributionPlots", basedir);
-  pngname <- sprintf("%s/%s.png", pngoutdir, chname);
+  pngoutdir <- file.path(basedir, "DistributionPlots")
+  dir.create(pngoutdir, recursive = TRUE)
+  pngname <- file.path(pngoutdir, paste0(chname, ".png"))
   
-  ls_cmd <- sprintf("ls -1 %s/*%s*.fcs", basedir_escapeSpace, grepForAnchor_escapeSpace);
-  anchors_list <- system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE);
+  anchors_list <- ls_cmd(basedir, anchorKeyword)
   anchors_list <- sortAnchorsByBatch(anchors_list,  anchorKeyword=anchorKeyword, batchKeyword=batchKeyword);
   N_anchors <- length(anchors_list);
   
@@ -727,11 +781,11 @@ plotAllAPrePost1ch <- function(ch="CD3", xlim=c(0,8), plotnz=TRUE, postdir=c(), 
         col <- colorPre;
         if(is.null(addExt)){
           #fname <- sprintf("%s/%s", predir_escapeSpace, basename(fname));
-          fname <- sprintf("%s/%s", predir, basename(fname));
+          fname <- file.path(predir, basename(fname))
         } else{
           addedPat <- sprintf("%s.fcs$", addExt);
           #fname <- sprintf("%s/%s", predir_escapeSpace, gsub(pattern=addedPat, replacement=".fcs", x=basename(fname), fixed=F));
-          fname <- sprintf("%s/%s", predir, gsub(pattern=addedPat, replacement=".fcs", x=basename(fname), fixed=F));
+          fname <- file.path(predir, gsub(pattern=addedPat, replacement=".fcs", x=basename(fname), fixed=F))
         }
       } else{
         col <- colorPost;
@@ -750,9 +804,7 @@ get_ch_name <- function(ch, basedir=c()){
   if(is.null(basedir)){
     stop("get_ch_name must be supplied with basedir, a directory to find a sample fcs file.")
   }
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  ls_cmd <- sprintf("ls -1t %s/*.fcs", basedir_escapeSpace);
-  anchors_list <- system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE);   
+  anchors_list <- ls_cmd(basedir, "");   
   anchor_file <- anchors_list[1];
   fc <- read.FCS(anchor_file, which.lines=10);
   chname <- grep(ch,pData(parameters(fc))$desc, value=T);
@@ -780,7 +832,7 @@ call_plotAllAPrePost1ch <- function(plotnz=TRUE, xlim=c(0,8), postdir=c(), ancho
 # fullnames=TRUE -> 145Nd_IFNg eg  more informative
 # fullnames=FALSE -> Nd145Di eg  matches cols_to_norm
 # trans=TRUE -> asinh
-fc_read <- function(fname="011118_Barcode_7_anchor stim_CD3+ CD19+.fcs", trans=TRUE, which.lines=NULL, fullnames=TRUE){
+fc_read <- function(fname, trans=TRUE, which.lines=NULL, fullnames=TRUE){
   fc <- read.FCS(fname, transformation=NULL, which.lines=which.lines, truncate_max_range=FALSE); # flowFrame
   fce <- exprs(fc); # matrix
   # flowFrame is an AnnotatedDataFrame from Biobase. To access useful names, have to use this:
@@ -944,7 +996,8 @@ varBarPlot <- function(mat_pre, mat_post, colorPre="blue", colorPost="wheat"){
 }
 
 get_bar_code_from_filename <- function(fname, batchKeyword="Plate"){
-  parts <- unlist(strsplit( x=gsub(pattern=".fcs$", replacement="", x=fname), split=batchKeyword));
+  ##-- \\.?
+  parts <- unlist(strsplit( x=gsub(pattern="\\.fcs$", replacement="", x=fname, ignore.case = TRUE), split=batchKeyword));
   subparts <- unlist(strsplit( x=parts[2], split="_"));
   return(subparts[1]);
 }
@@ -955,9 +1008,7 @@ get_bar_code_from_filename <- function(fname, batchKeyword="Plate"){
 # Does it matter if trans=FALSE or TRUE?
 # Similar to above, but not subpopulations. All cell events.
 get_summaries_per_channel <- function(basedir, cols_to_use, batchKeyword="Plate", anchorKeyword = "Sample2"){
-  basedir_escapeSpace <- gsub(pattern=" ", replacement="\\ ", x=basedir, fixed=TRUE);
-  ls_cmd <- sprintf("ls -1 %s/*.fcs", basedir_escapeSpace);
-  fcsfiles <- sort(system(ls_cmd, intern=TRUE, ignore.stdout = FALSE, ignore.stderr = TRUE, wait = TRUE));
+  fcsfiles <- sort(ls_cmd(basedir, ""))
   #togrep <- "anchor stim";
   togrep <- anchorKeyword;
   filelist <- sort(grep(togrep, fcsfiles, fixed=TRUE, value=TRUE)); 
@@ -996,9 +1047,9 @@ totalVar_allEvents <- function(predir, postdir, batchKeyword, channelsFile, anch
   pv <- N_as_or_more_extreme / length(perm_tests);
   
   pngwidth<-1600; pngheight<-1200;
-  png(filename=sprintf("%s/PrePostVariance.png", postdir) , width=pngwidth, height=pngheight);
+  png(filename=file.path(postdir, "PrePostVariance.png") , width=pngwidth, height=pngheight);
   layout(matrix(c(1,2,3,3), nrow=2, byrow=TRUE));
-  title <- sprintf("%s", "Mean signal intensity per replicate");
+  title <- "Mean signal intensity per replicate"
   
   # plot 1:
   par(cex=1.5);
@@ -1028,3 +1079,97 @@ totalVar_allEvents <- function(predir, postdir, batchKeyword, channelsFile, anch
   t11 <- Sys.time();
   t11-t00;
 }
+
+
+
+build_index_file <- function (
+  base_dir = ".",
+  index_file = "indexFile.csv",
+  sep = ",",
+  recursive = TRUE
+) {
+  if (!dir.exists(base_dir))
+    stop("Base directory does not exist.")
+  fcs_files <- dir(path = base_dir, pattern = "\\.fcs", full.names = TRUE,
+                   ignore.case = TRUE, recursive = recursive)
+  index_df <- data.frame(ORIGIN = fcs_files, stringsAsFactors = FALSE)
+  index_df$dirname <- dirname(index_df$ORIGIN)
+  index_df$basename <- basename(index_df$ORIGIN)
+  index_df$NEW <- ""
+  # index_df$batchnum <- 1
+  # index_df$reference <- ""
+  # index_df$reference[1] <- "x"  # as an example for editing
+  if (!is.null(index_file)) {
+    if (sep == ",") {
+      write.csv(index_df, file = index_file, quote = FALSE, row.names = FALSE)
+    } else if (sep == ";") {
+      write.csv2(index_df, file = index_file, quote = FALSE, row.names = FALSE)
+    } else if (sep == "\t") {
+      write.table(index_df, file = index_file, quote = FALSE, row.names = FALSE, sep = sep)
+    } else {
+      stop("Unknown separator.")
+    }
+  }
+}
+
+
+copy_indexed_files <- function(
+  index_file = "indexFile.csv",
+  destination_dir = "./renamed",
+  dry_run = FALSE
+) {
+  if (!file.exists(index_file))
+    stop("Index file \'", index_file, "\' cannot be found/read.")
+  # Guess CSV or CSV2 or tabulated
+  header <- readLines(index_file, n = 1)
+  if (grep(",", header)) {
+    index_df <- read.csv(index_file, stringsAsFactors = FALSE)
+  } else if (grep(";", header)) {
+    index_df <- read.csv2(index_file, stringsAsFactors = FALSE)
+  } else if (grep("\t", header)) {
+    index_df <- read.table(index_file, stringsAsFactors = FALSE, sep = "\t")
+  } else {
+    stop("Unknown separator.")
+  }
+  # Display top/bottom lines
+  cat("Overview of the index file\n")
+  print(index_df[1:min(6, nrow(index_df)),])
+  cat("...\n")
+  print(index_df[1:min(6, nrow(index_df)),])
+  cat("End!\n\n")
+  # Look ORIGIN and NEW columns
+  idx_origin <-"ORIGIN" == toupper(colnames(index_df))
+  idx_new <-"NEW" == toupper(colnames(index_df))
+  if ((any(idx_origin) && any(idx_new) == FALSE))
+    stop("Cannot find ORIGIN and/or NEW columns.")
+  idx_origin <- which(idx_origin)      
+  idx_new <- which(idx_new)      
+  # Final check
+  idx_filled <- which(index_df[, "NEW"] != "")
+  cat(length(idx_filled), " files will be copied.\n")
+  if (length(idx_filled) == 0)
+    stop("All destination file names are empty: no file to copy.")
+  idx_unique <- unique(index_df[, "NEW"] != "")
+  cat(length(idx_unique), " files are unique.\n")
+  if (length(idx_filled) != length(idx_filled))
+    stop("The count of unique files is not equal to the count of copied files.")
+  # Create a new directory for copied files
+  if (dir.exists(destination_dir))
+    stop("Directory \'", destination_dir, "\' should not exist.")
+  dir.create(destination_dir)
+  # Main loop
+  cat("Copying files\n")
+  for (i in idx_filled) {
+    OLD = index_df[i, idx_origin]
+    NEW = index_df[i, idx_new]
+    cat(i, " : ", OLD, "=>", NEW, "\n")
+    if (dry_run == FALSE)
+      file.copy(OLD, file.path(destination_dir, NEW))
+  }
+  cat("Done!\n\n")
+  # Final report
+  desination_files <- dir(destination_dir)
+  cat(length(destination_files), " files at destination.\n")
+  destination_files
+}
+

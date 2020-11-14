@@ -196,7 +196,8 @@ run.align <- function(ref.dat,
   
   ### Run
       
-      dir.create("OUTPUT")
+      unlink("OUTPUT", recursive = TRUE)
+      #dir.create("OUTPUT")
       
       BatchAdjust(
         basedir=".",
