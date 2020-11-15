@@ -119,6 +119,9 @@ run.align <- function(ref.dat,
       ref.dat[[batch.col]] <- as.numeric(ref.dat[[batch.col]])
       target.dat[[batch.col]] <- as.numeric(target.dat[[batch.col]])
       
+      
+      gc()
+      
   ### Setup a temp directory
   
       setwd(dir)
@@ -161,6 +164,11 @@ run.align <- function(ref.dat,
         rm(i)
       }
       
+      rm(ref.dat)
+      
+      gc()
+      
+      
       ## 
       target.dat
       
@@ -189,6 +197,11 @@ run.align <- function(ref.dat,
         rm(metadata)
         rm(i)
       }
+      
+      target.dat <- as.data.table(target.dat$ADJUST_ORDER)
+      names(target.dat) <- 'ADJUST_ORDER'
+      
+      gc()
       
   ### Write .txt. file of 'channels to adjust
   
