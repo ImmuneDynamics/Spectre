@@ -73,6 +73,8 @@ run.align <- function(ref.dat,
   
   ### Setup
       
+      message('Data preparation')
+  
       unlink("Temp -- cytofbatchadjust", recursive = TRUE)
       
       start.dat <- target.dat
@@ -134,6 +136,8 @@ run.align <- function(ref.dat,
       temp.dir <- getwd()  
       
   ### Write REFERENCE and TARGET FCS files to disk
+      
+      message('Creating FCS files')
       
       ##
       ref.dat
@@ -209,6 +213,8 @@ run.align <- function(ref.dat,
   
   ### Run
       
+      message('Running alignment')
+      
       unlink("OUTPUT", recursive = TRUE)
       #dir.create("OUTPUT")
       
@@ -262,6 +268,8 @@ run.align <- function(ref.dat,
       names(res) <- paste0(names(res), append.name)
   
   ### Finalise
+      
+      message('Finalising aligned data')
       
       setwd(dir)
       unlink("Temp -- cytofbatchadjust", recursive = TRUE)
