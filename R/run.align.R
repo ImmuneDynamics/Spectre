@@ -260,7 +260,7 @@ run.align <- function(ref.dat,
   ### Checks
       
       if(any(target.dat$ADJUST_ORDER != res$ADJUST_ORDER)){
-        stop('Result rows could not be matched with original target data')
+        warning('Result rows are not exactly matched with original target data')
       }
       
       res <- res[, align.cols, with = FALSE]
