@@ -29,13 +29,13 @@
 #' @export
 
 do.add.cols <- function(dat, # the list of dataframes (samples) where each dataframe will have the columns embedded
-                             base.col, # column name in the actual dataset
+                         base.col, # column name in the actual dataset
 
-                             add.dat,
-                             add.by,
-                             rmv.ext = FALSE,
-                             mem.ctrl = TRUE,
-                             show.status = TRUE)
+                         add.dat,
+                         add.by,
+                         rmv.ext = FALSE,
+                         mem.ctrl = TRUE,
+                         show.status = TRUE)
 {
 
   ## Packages
@@ -149,36 +149,36 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
       
       ## Data table method
       
-          tst <- as.data.table(dat[[base.col]])
-          names(tst) <- base.col
-    
-          setkeyv(tst, base.col)
-          setkeyv(add.dat, base.col)
-          
-          res <- add.dat[tst]
-          # res <- add.dat[dat, on = (Code = base.col)]
-    
-          res <- res[,added.names, with = FALSE]
-          dat <- cbind(dat, res)
-          
+          # tst <- as.data.table(dat[[base.col]])
+          # names(tst) <- base.col
+          # 
+          # setkeyv(tst, base.col)
+          # setkeyv(add.dat, base.col)
+          # 
+          # res <- add.dat[tst]
+          # # res <- add.dat[dat, on = (Code = base.col)]
+          # 
+          # res <- res[,added.names, with = FALSE]
+          # dat <- cbind(dat, res)
+          # 
+          # if(mem.ctrl == TRUE){
+          #   gc()
+          # }
+                
+      ## Previous bas method
+          dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
+          rm(add.dat)
+
           if(mem.ctrl == TRUE){
             gc()
           }
-                
-      ## Previous bas method
-          # dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
-          # rm(add.dat)
-          # 
-          # if(mem.ctrl == TRUE){
-          #   gc()
-          # }
-          # 
-          # dat <- as.data.table(dat)
-          # dat <- dat[,c(dat.names,added.names), with = FALSE]
-          # 
-          # if(mem.ctrl == TRUE){
-          #   gc()
-          # }
+
+          dat <- as.data.table(dat)
+          dat <- dat[,c(dat.names,added.names), with = FALSE]
+
+          if(mem.ctrl == TRUE){
+            gc()
+          }
 
   ### Returning data
       if(show.status == TRUE){

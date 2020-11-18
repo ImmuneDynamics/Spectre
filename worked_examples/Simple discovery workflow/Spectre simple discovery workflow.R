@@ -100,10 +100,13 @@
         meta.dat <- fread("sample.details.csv")
         meta.dat
 
-        meta.dat <- meta.dat[,c(1:4)]
-        meta.dat
+        sample.info <- meta.dat[,c(1:4)]
+        sample.info
+        
+        counts <- meta.dat[,c(2,5)]
+        counts
 
-        cell.dat <- do.add.cols(cell.dat, "FileName", meta.dat, "Filename", rmv.ext = TRUE)
+        cell.dat <- do.add.cols(cell.dat, "FileName", sample.info, "Filename", rmv.ext = TRUE)
         cell.dat
 
     ### Columns
@@ -186,6 +189,7 @@
 
         cell.dat <- do.add.cols(cell.dat, "FlowSOM_metacluster", annots, "Values")
         cell.dat
+        
         fwrite(cell.dat, "Annotated.data.csv")
 
         cell.sub <- do.add.cols(cell.sub, "FlowSOM_metacluster", annots, "Values")
@@ -203,47 +207,53 @@
     dir.create("Output - summary data")
     setwd("Output - summary data")
 
+    ### Select columns to measure MFI
+    
+        as.matrix(cellular.cols)
+        dyn.cols <- cellular.cols[c(5,8)]
+        dyn.cols
+    
     ### Create summary tables
-
-        write.sumtables(dat = cell.dat,
-                        sample.col = sample.col,
-                        pop.col = "Population",
-                        measure.col = cellular.cols,
-                        annot.col = c(group.col, batch.col),
-                        group.col = group.col, do.proportions = TRUE,
-                        do.mfi.per.sample = FALSE,
-                        do.mfi.per.marker = TRUE)
+    
+        sum.dat <- create.sumtable(dat = cell.dat, 
+                                   sample.col = sample.col,
+                                   pop.col = "Population",
+                                   use.cols = dyn.cols, 
+                                   annot.cols = c('Group', 'Batch'), 
+                                   counts = counts)
+        
+    ### Review summary data
+        
+        sum.dat
+        as.matrix(names(sum.dat))
+        
+        plot.cols <- names(sum.dat)[c(4:15,18:19,22:27)]
+        plot.cols
 
     ### Autographs
 
-        files <- list.files(getwd(), ".csv")
-        as.matrix(files)
-
-        files <- files[c(7,10)]
-        files
-
-        init <- fread(files[[1]])
-        init
-        as.matrix(names(init))
-
-        plot.cols <- names(init)[c(6:11)]
-        plot.cols
-
-        for(i in c(1:length(files))){
-          nm <- files[[i]]
-          temp <- fread(files[[i]])
-          nm <- gsub(".csv", "", nm)
-
-          for(a in plot.cols){
-           make.autograph(temp,
-                          x.axis = group.col,
-                          y.axis = a,
-                          y.axis.label = a,
-                          title = a,
-                          subtitle = gsub("SumTable-", "", nm),
-                          filename = paste0(gsub("SumTable-", "", nm), " ", a, ".png"))
-          }
+        for(i in plot.cols){
+            
+            measure <- gsub("\\ --.*", "", i)
+            measure
+            
+            pop <- gsub("^[^--]*.-- ", "", i)
+            pop
+            
+            make.autograph(sum.dat,
+                           x.axis = group.col,
+                           y.axis = i,
+                           y.axis.label = measure,
+                           title = pop,
+                           subtitle = measure,
+                           filename = paste0(i, '.pdf'))
+            
         }
+        
+    ### Create a fold change heatmap
+        
+        sum.dat.z <- do.zscore(sum.dat, plot.cols)
+        make.pheatmap(sum.dat.z, sample.col = sample.col, plot.cols = plot.cols, is.fold = TRUE, cutree_rows = 2, cutree_cols = 3)
 
 
 ##########################################################################################################
