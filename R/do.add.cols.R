@@ -60,6 +60,10 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
           # rmv.ext = FALSE
           # 
           # mem.ctrl = TRUE
+          # 
+          # set.seed(42)
+          # rw <- sample(nrow(dat))
+          # dat <- dat[rw,]
 
       ## Testing missing values in add.dat
           # add.dat <- data.table(Filename = unique(dat$FileName)[c(1:11)],
@@ -146,27 +150,10 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
       if(show.status == TRUE){
         message("Step 2/3. Merging data")
       }
-      
-      ## Data table method
-      
-          # tst <- as.data.table(dat[[base.col]])
-          # names(tst) <- base.col
-          # 
-          # setkeyv(tst, base.col)
-          # setkeyv(add.dat, base.col)
-          # 
-          # res <- add.dat[tst]
-          # # res <- add.dat[dat, on = (Code = base.col)]
-          # 
-          # res <- res[,added.names, with = FALSE]
-          # dat <- cbind(dat, res)
-          # 
-          # if(mem.ctrl == TRUE){
-          #   gc()
-          # }
-                
-      ## Previous bas method
-          dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
+
+          ## dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
+          dat <- data.table::merge.data.table(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
+          
           rm(add.dat)
 
           if(mem.ctrl == TRUE){
@@ -187,7 +174,6 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
       
       return(dat)
 }
-
 
 
 
