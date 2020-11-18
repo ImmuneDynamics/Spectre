@@ -13,7 +13,7 @@ run.harmony()
 
 \item{align.cols}{NO default. The columns you wish to align. For cytometry data, this can be the markers themselves or principle components. For single-cell seq data, principle components are recommended.}
 
-\item{append.name}{DEFAULT = '_harmony'. Text that will be appended to the new columns containing aligned data}
+\item{append.name}{DEFAULT = '_aligned'. Text that will be appended to the new columns containing aligned data}
 }
 \value{
 Returns a data.table with aligned data added in new columns.

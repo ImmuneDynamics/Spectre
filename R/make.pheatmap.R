@@ -92,14 +92,14 @@ make.pheatmap <- function(dat,
 {
 
   ### Check that necessary packages are installed
-  if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
+      if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
+      if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
+      if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
 
   ### Require packages
-  require(pheatmap)
-  require(RColorBrewer)
-  require(scales)
+      require(pheatmap)
+      require(RColorBrewer)
+      require(scales)
 
   ### Setup color scheme
 
@@ -196,9 +196,12 @@ make.pheatmap <- function(dat,
       if(normalise == TRUE){
         if(is.fold == FALSE){
           row.nam <- row.names(heatmap.data)
-
+          col.nam <- names(heatmap.data)
+          
           norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
           heatmap.data.norm <- as.data.frame(lapply(heatmap.data, norm.fun)) # by default, removes the names of each row
+          names(heatmap.data.norm) <- col.nam
+          
           max(heatmap.data.norm)
           # max(heatmap.data.norm[,5])
           heatmap.data.norm <- as.matrix(heatmap.data.norm)

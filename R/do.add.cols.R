@@ -34,7 +34,8 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
                              add.dat,
                              add.by,
                              rmv.ext = FALSE,
-                             mem.ctrl = TRUE)
+                             mem.ctrl = TRUE,
+                             show.status = TRUE)
 {
 
   ## Packages
@@ -91,8 +92,11 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
   ### Prep
 
       if(rmv.ext == TRUE){
-        message("Removing '.csv' or '.fcs' extension")
-
+        
+        if(show.status == TRUE){
+          message("Removing '.csv' or '.fcs' extension")
+        }
+        
           if(is.numeric(add.dat[[add.by]]) == FALSE){
             temp <- add.dat[[add.by]]
             temp <- gsub("*.csv", "", temp)
@@ -106,12 +110,10 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
       }
 
   ### Mapping data
+      if(show.status == TRUE){
+        message("Step 1/3. Mapping data")
+      }
 
-      dat <- as.data.table(dat)
-      add.dat <- as.data.table(add.dat)
-
-      message("Step 1/3. Mapping data")
-      
       added.names <- names(add.dat[,setdiff(names(add.dat),add.by),with = FALSE])
       
       add.dat <- cbind(add.dat[,add.by,with = FALSE],
@@ -141,26 +143,48 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
       }
 
   ### Mergind data
-
-      message("Step 2/3. Merging data")
-      
-      dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
-      rm(add.dat)
-      
-      if(mem.ctrl == TRUE){
-        gc()
+      if(show.status == TRUE){
+        message("Step 2/3. Merging data")
       }
       
-      dat <- as.data.table(dat)
-      dat <- dat[,c(dat.names,added.names), with = FALSE]
-
-      if(mem.ctrl == TRUE){
-        gc()
-      }
+      ## Data table method
+      
+          tst <- as.data.table(dat[[base.col]])
+          names(tst) <- base.col
+    
+          setkeyv(tst, base.col)
+          setkeyv(add.dat, base.col)
+          
+          res <- add.dat[tst]
+          # res <- add.dat[dat, on = (Code = base.col)]
+    
+          res <- res[,added.names, with = FALSE]
+          dat <- cbind(dat, res)
+          
+          if(mem.ctrl == TRUE){
+            gc()
+          }
+                
+      ## Previous bas method
+          # dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
+          # rm(add.dat)
+          # 
+          # if(mem.ctrl == TRUE){
+          #   gc()
+          # }
+          # 
+          # dat <- as.data.table(dat)
+          # dat <- dat[,c(dat.names,added.names), with = FALSE]
+          # 
+          # if(mem.ctrl == TRUE){
+          #   gc()
+          # }
 
   ### Returning data
-
-      message("Step 3/3. Returning data")
+      if(show.status == TRUE){
+        message("Step 3/3. Returning data")
+      }
+      
       return(dat)
 }
 
