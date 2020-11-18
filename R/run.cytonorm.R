@@ -262,12 +262,12 @@ if(method == 'cytonorm'){
       
       if(!all(starting.dat$ALGN_BARCODE == norm.dt$ALGN_BARCODE)){
         setwd(dir)
-        stop("Error -- the pre- and post-alignment row barcodes do not align")
+        message("WARNING -- the pre- and post-alignment row barcodes do not align")
       }
       
       if(!all(starting.dat[[batch.col]] == norm.dt[[batch.col]])){
         setwd(dir)
-        stop("Error -- the pre- and post-alignment batch labels")
+        message("WARNING -- the pre- and post-alignment batch labels")
       }
       
       align.mc <- norm.dt[[align.mc.nme]]
