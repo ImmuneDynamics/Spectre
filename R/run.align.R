@@ -27,18 +27,18 @@
 #' @export
 
 run.align <- function(ref.dat,
-                       target.dat,
-                       batch.col,
-                       align.cols,
-                       
-                       method = "quantile", # 'harmony'
-                       append.name = "_aligned",
-                       dir = getwd(),
-                       mem.ctrl = TRUE
+                      target.dat,
+                      batch.col,
+                      align.cols,
+                      
+                      method = "quantile", # 'harmony'
+                      append.name = "_aligned",
+                      dir = getwd(),
+                      mem.ctrl = TRUE
 ){
   
   ### Notes
-  
+      
       # 95p | SD | quantile
       # quantile: quantile normalization
       # SD: scaling to reference batch standard deviation
@@ -48,43 +48,55 @@ run.align <- function(ref.dat,
       
       # Make batch 1 the average of the other batches?
       # Else set a goal -- make that the first batch...
-      
+  
   ### Demo
-      
-      # ref.dat <- ref.dat
-      # target.dat <- target.dat
-      # dir <- working.dir
+
+      # setwd("/Users/thomasa/Desktop/")
+      # dir.create("Align test")
+      # setwd("Align test")
+      # dir <- getwd()
       # 
-      # batch.col <- 'Batches'
-      # align.cols <- names(dat)[c(11:16,18)] 
+      # ref.dat <- Spectre::demo.batches.1
+      # set.seed(42)
+      # nr <- sample(nrow(ref.dat))
+      # ref.dat <- ref.dat[nr,]
+      # 
+      # target.dat <- Spectre::demo.batches.1
+      # set.seed(42)
+      # nr <- sample(nrow(target.dat))
+      # target.dat <- target.dat[nr,]
+      # 
+      # batch.col <- 'Batch'
+      # align.cols <- names(Spectre::demo.batches.1)[c(1:15)]
       # method <- "95p"
-      
-#######################################################################################################
-########################################### Harmony methods ###########################################
-#######################################################################################################
 
+  #######################################################################################################
+  ########################################### Harmony methods ###########################################
+  #######################################################################################################
+  
   if(method == 'harmony'){
-
+    message("Please see '? run.harmony'")
+    
   }
   
-#######################################################################################################
-###################################### CytofBatchAdjust methods #######################################
-#######################################################################################################
+  #######################################################################################################
+  ###################################### CytofBatchAdjust methods #######################################
+  #######################################################################################################
   
   ### Setup
       
-      message('Data preparation')
-  
       unlink("Temp -- cytofbatchadjust", recursive = TRUE)
       
-      start.dat <- target.dat
-      
-      ref.dat$ADJUST_ORDER <- c(1:nrow(ref.dat))
-      target.dat$ADJUST_ORDER <- c(1:nrow(target.dat))
+      start.dat <- target.dat    
   
-  ### Adjust batches to match requirements
+      target.dat$ADJUST_ORDER <- c(1:nrow(ref.dat))
       
-      ## Check batch entries
+      # ref.dat$ADJUST_ORDER <- c(1:nrow(ref.dat))
+      # target.dat$ADJUST_ORDER <- c(1:nrow(target.dat))
+
+  ### Check batch entries
+      
+      message('Alignment - setting up')
       
       REF.BATCHES <- sort(unique(ref.dat[[batch.col]]))
       TRG.BATCHES <- sort(unique(target.dat[[batch.col]]))
@@ -110,22 +122,56 @@ run.align <- function(ref.dat,
       batch.tb <- as.data.table(batch.tb)
       names(batch.tb) <- c(batch.col, "ADJUST_BATCH_NUMBERS")
       batch.tb
+  
+  ###
       
-      ## 
-      
-      ref.dat <- do.add.cols(ref.dat, batch.col, batch.tb, batch.col)
-      target.dat <- do.add.cols(target.dat, batch.col, batch.tb, batch.col)
+      ref.dat <- do.add.cols(ref.dat, batch.col, batch.tb, batch.col, show.status = FALSE)
+      target.dat <- do.add.cols(target.dat, batch.col, batch.tb, batch.col, show.status = FALSE)
       
       batch.col <- 'ADJUST_BATCH_NUMBERS'
       
       ref.dat[[batch.col]] <- as.numeric(ref.dat[[batch.col]])
       target.dat[[batch.col]] <- as.numeric(target.dat[[batch.col]])
       
+  ### Sort 
+      
+      setorderv(ref.dat, 'ADJUST_BATCH_NUMBERS')
+      setorderv(target.dat, 'ADJUST_BATCH_NUMBERS')
+      
+      target.brcd <- target.dat[,'ADJUST_ORDER', with = FALSE]
+      target.brcd
       
       gc()
       
-  ### Setup a temp directory
+      # ### REFERENCE DAT - Add per batch barcode
+      # 
+      #     ref.dat$PER_BATCH_BARCODE <- 'EMPTY'
+      #     
+      #     for(i in unique(ref.dat[['ADJUST_BATCH_NUMBERS']])){
+      #       # i <- unique(ref.dat$ADJUST_BATCH_NUMBERS)[[1]]
+      #       ref.dat[ref.dat[['ADJUST_BATCH_NUMBERS']] == i,]$PER_BATCH_BARCODE <- c(1:nrow(ref.dat[ref.dat[['ADJUST_BATCH_NUMBERS']] == i,]))
+      #     }
+      #     
+      #     ref.dat$PER_BATCH_BARCODE <- as.numeric(ref.dat$PER_BATCH_BARCODE)
+      #     
+      # ### TARGET DAT - Add per batch barcode
+      # 
+      #     target.dat$PER_BATCH_BARCODE <- 'EMPTY'
+      #     
+      #     for(i in unique(target.dat[['ADJUST_BATCH_NUMBERS']])){
+      #       # i <- unique(target.dat$ADJUST_BATCH_NUMBERS)[[1]]
+      #       target.dat[target.dat[['ADJUST_BATCH_NUMBERS']] == i,]$PER_BATCH_BARCODE <- c(1:nrow(target.dat[target.dat[['ADJUST_BATCH_NUMBERS']] == i,]))
+      #     }
+      #     
+      #     target.dat$PER_BATCH_BARCODE <- as.numeric(target.dat$PER_BATCH_BARCODE)
+      # 
+      # # ref.dat[['ADJUST_ORDER']] <- as.numeric(ref.dat[['ADJUST_ORDER']])
+      # # target.dat[['ADJUST_ORDER']] <- as.numeric(target.dat[['ADJUST_ORDER']])
+      # 
+      # gc()
   
+  ### Setup a temp directory
+      
       setwd(dir)
       getwd()
       
@@ -134,19 +180,23 @@ run.align <- function(ref.dat,
       setwd("Temp -- cytofbatchadjust")
       
       temp.dir <- getwd()  
-      
+  
   ### Write REFERENCE and TARGET FCS files to disk
       
-      message('Creating FCS files')
+      message('Alignment - preparing reference and target files')
       
       ##
       ref.dat
       
-      for(i in all.batch.nums){
-        # i <- all.batch.nums[[2]]
+      for(i in unique(ref.dat[[batch.col]])){
+        # i <- unique(ref.dat[[batch.col]])[[1]]
         
         temp <- ref.dat[ref.dat[[batch.col]] == i,]
-        temp <- temp[, c('ADJUST_ORDER', align.cols), with = FALSE]
+        temp <- temp[, c(align.cols), with = FALSE]
+        temp$PER_BATCH_BARCODE <- c(1:nrow(temp))
+        
+        #temp$`PER_BATCH_BARCODE`
+        #str(temp)
         
         ## Write FCS
         metadata <- data.frame(name=dimnames(temp)[[2]], desc=paste(dimnames(temp)[[2]]))
@@ -157,30 +207,31 @@ run.align <- function(ref.dat,
         metadata$maxRange <- apply(temp,2,max)
         
         ## Create flowframe with tSNE data
-        temp.ff <- new("flowFrame", exprs=as.matrix(temp), parameters=Biobase::AnnotatedDataFrame(metadata))
+        temp <- new("flowFrame", exprs=as.matrix(temp), parameters=Biobase::AnnotatedDataFrame(metadata))
         
         ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
-        write.FCS(temp.ff, paste0("BATCH_", i, "_", "Ref.fcs"))
+        write.FCS(temp, paste0("BATCH_", i, "_", "Ref.fcs"))
         
         rm(temp)
-        rm(temp.ff)
         rm(metadata)
         rm(i)
+        gc()
       }
       
       rm(ref.dat)
       
       gc()
       
-      
-      ## 
+  
+  ## 
       target.dat
-      
+ 
       for(i in unique(target.dat[[batch.col]])){
         # i <- unique(target.dat[[batch.col]])[[1]]
         
         temp <- target.dat[target.dat[[batch.col]] == i,]
-        temp <- temp[, c('ADJUST_ORDER', align.cols), with = FALSE]
+        temp <- temp[, c(align.cols), with = FALSE]
+        temp$PER_BATCH_BARCODE <- c(1:nrow(temp))
         
         ## Write FCS
         metadata <- data.frame(name=dimnames(temp)[[2]], desc=paste(dimnames(temp)[[2]]))
@@ -191,29 +242,29 @@ run.align <- function(ref.dat,
         metadata$maxRange <- apply(temp,2,max)
         
         ## Create flowframe with tSNE data
-        temp.ff <- new("flowFrame", exprs=as.matrix(temp), parameters=Biobase::AnnotatedDataFrame(metadata))
+        temp <- new("flowFrame", exprs=as.matrix(temp), parameters=Biobase::AnnotatedDataFrame(metadata))
         
         ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
-        write.FCS(temp.ff, paste0("BATCH_", i, "_.fcs"))
+        write.FCS(temp, paste0("BATCH_", i, "_.fcs"))
         
         rm(temp)
-        rm(temp.ff)
         rm(metadata)
         rm(i)
+        gc()
       }
       
-      target.dat <- as.data.table(target.dat$ADJUST_ORDER)
-      names(target.dat) <- 'ADJUST_ORDER'
+      # target.dat <- as.data.table(target.dat[,c(batch.col, 'PER_BATCH_BARCODE'),with = FALSE])
+      # names(target.dat) <- 'PER_BATCH_BARCODE'
       
       gc()
-      
+  
   ### Write .txt. file of 'channels to adjust
   
       write(align.cols, 'ChannelsToAdjust.txt')
   
   ### Run
       
-      message('Running alignment')
+      message('Alignment - applying alignment process')
       
       unlink("OUTPUT", recursive = TRUE)
       #dir.create("OUTPUT")
@@ -229,7 +280,6 @@ run.align <- function(ref.dat,
         addExt=NULL,
         plotDiagnostics=FALSE)
       
-      
   ### Read in output
       
       setwd(dir)
@@ -244,10 +294,23 @@ run.align <- function(ref.dat,
       for(i in output.files){
         # i <- output.files[[1]]
         
-        temp <- exprs(flowCore::read.FCS(i, transformation = FALSE))
+        temp <- exprs(flowCore::read.FCS(i, 
+                                         transformation = FALSE, 
+                                         #truncate_max_range = FALSE
+        ))
+        
         temp <- temp[1:nrow(temp),1:ncol(temp)]
         temp <- as.data.table(temp)
         
+        i <- gsub("BATCH_", "", i)
+        i <- gsub("_.fcs", "", i)
+        i <- gsub("_", "", i)
+        
+        temp[['BATCH_CHECK']] <- i
+        temp[['BATCH_CHECK']] <- as.numeric(temp[['BATCH_CHECK']])
+        
+        # setorderv(temp, 'PER_BATCH_BARCODE')
+
         res.list[[i]] <- temp
         
         rm(i)
@@ -255,21 +318,34 @@ run.align <- function(ref.dat,
       }
       
       res <- rbindlist(res.list, fill = TRUE)
+      
+      setorderv(res, 'PER_BATCH_BARCODE')
+      setorderv(res, 'BATCH_CHECK')
+      
+      res <- cbind(target.brcd, res)
+      
       setorderv(res, 'ADJUST_ORDER')
-      
+
   ### Checks
-      
-      if(any(target.dat$ADJUST_ORDER != res$ADJUST_ORDER)){
-        warning('Result rows are not exactly matched with original target data')
-      }
+    
+      # if(any(target.dat$ADJUST_BATCH_NUMBERS != res$BATCH_CHECK)){
+      #   message('WARNING: Row barcode for adjusted data did not match original target data')
+      # }
+      # 
+      # if(any(target.dat$PER_BATCH_BARCODE != res$PER_BATCH_BARCODE)){
+      #   message('WARNING: Row barcode for adjusted data did not match original target data')
+      # }
+      # if(any(target.dat$ADJUST_ORDER != res$ADJUST_ORDER)){
+      #   message('WARNING: Row barcode for adjusted data did not match original target data')
+      # }
       
       res <- res[, align.cols, with = FALSE]
       
       names(res) <- paste0(names(res), append.name)
-  
+      
   ### Finalise
       
-      message('Finalising aligned data')
+      message('Alignment - finalising')
       
       setwd(dir)
       unlink("Temp -- cytofbatchadjust", recursive = TRUE)
