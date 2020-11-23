@@ -37,6 +37,7 @@ create.sumtable <- function(dat,
                             use.cols,
                             annot.cols = NULL,
                             counts = NULL,
+                            perc.pos = NULL,
                             func = 'median',
                             sep = " -- "){
   
@@ -56,8 +57,10 @@ create.sumtable <- function(dat,
       # use.cols <- names(dat)[c(11:19)]
       # sep = " -- "
       # func = 'median'
-      # counts <- data.frame('Sample' = unique(dat[['Sample']]),
+      # counts <- data.table('Sample' = unique(dat[['Sample']]),
       #                      'Counts' = c(rep(100000, 6), rep(1000000, 6)))
+      # perc.pos <- data.table('Marker' = c('Ly6C_asinh', 'CD11b_asinh'),
+      #                        'Cutoff' = c(3, 3.5))
   
   ### Checks
   
@@ -98,9 +101,9 @@ create.sumtable <- function(dat,
             
         ## Population percentages
             percent <- temp[, .(Percent = .N), by = pop.col]
-            percent[[2]] <- percent[[2]] / sum(percent[[2]])
+            percent[[2]] <- percent[[2]] / sum(percent[[2]]) * 100
             names(percent) <- c(pop.col, 'Percent of sample')
-        
+            
         ## Cell counts
             if(!is.null(counts)){
               ttl <- counts[counts[[1]] == i,2]
@@ -114,20 +117,66 @@ create.sumtable <- function(dat,
         ## MFIs
             mfis <- do.aggregate(temp, use.cols = use.cols, by = pop.col, func = func)
             names(mfis)[c(2:length(names(mfis)))] <- paste0('MFI of ', names(mfis)[c(2:length(names(mfis)))])
-        
-        ## Results
+            
+        ## Percent positive
+
+            if(!is.null(perc.pos)){
+              
+              all.pos.list <- list()
+              
+              for(o in perc.pos[,1][[1]]){
+                # o <- perc.pos[,1][[1]][[1]]
+                
+                ctf <- perc.pos[perc.pos[[1]] == o,2]
+                ctf <- ctf[[1]]
+                
+                pos.res.lst <- list()
+                for(f in pops){
+                  # f <- pops[[1]]
+                  pop.dt <- temp[temp[[pop.col]] == f,] 
+                  
+                  if(nrow(pop.dt) != 0){
+                    pos.res.lst[[f]] <- nrow(pop.dt[pop.dt[[o]] > ctf,]) / nrow(pop.dt) * 100
+                  }
+                  
+                  if(nrow(pop.dt) == 0){
+                    pos.res.lst[[f]] <- NA
+                  }
+                }
+                
+                all.pos.list[[o]] <- as.data.table(unlist(pos.res.lst))
+              }
+              
+              perc.res <- data.table('Population' = pops)
+              names(perc.res) <- pop.col
+              
+              perc.res <- cbind(perc.res, as.data.table(all.pos.list))
+              
+              names(perc.res)[c(2:length(names(perc.res)))] <- paste0("Percent expressing ", names(perc.res)[c(2:length(names(perc.res)))])
+            }
+
+        ## Combine results
+            
+            ## Percent 
             dt <- do.add.cols(dt, pop.col, percent, pop.col, show.status = FALSE)
             
+            ## Counts
             if(!is.null(counts)){
               dt <- do.add.cols(dt, pop.col, counts.per.sample, pop.col, show.status = FALSE)
             }
             
+            ## MFIs
             dt <- do.add.cols(dt, pop.col, mfis, pop.col, show.status = FALSE)
+            
+            ## Percent positive
+            if(!is.null(perc.pos)){
+              dt <- do.add.cols(dt, pop.col, perc.res, pop.col, show.status = FALSE)
+            }
             
         ## Reshape
             
             dt <- melt(dt, id.vars=c(pop.col))
-            dt$Measurement <- paste0(dt$variable, sep, dt$Population)
+            dt$Measurement <- paste0(dt$variable, sep, dt[[pop.col]])
             dt <- dt[,c('Measurement', 'value'), with = FALSE]
             names(dt) <- c("Measurement", 'Value')
 
@@ -144,7 +193,6 @@ create.sumtable <- function(dat,
             rm(i)
             rm(dt)
             rm(Tdt)
-   
       }
       
   ### Finalise and return
