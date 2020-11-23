@@ -13,6 +13,8 @@
 #'
 #' @return A data.table with new columns added, that contain the normalised data.
 #'
+#' @import data.table
+#'
 #' @export
 
 do.normalise <- function(dat,
@@ -21,6 +23,9 @@ do.normalise <- function(dat,
                          new.max = 1,
                          zero.drops = NULL){ # null by default
 
+  ### Packages
+  require('data.table')
+  
   ### Checks
   if(!is.null(zero.drops)){
     message("Zero drop transformation (as a part of the normalisation function) is experimental - please use with caution.")

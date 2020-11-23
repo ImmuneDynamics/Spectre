@@ -22,6 +22,8 @@
 #' @examples
 #' cell.dat <- do.mn()
 #'
+#' @import data.table
+#'
 #' @export
 
 do.mn <- function(dat,
@@ -112,7 +114,7 @@ do.mn <- function(dat,
         ## With upper Q (upper Q is NOT NULL)
         if(!is.null(upper.Q)){
           for(a in use.cols){
-            # a <- use.cols[[8]]
+            # a <- use.cols[[1]]
             
             A <- min(value[[a]])
             B <- quantile(value[[a]], probs = upper.Q)
