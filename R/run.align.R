@@ -89,7 +89,7 @@ run.align <- function(ref.dat,
       
       start.dat <- target.dat    
   
-      target.dat$ADJUST_ORDER <- c(1:nrow(ref.dat))
+      target.dat$ADJUST_ORDER <- c(1:nrow(target.dat))
       
       # ref.dat$ADJUST_ORDER <- c(1:nrow(ref.dat))
       # target.dat$ADJUST_ORDER <- c(1:nrow(target.dat))
