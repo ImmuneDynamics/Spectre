@@ -8,6 +8,7 @@
 #' @param use.cols NO DEFAULT. A character vector indicating the columns to be measured (e.g. cellular columns -- c("CD45", "CD3e") etc).
 #' @param annot.cols DEFAULT = NULL. A character vector indicating the columns to be included as annotation columns (e.g. c("Batch", "Group") etc). 
 #' @param counts DEFAULT = NULL. If you wish to calculate the actual number of cells per sample, a data.table containing the sample names (in column 1) and cell counts per sample (column 2). 
+#' @param perc.pos DEFAULT = NULL. If you wish to calculate the percentage of each population that is 'positive' for a marker, you can provide a data.table containing the mark names (in column 1) and cut off values for positivity (column 2). 
 #' @param func DEFAULT = "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.
 #' @param sep DEFAULT = " -- ". Character separation of the measurement type and the population (e.g. MFI of CD4 -- T cells)
 #' 
