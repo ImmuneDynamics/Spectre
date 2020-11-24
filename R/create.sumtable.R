@@ -7,6 +7,7 @@
 #' @param pop.col NO DEFAULT. Character. Name of the population/cluster column (e.g. "Population", "Cluster").
 #' @param use.cols NO DEFAULT. A character vector indicating the columns to be measured (e.g. cellular columns -- c("CD45", "CD3e") etc).
 #' @param annot.cols DEFAULT = NULL. A character vector indicating the columns to be included as annotation columns (e.g. c("Batch", "Group") etc). 
+#' @param parent.col DEFAULT = NULL. A character entry indicating a column that represents the 'lineage' each population belongs to (e.g. 'CD4 T cells' may belong to the 'T cells' lineage). Use this to also calculate each population as a percentage of lineage.
 #' @param counts DEFAULT = NULL. If you wish to calculate the actual number of cells per sample, a data.table containing the sample names (in column 1) and cell counts per sample (column 2). 
 #' @param perc.pos DEFAULT = NULL. If you wish to calculate the percentage of each population that is 'positive' for a marker, you can provide a data.table containing the mark names (in column 1) and cut off values for positivity (column 2). 
 #' @param func DEFAULT = "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.
@@ -37,6 +38,7 @@ create.sumtable <- function(dat,
                             pop.col,
                             use.cols,
                             annot.cols = NULL,
+                            parent.col = NULL,
                             counts = NULL,
                             perc.pos = NULL,
                             func = 'median',
@@ -58,10 +60,18 @@ create.sumtable <- function(dat,
       # use.cols <- names(dat)[c(11:19)]
       # sep = " -- "
       # func = 'median'
+      # 
+      # parent.col = 'Lineage'
+      # 
       # counts <- data.table('Sample' = unique(dat[['Sample']]),
       #                      'Counts' = c(rep(100000, 6), rep(1000000, 6)))
       # perc.pos <- data.table('Marker' = c('Ly6C_asinh', 'CD11b_asinh'),
       #                        'Cutoff' = c(3, 3.5))
+      # 
+      # lin.tb <- data.table('Population' = unique(dat$Population),
+      #                      'Lineage' = c('Resident' , 'Infiltrating', 'Infiltrating','Infiltrating','Infiltrating','Infiltrating'))
+      # 
+      # dat <- do.add.cols(dat, 'Population', lin.tb, 'Population')
   
   ### Checks
   
@@ -78,6 +88,10 @@ create.sumtable <- function(dat,
       samps <- sort(unique(dat[[sample.col]]))
       pops <- sort(unique(dat[[pop.col]]))
   
+      if(!is.null(parent.col)){
+        parents <- sort(unique(dat[[parent.col]]))
+      }
+      
       res.list <- list()
       
       for(i in samps){
@@ -115,7 +129,33 @@ create.sumtable <- function(dat,
               names(counts.per.sample) <- c(pop.col, 'Cells per sample')
             }
         
+        ## Percent of parent
+            
+            if(!is.null(parent.col)){
+              
+              all.perc.of.parent <- list()
+            
+              for(a in parents){
+                # a <- parents[[1]]
+                
+                tp <- temp[temp[[parent.col]] == a,]
+                
+                percent.of.parent <- tp[, .(Percent = .N), by = pop.col]
+                percent.of.parent[[2]] <- percent.of.parent[[2]] / sum(percent.of.parent[[2]]) * 100
+                names(percent.of.parent) <- c(pop.col, paste0('Percent of ', parent.col))
+                
+                all.perc.of.parent[[a]] <- percent.of.parent
+                
+                rm(a)
+                rm(tp)
+                rm(percent.of.parent)
+              }
+              
+              all.perc.of.parent <- rbindlist(all.perc.of.parent, fill = TRUE)
+            }
+            
         ## MFIs
+            
             mfis <- do.aggregate(temp, use.cols = use.cols, by = pop.col, func = func)
             names(mfis)[c(2:length(names(mfis)))] <- paste0('MFI of ', names(mfis)[c(2:length(names(mfis)))])
             
@@ -166,6 +206,11 @@ create.sumtable <- function(dat,
               dt <- do.add.cols(dt, pop.col, counts.per.sample, pop.col, show.status = FALSE)
             }
             
+            ## Percent of parent
+            if(!is.null(parent.col)){
+              dt <- do.add.cols(dt, pop.col, all.perc.of.parent, pop.col, show.status = FALSE)
+            }
+
             ## MFIs
             dt <- do.add.cols(dt, pop.col, mfis, pop.col, show.status = FALSE)
             
@@ -202,4 +247,3 @@ create.sumtable <- function(dat,
       return(res)
       
 } 
-
