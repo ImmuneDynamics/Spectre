@@ -112,6 +112,8 @@ read.files <- function(file.loc = getwd(),
         }
 
     ## Return result and result message
+        setwd(orig_wd)
+        
         return(data.list)
         message(msg)
 }
