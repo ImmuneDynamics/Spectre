@@ -1,12 +1,11 @@
 #' Run FIt-SNE, Fourier Transform TSNE.
 #' 
 #' Implementation of FIt-SNE is available from https://github.com/KlugerLab/FIt-SNE.
-#' As it is currently not possible to install FIt-SNE directly from github using devtools,
-#' we made a verbatim copy of KlugerLab's fftRtsne, modified it, and source it in this method.
+#' This function uses \code{\link{fftRtsne}} to run FIt-SNE. 
 #' 
 #' @param dat NO DEFAULT. Input data.table or data.frame.
 #' @param use.cols NO DEFAULT. Vector of column names or numbers for clustering.
-#' @param seed Default = 42 Numeric. Seed value for reproducibility.
+#' @param seed Default = 42. Seed value for reproducibility.
 #' @param fitsne.x.name Default = "FItSNE_X". Character. Name of FItSNE x-axis.
 #' @param fitsne.y.name Default = "FItSNE_Y". Character. Name of FItSNE y-axis.
 #' @param dim Default = 2. Dimensionality of the embedding (reduced data).
@@ -66,6 +65,25 @@
 #'   choice of 1 degree of freedom corresponds to df=1. Large df approximates
 #'   Gaussian kernel. df<1 corresponds to heavier tails, which can often resolve
 #'   substructure in the embedding. See Kobak et al. (2019) for details.
+#'   
+#' @usage 
+#' run.fitsne(dat, use.cols, seed = 42, fitsne.x.name = "FItSNE_X", fitsne.y.name = "FItSNE_Y",
+#'   dims = 2, perplexity = 30, theta = 0.5, max_iter = 750, fft_not_bh = TRUE, ann_not_vptree = TRUE,
+#'   stop_early_exag_iter = 250, exaggeration_factor = 12.0, no_momentum_during_exag = FALSE,
+#'   start_late_exag_iter = -1, late_exag_coeff = 1.0, mom_switch_iter = 250, momentum = 0.5, 
+#'   final_momentum = 0.8, learning_rate = 'auto', n_trees = 50, search_k = -1, nterms = 3, 
+#'   intervals_per_integer = 1, min_num_intervals = 50, K = -1, sigma = -30, initialization = 'pca',
+#'   max_step_norm = 5, load_affinities = NULL, fast_tsne_path = NULL, nthreads = 0, 
+#'   perplexity_list = NULL, get_costs = FALSE,  df = 1.0)
+#'   
+#' @examples
+#' dat <- demo.clustered
+#' dat.sub <- do.subsample(dat, 30000)
+#' use.cols <- names(dat)[12:19]
+#' dat.reduced <- run.fitsne(dat = dat.sub, use.cols = use.cols)
+#' 
+#' @author
+#' Givanna Putri, \email{givanna.haryonoputri@@sydney.edu.au}
 #'   
 #' @export
 run.fitsne <- function(dat,

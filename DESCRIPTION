@@ -5,6 +5,7 @@ Version: 0.3.7-0
 Author: Thomas Ashhurst, Felix Marsh-Wakefield, Givanna Putri
 Maintainer: Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>
 Description: A computational toolkit for analysis of high-dimensional single-cell cytometry data.
+Depends: R (>= 3.6.0)
 License: MIT Licence
 Encoding: UTF-8
 LazyData: true
@@ -32,6 +33,8 @@ Imports:
     gtools,
     tidygraph,
     ggraph,
-    stringr
+    stringr,
+    rsvd,
+    irlba
 Suggests:
 RoxygenNote: 7.1.1
