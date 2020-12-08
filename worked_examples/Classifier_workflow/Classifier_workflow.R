@@ -1,6 +1,5 @@
 ##########################################################################################################
-#### DRAFT Cytometry Analysis Pipeline for large and compleX data (CAPX) v3.0 - using the Spectre R package
-#### Part 2 - Classification, save files
+#### Classification
 ##########################################################################################################
 
 # Givanna Putri, Thomas Myles Ashhurst
