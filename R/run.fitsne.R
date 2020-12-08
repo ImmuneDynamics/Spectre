@@ -67,7 +67,7 @@
 #'   Gaussian kernel. df<1 corresponds to heavier tails, which can often resolve
 #'   substructure in the embedding. See Kobak et al. (2019) for details.
 #'   
-#' 
+#' @export
 run.fitsne <- function(dat,
                        use.cols,
                        seed = 42,
