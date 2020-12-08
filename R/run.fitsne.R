@@ -105,11 +105,11 @@ run.fitsne <- function(dat,
                        df = 1.0) {
     
     if(!is.element('rsvd', installed.packages()[,1])) stop('rsvd is required but not installed')
-    if(!is.element('ilrba', installed.packages()[,1])) stop('ilrba is required but not installed')
+    if(!is.element('irlba', installed.packages()[,1])) stop('irlba is required but not installed')
     if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
     
     require('rsvd')
-    require('ilrba')
+    require('irlba')
     
     if (is.null(fast_tsne_path)) {
         # use pre-compiled one given in Spectre

@@ -1,3 +1,6 @@
+library(devtools)
+install_github("immunedynamics/Spectre", ref='add_fitsne')
+
 library(Spectre)
 
 dat <- demo.clustered
