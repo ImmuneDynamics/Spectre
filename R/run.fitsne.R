@@ -114,10 +114,10 @@ run.fitsne <- function(dat,
     if (is.null(fast_tsne_path)) {
         # use pre-compiled one given in Spectre
         if (.Platform$OS.type == "unix") {
-            fast_tsne_path <- file.path(.libPaths(), "Spectre", "FItSNE_executable", "FItSNE_Unix_1_2_1")
+            fast_tsne_path <- file.path(.libPaths()[1], "Spectre", "FItSNE_executable", "FItSNE_Unix_1_2_1")
         }
         else if (.Platform$OS.type == "windows") {
-            fast_tsne_path <- file.path(.libPaths(), "Spectre", "FItSNE_executable", "FItSNE-Windows-1.2.1", "FItSNE.exe")
+            fast_tsne_path <- file.path(.libPaths()[1], "Spectre", "FItSNE_executable", "FItSNE-Windows-1.2.1", "FItSNE.exe")
         }
     }
     
