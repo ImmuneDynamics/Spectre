@@ -51,13 +51,11 @@ run.fitsne <- function(dat,
     if (is.null(fast_tsne_path)) {
         # use pre-compiled one given in Spectre
         if (.Platform$OS.type == "unix") {
-            fast_tsne_path <- file.path(.libPaths(), "Spectre", "bin", "fast_tsne")
+            fast_tsne_path <- file.path(.libPaths(), "Spectre", "bin", "FItSNE_Unix_1_2_1")
         }
-        # need to change the following to libpath
-        # and get the exe version
-        # else {
-        #     fast_tsne_path <- file.path(FAST_TSNE_SCRIPT_DIR, "bin", "FItSNE.exe")
-        # }
+        else if (.Platform$OS.type == "windows") {
+            fast_tsne_path <- file.path(.libPaths(), "Spectre", "bin", "FItSNE-Windows-1.2.1", "FItSNE.exe")
+        }
     }
     
     fitsne_out <- fftRtsne(X = as.matrix(dat[, use.cols, with = FALSE]),
