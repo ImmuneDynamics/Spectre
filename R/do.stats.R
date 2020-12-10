@@ -12,7 +12,7 @@ do.stats <- function(dat,
                      comparisons, # make a tool to create a factorial comparison design -- for now just specify manually
 
                      variance.test = "kruskal.test", ## add ANOVA
-                     pairwise.test = "wilcox.text", ## Add t-test
+                     pairwise.test = "wilcox.test", ## Add t-test
                      corrections = "fdr"){
 
   ### Test data

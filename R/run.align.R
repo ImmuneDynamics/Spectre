@@ -31,7 +31,10 @@ run.align <- function(ref.dat,
                       batch.col,
                       align.cols,
                       
-                      method = "quantile", # 'harmony'
+                      cluster.col = NULL,
+                      
+                      goal = NULL,
+                      method = "quantile",
                       append.name = "_aligned",
                       dir = getwd(),
                       mem.ctrl = TRUE
@@ -69,20 +72,18 @@ run.align <- function(ref.dat,
       # batch.col <- 'Batch'
       # align.cols <- names(Spectre::demo.batches.1)[c(1:15)]
       # method <- "95p"
+      # cluster.col <- NULL
+      # goal <- NULL
 
-  #######################################################################################################
-  ########################################### Harmony methods ###########################################
-  #######################################################################################################
+      # cluster.col <- 'Population'
+      # goal <- 'B'
   
-  if(method == 'harmony'){
-    message("Please see '? run.harmony'")
-    
-  }
+  ### Packages
   
-  #######################################################################################################
-  ###################################### CytofBatchAdjust methods #######################################
-  #######################################################################################################
-  
+      require('Spectre')
+      require('data.table')
+      require('flowCore')
+
   ### Setup
       
       unlink("Temp -- cytofbatchadjust", recursive = TRUE)
@@ -115,6 +116,12 @@ run.align <- function(ref.dat,
       all.batches <- sort(unique(ref.dat[[batch.col]]))
       all.batches
       
+      ## Sort to put goal batch at front (if 'goal' is set)
+      
+          if(!is.null(goal)){
+            all.batches <- all.batches[c(which(all.batches == goal), which(all.batches != goal))]
+          }
+
       all.batch.nums <- c(1:length(all.batches))
       all.batch.nums
       
@@ -181,6 +188,12 @@ run.align <- function(ref.dat,
       
       temp.dir <- getwd()  
   
+########################################################################################################
+################################# Whole dataset (i.e. no clusters) #####################################
+########################################################################################################
+
+  if(is.null(cluster.col)){
+    
   ### Write REFERENCE and TARGET FCS files to disk
       
       message('Alignment - preparing reference and target files')
@@ -219,10 +232,8 @@ run.align <- function(ref.dat,
       }
       
       rm(ref.dat)
-      
       gc()
       
-  
   ## 
       target.dat
  
@@ -352,6 +363,219 @@ run.align <- function(ref.dat,
       
       start.dat <- cbind(start.dat, res)
       return(start.dat)        
+  }
+      
+########################################################################################################
+########################################### CLUSTERS ###################################################
+########################################################################################################
+
+  if(!is.null(cluster.col)){
+    stop("The use of 'cluster.col' is not active yet")
+  }
+      
+  # if(!is.null(cluster.col)){
+  # 
+  #   message('Alignment - preparing reference and target files BY CLUSTER')
+  #   all.res <- list()
+  #   
+  #   ### Loop
+  #   
+  #   for(a in sort(unique(ref.dat[[cluster.col]]))){
+  #     # a <- sort(unique(ref.dat[[cluster.col]]))[[1]]
+  #     
+  #     ### Prep
+  #     
+  #         message(paste0(" -- running ", "'", a, "'"))
+  #         
+  #         setwd(temp.dir)
+  #         dir.create(a)
+  #         setwd(a)
+  #         
+  #         clust.dir <- getwd()
+  #   
+  #         ref.clust <- ref.dat[ref.dat[[cluster.col]] == a,]
+  #         target.clust <- target.dat[target.dat[[cluster.col]] == a,]
+  #         
+  #     ### Write REFERENCe files to disk
+  #         
+  #         for(i in unique(ref.clust[[batch.col]])){
+  #           # i <- unique(ref.dat[[batch.col]])[[1]]
+  #           
+  #           temp <- ref.clust[ref.clust[[batch.col]] == i,]
+  #           temp <- temp[, c(align.cols), with = FALSE]
+  #           temp$PER_BATCH_BARCODE <- c(1:nrow(temp))
+  #           
+  #           ## Write FCS
+  #           metadata <- data.frame(name=dimnames(temp)[[2]], desc=paste(dimnames(temp)[[2]]))
+  #           
+  #           ## Create FCS file metadata - ranges, min, and max settings
+  #           metadata$range <- apply(apply(temp,2,range),2,diff)
+  #           metadata$minRange <- apply(temp,2,min)
+  #           metadata$maxRange <- apply(temp,2,max)
+  #           
+  #           ## Create flowframe with tSNE data
+  #           temp <- new("flowFrame", exprs=as.matrix(temp), parameters=Biobase::AnnotatedDataFrame(metadata))
+  #           
+  #           ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
+  #           write.FCS(temp, paste0("BATCH_", i, "_", "Ref.fcs"))
+  #           
+  #           rm(temp)
+  #           rm(metadata)
+  #           rm(i)
+  #           gc()
+  #         }
+  #         
+  #         gc()
+  #     
+  #     ### Write TARGET data to disk
+  #         
+  #         for(i in unique(target.clust[[batch.col]])){
+  #           # i <- unique(target.dat[[batch.col]])[[1]]
+  #           
+  #           temp <- target.clust[target.clust[[batch.col]] == i,]
+  #           temp <- temp[, c(align.cols), with = FALSE]
+  #           temp$PER_BATCH_BARCODE <- c(1:nrow(temp))
+  #           
+  #           ## Write FCS
+  #           metadata <- data.frame(name=dimnames(temp)[[2]], desc=paste(dimnames(temp)[[2]]))
+  #           
+  #           ## Create FCS file metadata - ranges, min, and max settings
+  #           metadata$range <- apply(apply(temp,2,range),2,diff)
+  #           metadata$minRange <- apply(temp,2,min)
+  #           metadata$maxRange <- apply(temp,2,max)
+  #           
+  #           ## Create flowframe with tSNE data
+  #           temp <- new("flowFrame", exprs=as.matrix(temp), parameters=Biobase::AnnotatedDataFrame(metadata))
+  #           
+  #           ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
+  #           write.FCS(temp, paste0("BATCH_", i, "_.fcs"))
+  #           
+  #           rm(temp)
+  #           rm(metadata)
+  #           rm(i)
+  #           gc()
+  #         }
+  #         
+  #         # target.dat <- as.data.table(target.dat[,c(batch.col, 'PER_BATCH_BARCODE'),with = FALSE])
+  #         # names(target.dat) <- 'PER_BATCH_BARCODE'
+  #         
+  #         gc()
+  #     
+  #     ### Write .txt. file of 'channels to adjust
+  #     
+  #         write(align.cols, 'ChannelsToAdjust.txt')
+  #     
+  #     ### Run
+  #         
+  #         message('Alignment - applying alignment process')
+  #         
+  #         unlink("OUTPUT", recursive = TRUE)
+  #         #dir.create("OUTPUT")
+  #         
+  #         BatchAdjust(
+  #           basedir=".",
+  #           outdir="OUTPUT",
+  #           channelsFile = "ChannelsToAdjust.txt",
+  #           batchKeyword="BATCH_",
+  #           anchorKeyword = "Ref",
+  #           method=method,
+  #           transformation=FALSE,
+  #           addExt=NULL,
+  #           plotDiagnostics=FALSE)
+  #         
+  #     ### Read in output
+  #         
+  #         setwd(clust.dir)
+  #         setwd("OUTPUT")
+  #         
+  #         output.files <- list.files(getwd(), '.fcs')
+  #         output.files <- output.files[!grepl('_Ref.fcs', output.files)]
+  #         
+  #         res.list <- list()
+  #         
+  #         for(i in output.files){
+  #           # i <- output.files[[1]]
+  #           
+  #           temp <- exprs(flowCore::read.FCS(i,
+  #                                            transformation = FALSE,
+  #                                            #truncate_max_range = FALSE
+  #           ))
+  #           
+  #           temp <- temp[1:nrow(temp),1:ncol(temp)]
+  #           temp <- as.data.table(temp)
+  #           
+  #           i <- gsub("BATCH_", "", i)
+  #           i <- gsub("_.fcs", "", i)
+  #           i <- gsub("_", "", i)
+  #           
+  #           temp[['BATCH_CHECK']] <- i
+  #           temp[['BATCH_CHECK']] <- as.numeric(temp[['BATCH_CHECK']])
+  #           
+  #           # setorderv(temp, 'PER_BATCH_BARCODE')
+  #           
+  #           res.list[[i]] <- temp
+  #           
+  #           rm(i)
+  #           rm(temp)
+  #         }
+  #         
+  #         res <- rbindlist(res.list, fill = TRUE)
+  #         
+  #         setorderv(res, 'PER_BATCH_BARCODE')
+  #         setorderv(res, 'BATCH_CHECK')
+  #         
+  #         all.res[[a]] <- res
+  #       }
+  #   
+  #   ###
+  #   
+  # 
+  #           res <- cbind(target.brcd, res)
+  #           
+  #           setorderv(res, 'ADJUST_ORDER')
+  #           
+  #           ### Checks
+  #           
+  #           # if(any(target.dat$ADJUST_BATCH_NUMBERS != res$BATCH_CHECK)){
+  #           #   message('WARNING: Row barcode for adjusted data did not match original target data')
+  #           # }
+  #           #
+  #           # if(any(target.dat$PER_BATCH_BARCODE != res$PER_BATCH_BARCODE)){
+  #           #   message('WARNING: Row barcode for adjusted data did not match original target data')
+  #           # }
+  #           # if(any(target.dat$ADJUST_ORDER != res$ADJUST_ORDER)){
+  #           #   message('WARNING: Row barcode for adjusted data did not match original target data')
+  #           # }
+  #           
+  #           res <- res[, align.cols, with = FALSE]
+  #           names(res) <- paste0(names(res), append.name)
+  #           
+  #           
+  #   
+  #   
+  #   ### Finalise
+  #   
+  #   
+  #   
+  # 
+  #       message('Alignment - finalising')
+  # 
+  #       setwd(dir)
+  #       unlink("Temp -- cytofbatchadjust", recursive = TRUE)
+  # 
+  #       
+  #       #
+  #       #
+  #       #
+  #       
+  #       
+  #       
+  #       
+  #           
+  #       start.dat <- cbind(start.dat, res)
+  #       return(start.dat)
+  # 
+  # }
 }  
 
 
