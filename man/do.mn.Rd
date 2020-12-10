@@ -2,7 +2,7 @@
 % Please edit documentation in R/do.mn.R
 \name{do.mn}
 \alias{do.mn}
-\title{do.mn - Multipurpose function for arcsinh transformation, quantile normalisation, noise reduction, and normalisation}
+\title{do.mn - Multipurpose function for arcsinh transformation, outlier management, and quantile-based re-scaling}
 \usage{
 do.mn(dat, use.cols)
 }
@@ -13,13 +13,15 @@ do.mn(dat, use.cols)
 
 \item{asinh.cf}{DEFAULT = 15. The co-factor to use for arcsinh transformation}
 
-\item{norm}{DEFAULT = c(0,1). New MIN and MAX values for each channel, as c(MIN, MAX).}
+\item{lower.Q}{DEFAULT = 0.001. Quantile target for values at the lower threshold}
 
-\item{lower.threshold}{DEFAULT = 0. Values below this number will be converted to this number.}
+\item{upper.Q}{DEFAULT = 0.995. Quantile target for rescaling, such that the data will be scaled between 0 (the minimum value after clipping) and 1 (upper.Q), where values above the upper.Q will increase above 1 proportionatly.}
 
-\item{upper.Q}{DEFAULT = 0.995. To not utilise the upper quantile function, simply use upper.Q = NULL or upper.Q = 1. When normalising, the new 'maximum' value (defined in the 'norm' argument, typically '1') will be set to this quantile target (for upper.Q = 0.995, this is the 99.5th percentile). As such, any values above the 99.5th percentile will increase above this new maximum value proportionally. Any target between 0 and 1 can be set.}
+\item{lower.func}{DEFAULT = 'clip'. Determine what is done to values below the lower.Q threshold. 'clip' means values below the lower.Q quantile threshold will be clipped to that value. NULL will skip.}
 
 \item{append.name}{DEFAULT = '_transf'. Text to be appended to resultant column name}
+
+\item{save.info}{DEFAULT = TRUE. Save's the transformation details to a .txt file.}
 
 \item{info.dir}{DEFAULT = getwd(). Directory address to save a .txt. file with the settings used for the MRN function.}
 }
@@ -27,7 +29,7 @@ do.mn(dat, use.cols)
 Returns a data.table with transformed data added as new columns.
 }
 \description{
-This function facilitates multiple data transformation functions in a single process, including arcsinh transformation, noise reduction, and normalisation
+This function facilitates multiple data transformation functions in a single process, including arcsinh transformation, outlier management, and quantile-based re-scaling.
 }
 \examples{
 cell.dat <- do.mn()
