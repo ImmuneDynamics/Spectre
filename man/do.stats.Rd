@@ -11,7 +11,7 @@ do.stats(
   grp.col,
   comparisons,
   variance.test = "kruskal.test",
-  pairwise.test = "wilcox.text",
+  pairwise.test = "wilcox.test",
   corrections = "fdr"
 )
 }

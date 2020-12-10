@@ -27,7 +27,8 @@
 
 run.phenograph <- function(dat,
                            use.cols,
-                           k = 45){
+                           k = 45,
+                           clust.name = 'Phenograph_cluster'){
   
   ### Packages
   
@@ -48,6 +49,7 @@ run.phenograph <- function(dat,
       # dat <- Spectre::do.subsample(dat, 5000)
       # use.cols <- names(dat)[c(11:19)]
       # k <- 45
+      # clust.name <- 'Phenograph_cluster'
 
   ### Data setup
   
@@ -58,10 +60,12 @@ run.phenograph <- function(dat,
   ### Clustering
 
       res <- Rphenograph(dat, k = k)
+      res <- factor(membership(res[[2]]))
       
   ### Attach result
       
       res <- as.data.table(res)
+      names(res) <- clust.name
       dat.start <- cbind(dat.start, res)
       
   ### Return
