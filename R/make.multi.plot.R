@@ -217,7 +217,7 @@ make.multi.plot <- function(dat,
   }
 
 
-  ### Arrange plots in grd
+  ### Arrange plots in grid
 
   if(length(plots) < 4){
     num.cols <- length(plots)

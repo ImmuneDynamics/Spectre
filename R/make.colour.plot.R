@@ -178,23 +178,19 @@ make.colour.plot <- function(dat,
   ### Define limits
 
       # X AXIS
-      if(is.null(align.xy.by) == TRUE){
+      if(is.null(align.xy.by)){
         Xmax <- max(dat[[x.axis]])
         Xmin <- min(dat[[x.axis]])
-      }
-
-      if(is.null(align.xy.by) == FALSE){
+      } else {
         Xmax <- max(align.xy.by[[x.axis]])
         Xmin <- min(align.xy.by[[x.axis]])
       }
 
       # Y AXIS
-      if(is.null(align.xy.by) == TRUE){
+      if(is.null(align.xy.by)){
         Ymax <- max(dat[[y.axis]])
         Ymin <- min(dat[[y.axis]])
-      }
-
-      if(is.null(align.xy.by) == FALSE){
+      } else {
         Ymax <- max(align.xy.by[[y.axis]])
         Ymin <- min(align.xy.by[[y.axis]])
       }
@@ -203,28 +199,24 @@ make.colour.plot <- function(dat,
 
       if(!is.null(col.axis)){
         if(col.type == "continuous"){
-          if(is.null(align.col.by) == TRUE){
+          if(is.null(align.col.by)){
             ColrMin <- quantile(dat[[col.axis]], probs = c(col.min.threshold))
             ColrMax <- quantile(dat[[col.axis]], probs = c(col.max.threshold))
-          }
-
-          if(is.null(align.col.by) == FALSE){
+          } else {
             ColrMin <- quantile(align.col.by[[col.axis]], probs = c(col.min.threshold))
             ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold))
           }
         }
 
         if(col.type == "factor"){
-          if(is.null(align.col.by) == TRUE){
+          if(is.null(align.col.by)){
             #ColrMin <- min(d[[col.axis]])
             #ColrMax <- max(d[[col.axis]])
 
             colRange <- unique(dat[[col.axis]])
             colRange <- colRange[order(colRange)]
             colRange <- as.character(colRange)
-          }
-
-          if(is.null(align.col.by) == FALSE){
+          } else {
             #ColrMin <- min(align.col.by[[col.axis]])
             #ColrMax <- max(align.col.by[[col.axis]])
 
@@ -260,7 +252,7 @@ make.colour.plot <- function(dat,
           }
         }
 
-        if(col.type == "factor"){
+        else if(col.type == "factor"){
           p <- ggplot(data = dat,
                       aes(x = .data[[x.axis]],
                           y = .data[[y.axis]],
@@ -282,16 +274,16 @@ make.colour.plot <- function(dat,
             p <- p + viridis::scale_colour_viridis(option = colours)
           }
 
-          if(colours == "jet") {
+          else if(colours == "jet") {
             p <- p + ggplot2::scale_colour_gradientn(colours = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
           }
 
-          if(colours == "spectral"){
+          else if(colours == "spectral"){
             p <- p + ggplot2::scale_colour_gradientn(colours = rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)))
           }
 
           #Blue to Purple
-          if(colours == "BuPu"){
+          else if(colours == "BuPu"){
             colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
             #colours <- colorRampPalette(c(colour.list))
             p <- p + ggplot2::scale_colour_gradientn(colours = colour.list)
@@ -323,8 +315,6 @@ make.colour.plot <- function(dat,
                        axis.title.x=element_text(color="Black", face="bold", size=18),
                        axis.title.y=element_text(color="Black", face="bold", size=18),
                        legend.text=element_text(size=12), # large = 30 # small = 8
-                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-                       legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
                        legend.title=element_blank(),
                        plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
         )
@@ -342,11 +332,23 @@ make.colour.plot <- function(dat,
       }
 
       if(square == TRUE){
-        p <- p+ theme(aspect.ratio=1)
+        p <- p + theme(aspect.ratio=1)
       }
 
       if(!is.null(legend.loc)){
-        p <- p + theme(legend.position=legend.loc)
+        if(legend.loc %in% c("top", "bottom")) {
+          p <- p + theme(legend.direction = "horizontal", 
+                         legend.position=legend.loc,
+                         legend.key.height=unit(0.4,"cm"),
+                         legend.key.width=unit(1,"cm")
+                         )
+        } else {
+          p <- p + theme(legend.direction = "vertical",
+                         legend.position=legend.loc,
+                         legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                         legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
+                         )  
+        }
       }
 
       #p <- p + labs(colour = col.axis)
@@ -419,6 +421,9 @@ make.colour.plot <- function(dat,
                        #plot.title = element_text(color="Black", face="bold", size=15, hjust=0
         )
       }
+      
+      # Reduce plot margin
+      # p <- p + theme(plot.margin = unit(c(0,0,0,0), "cm"))
 
   ### Save plot
       if(save.to.disk == TRUE){
@@ -451,5 +456,7 @@ make.colour.plot <- function(dat,
 
   ### Print plot
       print(p)
+      # maybe return, i'm not sure.
+      # return(p)
 
 }
