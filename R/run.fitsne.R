@@ -8,7 +8,7 @@
 #' @param seed Default = 42. Seed value for reproducibility.
 #' @param fitsne.x.name Default = "FItSNE_X". Character. Name of FItSNE x-axis.
 #' @param fitsne.y.name Default = "FItSNE_Y". Character. Name of FItSNE y-axis.
-#' @param dim Default = 2. Dimensionality of the embedding (reduced data).
+#' @param dims Default = 2. Dimensionality of the embedding (reduced data).
 #' @param perplexity Default = 30. Perplexity is used to determine the bandwidth of the Gaussian kernel in the input space
 #' @param theta Default = 0.5. 
 #'   For exact t-SNE, set to 0. 

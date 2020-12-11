@@ -24,6 +24,8 @@ run.fitsne(dat, use.cols, seed = 42, fitsne.x.name = "FItSNE_X", fitsne.y.name =
 
 \item{fitsne.y.name}{Default = "FItSNE_Y". Character. Name of FItSNE y-axis.}
 
+\item{dims}{Default = 2. Dimensionality of the embedding (reduced data).}
+
 \item{perplexity}{Default = 30. Perplexity is used to determine the bandwidth of the Gaussian kernel in the input space}
 
 \item{theta}{Default = 0.5. 
@@ -108,8 +110,6 @@ t-distribution. The actual degree of freedom is 2*df-1. The standard t-SNE
 choice of 1 degree of freedom corresponds to df=1. Large df approximates
 Gaussian kernel. df<1 corresponds to heavier tails, which can often resolve
 substructure in the embedding. See Kobak et al. (2019) for details.}
-
-\item{dim}{Default = 2. Dimensionality of the embedding (reduced data).}
 }
 \description{
 Implementation of FIt-SNE is available from https://github.com/KlugerLab/FIt-SNE.
