@@ -28,23 +28,23 @@ run.fitsne(dat, use.cols, seed = 42, fitsne.x.name = "FItSNE_X", fitsne.y.name =
 
 \item{perplexity}{Default = 30. Perplexity is used to determine the bandwidth of the Gaussian kernel in the input space}
 
-\item{theta}{Default = 0.5. 
-For exact t-SNE, set to 0. 
-If non-zero, then will use either Barnes Hut or FIt-SNE based on nbody_algo. 
+\item{theta}{Default = 0.5.
+For exact t-SNE, set to 0.
+If non-zero, then will use either Barnes Hut or FIt-SNE based on nbody_algo.
 If Barnes Hut, then this determines the accuracy of BH approximation.}
 
 \item{max_iter}{Default = 750. Number of iterations of t-SNE to run.}
 
 \item{fft_not_bh}{Default = TRUE. If theta is nonzero, this determines whether to use FIt-SNE or Barnes Hut approximation.}
 
-\item{ann_not_vptree}{Default = TRUE. Use vp-trees (as in bhtsne) or approximate nearest neighbors (default). 
+\item{ann_not_vptree}{Default = TRUE. Use vp-trees (as in bhtsne) or approximate nearest neighbors (default).
 Set to be TRUE for approximate nearest neighbors.}
 
 \item{stop_early_exag_iter}{Default = 250. When to switch off early exaggeration.}
 
 \item{exaggeration_factor}{Default = 12. Coefficient for early exaggeration (>1).}
 
-\item{no_momentum_during_exag}{Default = FALSE. Set to 0 to use momentum and other optimization tricks. 
+\item{no_momentum_during_exag}{Default = FALSE. Set to 0 to use momentum and other optimization tricks.
 Can be set to 1 to do plain, vanilla gradient descent (useful for testing large exaggeration coefficients).}
 
 \item{start_late_exag_iter}{Default = -1. When to start late exaggeration.
@@ -59,14 +59,14 @@ Set to 1 by default to not use late exaggeration.}
 
 \item{final_momentum}{Default = 0.8. Value of momentum to use later in the optimisation.}
 
-\item{learning_rate}{Default = 'auto'. Set to desired learning rate or 'auto', which sets 
+\item{learning_rate}{Default = 'auto'. Set to desired learning rate or 'auto', which sets
 learning rate to N/exaggeration_factor where N is the sample size, or to
 200 if N/exaggeration_factor < 200.}
 
 \item{n_trees}{Default = 50. When using Annoy, the number of search trees to use.}
 
 \item{search_k}{Default = -1. When using Annoy, the number of nodes to inspect during
-search. Default is -1 which translate to 3*perplexity*n_trees (or K*n_trees when using fixed sigma).}
+search. Default is -1 which translate to 3\emph{perplexity}n_trees (or K*n_trees when using fixed sigma).}
 
 \item{nterms}{Default = 3. If using FIt-SNE, this is the number of interpolation points
 per sub-interval.}
@@ -74,8 +74,8 @@ per sub-interval.}
 \item{intervals_per_integer}{Default = 1. See min_num_intervals.}
 
 \item{min_num_intervals}{Default = 50. Let maxloc = ceil(max(max(X))) and minloc =
-floor(min(min(X))). i.e. the points are in a [minloc]^no_dims by
-[maxloc]^no_dims interval/square. The number of intervals in each dimension
+floor(min(min(X))). i.e. the points are in a \link{minloc}^no_dims by
+\link{maxloc}^no_dims interval/square. The number of intervals in each dimension
 is either min_num_intervals or ceil((maxloc -
 minloc)/intervals_per_integer), whichever is larger. min_num_intervals must
 be an integer >0, and intervals_per_integer must be >0. Defaults are

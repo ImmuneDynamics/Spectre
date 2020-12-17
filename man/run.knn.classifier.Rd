@@ -17,7 +17,7 @@ run.knn.classifier(train.dat, unlabelled.dat, use.cols, label.col, num.neighbour
 
 \item{num.neighbours}{DEFAULTS to 1. Numeric. When using a k-nearest neighbour classifier, then this parameter specifies the number of nearest neighbours.
 
-Train a k-NN classifier on a training data, and use it to classify an unlabelled data. 
+Train a k-NN classifier on a training data, and use it to classify an unlabelled data.
 Note that for the classifier to work as intended, the unlabelled.data has to be normalised to the range of the train.data.
 Note make sure that train.data and unlabelled.data has exactly the same features/markers.}
 }
