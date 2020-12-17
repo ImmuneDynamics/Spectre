@@ -334,21 +334,22 @@ make.colour.plot <- function(dat,
       if(square == TRUE){
         p <- p + theme(aspect.ratio=1)
       }
-
-      if(!is.null(legend.loc)){
-        if(legend.loc %in% c("top", "bottom")) {
-          p <- p + theme(legend.direction = "horizontal", 
-                         legend.position=legend.loc,
-                         legend.key.height=unit(0.4,"cm"),
-                         legend.key.width=unit(1,"cm")
-                         )
-        } else {
-          p <- p + theme(legend.direction = "vertical",
-                         legend.position=legend.loc,
-                         legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-                         legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
-                         )  
-        }
+      
+      if (legend.loc == 'none') {
+        p <- p + theme(legend.position=legend.loc)
+      } else if(legend.loc %in% c("top", "bottom")) {
+        p <- p + theme(legend.direction = "horizontal", 
+                       legend.position=legend.loc,
+                       legend.key.height=unit(0.4,"cm"),
+                       legend.key.width=unit(1,"cm")
+        )
+      } else {
+        # null which means right or right or left
+        p <- p + theme(legend.direction = "vertical",
+                       legend.position=legend.loc,
+                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                       legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
+        )  
       }
 
       #p <- p + labs(colour = col.axis)
@@ -421,9 +422,6 @@ make.colour.plot <- function(dat,
                        #plot.title = element_text(color="Black", face="bold", size=15, hjust=0
         )
       }
-      
-      # Reduce plot margin
-      # p <- p + theme(plot.margin = unit(c(0,0,0,0), "cm"))
 
   ### Save plot
       if(save.to.disk == TRUE){
@@ -452,11 +450,13 @@ make.colour.plot <- function(dat,
                width = plot.width,
                height = plot.height,
                limitsize = FALSE)
+      } else {
+        print(p)
       }
 
   ### Print plot
-      print(p)
+      # print(p)
       # maybe return, i'm not sure.
-      # return(p)
+      return(p)
 
 }
