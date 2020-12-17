@@ -1,4 +1,4 @@
-#' create.dt - convert a FlowFrame or Seurat or SingleCellExperiment to a data.table
+#' create.dt - convert a or Seurat or SingleCellExperiment to a data.table
 #'
 #' This function converts a Seurat or SingleCellExperiment object into a list containing a data.table, with vectors of gene and dimensionality reduction
 #'
