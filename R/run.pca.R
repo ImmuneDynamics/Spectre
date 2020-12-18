@@ -67,27 +67,27 @@
 #' @export
 
 run.pca <- function(dat,
-                 use.cols,
-                 scale = TRUE,
-                 scree.plot = TRUE,
-                 variable.contribution = TRUE,
-                 plot.individuals = TRUE,
-                 plot.ind.label = "point",
-                 pointsize.ind = 1.5,
-                 row.names = NULL,
-                 plot.ind.group = FALSE,
-                 group.ind = NULL,
-                 colour.group = "viridis",
-                 pointsize.group = 1.5,
-                 ellipse.type = "confidence",
-                 ellipse.level = 0.95,
-                 plot.variables = TRUE,
-                 colour.var  = "solid",
-                 plot.combined = TRUE,
-                 repel = FALSE,
-                 var.numb = 20,
-                 path = getwd()
-                 ) {
+                   use.cols,
+                   scale = TRUE,
+                   scree.plot = TRUE,
+                   variable.contribution = TRUE,
+                   plot.individuals = TRUE,
+                   plot.ind.label = "point",
+                   pointsize.ind = 1.5,
+                   row.names = NULL,
+                   plot.ind.group = FALSE,
+                   group.ind = NULL,
+                   colour.group = "viridis",
+                   pointsize.group = 1.5,
+                   ellipse.type = "confidence",
+                   ellipse.level = 0.95,
+                   plot.variables = TRUE,
+                   colour.var  = "solid",
+                   plot.combined = TRUE,
+                   repel = FALSE,
+                   var.numb = 20,
+                   path = getwd()
+                   ) {
   
   ## Check that necessary packages are installed
   if(!is.element('stats', installed.packages()[,1])) stop('stats is required but not installed')
