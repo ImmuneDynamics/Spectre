@@ -12,18 +12,24 @@
 #' @param dat NO DEFAULT. data.frame.
 #' @param use.cols NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").
 #' @param scale DEFAULT = TRUE. A logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place.
+#' @param add.pca.col DEFAULT = FALSE. Option to add PC coordinates to input data.
+#' @param pca.col.no DEFULAT = 50. Number of PC to be added to input data.
+#' @param pca.lite DEFAULT = FALSE. Will stop running the function after PCA coordinates have been added to input data (assuming add.pca.col = TRUE).
 #' @param scree.plot DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.
 #' @param variable.contribution DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.
 #' @param plot.individuals DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).
 #' @param plot.ind.label DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.
 #' @param pointsize.ind DEFAULT = 1.5. Numeric. Size of dots of individuals on PCA plot.
 #' @param row.names DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.
-#' @param plot.ind.group DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.
+#' @param plot.ind.group DEFAULT = FALSE. Option to group individuals with ellipses (which by default show the 95 % confidence interval). Must specify column that groups individuals with group.ind.
 #' @param group.ind DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.
 #' @param colour.group DEFAULT = "viridis". Colour scheme for each group. Options include "jet", "spectral", "viridis", "inferno", "magma".
 #' @param pointsize.group DEFAULT = 1.5. Numeric. Size of shapes of group individuals on PCA plot.
 #' @param ellipse.type DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.
 #' @param ellipse.level DEFAULT = 0.95. Size of ellipses. By default 95 % (0.95).
+#' @param mean.point DEFAULT = TRUE. Option to plot the mean on PCA plot with different groups.
+#' @param randomise.order DEFAULT = TRUE. Option to randomise plotting order of individuals to control for overlap.
+#' @param order.seed DEFAULT = 42. Set the seed for randomising plotting order of individuals.
 #' @param plot.variables DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).
 #' @param colour.var DEFAULT = "solid". Colour scheme for PCA plot with variables. Options include "solid", "jet", "spectral", "viridis", "inferno", "magma", "BuPu". Note some colours are pale and may not appear clearly on plot.
 #' @param plot.combined DEFAULT = TRUE. Option to create a combined PCA plot with both individuals and variables.
@@ -31,7 +37,7 @@
 #' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
@@ -67,28 +73,34 @@
 #' @export
 
 run.pca <- function(dat,
-                 use.cols,
-                 scale = TRUE,
-                 scree.plot = TRUE,
-                 variable.contribution = TRUE,
-                 plot.individuals = TRUE,
-                 plot.ind.label = "point",
-                 pointsize.ind = 1.5,
-                 row.names = NULL,
-                 plot.ind.group = FALSE,
-                 group.ind = NULL,
-                 colour.group = "viridis",
-                 pointsize.group = 1.5,
-                 ellipse.type = "confidence",
-                 ellipse.level = 0.95,
-                 plot.variables = TRUE,
-                 colour.var  = "solid",
-                 plot.combined = TRUE,
-                 repel = FALSE,
-                 var.numb = 20,
-                 path = getwd()
-                 ) {
-  
+                    use.cols,
+                    scale = TRUE,
+                    add.pca.col = FALSE,
+                    pca.col.no = 50,
+                    pca.lite = FALSE,
+                    scree.plot = TRUE,
+                    variable.contribution = TRUE,
+                    plot.individuals = TRUE,
+                    plot.ind.label = "point",
+                    pointsize.ind = 1.5,
+                    row.names = NULL,
+                    plot.ind.group = FALSE,
+                    group.ind = NULL,
+                    colour.group = "viridis",
+                    pointsize.group = 1.5,
+                    ellipse.type = "confidence",
+                    ellipse.level = 0.95,
+                    mean.point = TRUE,
+                    randomise.order = TRUE,
+                    order.seed = 42,
+                    plot.variables = TRUE,
+                    colour.var  = "solid",
+                    plot.combined = TRUE,
+                    repel = FALSE,
+                    var.numb = 20,
+                    path = getwd()
+                    ) {
+
   ## Check that necessary packages are installed
   if(!is.element('stats', installed.packages()[,1])) stop('stats is required but not installed')
   if(!is.element('factoextra', installed.packages()[,1])) stop('factoextra is required but not installed')
@@ -119,6 +131,26 @@ run.pca <- function(dat,
   pca_out <- stats::prcomp(dat[, use.cols],
                            scale = scale
                            )
+  
+  # Add PCA coordinates to input data
+  if(add.pca.col == TRUE) {
+    # Extract coordinates of individuals
+    pca_out_ind <- factoextra::get_pca_ind(pca_out)
+    pca_ind_coord <- data.table::as.data.table(pca_out_ind$coord) #coordinates of each point for PCA plot
+    
+    # Select number of columns to add to input data
+    if(ncol(pca_ind_coord) > pca.col.no){
+      pca_ind_coord <- pca_ind_coord[,1:pca.col.no]
+    }
+    
+    dat.merge.ind <- cbind(dat, pca_ind_coord)
+    return(dat.merge.ind)
+  }
+  
+  # Stop the function!
+  if(pca.lite == TRUE) {
+    stop("PCA complete! PC coordinates have been added to input data if add.pca.col = TRUE. See you Space Cowboy...")
+  }
   
   # Create scree plot
   if (scree.plot == TRUE) {
@@ -235,8 +267,23 @@ run.pca <- function(dat,
                                                   legend.title = "Groups",
                                                   repel = repel,
                                                   geom = plot.ind.label,
-                                                  pointsize = pointsize.group
+                                                  pointsize = pointsize.group,
+                                                  mean.point = mean.point
                                                   )
+    
+    if(randomise.order == TRUE) {
+      # Breakdown plot
+      #https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
+      edit.plot <- ggplot2::ggplot_build(pca_out_ind_group)
+      
+      # Randomise order
+      set.seed(order.seed)
+      nsub <- sample(nrow(edit.plot[["data"]][[1]]))
+      edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub,]
+      
+      # Re-create plot
+      pca_out_ind_group <- ggplot2::ggplot_gtable(edit.plot)
+    }
     
     ggplot2::ggsave(pca_out_ind_group,
                     filename = "PCA plot-ind-groups.pdf",

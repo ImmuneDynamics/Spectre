@@ -54,6 +54,7 @@ read.files <- function(file.loc = getwd(),
         }
 
     ## Read data from Files into list of data frames
+        
         data.list=list() # Creates and empty list to start
 
         ncol.check = list() # creates an empty list
@@ -61,6 +62,7 @@ read.files <- function(file.loc = getwd(),
         nrow.check = list()
 
     ## For reading CSV files
+        
         if(file.type == ".csv"){
           file.names <- list.files(path=wd, pattern = file.type)
 
@@ -75,6 +77,7 @@ read.files <- function(file.loc = getwd(),
         }
 
     ## For reading FCS files
+        
         if(file.type == ".fcs"){
           if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
           require(flowCore)

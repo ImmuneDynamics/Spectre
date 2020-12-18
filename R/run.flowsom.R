@@ -77,6 +77,7 @@ run.flowsom <- function(dat,
       clustering.cols <- use.cols
 
   ### Check selected columns are numeric
+      
       if(any(unlist(lapply(dat[, use.cols, with = FALSE], is.numeric)) == FALSE)) {
         stop('Non-numeric column selected for analysis. Check use.cols parameter.')
       }
@@ -84,6 +85,7 @@ run.flowsom <- function(dat,
       dat <- dat[,use.cols, with = FALSE]
 
   ### Create flowFrame metadata (column names with descriptions) plus flowFrame
+      
       metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
       dat.ff <- new("flowFrame",
                      exprs=as.matrix(dat), # in order to create a flow frame, data needs to be read as matrix
@@ -100,6 +102,7 @@ run.flowsom <- function(dat,
       }
 
   ### Run FlowSOM clustering
+      
       message("Starting FlowSOM")
 
       FlowSOM_cols <- clustering.cols # clustering cols

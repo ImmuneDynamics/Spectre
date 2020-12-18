@@ -34,6 +34,20 @@ create.dt <- function(dat,
       # dat <- pbmc
       # dat <- pbmc.sce
       # from <- NULL
+  
+      # dat <- Spectre::demo.asinh
+      # from <- NULL
+      # 
+      # metadata <- data.frame(name=dimnames(dat)[[2]], desc=paste('column',dimnames(dat)[[2]],'from dataset'))
+      # dat.ff <- new("flowFrame",
+      #               exprs=as.matrix(dat), # in order to create a flow frame, data needs to be read as matrix
+      #               parameters=Biobase::AnnotatedDataFrame(metadata))
+      # 
+      # head(flowCore::exprs(dat.ff))
+      # dat <- dat.ff
+      # 
+      # rm(dat.ff)
+      # rm(metadata)
  
   ### Determine class of object
       
@@ -282,6 +296,49 @@ create.dt <- function(dat,
             
             message(paste0("Converted a ", object.type, " object into a data.table stored in a list"))
             return(final.res)
+      }
+  
+  ######################################################################################################
+  ### OPTION: flowFrames
+  ######################################################################################################
+  
+      if(object.type == "flowFrame"){
+        
+        message(object.type, ' detected')
+        
+        ### Packages
+        
+            require('flowCore')
+            require('data.table')
+
+        ### Extract 'exprs'
+        
+            res <- exprs(dat)
+            res <- res[1:nrow(res),1:ncol(res)]
+            res <- as.data.table(res)
+            
+            for(i in names(res)){
+              # i <- names(res)[1]
+              
+              if(!any(is.na(as.numeric(as.character(res[[i]]))))){
+                res[[i]] <- as.numeric(res[[i]])
+              }
+              
+            }
+
+        ### Setup list
+        
+            final.res <- list()
+            
+            final.res$data.table <- res
+            final.res$parameters <- dat@parameters
+            final.res$description <- dat@description
+
+        ### Return
+            
+            message(paste0("Converted a ", object.type, " object into a data.table stored in a list"))
+            return(final.res)
+        
       }
 
 }
