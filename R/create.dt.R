@@ -23,12 +23,18 @@ create.dt <- function(dat,
   ######################################################################################################
   ### Setup
   ######################################################################################################
-      
+    
   ### Packages
   
       require('Spectre')
       require('data.table')
   
+  ### Demo data
+  
+      # dat <- pbmc
+      # dat <- pbmc.sce
+      # from <- NULL
+ 
   ### Determine class of object
       
       if(class(dat)[1] == 'Seurat'){
@@ -80,7 +86,6 @@ create.dt <- function(dat,
             if(length(var.features) > 0){
               var.features.top10 <- head(VariableFeatures(dat), 10)
             }
-            
 
         ### Genes and cells
             
@@ -91,7 +96,17 @@ create.dt <- function(dat,
             
             res <- as.data.table(cellNames)
             names(res) <- 'cellNames'
+        
+        ### Add metadata
             
+            if(!is.null(dat@meta.data)){
+              col.meta <- dat@meta.data
+              col.meta <- as.data.table(col.meta)
+              meta.cols <- names(col.meta)
+              
+              res <- cbind(res, col.meta)
+            }
+              
         ### Add data from slots
    
             for(i in assays){
@@ -158,6 +173,8 @@ create.dt <- function(dat,
             final.res$geneNames <- geneNames
             final.res$cellNames <- cellNames
             
+            final.res$meta.data <- meta.cols
+            
             if(length(var.features) > 0){
               final.res$var.features <- var.features
               final.res$var.features.top10 <- var.features.top10
@@ -199,12 +216,13 @@ create.dt <- function(dat,
             dim.reds
         
         ###
+            
             res <- as.data.table(cellNames)
             names(res) <- 'cellNames'
         
         ### Add metadata
             
-            if(exists('dat@colData')){
+            if(!is.null(dat@colData)){
               col.meta <- dat@colData
               col.meta <- as.data.table(col.meta)
               meta.cols <- names(col.meta)
@@ -258,6 +276,7 @@ create.dt <- function(dat,
             final.res$data.table <- res
             final.res$geneNames <- geneNames
             final.res$cellNames <- cellNames
+            final.res$meta.data <- meta.cols
             final.res$assays <- paste0('_', assays)
             final.res$dim.reds <- paste0(dim.reds, '_')
             

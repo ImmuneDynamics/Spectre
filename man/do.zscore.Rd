@@ -7,9 +7,11 @@
 do.zscore(dat, use.cols)
 }
 \arguments{
-\item{dat}{NO DEFAULT. A data.table (or data.frame) containing the data to be converted to z-scores.}
+\item{dat}{NO DEFAULT. A data.table (or data.frame) containing the data to be converted to z-scores. Z-score transformed values will be added as new columns.}
 
 \item{use.cols}{NO DEFAULT. The columns to be used for z-score calculations.}
+
+\item{append.name}{DEFAULT = '_zscore'. Text to be appended to the end of the new z-score transformed columns.}
 }
 \value{
 Returns a new data.table with z-score calculations for each selected column

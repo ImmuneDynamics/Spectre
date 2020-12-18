@@ -1,6 +1,6 @@
-#' run.train.knn.classifier - Train KNN classifier
+#' train.knn.classifier - Train KNN classifier
 #'
-#' @usage run.train.knn.classifier(dat, use.cols, label.col,min.num.neighbours, max.num.neighbours, evaluation.metric, num.folds, num.repeats)
+#' @usage train.knn.classifier(dat, use.cols, label.col,min.num.neighbours, max.num.neighbours, evaluation.metric, num.folds, num.repeats)
 #'
 #' @param dat NO DEFAULT. data.frame. A dataframe containing cells (rows) vs features/markers (columns) to be used to train k-nearest neighbour (KNN) classifier 
 #' @param use.cols NO DEFAULT. Vector of column names to use for training k-nearest neighbour (KNN) classifier.
@@ -31,14 +31,14 @@
 #'
 #' @export
 
-run.train.knn.classifier <- function(dat, 
-                                     use.cols,
-                                     label.col,
-                                     min.num.neighbours = 1,
-                                     max.num.neighbours = 10,
-                                     evaluation.metric = 'Accuracy',
-                                     num.folds = 10,
-                                     num.repeats = 10){
+train.knn.classifier <- function(dat, 
+                                 use.cols,
+                                 label.col,
+                                 min.num.neighbours = 1,
+                                 max.num.neighbours = 10,
+                                 evaluation.metric = 'Accuracy',
+                                 num.folds = 10,
+                                 num.repeats = 10){
   
   if(!is.element('caret', installed.packages()[,1])) stop('caret is required but not installed')
   require(caret)

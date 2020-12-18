@@ -4,16 +4,16 @@
 #'
 #' @export
 
-do.stats <- function(dat,
-                     use.cols,
-                     sample.col,
-                     grp.col,
-
-                     comparisons, # make a tool to create a factorial comparison design -- for now just specify manually
-
-                     variance.test = "kruskal.test", ## add ANOVA
-                     pairwise.test = "wilcox.test", ## Add t-test
-                     corrections = "fdr"){
+create.stats <- function(dat,
+                         use.cols,
+                         sample.col,
+                         grp.col,
+    
+                         comparisons, # make a tool to create a factorial comparison design -- for now just specify manually
+    
+                         variance.test = "kruskal.test", ## add ANOVA
+                         pairwise.test = "wilcox.test", ## Add t-test
+                         corrections = "fdr"){
 
   ### Test data
       # dat <- merged.dat
