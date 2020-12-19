@@ -17,7 +17,7 @@
 #'   If this is set to FALSE, default or overriden 
 #'   \code{linearisation.width, max.scale.val, full.transform.width, additional.negative.range}
 #'   will be used instead to calculate the logical transformation function.
-#' @param linearisation.width Default = 0.5. Linearisation width in asymptotic decades.
+#' @param linearisation.width Default = 1.2. Linearisation width in asymptotic decades.
 #'   This must be > 0 and determines the slope of transformation at zero.
 #'   It can be estimated using equation:
 #'   \eqn{(m-log10(max.scale.val/|r|))/2}
@@ -49,7 +49,7 @@
 do.logicle <- function(dat, 
                        use.cols,
                        auto.infer.function = TRUE,
-                       linearisation.width = 0.5,
+                       linearisation.width = 1.2,
                        max.scale.val = 262144,
                        full.transform.width = 4.5,
                        additional.negative.range = 0) {
@@ -99,6 +99,7 @@ do.logicle <- function(dat,
   message("Transforming data")
   trans.val <- transform(ff, lgcl)
   
+  message("Converting data back to data.table")
   trans.val.dt <- data.table(exprs(trans.val))
   names(trans.val.dt) <- paste(names(trans.val.dt), "logicle", sep = "_")
   
