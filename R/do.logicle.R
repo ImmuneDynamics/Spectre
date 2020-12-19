@@ -19,6 +19,7 @@
 #'   will be used instead to calculate the logical transformation function.
 #' @param linearisation.width Default = 1.2. Linearisation width in asymptotic decades.
 #'   This must be > 0 and determines the slope of transformation at zero.
+#'   We found 1.2 works well for flow data, and 0.5 works well for cytof data.
 #'   It can be estimated using equation:
 #'   \eqn{(m-log10(max.scale.val/|r|))/2}
 #'   where r is the most negative value to included in the display.
