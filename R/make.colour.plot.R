@@ -316,6 +316,8 @@ make.colour.plot <- function(dat,
                        axis.title.y=element_text(color="Black", face="bold", size=18),
                        legend.text=element_text(size=12), # large = 30 # small = 8
                        legend.title=element_blank(),
+                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                       legend.key.width=unit(0.4,"cm"),
                        plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
         )
       }
@@ -335,21 +337,14 @@ make.colour.plot <- function(dat,
         p <- p + theme(aspect.ratio=1)
       }
       
-      if (legend.loc == 'none') {
+      if (!is.null(legend.loc)) {
         p <- p + theme(legend.position=legend.loc)
-      } else if(legend.loc %in% c("top", "bottom")) {
-        p <- p + theme(legend.direction = "horizontal", 
-                       legend.position=legend.loc,
-                       legend.key.height=unit(0.4,"cm"),
-                       legend.key.width=unit(1,"cm")
-        )
-      } else {
-        # null which means right or right or left
-        p <- p + theme(legend.direction = "vertical",
-                       legend.position=legend.loc,
-                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-                       legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
-        )  
+        if(legend.loc %in% c("top", "bottom")) {
+          p <- p + theme(legend.position=legend.loc,
+                         legend.key.height=unit(0.4,"cm"),
+                         legend.key.width=unit(1,"cm")
+          )
+        }
       }
 
       #p <- p + labs(colour = col.axis)
