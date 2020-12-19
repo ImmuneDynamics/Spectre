@@ -97,7 +97,7 @@ do.logicle <- function(dat,
   
   # Do transformation
   message("Transforming data")
-  trans.val <- transform(ff, lgcl)
+  trans.val <- flowCore::transform(ff, lgcl)
   
   message("Converting data back to data.table")
   trans.val.dt <- data.table(exprs(trans.val))
