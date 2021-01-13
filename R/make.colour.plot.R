@@ -91,7 +91,7 @@ make.colour.plot <- function(dat,
                              nudge_x = 0.5,
                              nudge_y = 0.5,
                              square = TRUE,
-                             legend.loc = NULL, # 'right' and 'bottom'
+                             legend.loc = 'right', # 'right' and 'bottom'
                              save.to.disk = TRUE,
                              path = getwd(),
                              blank.axis = FALSE){
@@ -110,6 +110,40 @@ make.colour.plot <- function(dat,
       require(ggthemes)
       require(RColorBrewer)
 
+  ### Demo data
+  
+      # dat <- Spectre::demo.clustered
+      # x.axis <- 'UMAP_X'
+      # y.axis <- 'UMAP_Y'
+      # col.axis <- 'Population'
+      # 
+      # col.type = "continuous" # can be "continuous" or "factor"
+      # add.label = FALSE # only works for 'factor'
+      # 
+      # hex = FALSE
+      # hex.bins = 30
+      # colours = "spectral" # can be spectral, jet, etc      # only works for continuous
+      # col.min.threshold = 0.01
+      # col.max.threshold = 0.995
+      # align.xy.by = dat
+      # align.col.by = dat
+      # 
+      # regression.line = NULL # "lm" # "loess"
+      # 
+      # title = col.axis
+      # filename = NULL
+      # 
+      # dot.size = 1
+      # plot.width = 9
+      # plot.height = 7
+      # nudge_x = 0.5
+      # nudge_y = 0.5
+      # square = TRUE
+      # legend.loc = NULL # 'right' and 'bottom'
+      # save.to.disk = TRUE
+      # path = getwd()
+      # blank.axis = FALSE
+      
   ### Some tests
 
       if(hex == TRUE){
@@ -335,7 +369,8 @@ make.colour.plot <- function(dat,
         p <- p + theme(aspect.ratio=1)
       }
       
-      if (legend.loc == 'none') {
+      if (is.null(legend.loc)) {
+        legend.loc <- 'none'
         p <- p + theme(legend.position=legend.loc)
       } else if(legend.loc %in% c("top", "bottom")) {
         p <- p + theme(legend.direction = "horizontal", 
