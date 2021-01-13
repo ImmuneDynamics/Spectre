@@ -276,7 +276,7 @@
                     write.fcs = TRUE)
         
 ##########################################################################################################
-#### Fine alignment
+#### Fine alignment with CytoNorm
 ##########################################################################################################
 
     setwd(OutputDirectory)
@@ -463,4 +463,22 @@
                     divide.by = sample.col, 
                     write.csv = FALSE, 
                     write.fcs = TRUE)
+        
+##########################################################################################################
+#### Save session info
+##########################################################################################################
+
+    setwd(OutputDirectory)
+    dir.create("Output - info", showWarnings = FALSE)
+    setwd("Output - info")
+
+    ### Save session info to disk
+        
+        setwd(OutputDirectory)
+        dir.create("Output - info", showWarnings = FALSE)
+        setwd("Output - info")
+        
+        sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
+        session_info()
+        sink()
         

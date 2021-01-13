@@ -81,7 +81,7 @@
         cell.dat
 
 ##########################################################################################################
-#### Acrsinh transformations
+#### Arcsinh transformation
 ##########################################################################################################
 
     setwd(OutputDirectory)
@@ -141,7 +141,7 @@
         as.matrix(names(cell.dat))
 
 ##########################################################################################################
-#### Add metadata and set preferences
+#### Add metadata
 ##########################################################################################################
         
     setwd(MetaDirectory)
@@ -173,9 +173,9 @@
 
     ### Save session info to disk
 
-        setwd(OutputDirectory)
-        dir.create("Output - info", showWarnings = FALSE)
-        setwd("Output - info")
+    setwd(OutputDirectory)
+    dir.create("Output - info", showWarnings = FALSE)
+    setwd("Output - info")
 
         sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
         session_info()

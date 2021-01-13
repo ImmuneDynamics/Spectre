@@ -68,6 +68,21 @@
         cell.dat <- Spectre::do.merge.files(dat = data.list)
         cell.dat
 
+    ### Read in metadata  
+       
+        setwd(MetaDirectory)
+        
+        meta.dat <- fread("sample.details.csv")
+        meta.dat
+        
+##########################################################################################################
+#### 3. Data transformation
+##########################################################################################################
+
+    setwd(OutputDirectory)
+    dir.create("Output 1 - transformed plots")
+    setwd("Output 1 - transformed plots")
+        
     ### Arcsinh transformation
 
         as.matrix(names(cell.dat))
@@ -81,24 +96,15 @@
         cell.dat <- do.asinh(cell.dat, to.asinh, cofactor = cofactor)
         transformed.cols <- paste0(to.asinh, "_asinh")
 
-        setwd(OutputDirectory)
-        dir.create("Output - transformed plots")
-        setwd("Output - transformed plots")
-
         for(i in transformed.cols){
           make.colour.plot(do.subsample(cell.dat, 20000), i, plot.against)
         }
 
 ##########################################################################################################
-#### 3. Add metadata and set some preferences
+#### 4. Add metadata and set some preferences
 ##########################################################################################################
 
-    setwd(MetaDirectory)
-
-    ### Metadata
-
-        meta.dat <- fread("sample.details.csv")
-        meta.dat
+    ### Add metadata to data.table
 
         sample.info <- meta.dat[,c(1:4)]
         sample.info
@@ -132,12 +138,12 @@
         sub.targets
 
 ##########################################################################################################
-#### 4. Clustering and dimensionality reduction
+#### 5. Clustering and dimensionality reduction
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output - clustering")
-    setwd("Output - clustering")
+    dir.create("Output 2 - clustering")
+    setwd("Output 2 - clustering")
 
     ### Clustering
 
@@ -163,12 +169,12 @@
         make.pheatmap(exp, "FlowSOM_metacluster", cellular.cols)
 
 ##########################################################################################################
-#### 5. Annotate clusters
+#### 6. Annotate clusters
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output - annotation")
-    setwd("Output - annotation")
+    dir.create("Output 3 - annotation")
+    setwd("Output 3 - annotation")
 
     ### Annotate
 
@@ -199,14 +205,45 @@
         make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", col.type = 'factor', add.label = TRUE)
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", group.col, col.type = 'factor')
 
+    ### Expression heatmap
+        
+        rm(exp)
+        exp <- do.aggregate(cell.dat, cellular.cols, by = "Population")
+        make.pheatmap(exp, "Population", cellular.cols)
+        
+    ### Write FCS files
+        
+        setwd(OutputDirectory)
+        setwd("Output 3 - annotation")
+        
+        dir.create('FCS files')
+        setwd('FCS files')
+        
+        write.files(cell.dat,
+                    file.prefix = exp.name,
+                    divide.by = sample.col,
+                    write.csv = FALSE,
+                    write.fcs = TRUE)
+        
 ##########################################################################################################
-#### 6. Summary data
+#### 7. Summary data and statistical analysis
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output - summary data")
-    setwd("Output - summary data")
+    dir.create("Output 4 - summary data")
+    setwd("Output 4 - summary data")
 
+    ### Setup
+    
+        variance.test <- 'kruskal.test'
+        pairwise.test <- "wilcox.test"
+    
+        comparisons <- list(c("Mock", "WNV"))
+        comparisons
+        
+        grp.order <- c("Mock", "WNV")
+        grp.order
+    
     ### Select columns to measure MFI
     
         as.matrix(cellular.cols)
@@ -219,7 +256,7 @@
                                    sample.col = sample.col,
                                    pop.col = "Population",
                                    use.cols = dyn.cols, 
-                                   annot.cols = c('Group', 'Batch'), 
+                                   annot.cols = c(group.col, batch.col), 
                                    counts = counts)
         
     ### Review summary data
@@ -227,9 +264,16 @@
         sum.dat
         as.matrix(names(sum.dat))
         
-        plot.cols <- names(sum.dat)[c(4:15,18:19,22:27)]
+        annot.cols <- c(group.col, batch.col)
+        
+        plot.cols <- names(sum.dat)[c(4:27)]
         plot.cols
 
+    ### Reorder summary data
+        
+        sum.dat <- do.reorder(sum.dat, group.col, grp.order)
+        sum.dat[,c(1:3)]
+        
     ### Autographs
 
         for(i in plot.cols){
@@ -244,6 +288,13 @@
                            x.axis = group.col,
                            y.axis = i,
                            y.axis.label = measure,
+                           
+                           grp.order = grp.order,
+                           my_comparisons = comparisons,
+                           
+                           Variance_test = variance.test,
+                           Pairwise_test = pairwise.test,
+                           
                            title = pop,
                            subtitle = measure,
                            filename = paste0(i, '.pdf'))
@@ -252,15 +303,31 @@
         
     ### Create a fold change heatmap
         
+        ## Z-score calculation
         sum.dat.z <- do.zscore(sum.dat, plot.cols)
-        make.pheatmap(sum.dat.z, sample.col = sample.col, plot.cols = plot.cols, is.fold = TRUE, cutree_rows = 2, cutree_cols = 3)
-
+        
+        ## Group 
+        t.first <- match(grp.order, sum.dat.z[[group.col]])
+        t.first <- t.first -1
+        t.first
+        
+        ## Make heatmap
+        make.pheatmap(sum.dat.z, 
+                      sample.col = sample.col, 
+                      plot.cols = paste0(plot.cols, '_zscore'), 
+                      is.fold = TRUE, 
+                      plot.title = 'Z-score',
+                      annot.cols = annot.cols,
+                      dendrograms = 'column',
+                      row.sep = t.first,
+                      cutree_cols = 3)
 
 ##########################################################################################################
-#### 7. Output session info and FCS files
+#### 8. Output session info
 ##########################################################################################################
 
     ### Session info and metadata
+        
         setwd(OutputDirectory)
         dir.create("Output - info", showWarnings = FALSE)
         setwd("Output - info")
@@ -271,16 +338,4 @@
 
         write(cellular.cols, "cellular.cols.txt")
         write(cluster.cols, "cluster.cols.txt")
-
-    ### Write FCS files
-
-        setwd(OutputDirectory)
-        dir.create("Output - FCS files", showWarnings = FALSE)
-        setwd("Output - FCS files")
-
-        write.files(cell.dat,
-                    file.prefix = exp.name,
-                    divide.by = sample.col,
-                    write.csv = FALSE,
-                    write.fcs = TRUE)
 

@@ -95,14 +95,7 @@
         
         as.matrix(unique(cell.dat[[sub.by]]))
 
-        cells.per <- list()
-        
-        for(i in unique(cell.dat[[sub.by]])){
-            # i <- unique(cell.dat[[sub.by]])[[1]]
-            cells.per[[i]] <- nrow(cell.dat[cell.dat[[sub.by]] == i,])
-        }
-        
-        cells.per
+        data.frame(table(cell.dat[[group.col]]))
         
         sub.targets <- c(2000, 18380)
         sub.targets

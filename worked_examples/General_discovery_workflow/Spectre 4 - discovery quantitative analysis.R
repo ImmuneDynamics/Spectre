@@ -67,7 +67,7 @@
         sum.dat    
 
 ##########################################################################################################
-#### Meta data
+#### Metadata
 ##########################################################################################################
         
     setwd(MetaDirectory)
@@ -109,12 +109,8 @@
         
         grp.order <- c("Mock", "WNV")
         grp.order
-        
-##########################################################################################################
-#### Sort data
-##########################################################################################################
 
-    ### Set order 
+    ### Sort row order
 
         sum.dat <- do.reorder(sum.dat, group.col, grp.order)
         
@@ -137,11 +133,6 @@
         
         as.matrix(names(sum.dat.z))
         sum.dat.z
-        
-        # res <- scale(sum.dat.z[,plot.cols, with = FALSE])
-        # res <- as.data.table(res)
-        # sum.dat.z[,plot.cols] <- res
-        # sum.dat.z
 
         fwrite(sum.dat, "Summary data.csv")
         fwrite(sum.dat.z, "Summary data - z-score.csv")
@@ -238,33 +229,17 @@
 
     ### Create annotation data.frame
 
-        x <- rbind(pval.sig, pval.fdr.sig)
-
-        # x <- data.frame("p_value" = pval,
-        #                 "p_value_FDR" = pval.fdr)
-
-        x <- t(x)
-        x <- as.data.frame(x)
-        x
+        feature.annots <- rbind(pval.sig, pval.fdr.sig)
+        feature.annots <- t(feature.annots)
+        feature.annots <- as.data.frame(feature.annots)
         
-        # x <- as.matrix(x)
-        # feature.annots <- as.data.frame(x)
-        # rownames(feature.annots) <- plot.cols
-        # feature.annots
-
-        #str(feature.annots)
-        #str(my_sample_col)
-        str(x)
-
-        feature.annots <- x
+        feature.annots
+        str(feature.annots)
 
         p.val.annots
         p.val.fdr.annots
 
         annotation_colors <- c(p.val.annots, p.val.fdr.annots)
-
-        # annotation_colors <- list('p_value' = c('NS' = "Black", "Significant" = "Blue"),
-        #                           'p_value_FDR' = c('NS' = "Black", "Significant" = "Red"))
 
 ##########################################################################################################
 #### Differential heatmap
@@ -273,8 +248,6 @@
     setwd(OutputDirectory)
     dir.create("Output 2 - heatmaps")
     setwd("Output 2 - heatmaps")
-
-    sum.dat.z[[group.col]]
 
     ### Determine rows for the start of each new group
     
@@ -297,7 +270,6 @@
                       cutree_cols = 2,
                       plot.title = "All features - z-score (static rows)",
                       file.name = "All features - z-score (static rows).png")
-
         
     ### Heatmap (clustered rows)
         
@@ -486,7 +458,7 @@
         }
 
 ##########################################################################################################
-#### AutoGraphs
+#### Violin plots (with stats)
 ##########################################################################################################
 
     setwd(OutputDirectory)
@@ -522,15 +494,15 @@
 ##########################################################################################################
 
     ### Save session info
-    
-    setwd(OutputDirectory)
-    dir.create("Output - info")
-    setwd("Output - info")
-    
-    sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
-    session_info()
-    sink()
-    
-    setwd(PrimaryDirectory)
+        
+        setwd(OutputDirectory)
+        dir.create("Output - info")
+        setwd("Output - info")
+        
+        sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
+        session_info()
+        sink()
+        
+        setwd(PrimaryDirectory)
     
     
