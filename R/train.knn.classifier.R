@@ -7,7 +7,9 @@
 #' @param label.col NO DEFAULT. Character. Name of the column representing the population name of the cells in dat.
 #' @param min.num.neighbours DEFAULTS to 1. Numeric. When using a k-nearest neighbour (KNN) classifier, this parameter specifies the minimum number of nearest neighbours used to train the KNN classifier.
 #' @param max.num.neighbours DEFAULTS to 1. Numeric. When using a k-nearest neighbour (KNN) classifier, this parameter specifies the maximum number of nearest neighbours used to train the KNN classifier.
-#' @param evaluation.metric DEFAULTS to 'Accuracy'. Character. How do you want the classifier performance to be evaluated? By measuring accuracy (pass "Accuracy") or Cohen Kappa score (pass "Kappa").
+#' @param method DEFAULTS to random. Can either be random which randomly shuffle data and split them into 2 halves,
+#'   one for training, the other for testing. Or CV (cross validation) where data is split into num.folds complementary 
+#'   portions, and num.folds-1 portions used for training and the remaining for testing.
 #' @param num.folds DEFAULTS to 10. Numeric. Number of chunks the training data is to be split into. The classifier will then take 1 chunk for testing the classifier (after it's trained), and use the remaining chunk to train the classifier.
 #' @param num.repeats DEFAULTS to 10. Numeric. Number of time the classifier will be trained (per number of neighbours). For each repeat, different chunk will be used for testing and training.
 #' 
@@ -36,16 +38,15 @@ train.knn.classifier <- function(dat,
                                  label.col,
                                  min.num.neighbours = 1,
                                  max.num.neighbours = 10,
-                                 evaluation.metric = 'Accuracy',
+                                 method = c('random', 'CV'),
                                  num.folds = 10,
                                  num.repeats = 10){
   
   if(!is.element('caret', installed.packages()[,1])) stop('caret is required but not installed')
-  require(caret)
+  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
   
-  # check the metric given is valid
-  valid.metrics <- c("Accuracy", "Kappa")
-  if(!(evaluation.metric %in% valid.metrics)) stop("evaluation.metric can only either be 'Accuracy' or 'Kappa'")
+  require(data.table)
+  require(caret)
   
   dat.features <- dat[, ..use.cols]
   dat.labels <- as.character(dat[[label.col]])
@@ -57,21 +58,60 @@ train.knn.classifier <- function(dat,
   # add the label as a column in normalised data
   normalised.data[, ('population') := dat.labels]
   
-  # split data into 10 folds and repeat training and testing 10 times
-  # each iteration will train and test on different fold.
-  trControl <- caret::trainControl(
-    method = 'repeatedcv',
-    number = num.folds,
-    repeats = num.repeats
-  )
+  method <- match.arg(method)
   
-  # train the classifier
-  knn.fit <- caret::train(population ~ .,
-                   method     = "knn",
-                   tuneGrid   = expand.grid(k = min.num.neighbours:max.num.neighbours),
-                   trControl  = trControl,
-                   metric     = evaluation.metric,
-                   data       = normalised.data)
-  
-  return(knn.fit)
+  if (method == 'random') {
+    set.seed(42)
+    num_row <- nrow(normalised.data)
+    normalised.data <- normalised.data[sample(num_row), ]
+    split <- round(num_row/ 2)
+    
+    train.dat <- normalised.data[c(1:split),]
+    valid.dat <- normalised.data[c( (split+1) : num_row),]
+    
+    knn.res <- list()
+    num_neighbours <- c(min.num.neighbours:max.num.neighbours)
+    
+    for (n in num_neighbours) {
+      message(paste("Evaluating", n))
+      res.knn <- Spectre::run.knn.classifier(train.dat = train.dat,
+                                             unlabelled.dat = valid.dat,
+                                             use.cols = cols,
+                                             label.col = "population",
+                                             num.neighbours = n)
+      knn.res[[n]] <- res.knn
+    }
+    accuracies <- sapply(knn.res, function(res) {
+      cm = as.matrix(table(Actual = res$population, 
+                           Predicted = res$Prediction))
+      corr.pred = sum(diag(cm))/length(res$Prediction)
+    })
+    
+    acc.dat = data.table(k=num_neighbours,
+                         accuracy=accuracies)
+    
+    
+  } else if (method == 'CV') {
+    # split data into 10 folds and repeat training and testing 10 times
+    # each iteration will train and test on different fold.
+    trControl <- caret::trainControl(
+      method = 'repeatedcv',
+      number = num.folds,
+      repeats = num.repeats
+    )
+    
+    # train the classifier
+    knn.fit <- caret::train(population ~ .,
+                            method     = "knn",
+                            tuneGrid   = expand.grid(k = min.num.neighbours:max.num.neighbours),
+                            trControl  = trControl,
+                            metric     = 'Accuracy',
+                            data       = normalised.data)
+    
+    acc.dat <- data.table(k=knn.fit$results$k, 
+                          accuracy=knn.fit$results$Accuracy, 
+                          accuracySD=knn.fit$results$AccuracySD)
+    
+  }
+  return(acc.dat)
 }

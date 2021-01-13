@@ -111,15 +111,15 @@ make.colour.plot <- function(dat,
       require(RColorBrewer)
 
   ### Demo data
-  
+
       # dat <- Spectre::demo.clustered
       # x.axis <- 'UMAP_X'
       # y.axis <- 'UMAP_Y'
       # col.axis <- 'Population'
-      # 
+      #
       # col.type = "continuous" # can be "continuous" or "factor"
       # add.label = FALSE # only works for 'factor'
-      # 
+      #
       # hex = FALSE
       # hex.bins = 30
       # colours = "spectral" # can be spectral, jet, etc      # only works for continuous
@@ -127,12 +127,12 @@ make.colour.plot <- function(dat,
       # col.max.threshold = 0.995
       # align.xy.by = dat
       # align.col.by = dat
-      # 
+      #
       # regression.line = NULL # "lm" # "loess"
-      # 
+      #
       # title = col.axis
       # filename = NULL
-      # 
+      #
       # dot.size = 1
       # plot.width = 9
       # plot.height = 7
@@ -143,7 +143,7 @@ make.colour.plot <- function(dat,
       # save.to.disk = TRUE
       # path = getwd()
       # blank.axis = FALSE
-      
+
   ### Some tests
 
       if(hex == TRUE){
@@ -350,6 +350,8 @@ make.colour.plot <- function(dat,
                        axis.title.y=element_text(color="Black", face="bold", size=18),
                        legend.text=element_text(size=12), # large = 30 # small = 8
                        legend.title=element_blank(),
+                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                       legend.key.width=unit(0.4,"cm"),
                        plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
         )
       }
@@ -368,23 +370,16 @@ make.colour.plot <- function(dat,
       if(square == TRUE){
         p <- p + theme(aspect.ratio=1)
       }
-      
+
       if (is.null(legend.loc)) {
         legend.loc <- 'none'
         p <- p + theme(legend.position=legend.loc)
-      } else if(legend.loc %in% c("top", "bottom")) {
-        p <- p + theme(legend.direction = "horizontal", 
-                       legend.position=legend.loc,
-                       legend.key.height=unit(0.4,"cm"),
-                       legend.key.width=unit(1,"cm")
-        )
-      } else {
-        # null which means right or right or left
-        p <- p + theme(legend.direction = "vertical",
-                       legend.position=legend.loc,
-                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-                       legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
-        )  
+        if(legend.loc %in% c("top", "bottom")) {
+          p <- p + theme(legend.position=legend.loc,
+                         legend.key.height=unit(0.4,"cm"),
+                         legend.key.width=unit(1,"cm")
+          )
+        }
       }
 
       #p <- p + labs(colour = col.axis)
