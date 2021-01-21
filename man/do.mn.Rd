@@ -13,9 +13,9 @@ do.mn(dat, use.cols)
 
 \item{asinh.cf}{DEFAULT = 15. The co-factor to use for arcsinh transformation}
 
-\item{lower.Q}{DEFAULT = 0.001. Quantile target for values at the lower threshold}
+\item{lower.Q}{DEFAULT = 0.001. Quantile target for values at the lower threshold. Set to 0 to use the minimum value.}
 
-\item{upper.Q}{DEFAULT = 0.995. Quantile target for rescaling, such that the data will be scaled between 0 (the minimum value after clipping) and 1 (upper.Q), where values above the upper.Q will increase above 1 proportionatly.}
+\item{upper.Q}{DEFAULT = 0.995. Quantile target for rescaling, such that the data will be scaled between 0 (the minimum value after clipping) and 1 (upper.Q), where values above the upper.Q will increase above 1 proportionatly. Set to 1 to use the maximum value.}
 
 \item{lower.func}{DEFAULT = 'clip'. Determine what is done to values below the lower.Q threshold. 'clip' means values below the lower.Q quantile threshold will be clipped to that value. NULL will skip.}
 

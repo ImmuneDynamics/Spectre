@@ -47,7 +47,7 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{square}{DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.}
 
-\item{legend.loc}{DEFAULT = NULL. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired.}
+\item{legend.loc}{DEFAULT = 'right'. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.}
 
 \item{save.to.disk}{DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.}
 

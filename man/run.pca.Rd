@@ -4,7 +4,7 @@
 \alias{run.pca}
 \title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -12,6 +12,12 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 \item{use.cols}{NO DEFAULT. Vector of numbers, reflecting the columns to use for dimensionality reduction (may not want parameters such as "Time" or "Sample").}
 
 \item{scale}{DEFAULT = TRUE. A logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place.}
+
+\item{add.pca.col}{DEFAULT = FALSE. Option to add PC coordinates to input data.}
+
+\item{pca.col.no}{DEFULAT = 50. Number of PC to be added to input data.}
+
+\item{pca.lite}{DEFAULT = FALSE. Will stop running the function after PCA coordinates have been added to input data (assuming add.pca.col = TRUE).}
 
 \item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.}
 
@@ -25,7 +31,7 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 
 \item{row.names}{DEFAULT = NULL. Column (as character) that defines individuals. Will be used to place name on plot.individuals.}
 
-\item{plot.ind.group}{DEFAULT = FALSE. Option to group inidividuals with ellipses (which by default show the 95 \% confidence interval). Must specify column that groups individuals with group.ind.}
+\item{plot.ind.group}{DEFAULT = FALSE. Option to group individuals with ellipses (which by default show the 95 \% confidence interval). Must specify column that groups individuals with group.ind.}
 
 \item{group.ind}{DEFAULT = NULL. Column (as character) that defines groups of individuals. Works with plot.ind.group which must be set to TRUE.}
 
@@ -36,6 +42,12 @@ run.pca(dat, use.cols, scale = TRUE, scree.plot = TRUE, variable.contribution = 
 \item{ellipse.type}{DEFAULT = "confidence". Set type of ellipse. Options include "confidence", "convex", "concentration", "t", "norm", "euclid". See factoextra::fviz for more information.}
 
 \item{ellipse.level}{DEFAULT = 0.95. Size of ellipses. By default 95 \% (0.95).}
+
+\item{mean.point}{DEFAULT = TRUE. Option to plot the mean on PCA plot with different groups.}
+
+\item{randomise.order}{DEFAULT = TRUE. Option to randomise plotting order of individuals to control for overlap.}
+
+\item{order.seed}{DEFAULT = 42. Set the seed for randomising plotting order of individuals.}
 
 \item{plot.variables}{DEFAULT = TRUE. Option to create PCA plots on variables (markers/cell counts).}
 
@@ -63,6 +75,14 @@ More information on PCA plots can be found here http://www.sthda.com/english/art
 # Set directory to save files. By default it will save files at get()
 setwd("/Users/felixmarsh-wakefield/Desktop")
 
+# Run PCA on demonstration dataset, adding PC to dataset
+dat <- Spectre::demo.clustered
+dat <- test.pca(dat = dat,
+                        use.cols = c(11:19),
+                        add.pca.col = TRUE,
+                        pca.lite = TRUE
+                        )
+                        
 # Run PCA on demonstration dataset
 Spectre::run.pca(dat = Spectre::demo.clustered,
                 use.cols = c(11:19),
@@ -74,7 +94,9 @@ Spectre::run.pca(dat = Spectre::demo.clustered,
                  use.cols = c(11:19),
                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
                  plot.ind.group = TRUE,
-                 group.ind = "Group"
+                 group.ind = "Group",
+                 mean.point = FALSE,
+                 randomise.order = TRUE
                  )
         
 # When prompted, type in "5" and click enter to continue function (this selects the elbow point based off the scree plot)

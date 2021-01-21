@@ -17,7 +17,9 @@ train.knn.classifier(dat, use.cols, label.col,min.num.neighbours, max.num.neighb
 
 \item{max.num.neighbours}{DEFAULTS to 1. Numeric. When using a k-nearest neighbour (KNN) classifier, this parameter specifies the maximum number of nearest neighbours used to train the KNN classifier.}
 
-\item{evaluation.metric}{DEFAULTS to 'Accuracy'. Character. How do you want the classifier performance to be evaluated? By measuring accuracy (pass "Accuracy") or Cohen Kappa score (pass "Kappa").}
+\item{method}{DEFAULTS to random. Can either be random which randomly shuffle data and split them into 2 halves,
+one for training, the other for testing. Or CV (cross validation) where data is split into num.folds complementary
+portions, and num.folds-1 portions used for training and the remaining for testing.}
 
 \item{num.folds}{DEFAULTS to 10. Numeric. Number of chunks the training data is to be split into. The classifier will then take 1 chunk for testing the classifier (after it's trained), and use the remaining chunk to train the classifier.}
 
