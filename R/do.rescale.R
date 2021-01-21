@@ -9,6 +9,7 @@
 #' @param use.cols NO DEFAULT. Vector of character column names -- these columns will be normalised and added to the data.table as new columns.
 #' @param new.min DEFAULT = 0. The new minimum value.
 #' @param new.max DEFAULT = 1. The new maximum value.
+#' @param append.name DEFAULT = '_rescaled'. Text to be appended to the column names of re-scaled data.
 #' 
 #' @return A data.table with new columns added, that contain the re-scaled data.
 #'
@@ -17,21 +18,22 @@
 #' @export
 
 do.rescale <- function(dat,
-                         use.cols,
-                         new.min = 0,
-                         new.max = 1){ 
+                       use.cols,
+                       new.min = 0,
+                       new.max = 1,
+                       append.name = '_rescaled'
+                       ){ 
 
   ### Packages
       require('data.table')
   
-  ### Checks
-      if(!is.null(zero.drops)){
-        message("Zero drop transformation (as a part of the normalisation function) is experimental - please use with caution.")
-        if(length(use.cols) != length(zero.drops)){
-          warning("The number of your columns to modify the number of cutoff values. Please check your input.")
-        }
-      }
-
+  ### Test data
+      # dat <- Spectre::demo.asinh
+      # use.cols <- names(dat)[c(11:19)]
+      # new.min = -1
+      # new.max = 1
+      # append.name = '_rescaled'
+      
   ### Create normalisation function
       #norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
       norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (new.max - new.min) + new.min}
@@ -40,32 +42,11 @@ do.rescale <- function(dat,
   ### Establish dataset
       value <- dat[,use.cols,with = FALSE]
 
-  ### Changes values < cutoff to the cutoff values
-      if(!is.null(zero.drops)){
-        for(i in c(1:length(use.cols))){
-          # i <- 1
-          a <- use.cols[[i]]
-          b <- zero.drops[[i]]
-          temp <- value[,a,with = FALSE]
-          temp[temp[[a]] < b,] <- b
-          value[,a] <- temp
-        }
-      }
-
-  ### Normalise between 0 to 1
+  ### Normalise between new values
       res <- as.data.table(lapply(value, norm.fun)) # by default, removes the names of each row
-    
-      if(!is.null(zero.drops)){
-        names(res) <- paste0(names(res), "_norm_zd")
-        dat <- cbind(dat, res)
-      }
-    
-      if(is.null(zero.drops)){
-        names(res) <- paste0(names(res), "_norm")
-        dat <- cbind(dat, res)
-      }
-
-  ###
+      names(res) <- paste0(names(res), append.name)
+      dat <- cbind(dat, res)
+      
+  ### Return
       return(dat)
 }
-

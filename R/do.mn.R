@@ -7,8 +7,8 @@
 #' @param dat NO DEFAULT. A data.table
 #' @param use.cols NO DEFAULT. Vector of column names that you wish to transform
 #' @param asinh.cf DEFAULT = 15. The co-factor to use for arcsinh transformation
-#' @param lower.Q DEFAULT = 0.001. Quantile target for values at the lower threshold
-#' @param upper.Q DEFAULT = 0.995. Quantile target for rescaling, such that the data will be scaled between 0 (the minimum value after clipping) and 1 (upper.Q), where values above the upper.Q will increase above 1 proportionatly.
+#' @param lower.Q DEFAULT = 0.001. Quantile target for values at the lower threshold. Set to 0 to use the minimum value.
+#' @param upper.Q DEFAULT = 0.995. Quantile target for rescaling, such that the data will be scaled between 0 (the minimum value after clipping) and 1 (upper.Q), where values above the upper.Q will increase above 1 proportionatly. Set to 1 to use the maximum value.
 #' @param lower.func DEFAULT = 'clip'. Determine what is done to values below the lower.Q threshold. 'clip' means values below the lower.Q quantile threshold will be clipped to that value. NULL will skip.
 #' @param append.name DEFAULT = '_transf'. Text to be appended to resultant column name
 #' @param save.info DEFAULT = TRUE. Save's the transformation details to a .txt file.
@@ -53,7 +53,6 @@ do.mn <- function(dat,
       # use.cols <- names(dat)[c(2:10)]
       # 
       # asinh.cf <- 1000
-      # norm = c(0,1)
       # 
       # lower.Q = 0.005
       # upper.Q = 0.995
@@ -64,15 +63,19 @@ do.mn <- function(dat,
       # append.name = '_transf'
       # info.dir = getwd()
 
-  ### Some settings and tests
-
-      norm = c(0,1) # default re-scaling to 0 and 1
+  ### Checks
   
-      if(lower.squish >= upper.Q){
-        stop(paste0("Qs[1] is greater than Qs[2]"))
+      if(length(use.cols) == 0){
+        return(dat)
+      }
+
+      if(lower.Q >= upper.Q){
+        stop(paste0("lower.Q is greater than upper.Q"))
       }
       
   ### Extract data
+  
+      norm = c(0,1) # default re-scaling to 0 and 1
   
       value <- dat[,use.cols,with = FALSE]
   
@@ -84,7 +87,7 @@ do.mn <- function(dat,
         stop("do.asinh stopped")
       }
   
-  ### Arcsinh
+  ### Arcsinh transformation
   
       if(!is.null(asinh.cf)){
         value <- value / asinh.cf
@@ -94,124 +97,67 @@ do.mn <- function(dat,
         message("Arcsinh transformation complete")
       }
  
-  ### Lower Q
+  ### Lower Q clipping
 
-      if(!is.null(lower.Q)){
+      if(lower.func == 'clip'){
         
-        if(!is.null(lower.func)){
-        
-            if(lower.func == 'clip'){
-              for(a in use.cols){
-                # a <- use.cols[[2]]
-                
-                temp <- value[,a,with = FALSE]
-                b <- quantile(temp[[1]], lower.Q)
-                
-                temp[temp[[a]] < b,] <- b
-                value[,a] <- temp
-                
-                rm(a)
-                rm(b)
-                rm(temp)
-              }
-              message("Lower quantile clipping is complete")
-            }
+        for(a in use.cols){
+          # a <- use.cols[[2]]
           
+          temp <- value[,a,with = FALSE]
+          b <- quantile(temp[[1]], lower.Q)
+          
+          temp[temp[[a]] < b,] <- b
+          value[,a] <- temp
+          
+          rm(a)
+          rm(b)
+          rm(temp)
         }
+        
+        message("Lower quantile clipping is complete")
       }
 
-  # ### Upper squish
-      #     
-      #     if(!is.null(upper.squish)){
-      #       for(a in use.cols){
-      #         
-      #         b <- upper.squish
-      #         temp <- value[,a,with = FALSE]
-      #         temp[temp[[a]] > b,] <- b
-      #         value[,a] <- temp
-      #         
-      #         rm(a)
-      #         rm(b)
-      #         rm(temp)
-      #       }
-      #       message("Upper squish clipping is complete")
-      #     }
-      
-  ### Rescale between min and upper Q as 1
-      
-      if(!is.null(norm)){
+  ### Rescale between min and upper.Q as 1, with values above upper.Q increasing proportionally above 1
+  
+      for(a in use.cols){
+        # a <- use.cols[[2]]
         
-        ## No upper Q (upper Q is NULL)
-            
-            if(is.null(upper.Q)){
-              norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (norm[2] - norm[1]) + norm[1]}
-              value <- as.data.table(lapply(value, norm.fun)) # by default, removes the names of each row
-              
-              message("Normalisation between ", norm[1], " and ", norm[2], " complete")
-            }
+        A <- min(value[[a]])
+        B1 <- quantile(value[[a]], probs = lower.Q)
+        B2 <- quantile(value[[a]], probs = upper.Q)
+        C <- max(value[[a]])
         
-        ## With lower and upper Q (upper Q is NOT NULL)
+        ## Upper Q calculations
+        pt.1 <- (B2)-(A)        # range from min to upper.Q
+        pt.2 <- pt.1 + (C-B2)   # range from min to upper.Q + range from upper.Q to max (total range)
+        mx <- pt.2/pt.1         # ratio of [total range] over [min to upper.Q]
+        mx <- mx * norm[2]      # ratio x new target value
         
-            if(!is.null(Qs)){
-                
-                  for(a in use.cols){
-                    # a <- use.cols[[2]]
-                    
-                    A <- min(value[[a]])
-                    B1 <- quantile(value[[a]], probs = Qs[1])
-                    B2 <- quantile(value[[a]], probs = Qs[2])
-                    C <- max(value[[a]])
-    
-                    ## Upper Q calculations
-                    
-                        pt.1 <- (B2)-(A)        # range from min to upper.Q
-                        pt.2 <- pt.1 + (C-B2)   # range from min to upper.Q + range from upper.Q to max (total range)
-                        mx <- pt.2/pt.1         # ratio of [total range] over [min to upper.Q]
-                        mx <- mx * norm[2]      # ratio x new target value
-    
-                    ## Lower Q calculations
-                        
-                        # mn <- ((A) - (B1)) * (mx / C)
-                        # mn
-    
-                        # pt.1 <- (C)-(B1)        # range from max to lower.Q
-                        # pt.2 <- pt.1 + (B1)-(A) # range from max to lower.Q + range from lower.Q to min (total range)
-                        # 
-                        # x - B1 # range from lowerQ to upper Q (=1)
-                        # B1 - A # range from lowerQ to min
-                        # 
-                        # mn <- (A) / (pt.1)
-                        # 
-                        # # mn <- pt.2 / (norm[1] - ((B1) - (A)))
-                    
-                    temp <- value[, a, with = FALSE]
-                    temp <- as.data.table(temp)
-                    names(temp) <- a
+        ## Select data
+        temp <- value[, a, with = FALSE]
+        temp <- as.data.table(temp)
+        names(temp) <- a
         
-                    # norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (mx - norm[1]) + norm[1]}
-                    # temp <- as.data.table(norm.fun(temp)) # by default, removes the names of each row
-                    
-                    res <- do.normalise(temp, a, new.min = norm[1], new.max = mx)
-                    res <- res[[paste0(a, "_norm")]]
-                    
-                    value[[a]] <- res
+        ## Normalise
+        norm.fun <- function(x) {(x - min(x))/(max(x)-min(x)) * (mx - norm[1]) + norm[1]}
+        res <- as.data.table(lapply(temp, norm.fun))
         
-                    rm(a)
-                    rm(A)
-                    rm(B1)
-                    rm(B2)
-                    rm(C)
-                    rm(temp)
-                    rm(res)
-                    rm(pt.1)
-                    rm(pt.2)
-                  }
-                
-              message("Re-scaling between ", norm[1], " and ", norm[2], " complete, with lower.Q = ", Qs[1], " and upper.Q = ", Qs[2])
-            }
+        value[[a]] <- res[[1]]
         
+        rm(a)
+        rm(A)
+        rm(B1)
+        rm(B2)
+        rm(C)
+        rm(temp)
+        rm(res)
+        rm(pt.1)
+        rm(pt.2)
       }
       
+      message("Re-scaling between ", norm[1], " and ", norm[2], " complete, with lower.Q = ", lower.Q, " and upper.Q = ", upper.Q)
+        
   ### Wrap up
       
       value <- as.data.table(value)
