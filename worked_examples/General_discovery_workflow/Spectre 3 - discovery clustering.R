@@ -30,7 +30,7 @@
     ### Set input directory
     
         setwd(PrimaryDirectory)
-        setwd("Output 2 - batch alignment/Output 4 - fine alignment/F - Fine aligned data/")
+        setwd("Output 2 - batch alignment/Output 2.4 - fine alignment/F - Fine aligned data/")
         InputDirectory <- getwd()
         InputDirectory
         setwd(PrimaryDirectory)
@@ -97,7 +97,7 @@
 
         data.frame(table(cell.dat[[group.col]]))
         
-        sub.targets <- c(2000, 18380)
+        sub.targets <- c(2000, 2000)
         sub.targets
         
     ### Clustering preferences
@@ -105,13 +105,13 @@
         ## Cellular cols
         as.matrix(names(cell.dat))
 
-        cellular.cols <- names(cell.dat)[c(33:41)]
+        cellular.cols <- names(cell.dat)[c(30:37)]
         cellular.cols
 
         ## Columns for clustering
         as.matrix(names(cell.dat))
 
-        clustering.cols <- names(cell.dat)[c(33:41)]
+        clustering.cols <- names(cell.dat)[c(30:37)]
         clustering.cols
 
         ## Cluster numbers etc
@@ -122,8 +122,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 1 - clustered")
-    setwd("Output 1 - clustered")
+    dir.create("Output 3.1 - clustered")
+    setwd("Output 3.1 - clustered")
 
     ### Run clustering
 
@@ -150,6 +150,9 @@
     ### Make expression plots
 
         make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "FlowSOM_metacluster", col.type = 'factor', add.label = TRUE)
+        make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", group.col, col.type = 'factor')
+        make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", batch.col, col.type = 'factor')
+        
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "FlowSOM_metacluster", group.col, col.type = 'factor')
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", cellular.cols)
 
@@ -162,18 +165,16 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 2 - annotated")
-    setwd("Output 2 - annotated")
+    dir.create("Output 3.2 - annotated")
+    setwd("Output 3.2 - annotated")
 
     ### Identify cellular populations
 
-        annots <- list("CD4 T cells" = c(7),
-                       "CD8 T cells" = c(6),
-                       "NK cells" = c(5),
-                       "Neutrophils" = c(1),
-                       "Infil Macrophages" = c(3),
-                       "Microglia" = c(2,4,8)
-                       )
+        annots <- list('Neutrophils' = 5,
+                       'Monocyte' = 4,
+                       'T cells' = 1,
+                       'B cells' = 2,
+                       'Other' = 3)
 
         annots <- do.list.switch(annots)
         setorderv(annots, 'Values')
@@ -208,8 +209,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 2 - annotated")
-    setwd("Output 2 - annotated")
+    dir.create("Output 3.4 - percent positive")
+    setwd("Output 3.4 - percent positive")
     
     dir.create("Percent positive plots")
     setwd("Percent positive plots")
@@ -218,8 +219,10 @@
 
         as.matrix(names(cell.dat))
 
-        perc.pos.markers <- names(cell.dat)[c(40)]
-        plot.against <- 'CD11b_asinh_fineAlign'
+        perc.pos.markers <- names(cell.dat)[c(31,37)]
+        perc.pos.markers
+        
+        plot.against <- 'BUV395 CD11b_asinh_fineAlign'
         
         for(i in perc.pos.markers){
           make.multi.plot(cell.sub, i, plot.against, plot.by = group.col)
@@ -228,10 +231,10 @@
     ### Percent positive cutoffs
         
         perc.pos.markers
-        perc.pos.cutoffs <- c(1.75)
+        perc.pos.cutoffs <- c(2, 3)
         
-        perc.pos.markers
-        perc.pos.cutoffs
+        as.matrix(perc.pos.markers)
+        as.matrix(perc.pos.cutoffs)
         
         for(i in c(1:length(perc.pos.markers))){
           a <- perc.pos.markers[[i]]
@@ -257,13 +260,13 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 3 - summary data")
-    setwd("Output 3 - summary data")
+    dir.create("Output 3.5 - summary data")
+    setwd("Output 3.5 - summary data")
     
     ### Select columns to measure MFI
     
         as.matrix(cellular.cols)
-        dyn.cols <- cellular.cols[c(5,8)]
+        dyn.cols <- cellular.cols[c(2,8)]
         dyn.cols
     
     ### Setup cell count data
@@ -271,8 +274,8 @@
         as.matrix(unique(cell.dat[[sample.col]]))
         meta.dat
         
-        counts <- meta.dat[,c(sample.col, 'Cells per sample'), with = FALSE]
-        counts
+        # counts <- meta.dat[,c(sample.col, 'Cells per sample'), with = FALSE]
+        # counts
 
     ### Create summary tables
 
@@ -281,7 +284,7 @@
                                    pop.col = "Population",
                                    use.cols = dyn.cols, 
                                    annot.cols = c(group.col, batch.col), 
-                                   counts = counts, 
+                                   #counts = counts, 
                                    perc.pos = perc.pos)
     
         as.matrix(names(sum.dat))
@@ -302,7 +305,5 @@
     sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
     session_info()
     sink()
-    
-    #saveRDS(prefs, "Analysis preferences.rds") # analysis preferences
         
         

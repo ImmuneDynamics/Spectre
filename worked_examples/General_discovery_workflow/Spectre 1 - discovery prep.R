@@ -74,7 +74,7 @@
         check$nrow.check # Review number of rows (cells) in each sample
         
         data.list[[1]]
-        
+  
     ### Merge data
         
         cell.dat <- Spectre::do.merge.files(dat = data.list)
@@ -85,8 +85,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 1 - transformation plots")
-    setwd("Output 1 - transformation plots")
+    dir.create("Output 1.1 - transformation plots")
+    setwd("Output 1.1 - transformation plots")
 
     ### Co-factor targets
     
@@ -102,32 +102,32 @@
 
         as.matrix(names(cell.dat))
 
-        asinh.low <- names(cell.dat)[c(1:3)]
-        asinh.mid <- names(cell.dat)[c(4:6)]
-        asinh.high <- names(cell.dat)[c(7:9)]
+        asinh.low <- names(cell.dat)[c()]
+        asinh.mid <- names(cell.dat)[c(1:8)]
+        asinh.high <- names(cell.dat)[c()]
     
         asinh.low
         asinh.mid
         asinh.high
             
     ### Test transformation settings on subsampled data
-        
+
         sub <- do.subsample(cell.dat, 10000)
 
         sub <- do.asinh(sub, use.cols = asinh.low, cofactor = cf.low)
         sub <- do.asinh(sub, use.cols = asinh.mid, cofactor = cf.mid)
         sub <- do.asinh(sub, use.cols = asinh.high, cofactor = cf.high)
-        
+
         as.matrix(names(sub))
 
         transf.cols <- names(sub)[grepl('_asinh', names(sub))]
-        transf.cols
-
+        as.matrix(transf.cols)
+        
     ### Make plots of transformed columns from the subsampled data
-        
-        plot.against <- 'Ly6C_asinh'
+
+        plot.against <- 'BV605 Ly6C_asinh'
         which(names(sub) == plot.against)
-        
+
         for(i in transf.cols){
           make.colour.plot(sub, i, plot.against)
         }
@@ -137,9 +137,9 @@
         cell.dat <- do.asinh(cell.dat, use.cols = asinh.low, cofactor = cf.low)
         cell.dat <- do.asinh(cell.dat, use.cols = asinh.mid, cofactor = cf.mid)
         cell.dat <- do.asinh(cell.dat, use.cols = asinh.high, cofactor = cf.high)
-        
-        as.matrix(names(cell.dat))
 
+        as.matrix(names(cell.dat))
+        
 ##########################################################################################################
 #### Add metadata
 ##########################################################################################################
@@ -156,7 +156,7 @@
 
     ### Add sample metadata to primary data.table
         
-        cell.dat <- do.add.cols(cell.dat, "FileName", sample.info, "Filename", rmv.ext = TRUE)
+        cell.dat <- do.add.cols(cell.dat, "FileName", sample.info, "FileName", rmv.ext = TRUE)
         cell.dat
 
 ##########################################################################################################
@@ -164,18 +164,18 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 2 - transformed data")
-    setwd("Output 2 - transformed data")
+    dir.create("Output 1.2 - transformed data")
+    setwd("Output 1.2 - transformed data")
         
     ### Write cellular data and analysis  preferences to disk
 
         fwrite(cell.dat, "cell.dat.csv") # data
 
     ### Save session info to disk
-
-    setwd(OutputDirectory)
-    dir.create("Output - info", showWarnings = FALSE)
-    setwd("Output - info")
+    
+        setwd(OutputDirectory)
+        dir.create("Output - info", showWarnings = FALSE)
+        setwd("Output - info")
 
         sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
         session_info()

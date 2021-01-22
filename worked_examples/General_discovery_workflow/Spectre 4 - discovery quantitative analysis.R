@@ -30,7 +30,7 @@
     ### Set input directory
 
         setwd(PrimaryDirectory)
-        setwd("Output 3 - clustering and DR/Output 3 - summary data/")
+        setwd("Output 3 - clustering and DR/Output 3.5 - summary data/")
         InputDirectory <- getwd()
         InputDirectory
         setwd(PrimaryDirectory)
@@ -96,7 +96,7 @@
         annot.cols <- c(group.col, batch.col)
         annot.cols
 
-        plot.cols <- names(sum.dat)[c(4:33)]
+        plot.cols <- names(sum.dat)[c(4:28)]
         plot.cols
 
     ### Comparisons and group order
@@ -104,10 +104,10 @@
         variance.test <- 'kruskal.test'
         pairwise.test <- "wilcox.test"
 
-        comparisons <- list(c("Mock", "WNV"))
+        comparisons <- list(c("Mock", "Virus"))
         comparisons
         
-        grp.order <- c("Mock", "WNV")
+        grp.order <- c("Mock", "Virus")
         grp.order
 
     ### Sort row order
@@ -122,8 +122,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 1 - summary data tables")
-    setwd("Output 1 - summary data tables")
+    dir.create("Output 4.1 - summary data tables")
+    setwd("Output 4.1 - summary data tables")
 
     ### Z score
         
@@ -226,7 +226,6 @@
           p.val.fdr.annots[[i]]  <- c('NS' = "Black", "Significant" = "Red")
         }
 
-
     ### Create annotation data.frame
 
         feature.annots <- rbind(pval.sig, pval.fdr.sig)
@@ -246,8 +245,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 2 - heatmaps")
-    setwd("Output 2 - heatmaps")
+    dir.create("Output 4.2 - heatmaps")
+    setwd("Output 4.2 - heatmaps")
 
     ### Determine rows for the start of each new group
     
@@ -267,7 +266,7 @@
                       dendrograms = 'column',
                       row.sep = t.first,
                       #cutree_rows = 2,
-                      cutree_cols = 2,
+                      cutree_cols = 3,
                       plot.title = "All features - z-score (static rows)",
                       file.name = "All features - z-score (static rows).png")
         
@@ -282,7 +281,7 @@
                       is.fold = TRUE,
                       fold.range = c(3, -3),
                       cutree_rows = 2,
-                      cutree_cols = 2,
+                      cutree_cols = 3,
                       plot.title = "All features - z-score",
                       file.name = "All features - z-score.png")
 
@@ -291,8 +290,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 3 - PCA")
-    setwd("Output 3 - PCA")
+    dir.create("Output 4.3 - PCA")
+    setwd("Output 4.3 - PCA")
     
     ### Setup
     
@@ -301,7 +300,7 @@
     ### PCA plots - columns with NA removed
         
         setwd(OutputDirectory)
-        setwd("Output 3 - PCA")
+        setwd("Output 4.3 - PCA")
         dir.create('PCA -- NA cols removed')
         setwd('PCA -- NA cols removed')
         
@@ -342,7 +341,7 @@
     ### PCA plots - rows with NA removed
     
         setwd(OutputDirectory)
-        setwd("Output 3 - PCA")
+        setwd("Output 4.3 - PCA")
         dir.create('PCA -- NA rows removed')
         setwd('PCA -- NA rows removed')
     
@@ -386,8 +385,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 4 - volcano plots")
-    setwd("Output 4 - volcano plots")
+    dir.create("Output 4.4 - volcano plots")
+    setwd("Output 4.4 - volcano plots")
 
     ### Setup for volcanos
 
@@ -404,8 +403,8 @@
     ### Uncorrected volcanos (p-values)
         
         setwd(OutputDirectory)
-        dir.create("Output 4 - volcano plots")
-        setwd("Output 4 - volcano plots")
+        dir.create("Output 4.4 - volcano plots")
+        setwd("Output 4.4 - volcano plots")
 
         dir.create("Uncorrected p-values")
         setwd("Uncorrected p-values")
@@ -432,8 +431,8 @@
     ### Corrected volcanos (q-values)
         
         setwd(OutputDirectory)
-        dir.create("Output 4 - volcano plots")
-        setwd("Output 4 - volcano plots")
+        dir.create("Output 4.4 - volcano plots")
+        setwd("Output 4.4 - volcano plots")
 
         dir.create("Corrected p-values")
         setwd("Corrected p-values")
@@ -462,8 +461,8 @@
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 5 - autographs")
-    setwd("Output 5 - autographs")
+    dir.create("Output 4.5 - autographs")
+    setwd("Output 4.5 - autographs")
 
     # meas.type <- unique(sub(" -- .*", "", names(sum.dat[,..plot.cols])))
     # meas.type
