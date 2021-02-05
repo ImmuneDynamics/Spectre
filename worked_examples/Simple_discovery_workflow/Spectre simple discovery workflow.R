@@ -268,11 +268,13 @@
         
         plot.cols <- names(sum.dat)[c(4:27)]
         plot.cols
-
-    ### Reorder summary data
+        
+    ### Reorder summary data and SAVE
         
         sum.dat <- do.reorder(sum.dat, group.col, grp.order)
         sum.dat[,c(1:3)]
+        
+        fwrite(sum.dat, 'sum.dat.csv')
         
     ### Autographs
 
