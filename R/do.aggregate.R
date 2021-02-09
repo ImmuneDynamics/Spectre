@@ -27,10 +27,10 @@
 #' @export
 
 do.aggregate <- function(dat,
-                         use.cols,
-                         by,
-                         func = 'median',
-                         dt = TRUE
+                             use.cols,
+                             by,
+                             func = 'median',
+                             dt = TRUE
 ) {
 
   ### Testing

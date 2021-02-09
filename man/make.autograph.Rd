@@ -13,17 +13,27 @@ make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order,
 
 \item{y.axis}{NO DEFAULT. Character or numeric. Selects column that will specify y-axis.}
 
-\item{colour.by}{NO DEFAULT. Character or numeric. Selects column that will determine differentiator of colour in plots.}
+\item{colour.by}{DEFAULT = x.axis. Character, column name. Selects column that will determine differentiator of colour in plots.}
 
 \item{y.axis.label}{NO DEFAULT. Character. Specify y-axis label. Can be "" if one is not desired.}
 
 \item{grp.order}{DEFAULT = NULL. String of characters or numbers. Specify order of group for x-axis.}
 
-\item{colours}{NO DEFAULT. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.}
+\item{colours}{DEFAULT = NULL. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.}
+
+\item{my_comparisons}{DEFAULT = NULL. A list containing vectors -- each a pair of groups for comparison.}
+
+\item{Variance_test}{DEFAULT = NULL. Can be 'wilcox.test' (non-parametric) or 't.test' (parametric)}
+
+\item{Pairwise_test}{DEFAULT = NULL. Can be 'kruskal.test' (non-parametric) or 'anova' (parametric)}
 
 \item{title}{DEFAULT = paste0(y.axis.label, " - ", y.axis). Character. Specify title of plot on graph. Default combines 'y.axis.label' and 'y.axis'.}
 
+\item{subtitle}{DEFAULT = NULL. Plot subtitle.}
+
 \item{filename}{DEFAULT = paste0(y.axis.label, " - ", y.axis, ".pdf"). Character. Specify name plot will be exported as. Default combines 'y.axis.label' and 'y.axis'. Make sure to end with ".pdf" so file is correctly saved.}
+
+\item{violin}{DEFAULT = TRUE. Add violin plot underneath the data points.}
 
 \item{scale}{DEFAULT = "lin". Character. Select y-axis scale. Can also be "sci".}
 
@@ -32,6 +42,8 @@ make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order,
 \item{width}{DEFAULT = 5. Numeric. Specify width of plot.}
 
 \item{height}{DEFAULT = 5. Numeric. Specify height of plot.}
+
+\item{max.y}{DEFAULT = 1.4. Multiplier for plot heigh -- allowing room for stats.}
 
 \item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
