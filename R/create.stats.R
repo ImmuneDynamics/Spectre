@@ -1,4 +1,15 @@
-#' Statistical analysis
+#' create.stats - perform statistical analysis and generate an output data.table
+#' 
+#' This function performs statistical analysis and generates an output data.table
+#'
+#' @param dat NO DEFAULT. A data.table containing summary data (samples vs features)
+#' @param use.cols NO DEFAULT. Columns (i.e. features) to use for statistical analysis.
+#' @param sample.col NO DEFAULT. The column denoting sample names.
+#' @param group.col NO DEFAULT. The column denoting experimental group names.
+#' @param comparisons NO DEFAULT. A list of pairwise comparisons between samples. E.g. list(c('Group A', 'Group B'), c('Group B', 'Group C')).
+#' @param variance.test DEFAULT = 'kruskal.test'. Currently the only option
+#' @param pairwise.test DEFAULT = 'wilcox.test'. Currently the only option
+#' @param corrections DEFAULT = 'fdr' (false discovery rate). Currently the only option
 #'
 #' @import data.table
 #'
@@ -7,7 +18,7 @@
 create.stats <- function(dat,
                          use.cols,
                          sample.col,
-                         grp.col,
+                         group.col,
     
                          comparisons, # make a tool to create a factorial comparison design -- for now just specify manually
     
@@ -28,6 +39,8 @@ create.stats <- function(dat,
 
   ### Setup
 
+      grp.col <- group.col
+  
       grps <- unique(dat[[grp.col]])
       ngrps <- c(length(unique(dat[[grp.col]])))
 

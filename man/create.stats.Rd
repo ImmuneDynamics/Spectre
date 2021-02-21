@@ -2,19 +2,36 @@
 % Please edit documentation in R/create.stats.R
 \name{create.stats}
 \alias{create.stats}
-\title{Statistical analysis}
+\title{create.stats - perform statistical analysis and generate an output data.table}
 \usage{
 create.stats(
   dat,
   use.cols,
   sample.col,
-  grp.col,
+  group.col,
   comparisons,
   variance.test = "kruskal.test",
   pairwise.test = "wilcox.test",
   corrections = "fdr"
 )
 }
+\arguments{
+\item{dat}{NO DEFAULT. A data.table containing summary data (samples vs features)}
+
+\item{use.cols}{NO DEFAULT. Columns (i.e. features) to use for statistical analysis.}
+
+\item{sample.col}{NO DEFAULT. The column denoting sample names.}
+
+\item{group.col}{NO DEFAULT. The column denoting experimental group names.}
+
+\item{comparisons}{NO DEFAULT. A list of pairwise comparisons between samples. E.g. list(c('Group A', 'Group B'), c('Group B', 'Group C')).}
+
+\item{variance.test}{DEFAULT = 'kruskal.test'. Currently the only option}
+
+\item{pairwise.test}{DEFAULT = 'wilcox.test'. Currently the only option}
+
+\item{corrections}{DEFAULT = 'fdr' (false discovery rate). Currently the only option}
+}
 \description{
-Statistical analysis
+This function performs statistical analysis and generates an output data.table
 }
