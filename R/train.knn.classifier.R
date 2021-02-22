@@ -14,7 +14,7 @@
 #' @param num.repeats DEFAULTS to 1. Numeric. Number of time the training data will be split into num.folds chunks. 
 #'   If you set this to 3 and num.folds to 10, the classifier will split data into 10 chunks, train classifier on those chunks 10 times,
 #'   and repeat the entire procedure 3 times (each time differet data will be in each chunk).
-#'   
+#' @param seed DEFAULTS to 42. Seed used when splitting data into training and testing set.
 #' 
 #' Train a k-nearest neighbour (KNN) classifier.
 #' The classifier will be trained on a number of neighbours, starting from min.num.neighbours, and increased gradually by 1 until max.num.neighbours is reached.
@@ -43,7 +43,8 @@ train.knn.classifier <- function(dat,
                                  max.num.neighbours = 10,
                                  method = c('random', 'CV'),
                                  num.folds = 10,
-                                 num.repeats = 1){
+                                 num.repeats = 1,
+                                 seed = 42){
   
   if(!is.element('caret', installed.packages()[,1])) stop('caret is required but not installed')
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
@@ -63,8 +64,9 @@ train.knn.classifier <- function(dat,
   
   method <- match.arg(method)
   
+  set.seed(seed)
+  
   if (method == 'random') {
-    set.seed(42)
     num_row <- nrow(normalised.data)
     normalised.data <- normalised.data[sample(num_row), ]
     split <- round(num_row/ 2)
