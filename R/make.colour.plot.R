@@ -372,20 +372,22 @@ make.colour.plot <- function(dat,
       if(legend.loc %in% c("top", "bottom")) {
         p <- p + theme(legend.direction = "horizontal", 
                        legend.position=legend.loc,
-                       legend.key.height=unit(0.7,"cm"),
-                       legend.key.width=unit(0.7,"cm"),
+                       #legend.key.height=unit(0.7,"cm"),
+                       #legend.key.width=unit(0.7,"cm"),
                        legend.text=element_text(size=12), # large = 30 # small = 8
-                       legend.title=element_blank())
+                       legend.title=element_blank()
+                       )
       }
       
       ## 'left' or 'right'
       if(legend.loc %in% c("left", "right")) {
         p <- p + theme(legend.direction = "vertical",
                        legend.position=legend.loc,
-                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-                       legend.key.width=unit(0.7,"cm"), # large = 1 # small = 0.4
+                       #legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                       #legend.key.width=unit(0.7,"cm"), # large = 1 # small = 0.4
                        legend.text=element_text(size=12), # large = 30 # small = 8
-                       legend.title=element_blank())  
+                       legend.title=element_blank()
+                       )  
       }
 
   ### Add labels (if desired)
