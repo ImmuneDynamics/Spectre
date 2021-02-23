@@ -23,7 +23,11 @@ portions, and num.folds-1 portions used for training and the remaining for testi
 
 \item{num.folds}{DEFAULTS to 10. Numeric. Number of chunks the training data is to be split into. The classifier will then take 1 chunk for testing the classifier (after it's trained), and use the remaining chunk to train the classifier.}
 
-\item{num.repeats}{DEFAULTS to 10. Numeric. Number of time the classifier will be trained (per number of neighbours). For each repeat, different chunk will be used for testing and training.
+\item{num.repeats}{DEFAULTS to 1. Numeric. Number of time the training data will be split into num.folds chunks.
+If you set this to 3 and num.folds to 10, the classifier will split data into 10 chunks, train classifier on those chunks 10 times,
+and repeat the entire procedure 3 times (each time differet data will be in each chunk).}
+
+\item{seed}{DEFAULTS to 42. Seed used when splitting data into training and testing set.
 
 Train a k-nearest neighbour (KNN) classifier.
 The classifier will be trained on a number of neighbours, starting from min.num.neighbours, and increased gradually by 1 until max.num.neighbours is reached.
