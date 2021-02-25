@@ -76,7 +76,5 @@ Spectre::package.load()
 
 Alternatively, you can go to releases (https://github.com/immunedynamics/spectre/releases) and download the latest stable release -- which can then be installed in R.
 
-Once installed, usage instructions and vignettes can be found here: https://wiki.centenary.org.au/display/SPECTRE
-
 ### Acknowledgements
 The Spectre package was constructed on the basis of the CAPX workflow in R (https://sydneycytometry.org.au/capx). Along with the various R packages used within Spectre, we would like to acknowledge the Seurat and cytofkit R packages from providing inspiration for elements of the package design.
