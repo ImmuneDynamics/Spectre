@@ -155,7 +155,7 @@
         cell.sub <- do.subsample(cell.dat, sub.targets, group.col)
         cell.sub <- run.umap(cell.sub, cluster.cols)
 
-        fwrite(cell.dat, "clustered.data.DR.csv")
+        fwrite(cell.sub, "clustered.data.DR.csv")
 
     ### DR plots
 
@@ -200,7 +200,7 @@
 
         cell.sub <- do.add.cols(cell.sub, "FlowSOM_metacluster", annots, "Values")
         cell.sub
-        fwrite(cell.dat, "Annotated.data.DR.csv")
+        fwrite(cell.sub, "Annotated.data.DR.csv")
 
         make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", col.type = 'factor', add.label = TRUE)
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", group.col, col.type = 'factor')
