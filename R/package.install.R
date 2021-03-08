@@ -58,6 +58,7 @@ package.install <- function(type = "general")
     if(!require('sp')) {install.packages('sp')}
     if(!require('sf')) {install.packages('sf')}
     if(!require('stars')) {install.packages('stars')}
+    if(!require('qs')) {install.packages('qs')}
   }
 
   if(type == "ML"){

@@ -39,17 +39,22 @@ read.files <- function(file.loc = getwd(),
         require(data.table)
 
     ## Initial warnings
-        wd <- setwd(file.loc)
-
-        if(!exists("wd")){
-          warning("We were not able to set the directory. Are you sure that location exists?")
+        orig_wd <- getwd()
+        
+        if (!dir.exists(paste(orig_wd, file.loc, sep='/')) &
+            !dir.exists(file.loc)) {
+            warning("We were not able to find the directory specified by file.loc. Are you sure that location exists?")
         }
+        
+        setwd(file.loc)
+        wd <- getwd()
 
-        if(length(list.files(path=file.loc, pattern = file.type)) == 0){
+        if(length(list.files(path=wd, pattern = file.type)) == 0){
           warning("We did not find any files in that directory, are you sure this is the right place?")
         }
 
     ## Read data from Files into list of data frames
+        
         data.list=list() # Creates and empty list to start
 
         ncol.check = list() # creates an empty list
@@ -57,8 +62,9 @@ read.files <- function(file.loc = getwd(),
         nrow.check = list()
 
     ## For reading CSV files
+        
         if(file.type == ".csv"){
-          file.names <- list.files(path=file.loc, pattern = file.type)
+          file.names <- list.files(path=wd, pattern = file.type)
 
           for (file in file.names) { # Loop to read files into the list
             tempdata <- data.table::fread(file, check.names = FALSE, header = header)
@@ -71,11 +77,12 @@ read.files <- function(file.loc = getwd(),
         }
 
     ## For reading FCS files
+        
         if(file.type == ".fcs"){
           if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
           require(flowCore)
           
-          file.names <- list.files(path=file.loc, pattern = file.type)
+          file.names <- list.files(path=wd, pattern = file.type)
 
           for (file in file.names) { # Loop to read files into the list
             tempdata <- exprs(flowCore::read.FCS(file, transformation = FALSE))
@@ -108,6 +115,8 @@ read.files <- function(file.loc = getwd(),
         }
 
     ## Return result and result message
+        setwd(orig_wd)
+        
         return(data.list)
         message(msg)
 }

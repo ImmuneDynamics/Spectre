@@ -31,7 +31,7 @@ run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.see
 
 \item{min_dist}{DEFAULT = 0.1. Numeric. Determines how close points appear in final layout.}
 
-\item{set_op_mix_ratio}{DEFAULT = 1. Numeric in range [0,1]. Determines who the knn-graph is used to create a fuzzy simplicial graph.}
+\item{set_op_mix_ratio}{DEFAULT = 1. Numeric in range \link{0,1}. Determines who the knn-graph is used to create a fuzzy simplicial graph.}
 
 \item{local_connectivity}{DEFAULT = 1. Numeric. Used during construction of fuzzy simplicial set.}
 

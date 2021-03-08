@@ -29,7 +29,7 @@
 #' @param nudge_x DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.
 #' @param nudge_y DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.
 #' @param square DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.
-#' @param legend.loc DEFAULT = NULL. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired.
+#' @param legend.loc DEFAULT = 'right'. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.
 #' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
 #' @param save.to.disk DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.
 #' @param path DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.
@@ -91,7 +91,7 @@ make.colour.plot <- function(dat,
                              nudge_x = 0.5,
                              nudge_y = 0.5,
                              square = TRUE,
-                             legend.loc = NULL, # 'right' and 'bottom'
+                             legend.loc = 'right', # 'right' and 'bottom'
                              save.to.disk = TRUE,
                              path = getwd(),
                              blank.axis = FALSE){
@@ -109,6 +109,40 @@ make.colour.plot <- function(dat,
       require(colorRamps)
       require(ggthemes)
       require(RColorBrewer)
+
+  ### Demo data
+
+      # dat <- Spectre::demo.clustered
+      # x.axis <- 'UMAP_X'
+      # y.axis <- 'UMAP_Y'
+      # col.axis <- 'Population'
+      #
+      # col.type = "continuous" # can be "continuous" or "factor"
+      # add.label = FALSE # only works for 'factor'
+      #
+      # hex = FALSE
+      # hex.bins = 30
+      # colours = "spectral" # can be spectral, jet, etc      # only works for continuous
+      # col.min.threshold = 0.01
+      # col.max.threshold = 0.995
+      # align.xy.by = dat
+      # align.col.by = dat
+      #
+      # regression.line = NULL # "lm" # "loess"
+      #
+      # title = col.axis
+      # filename = NULL
+      #
+      # dot.size = 1
+      # plot.width = 9
+      # plot.height = 7
+      # nudge_x = 0.5
+      # nudge_y = 0.5
+      # square = TRUE
+      # legend.loc = NULL # 'right' and 'bottom'
+      # save.to.disk = TRUE
+      # path = getwd()
+      # blank.axis = FALSE
 
   ### Some tests
 
@@ -178,23 +212,19 @@ make.colour.plot <- function(dat,
   ### Define limits
 
       # X AXIS
-      if(is.null(align.xy.by) == TRUE){
+      if(is.null(align.xy.by)){
         Xmax <- max(dat[[x.axis]])
         Xmin <- min(dat[[x.axis]])
-      }
-
-      if(is.null(align.xy.by) == FALSE){
+      } else {
         Xmax <- max(align.xy.by[[x.axis]])
         Xmin <- min(align.xy.by[[x.axis]])
       }
 
       # Y AXIS
-      if(is.null(align.xy.by) == TRUE){
+      if(is.null(align.xy.by)){
         Ymax <- max(dat[[y.axis]])
         Ymin <- min(dat[[y.axis]])
-      }
-
-      if(is.null(align.xy.by) == FALSE){
+      } else {
         Ymax <- max(align.xy.by[[y.axis]])
         Ymin <- min(align.xy.by[[y.axis]])
       }
@@ -203,28 +233,24 @@ make.colour.plot <- function(dat,
 
       if(!is.null(col.axis)){
         if(col.type == "continuous"){
-          if(is.null(align.col.by) == TRUE){
+          if(is.null(align.col.by)){
             ColrMin <- quantile(dat[[col.axis]], probs = c(col.min.threshold))
             ColrMax <- quantile(dat[[col.axis]], probs = c(col.max.threshold))
-          }
-
-          if(is.null(align.col.by) == FALSE){
+          } else {
             ColrMin <- quantile(align.col.by[[col.axis]], probs = c(col.min.threshold))
             ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold))
           }
         }
 
         if(col.type == "factor"){
-          if(is.null(align.col.by) == TRUE){
+          if(is.null(align.col.by)){
             #ColrMin <- min(d[[col.axis]])
             #ColrMax <- max(d[[col.axis]])
 
             colRange <- unique(dat[[col.axis]])
             colRange <- colRange[order(colRange)]
             colRange <- as.character(colRange)
-          }
-
-          if(is.null(align.col.by) == FALSE){
+          } else {
             #ColrMin <- min(align.col.by[[col.axis]])
             #ColrMax <- max(align.col.by[[col.axis]])
 
@@ -260,7 +286,7 @@ make.colour.plot <- function(dat,
           }
         }
 
-        if(col.type == "factor"){
+        else if(col.type == "factor"){
           p <- ggplot(data = dat,
                       aes(x = .data[[x.axis]],
                           y = .data[[y.axis]],
@@ -282,16 +308,16 @@ make.colour.plot <- function(dat,
             p <- p + viridis::scale_colour_viridis(option = colours)
           }
 
-          if(colours == "jet") {
+          else if(colours == "jet") {
             p <- p + ggplot2::scale_colour_gradientn(colours = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
           }
 
-          if(colours == "spectral"){
+          else if(colours == "spectral"){
             p <- p + ggplot2::scale_colour_gradientn(colours = rev(colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)))
           }
 
           #Blue to Purple
-          if(colours == "BuPu"){
+          else if(colours == "BuPu"){
             colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
             #colours <- colorRampPalette(c(colour.list))
             p <- p + ggplot2::scale_colour_gradientn(colours = colour.list)
@@ -322,10 +348,6 @@ make.colour.plot <- function(dat,
         p <- p + theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
                        axis.title.x=element_text(color="Black", face="bold", size=18),
                        axis.title.y=element_text(color="Black", face="bold", size=18),
-                       legend.text=element_text(size=12), # large = 30 # small = 8
-                       legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-                       legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
-                       legend.title=element_blank(),
                        plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
         )
       }
@@ -334,7 +356,6 @@ make.colour.plot <- function(dat,
         p <- p + theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5),
                        axis.title.x=element_text(color="Black", face="bold", size=18),
                        axis.title.y=element_text(color="Black", face="bold", size=18),
-                       legend.title=element_blank(),
                        plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
         )
 
@@ -342,14 +363,32 @@ make.colour.plot <- function(dat,
       }
 
       if(square == TRUE){
-        p <- p+ theme(aspect.ratio=1)
+        p <- p + theme(aspect.ratio=1)
       }
 
-      if(!is.null(legend.loc)){
-        p <- p + theme(legend.position=legend.loc)
+  ### Setup legend    
+  
+      ## 'top' or 'bottom'
+      if(legend.loc %in% c("top", "bottom")) {
+        p <- p + theme(legend.direction = "horizontal", 
+                       legend.position=legend.loc,
+                       #legend.key.height=unit(0.7,"cm"),
+                       #legend.key.width=unit(0.7,"cm"),
+                       legend.text=element_text(size=12), # large = 30 # small = 8
+                       legend.title=element_blank()
+                       )
       }
-
-      #p <- p + labs(colour = col.axis)
+      
+      ## 'left' or 'right'
+      if(legend.loc %in% c("left", "right")) {
+        p <- p + theme(legend.direction = "vertical",
+                       legend.position=legend.loc,
+                       #legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
+                       #legend.key.width=unit(0.7,"cm"), # large = 1 # small = 0.4
+                       legend.text=element_text(size=12), # large = 30 # small = 8
+                       legend.title=element_blank()
+                       )  
+      }
 
   ### Add labels (if desired)
 
@@ -447,9 +486,13 @@ make.colour.plot <- function(dat,
                width = plot.width,
                height = plot.height,
                limitsize = FALSE)
+      } else {
+        print(p)
       }
 
   ### Print plot
-      print(p)
+      # print(p)
+      # maybe return, i'm not sure.
+      return(p)
 
 }

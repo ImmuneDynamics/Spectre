@@ -52,6 +52,7 @@ package.load <- function(type = "general")
     require('sp')
     require('sf')
     require('stars')
+    require('qs')
   }
 
   if(type == "ML"){

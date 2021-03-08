@@ -8,16 +8,22 @@
 #' @param dat NO DEFAULT. data.frame.
 #' @param x.axis NO DEFAULT. Character or numeric. Selects column that will specify x-axis.
 #' @param y.axis NO DEFAULT. Character or numeric. Selects column that will specify y-axis.
-#' @param colour.by NO DEFAULT. Character or numeric. Selects column that will determine differentiator of colour in plots.
-#' @param colours NO DEFAULT. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.
+#' @param colour.by DEFAULT = x.axis. Character, column name. Selects column that will determine differentiator of colour in plots.
 #' @param y.axis.label NO DEFAULT. Character. Specify y-axis label. Can be "" if one is not desired.
 #' @param grp.order DEFAULT = NULL. String of characters or numbers. Specify order of group for x-axis.
+#' @param colours DEFAULT = NULL. String of characters. Will determine the colours that will differentiate between colours specified by 'colour.by'.
+#' @param my_comparisons DEFAULT = NULL. A list containing vectors -- each a pair of groups for comparison.
+#' @param Variance_test DEFAULT = NULL. Can be 'wilcox.test' (non-parametric) or 't.test' (parametric)
+#' @param Pairwise_test DEFAULT = NULL. Can be 'kruskal.test' (non-parametric) or 'anova' (parametric)
 #' @param title DEFAULT = paste0(y.axis.label, " - ", y.axis). Character. Specify title of plot on graph. Default combines 'y.axis.label' and 'y.axis'.
+#' @param subtitle DEFAULT = NULL. Plot subtitle.
 #' @param filename DEFAULT = paste0(y.axis.label, " - ", y.axis, ".pdf"). Character. Specify name plot will be exported as. Default combines 'y.axis.label' and 'y.axis'. Make sure to end with ".pdf" so file is correctly saved.
+#' @param violin DEFAULT = TRUE. Add violin plot underneath the data points.
 #' @param scale DEFAULT = "lin". Character. Select y-axis scale. Can also be "sci".
 #' @param dot.size DEFAULT = 5. Numeric. Specify size of dots on plot.
 #' @param width DEFAULT = 5. Numeric. Specify width of plot.
 #' @param height DEFAULT = 5. Numeric. Specify height of plot.
+#' @param max.y DEFAULT = 1.4. Multiplier for plot heigh -- allowing room for stats.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
 #' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
@@ -48,9 +54,7 @@ make.autograph <- function(dat,
                            y.axis,
 
                            colour.by = x.axis,
-
                            y.axis.label = y.axis,
-
                            grp.order = NULL,
                            colours = NULL,
 

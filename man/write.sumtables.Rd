@@ -37,7 +37,7 @@ make.sumtables(dat, sample.col, pop.col, measure.col, annot.col, group.col, do.p
 }
 \description{
 This function summarises generated results and exports them as a .csv file.
-It can include the calculation of median fluorescence intensity (or equivalent), proportion (%) or cell counts for clusters/subsets of interest.
+It can include the calculation of median fluorescence intensity (or equivalent), proportion (\%) or cell counts for clusters/subsets of interest.
 Makes use of the packages 'data.table' and 'tidyr' to handle the data.
 }
 \examples{
