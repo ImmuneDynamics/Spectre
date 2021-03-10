@@ -95,7 +95,7 @@ create.sumtable <- function(dat,
       res.list <- list()
       
       for(i in samps){
-        # i <- samps[[1]]
+        # i <- samps[[7]]
 
         message(paste0(' -- processing sample ', i))
         
@@ -125,7 +125,7 @@ create.sumtable <- function(dat,
               ttl <- ttl[[1]]
               
               counts.per.sample <- percent
-              counts.per.sample[[2]] <- counts.per.sample[[2]] * ttl
+              counts.per.sample[[2]] <- (counts.per.sample[[2]] * ttl) / 100
               names(counts.per.sample) <- c(pop.col, 'Cells per sample')
             }
         
