@@ -5,6 +5,7 @@
 #' @param dat NO DEFAULT. A data.table (or data.frame) containing the data to be converted to z-scores. Z-score transformed values will be added as new columns.
 #' @param use.cols NO DEFAULT. The columns to be used for z-score calculations.
 #' @param append.name DEFAULT = '_zscore'. Text to be appended to the end of the new z-score transformed columns.
+#' @param replace DEFAULT = FALSE. If FALSE, appends new columns to the data.table. If TRUE, replaces the values in the existing columns with the z-score tranformed values, and does not change the column names.
 #' 
 #' @return Returns a new data.table with z-score calculations for each selected column
 #'
@@ -18,7 +19,8 @@
 
 do.zscore <- function(dat,
                       use.cols,
-                      append.name = '_zscore') 
+                      append.name = '_zscore',
+                      replace = FALSE) 
 
 {
   
@@ -33,13 +35,22 @@ do.zscore <- function(dat,
   
   ### Using R's scale()
   
-      res <- dat
-  
       sc <- scale(dat[,use.cols, with = FALSE])
       sc <- as.data.table(sc)
-      names(sc) <- paste0(names(sc), append.name)
+  
+  ### Replace or not
       
-      res <- cbind(dat, sc)
+      if(isTRUE(replace)){
+        
+        res <- dat
+        res[,use.cols] <- sc
+
+      } else {
+        
+        names(sc) <- paste0(names(sc), append.name)
+        res <- cbind(dat, sc)
+        
+      }
       
   ### Manual calculation
       

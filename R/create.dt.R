@@ -236,6 +236,8 @@ create.dt <- function(dat,
         
         ### Add metadata
             
+            message('-- Adding metadata')
+            
             if(!is.null(dat@colData)){
               col.meta <- dat@colData
               col.meta <- as.data.table(col.meta)
@@ -247,10 +249,13 @@ create.dt <- function(dat,
 
         ### Assay data
             
+            message('-- Adding assay data')
+            
             for(i in assays){
               # i <- assays[[1]]
               
               tmp <- dat@assays@data[[i]]
+              tmp <- as.matrix(tmp)
               # dim(tmp)
               # colnames(tmp) # columns = cells
               tmp <- as.data.table(tmp)
@@ -265,6 +270,8 @@ create.dt <- function(dat,
             }
         
         ### DimRed data
+            
+            message('-- Adding DimRed data')
             
             for(i in dim.reds){
               # i <- dim.reds[[2]]
@@ -284,6 +291,8 @@ create.dt <- function(dat,
             }
             
         ### Wrap up and return
+            
+            message('-- Finalising')
             
             final.res <- list()
             
