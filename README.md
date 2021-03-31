@@ -12,13 +12,13 @@ Spectre is an R package that enables comprehensive end-to-end integration and an
 Spectre was developed by [Thomas Ashhurst](https://tomashhurst.github.io/), [Felix Marsh-Wakefield](https://scholar.google.com/citations?user=6PaVkisAAAAJ&hl=en), and [Givanna Putri](https://scholar.google.com/citations?user=S-sNLPIAAAAJ&hl=en).
 
 ### Protocols and vignettes
-Usage instructions and protocols are available from https://wiki.centenary.org.au/display/SPECTRE.
+Usage instructions and protocols are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre).
 
 ### Citation
 If you use Spectre in your work, please consider citing [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2020). bioRxiv. 2020.10.22.349563](https://www.biorxiv.org/content/10.1101/2020.10.22.349563v1.abstract). To continue providing open-source tools such as Spectre, it helps us if we can demonstrate that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. CytoNorm, FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.
 
 ### Installing Spectre
-Detailed installation instructions are available from https://wiki.centenary.org.au/display/SPECTRE. Briefly, install and load the 'devtools' library.
+Detailed installation instructions are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre). Briefly, install and load the 'devtools' library.
 
 ```     
 if(!require('devtools')) {install.packages('devtools')}
