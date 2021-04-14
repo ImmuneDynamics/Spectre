@@ -54,7 +54,10 @@ package.install <- function(type = "general")
     if(!require('raster')) {install.packages('raster')}
     if(!require('tiff')) {install.packages('tiff')}
     if(!require('rgeos')) {install.packages('rgeos')}
-    if(!require('velox')) {install.packages('velox')}
+    if(!require('velox')) {
+      require('devtools')
+      install_github("hunzikp/velox")
+    }
     if(!require('sp')) {install.packages('sp')}
     if(!require('sf')) {install.packages('sf')}
     if(!require('stars')) {install.packages('stars')}
