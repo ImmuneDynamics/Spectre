@@ -17,8 +17,8 @@
 #'
 #' @export
 
-package.check <- function(type = "general")
-{
+package.check <- function(type = "general"){
+  
     if(!is.element('data.table', installed.packages()[,1])) message('data.table is required but not installed')
     if(!is.element('plyr', installed.packages()[,1])) message('plyr is required but not installed')
     if(!is.element('dplyr', installed.packages()[,1])) message('dplyr is required but not installed')
@@ -36,7 +36,9 @@ package.check <- function(type = "general")
     if(!is.element('ggpointdensity', installed.packages()[,1])) message('ggpointdensity is required but not installed')
     if(!is.element('pheatmap', installed.packages()[,1])) message('ggpointdensity is required but not installed')
     if(!is.element('ggpubr', installed.packages()[,1])) message('ggpointdensity is required but not installed')
-
+    if(!is.element('caret', installed.packages()[,1])) message('caret is required for machine learning analysis but is not installed')
+    if(!is.element('class', installed.packages()[,1])) message('class is required for machine learning analysis but is not installed')
+  
     if(!is.element('flowCore', installed.packages()[,1])) message('flowCore is required but not installed. Please install from BioConductor.')
     if(!is.element('Biobase', installed.packages()[,1])) message('Biobase is required but not installed. Please install from BioConductor.')
     if(!is.element('flowViz', installed.packages()[,1])) message('flowViz is required but not installed. Please install from BioConductor.')
@@ -46,16 +48,10 @@ package.check <- function(type = "general")
     if(!is.element('raster', installed.packages()[,1])) message('raster is required for SPATIAL analysis but is not installed')
     if(!is.element('tiff', installed.packages()[,1])) message('tiff is required for SPATIAL analysis but is not installed')
     if(!is.element('rgeos', installed.packages()[,1])) message('rgeos is required for SPATIAL analysis but is not installed')
-    if(!is.element('velox', installed.packages()[,1])) message('velox is required for SPATIAL analysis but is not installed')
+    if(!is.element('exactextractr', installed.packages()[,1])) message('exactextractr is required for SPATIAL analysis but is not installed')
     if(!is.element('sp', installed.packages()[,1])) message('sp is required for SPATIAL analysis but is not installed')
     if(!is.element('sf', installed.packages()[,1])) message('sf is required for SPATIAL analysis but is not installed')
     if(!is.element('stars', installed.packages()[,1])) message('stars is required for SPATIAL analysis but is not installed')
     if(!is.element('qs', installed.packages()[,1])) message('qs is required for SPATIAL analysis but is not installed')
   }
-
-  if(type == "ML"){
-    if(!is.element('caret', installed.packages()[,1])) message('caret is required for machine learning analysis but is not installed')
-    if(!is.element('class', installed.packages()[,1])) message('class is required for machine learning analysis but is not installed')
-  }
-
 }

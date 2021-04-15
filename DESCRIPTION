@@ -26,6 +26,7 @@ Imports:
     gridExtra,
     pheatmap,
     ggpubr,
+    class,
     caret,
     FNN,
     ggpointdensity,

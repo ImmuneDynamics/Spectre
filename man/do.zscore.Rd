@@ -12,6 +12,8 @@ do.zscore(dat, use.cols)
 \item{use.cols}{NO DEFAULT. The columns to be used for z-score calculations.}
 
 \item{append.name}{DEFAULT = '_zscore'. Text to be appended to the end of the new z-score transformed columns.}
+
+\item{replace}{DEFAULT = FALSE. If FALSE, appends new columns to the data.table. If TRUE, replaces the values in the existing columns with the z-score tranformed values, and does not change the column names.}
 }
 \value{
 Returns a new data.table with z-score calculations for each selected column
