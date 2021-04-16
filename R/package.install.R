@@ -4,7 +4,7 @@
 #'
 #' @return returns an error message if one of the common use packages are not installed. Proceeds in order of package importance, and only the first error message encountered will be returned.
 #'
-#' @param type DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis. If "ML", then checks for additional packages required for machine-learing functionality.
+#' @param type DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis.
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
@@ -15,12 +15,11 @@
 #' @examples
 #' package.install()
 #' package.install(type = 'spatial')
-#' package.install(type = 'ML')
 #'
 #' @export
 
-package.install <- function(type = "general")
-{
+package.install <- function(type = 'general'){
+
     if(!require('data.table')) {install.packages('data.table')}
     if(!require('plyr')) {install.packages('plyr')}
     if(!require('dplyr')) {install.packages('dplyr')}
@@ -39,6 +38,8 @@ package.install <- function(type = "general")
     if(!require('ggpubr')) {install.packages('ggpubr')}
     if(!require('factoextra')) {install.packages('factoextra')}
     if(!require('reticulate')) {install.packages('reticulate')}
+    if(!require('caret')) {install.packages('caret')}
+    if(!require('class')) {install.packages('class')}
 
     ## Install BiocManager to download packages from Bioconductor
     if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -49,24 +50,20 @@ package.install <- function(type = "general")
     if(!require('Biobase')) {BiocManager::install('Biobase')}
     if(!require('flowViz')) {BiocManager::install('flowViz')}
     if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
-
-  if(type == "spatial"){
-    if(!require('raster')) {install.packages('raster')}
-    if(!require('tiff')) {install.packages('tiff')}
-    if(!require('rgeos')) {install.packages('rgeos')}
-    if(!require('velox')) {
-      require('devtools')
-      install_github("hunzikp/velox")
+  
+    if(type == "spatial"){
+      if(!require('raster')) {install.packages('raster')}
+      if(!require('tiff')) {install.packages('tiff')}
+      if(!require('rgeos')) {install.packages('rgeos')}
+      if(!require('exactextractr')) {install.packages('exactextractr')}
+      if(!require('sp')) {install.packages('sp')}
+      if(!require('sf')) {install.packages('sf')}
+      if(!require('stars')) {install.packages('stars')}
+      if(!require('qs')) {install.packages('qs')}
     }
-    if(!require('sp')) {install.packages('sp')}
-    if(!require('sf')) {install.packages('sf')}
-    if(!require('stars')) {install.packages('stars')}
-    if(!require('qs')) {install.packages('qs')}
-  }
-
-  if(type == "ML"){
-    if(!require('caret')) {install.packages('caret')}
-    if(!require('class')) {install.packages('class')}
-  }
-
 }
+
+
+
+
+

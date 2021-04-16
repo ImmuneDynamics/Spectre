@@ -18,8 +18,8 @@
 #'
 #' @export
 
-package.load <- function(type = "general")
-{
+package.load <- function(type = "general"){
+  
     require('devtools')
     require('data.table')
     require('plyr')
@@ -38,6 +38,8 @@ package.load <- function(type = "general")
     require('ggpointdensity')
     require('pheatmap')
     require('ggpubr')
+    require('caret')
+    require('class')
 
     require('flowCore')
     require('Biobase')
@@ -48,16 +50,10 @@ package.load <- function(type = "general")
     require('raster')
     require('tiff')
     require('rgeos')
-    require('velox')
+    require('exactextractr')
     require('sp')
     require('sf')
     require('stars')
     require('qs')
   }
-
-  if(type == "ML"){
-    require('caret')
-    require('class')
-  }
-
 }
