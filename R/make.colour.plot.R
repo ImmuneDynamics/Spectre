@@ -74,7 +74,7 @@ make.colour.plot <- function(dat,
 
                              hex = FALSE,
                              hex.bins = 30,
-                             colours = "spectral", # can be spectral, jet, etc      # only works for continuous
+                             colours = "spectral", # can be spectral, jet, etc      # only works for continuous # 
                              col.min.threshold = 0.01,
                              col.max.threshold = 0.995,
                              align.xy.by = dat,
@@ -116,10 +116,10 @@ make.colour.plot <- function(dat,
       # x.axis <- 'UMAP_X'
       # y.axis <- 'UMAP_Y'
       # col.axis <- 'Population'
-      #
+      # 
       # col.type = "continuous" # can be "continuous" or "factor"
       # add.label = FALSE # only works for 'factor'
-      #
+      # 
       # hex = FALSE
       # hex.bins = 30
       # colours = "spectral" # can be spectral, jet, etc      # only works for continuous
@@ -127,12 +127,12 @@ make.colour.plot <- function(dat,
       # col.max.threshold = 0.995
       # align.xy.by = dat
       # align.col.by = dat
-      #
+      # 
       # regression.line = NULL # "lm" # "loess"
-      #
+      # 
       # title = col.axis
       # filename = NULL
-      #
+      # 
       # dot.size = 1
       # plot.width = 9
       # plot.height = 7
@@ -208,6 +208,23 @@ make.colour.plot <- function(dat,
         colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
         colour.scheme <- colorRampPalette(c(colour.list))
       }
+  
+      #Turbo
+      if(colours == "turbo"){
+        colour.scheme <- colorRampPalette(c(viridis_pal(option = "turbo")(50)))
+      }
+  
+      #Mako
+      if(colours == "mako"){
+        colour.scheme <- colorRampPalette(c(viridis_pal(option = "mako")(50)))
+      }
+  
+      #Rocket
+      if(colours == "rocket"){
+        colour.scheme <- colorRampPalette(c(viridis_pal(option = "rocket")(50)))
+      }
+      
+      
 
   ### Define limits
 
@@ -234,11 +251,11 @@ make.colour.plot <- function(dat,
       if(!is.null(col.axis)){
         if(col.type == "continuous"){
           if(is.null(align.col.by)){
-            ColrMin <- quantile(dat[[col.axis]], probs = c(col.min.threshold))
-            ColrMax <- quantile(dat[[col.axis]], probs = c(col.max.threshold))
+            ColrMin <- quantile(dat[[col.axis]], probs = c(col.min.threshold), na.rm = TRUE)
+            ColrMax <- quantile(dat[[col.axis]], probs = c(col.max.threshold), na.rm = TRUE)
           } else {
-            ColrMin <- quantile(align.col.by[[col.axis]], probs = c(col.min.threshold))
-            ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold))
+            ColrMin <- quantile(align.col.by[[col.axis]], probs = c(col.min.threshold), na.rm = TRUE)
+            ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold), na.rm = TRUE)
           }
         }
 
@@ -282,7 +299,8 @@ make.colour.plot <- function(dat,
             p <- p + geom_point(size = dot.size)
             p <- p + scale_colour_gradientn(colours = colour.scheme(50),
                                             limits = c(ColrMin, ColrMax),
-                                            oob=squish)
+                                            oob=squish, 
+                                            na.value = "grey50")
           }
         }
 
