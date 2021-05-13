@@ -5,7 +5,7 @@
 #' Useful to decrease total cells for generating dimensionality reduction plots (tSNE/UMAP).
 #'
 #' @param dat NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).
-#' @param targets NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries.
+#' @param targets NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries (e.g. unique(dat)).
 #' @param divide.by DEFAULT = NULL. Character. Name of the column that reflects groupings of cells (sample names, group names etc) if you want to subsample by each.
 #' @param min.per DEFAULT = FALSE. If TRUE, and divide.by is specified, each sample contributes the same amount of data based on sample with lowest count.
 #' @param seed DEFAULT = 42. Numeric. Seed for reproducibility.
@@ -32,7 +32,6 @@
 
 do.subsample <- function(dat,
                          targets,
-
                          divide.by = NULL,
                          min.per = FALSE,
                          seed = 42){
