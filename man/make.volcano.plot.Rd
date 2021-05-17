@@ -15,6 +15,14 @@ make.volcano.plot(
   path = getwd(),
   width = 7,
   height = 8,
+  pCutoff = 0.05,
+  FCcutoff = 0.26,
+  hline = c(0.01, 0.05),
+  hlineCol = c("grey75", "grey25"),
+  pointSize = 3,
+  labSize = 3,
+  col = c("black", "black", "blue", "red3"),
+  colAlpha = 1,
   ...
 )
 }

@@ -19,7 +19,7 @@ create.sumtable(dat, sample.col, pop.col, use.cols, annot.cols, counts, func, se
 
 \item{parent.col}{DEFAULT = NULL. A character entry indicating a column that represents the 'lineage' each population belongs to (e.g. 'CD4 T cells' may belong to the 'T cells' lineage). Use this to also calculate each population as a percentage of lineage.}
 
-\item{counts}{DEFAULT = NULL. If you wish to calculate the actual number of cells per sample, a data.table containing the sample names (in column 1) and cell counts per sample (column 2).}
+\item{counts}{DEFAULT = NULL. If you wish to calculate the actual number of cells per sample, a data.frame or data.table containing the sample names (in column 1) and cell counts per sample (column 2).}
 
 \item{perc.pos}{DEFAULT = NULL. If you wish to calculate the percentage of each population that is 'positive' for a marker, you can provide a data.table containing the mark names (in column 1) and cut off values for positivity (column 2).}
 
