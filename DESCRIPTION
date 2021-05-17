@@ -36,7 +36,17 @@ Imports:
     ggraph,
     stringr,
     rsvd,
-    irlba
+    irlba,
+    gridExtra,
+    raster,
+    tiff,
+    rgeos,
+    tidyr,
+    sp,
+    sf,
+    stars,
+    qs,
+    exactextractr
 Suggests:
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
