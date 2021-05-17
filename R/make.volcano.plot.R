@@ -14,6 +14,19 @@ make.volcano.plot <- function(dat.p,
                               path = getwd(),
                               width = 7,
                               height = 8,
+                              
+                              pCutoff = 0.05,
+                              FCcutoff = 0.26,
+                              
+                              hline = c(0.01, 0.05),
+                              hlineCol = c('grey75', 'grey25'),
+                              
+                              pointSize = 3.0,
+                              labSize = 3.0,
+                              
+                              col=c('black', 'black', 'blue', 'red3'),
+                              colAlpha = 1,
+                              
                               ...){
 
   ### Packages
@@ -50,22 +63,22 @@ make.volcano.plot <- function(dat.p,
                        lab = rownames(x),
                        x = 'log2FoldChange',
                        y = 'p-value',
-                       pCutoff = 0.05,
-                       FCcutoff = 0.26,
+                       pCutoff = pCutoff,
+                       FCcutoff = FCcutoff,
                        xlim = xlim,
                        #xlim = c(-2,2),
                        ylim = ylim,
                        title = title,
                        subtitle = subtitle,
 
-                       hline = c(0.01, 0.05),
-                       hlineCol = c('grey75', 'grey25'),
+                       hline = hline,
+                       hlineCol = hlineCol,
 
-                       pointSize = 3.0,
-                       labSize = 3.0,
+                       pointSize = pointSize,
+                       labSize = labSize,
 
-                       col=c('black', 'black', 'blue', 'red3'),
-                       colAlpha = 1
+                       col=col,
+                       colAlpha = colAlpha
   )
   ### Save
   ggsave(filename = paste0("Volcano plot - ", title, ".png"),
