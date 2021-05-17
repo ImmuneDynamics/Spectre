@@ -9,7 +9,7 @@ do.subsample(dat, targets, samp.col, min.per, seed)
 \arguments{
 \item{dat}{NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).}
 
-\item{targets}{NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries.}
+\item{targets}{NO DEFAULT. Vector of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries (e.g. unique(dat[\link{divide.by}])). Can also provide as a data.table or data.frame where the first column is the unique entries in the divide.by argument (i.e. unique(dat[\link{divide.by}])), and the second column should be the targets. In this case, does not have to be in the order they appear in the dataset, but the 'divide.by' argument must be set.}
 
 \item{divide.by}{DEFAULT = NULL. Character. Name of the column that reflects groupings of cells (sample names, group names etc) if you want to subsample by each.}
 

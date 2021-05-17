@@ -5,7 +5,7 @@
 #' Useful to decrease total cells for generating dimensionality reduction plots (tSNE/UMAP).
 #'
 #' @param dat NO DEFAULT. Input dataframe with cells (rows) vs markers (columns).
-#' @param targets NO DEFAULT. List of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries (e.g. unique(dat)).
+#' @param targets NO DEFAULT. Vector of downsample targets. If divide.by is specified, then must be a vector of subsample targets in the same order as the unique divide.by entries (e.g. unique(dat[[divide.by]])). Can also provide as a data.table or data.frame where the first column is the unique entries in the divide.by argument (i.e. unique(dat[[divide.by]])), and the second column should be the targets. In this case, does not have to be in the order they appear in the dataset, but the 'divide.by' argument must be set. 
 #' @param divide.by DEFAULT = NULL. Character. Name of the column that reflects groupings of cells (sample names, group names etc) if you want to subsample by each.
 #' @param min.per DEFAULT = FALSE. If TRUE, and divide.by is specified, each sample contributes the same amount of data based on sample with lowest count.
 #' @param seed DEFAULT = 42. Numeric. Seed for reproducibility.
@@ -38,10 +38,21 @@ do.subsample <- function(dat,
 
   ## Check that necessary packages are installed
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-
+  require('data.table')
+  
   ## Require packages
   require(data.table)
+  
+  ## Test
+  
+      # dat <- Spectre::demo.clustered
+      # targets <- data.table('Group' = c('WNV', 'Mock'),
+      #                       'Targets' = c(10000, 1000))
+      # divide.by = 'Group'
+      # min.per = FALSE
+      # seed = 42
 
+  ## Setup
   dat <- as.data.table(dat)
 
   ## IF random
@@ -56,9 +67,17 @@ do.subsample <- function(dat,
   if(!is.null(divide.by)){
 
     if(min.per == FALSE){
+      
       # Create list of unique sample names
-      sample.list <- unique(dat[,divide.by,with = FALSE])
-      sample.list <- sample.list[[1]]
+      if(is.vector(targets)){
+        sample.list <- unique(dat[,divide.by,with = FALSE])
+        sample.list <- sample.list[[1]]
+      }
+      
+      if(is.data.frame(targets)){
+        sample.list <- targets[[1]]
+        targets <- targets[[2]]
+      }
 
       # Create res data.frame
       subsample.res <- data.frame()
