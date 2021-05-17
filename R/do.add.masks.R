@@ -27,6 +27,10 @@ do.add.masks <- function(spatial.dat,
                          array = FALSE
                          ){
 
+  ### Require
+  
+      require('raster')
+  
   ### Setup
   message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
@@ -67,7 +71,8 @@ do.add.masks <- function(spatial.dat,
       mask.img <- flip(mask.img, 'y')
     }
 
-    values(mask.img) <- values(mask.img)*value.modifier
+    raster::values(mask.img) <- raster::values(mask.img) * value.modifier
+    
     names(mask.img) <- mask.label
 
     spatial.dat[[i]]$MASKS[[mask.label]]$maskraster <- mask.img

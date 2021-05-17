@@ -164,7 +164,7 @@ run.spatial.analysis <- function(dat,
               a.res.long
               
               a.res.long.new <- data.table()
-              a.res.long.new$measure <- paste0("Distribution of ", a.res.long$POPULATIONS, " in ", a.res.long$REGION, " | Percent of cell type in sample")
+              a.res.long.new$measure <- paste0("Distribution of ", a.res.long$POPULATIONS, " in ", a.res.long$REGION, " -- Percent of cell type in sample")
               a.res.long.new$counts <- a.res.long$value
               
               a.res.long.new <- dcast(melt(a.res.long.new, id.vars = "measure"), variable ~ measure)
@@ -206,7 +206,7 @@ run.spatial.analysis <- function(dat,
               b.res.long
               
               b.res.long.new <- data.table()
-              b.res.long.new$measure <- paste0("Composition of ", b.res.long$REGION, " - ", b.res.long$POPULATIONS, " | Percent of cells in region")
+              b.res.long.new$measure <- paste0("Composition of ", b.res.long$REGION, " - ", b.res.long$POPULATIONS, " -- Percent of cells in region")
               b.res.long.new$counts <- b.res.long$value
               b.res.long.new
               
@@ -226,7 +226,7 @@ run.spatial.analysis <- function(dat,
             reg.res.long
     
             reg.res.long.new <- data.table()
-            reg.res.long.new$measure <- paste0("Cell counts in ", reg.res.long$REGION, " - ", reg.res.long$POPULATIONS, " | Cells per region")
+            reg.res.long.new$measure <- paste0("Cell counts in ", reg.res.long$REGION, " - ", reg.res.long$POPULATIONS, " -- Cells per region")
             reg.res.long.new$counts <- reg.res.long$value
             
             reg.res.long.new <- dcast(melt(reg.res.long.new, id.vars = "measure"), variable ~ measure)
@@ -255,7 +255,7 @@ run.spatial.analysis <- function(dat,
             reg.res.area.long
     
             reg.res.area.long.new <- data.table()
-            reg.res.area.long.new$measure <- paste0("Cells per area in ", reg.res.area.long$REGION, " - ", reg.res.area.long$POPULATIONS, " | Cells per 100 um^2 of region")
+            reg.res.area.long.new$measure <- paste0("Cells per area in ", reg.res.area.long$REGION, " - ", reg.res.area.long$POPULATIONS, " -- Cells per 100 um^2 of region")
             reg.res.area.long.new$counts <- reg.res.area.long$value
             
             reg.res.area.long.new <- dcast(melt(reg.res.area.long.new, id.vars = "measure"), variable ~ measure)
