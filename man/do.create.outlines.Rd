@@ -4,7 +4,7 @@
 \alias{do.create.outlines}
 \title{do.create.outlines}
 \usage{
-\method{do}{create.outlines}(spatial.dat, mask.name, method = "stars")
+do.create.outlines(spatial.dat, mask.name, method = "stars")
 }
 \arguments{
 \item{spatial.dat}{NO DEFAULT. Spatial data list}

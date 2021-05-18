@@ -4,7 +4,13 @@
 \alias{do.clip}
 \title{do.clip - Clips data using a specified lower and upper value}
 \usage{
-\method{do}{clip}(dat, use.cols, min.value = NULL, max.value = NULL, append.name = "_clipped")
+do.clip(
+  dat,
+  use.cols,
+  min.value = NULL,
+  max.value = NULL,
+  append.name = "_clipped"
+)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
