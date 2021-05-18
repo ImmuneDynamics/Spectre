@@ -4,11 +4,11 @@
 \alias{do.add.masks}
 \title{do.add.masks}
 \usage{
-do.add.masks(
+\method{do}{add.masks}(
   spatial.dat,
   mask.loc,
   masks,
-  mask.label = "cell_mask",
+  mask.label = "cell.mask",
   mask.ext = "_mask.tiff",
   correct.extent = TRUE,
   flip.y = TRUE,

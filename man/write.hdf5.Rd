@@ -16,7 +16,7 @@ write.hdf5(
   print.spatial.plot = TRUE,
   chunk.size = NULL,
   compression = 0,
-  plots = TRUE
+  plots = FALSE
 )
 }
 \arguments{
@@ -42,7 +42,7 @@ write.hdf5(
 
 \item{compression}{DEFAULT = 0}
 
-\item{plots}{DEFAULT = TRUE}
+\item{plots}{DEFAULT = FALSE}
 }
 \description{
 write.hdf5

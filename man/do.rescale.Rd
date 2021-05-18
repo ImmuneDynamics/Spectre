@@ -4,7 +4,7 @@
 \alias{do.rescale}
 \title{do.rescale - Re-scale data in selected columns between two values, usually 0 and 1.}
 \usage{
-do.rescale(dat, use.cols, new.min = 0, new.max = 1, append.name = "_rescaled")
+\method{do}{rescale}(dat, use.cols, new.min = 0, new.max = 1, append.name = "_rescaled")
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
