@@ -90,7 +90,7 @@ make.spatial.plot <- function(spatial.dat, # spatial data object
       # cell.x = "X"
       # cell.y = "Y"
       # cell.colour = 'CD20'
-      #
+      # 
       # add.outlines = TRUE
       # flip.y.axis = TRUE
 

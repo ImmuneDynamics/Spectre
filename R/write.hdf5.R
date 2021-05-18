@@ -11,7 +11,7 @@
 #' @param print.spatial.plot DEFAULT = TRUE
 #' @param chunk.size DEFAULT = NULL
 #' @param compression DEFAULT = 0
-#' @param plots DEFAULT = TRUE
+#' @param plots DEFAULT = FALSE
 #' 
 #' @import data.table
 #'
@@ -30,7 +30,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
                        print.spatial.plot = TRUE,
                        chunk.size = NULL,
                        compression = 0,
-                       plots = TRUE
+                       plots = FALSE
                        ){
 
   ### Packages
@@ -152,18 +152,40 @@ write.hdf5 <- function(dat, # SpectreMAP object
 
         ## Adjust
             
-            rws <- dat[[i]]$RASTERS@nrows
-            cls <- dat[[i]]$RASTERS@ncols
+            rws <- dat[[i]]$RASTERS@nrows # rows = y-axis
+            cls <- dat[[i]]$RASTERS@ncols # cols = x-axis
             
             temp <- raster::values(dat[[i]]$RASTERS)
             temp <- as.data.table(temp)
             temp <- temp[,..channels]
             temp <- as.vector(as.matrix(temp))
+            # temp <- c(temp, rep(1, length(temp)))
             
         ## Array
             
-            AR <- array(data = temp, dim = c(rws, cls, length(for.ilastik), 1))
+            # AR <- array(data = temp, dim = c(length(for.ilastik), rws, cls, 1))
+            # AR <- array(data = temp, dim = c(rws, cls, length(for.ilastik), 1))
+            AR <- array(data = temp, dim = c(cls, rws, length(for.ilastik), 1))
+            
+            # AR <- array(data = temp, dim = c(length(for.ilastik),cls, rws, 1, 1))
+            # 
+            # AR <- array(data = temp, dim = c(cls, rws, length(for.ilastik), 1))
+            
+            
+            # AR[1:501,1:500,]
+            # 
+            # AR[1,,]
+            # AR[,1,] # r
+            # AR[,,1]
+            # 
+            # AR[1,,,]
+            # AR[,1,,] # r
+            # AR[,,1,]
+            # AR[,,,1] ####
+            
             AR <- aperm(AR, c(3,1,2,4))
+            
+            # AR <- aperm(AR, c(1,3,2,4))
         
             dim(AR)[1] # layers (channels)
             dim(AR)[2] # rows (y-axis)
@@ -172,43 +194,100 @@ write.hdf5 <- function(dat, # SpectreMAP object
             
         ## Write HDF5
             
-            file.remove(paste0(i, ".h5"))
-            h5createFile(paste0(i, ".h5"))
-            h5createDataset(paste0(i, ".h5"), 
-                            "stacked_channels", 
-                            dim(AR),
-                            storage.mode = "integer", 
-                            chunk = c(1,dim(AR)[2],dim(AR)[3],1),
-                            level = compression
-                            )
-            h5write(AR, file=paste0(i, ".h5"),
-                    name="stacked_channels")
-            h5ls(paste0(i, ".h5"))
+            # h5closeAll()
             
-        ## Message
-            
-            message('  -- HDF5 file for ', i, ' complete')
+            if(!is.null(random.crop.x)){
+              if(!is.null(random.crop.y)){
+                
+                file.remove(paste0(i, "_crop.h5"))
+                h5createFile(paste0(i, "_crop.h5"))
+                h5createDataset(paste0(i, "_crop.h5"), 
+                                "stacked_channels", 
+                                dim(AR),
+                                storage.mode = "integer", 
+                                chunk = c(1, dim(AR)[2],dim(AR)[3], 1),
+                                level = compression
+                                )
+                h5write(AR, file=paste0(i, "_crop.h5"),
+                        name="stacked_channels")
+                h5ls(paste0(i, "_crop.h5"))
+                
+                  
+              }
+              
+            } else {
+              
+              file.remove(paste0(i, ".h5"))
+              h5createFile(paste0(i, ".h5"))
+              h5createDataset(paste0(i, ".h5"), 
+                              "stacked_channels", 
+                              dim(AR),
+                              maxdims = dim(AR),
+                              storage.mode = "integer", 
+                              chunk = c(1, dim(AR)[2],dim(AR)[3], 1),
+                              level = compression
+                              )
+              h5write(AR, file=paste0(i, ".h5"),
+                      name="stacked_channels")
+              h5ls(paste0(i, ".h5"))
+              
+              # x <- h5ls("../../../../../../../Desktop/R TIFF HDF5/HDF5 etc/output/tiffs/20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac_ilastik_s2.h5")
+              # x
+              # 
+              # x <- h5read("../../../../../../../Desktop/R TIFF HDF5/HDF5 etc/output/tiffs/20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac_ilastik_s2.h5", name = 'stacked_channels')
+              # x
+            }
+
 
         ## Plots
             
             if(isTRUE(plots)){
               
-              dir.create('HDF5 plots')
-              dir.create(paste0('HDF5 plots/', i))
-              
-              for(a in channels){
-                make.spatial.plot(dat,
-                                  image.roi = i,
-                                  image.channel = a,
-                                  image.min.threshold = 0,
-                                  image.max.threshold = 1,
-                                  image.y.flip = FALSE, 
-                                  path = paste0('HDF5 plots/', i)
-                )
+              if(!is.null(random.crop.x)){
+                if(!is.null(random.crop.y)){
+                  
+                  dir.create('HDF5 cropped plots')
+                  dir.create(paste0('HDF5 cropped plots/', i))
+                  
+                  for(a in channels){
+                    make.spatial.plot(dat,
+                                      image.roi = i,
+                                      image.channel = a,
+                                      image.min.threshold = 0,
+                                      image.max.threshold = 1,
+                                      image.y.flip = FALSE, 
+                                      path = paste0('HDF5 cropped plots/', i)
+                    )
+                  }
+                }
+                
+              } else {
+                
+                dir.create('HDF5 plots')
+                dir.create(paste0('HDF5 plots/', i))
+                
+                for(a in channels){
+                  make.spatial.plot(dat,
+                                    image.roi = i,
+                                    image.channel = a,
+                                    image.min.threshold = 0,
+                                    image.max.threshold = 1,
+                                    image.y.flip = FALSE, 
+                                    path = paste0('HDF5 plots/', i)
+                  )
+                }
               }
-              
+
             }
 
+            
+            ## Message
+            if(!is.null(random.crop.x)){
+              if(!is.null(random.crop.y)){
+                message('  -- cropped HDF5 file for ', i, ' complete')
+              }
+            } else {
+              message('  -- HDF5 file for ', i, ' complete')
+            }
       }
- 
 }
