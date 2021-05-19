@@ -49,7 +49,7 @@
         setwd("masks/")
         
         all.masks <- list.files(pattern = '.tif')
-        all.masks
+        as.matrix(all.masks)
         
     ### Import CELL masks
         
@@ -173,13 +173,63 @@
         }
        
 ###################################################################################
-### Annotate?
+### Annotate
 ###################################################################################       
 
+    ### Annotate cell types
         
+        cell.type.annot <- list('Cell' = '257',
+                                'Non cell' = '514')
         
+        cell.type.annot <- do.list.switch(cell.type.annot)
+        names(cell.type.annot) <- c('Values', 'Annotated cell type')
+        cell.type.annot
         
-         
+        for(i in names(spatial.dat)){
+            spatial.dat[[i]]$DATA$CellData <- do.add.cols(spatial.dat[[i]]$DATA$CellData, 'cell.type', cell.type.annot, 'Values')
+        }
+        
+        spatial.dat[[1]]$DATA$CellData
+        
+    ### Annotate regions
+        
+        region.annot <- list('White pulp' = '257',
+                                'Red pulp' = '514',
+                                'Background' = '771')
+        
+        region.annot <- do.list.switch(region.annot)
+        names(region.annot) <- c('Values', 'Annotated region')
+        region.annot
+        
+        for(i in names(spatial.dat)){
+            spatial.dat[[i]]$DATA$CellData <- do.add.cols(spatial.dat[[i]]$DATA$CellData, 'region', region.annot, 'Values')
+        }
+        
+        spatial.dat[[1]]$DATA$CellData        
+  
+###################################################################################
+### Area calculations
+###################################################################################
+
+    ### Area calculations
+        
+        str(spatial.dat, 3)
+        
+        area.table <- do.calculate.area(spatial.dat, region = 'region')
+        area.table
+        
+        for(i in c(1:length(region.annot[[1]]))){
+            # i <- 1
+            nm <- region.annot[[1]][i]
+            trg <- which(names(area.table) == nm)
+            names(area.table)[trg] <- region.annot[[2]][i]
+        }
+        
+        area.table
+        
+        setwd(OutputDirectory)
+        fwrite(area.table, 'area.table.csv')
+              
 ###################################################################################
 ### Save spatial data object as qs file
 ###################################################################################       

@@ -199,7 +199,10 @@ write.hdf5 <- function(dat, # SpectreMAP object
             if(!is.null(random.crop.x)){
               if(!is.null(random.crop.y)){
                 
-                file.remove(paste0(i, "_crop.h5"))
+                if(!paste0(i, "_crop.h5") %in% list.files(getwd())){
+                  file.remove(paste0(i, "_crop.h5"))
+                }
+
                 h5createFile(paste0(i, "_crop.h5"))
                 h5createDataset(paste0(i, "_crop.h5"), 
                                 "stacked_channels", 
@@ -217,7 +220,10 @@ write.hdf5 <- function(dat, # SpectreMAP object
               
             } else {
               
-              file.remove(paste0(i, ".h5"))
+              if(!paste0(i, ".h5") %in% list.files(getwd())){
+                file.remove(paste0(i, ".h5"))
+              }
+              
               h5createFile(paste0(i, ".h5"))
               h5createDataset(paste0(i, ".h5"), 
                               "stacked_channels", 

@@ -52,13 +52,22 @@
         spatial.dat <- qread('spatial.dat_masks.qs')
         str(spatial.dat, 3)
         
+        spatial.dat[[1]]$DATA$CellData
+        
     ### Metadata
         
         setwd(MetaDirectory)
         
         sample.meta <- fread("ROIs and samples.csv")
         sample.meta
-
+        
+    ### Area calculations
+        
+        setwd(InputDirectory)
+        
+        area.table <- fread("area.table.csv")
+        area.table
+        
 ###################################################################################
 ### Extract cellular data from images using masks and add annotations
 ###################################################################################
@@ -73,52 +82,33 @@
         cell.dat <- do.add.cols(cell.dat, base.col = 'ROI', add.dat = sample.meta, add.by = 'ROI')
         cell.dat
 
-    ### Cell type annotations
-
-        types <- list("Cell" = '257',
-                      "Background" = '514'
-                      )
-
-        types <- do.list.switch(types)
-        names(types) <- c("Values", "CellType")
-        types
-
-        cell.dat <- do.add.cols(cell.dat, base.col = 'cell.type', add.dat = types, add.by = 'Values')
-        cell.dat
-
-    ### Region annotations
-
-        regions <- list("Background" = '65533',
-                        "White pulp" = '65535',
-                        "Red pulp" = "65534")
-
-        regions
-
-        regions <- do.list.switch(regions)
-        names(regions) <- c("Values", "Region")
-        regions
-
-        cell.dat <- do.add.cols(cell.dat, base.col = 'region', add.dat = regions, add.by = 'Values')
-        cell.dat
-        
-    ### Area calculations
-        
-        str(spatial.dat, 3)
-        
-        area.table <- do.calculate.area(spatial.dat, region = 'region')
-        area.table
-        
-        for(i in c(1:length(regions[[1]]))){
-            # i <- 1
-            nm <- regions[[1]][i]
-            trg <- which(names(area.table) == nm)
-            names(area.table)[trg] <- regions[[2]][i]
-        }
-        
-        area.table
-        
-        setwd(OutputDirectory)
-        fwrite(area.table, 'area.table.csv')
+    # ### Cell type annotations
+    # 
+    #     types <- list("Cell" = '257',
+    #                   "Background" = '514'
+    #                   )
+    # 
+    #     types <- do.list.switch(types)
+    #     names(types) <- c("Values", "CellType")
+    #     types
+    # 
+    #     cell.dat <- do.add.cols(cell.dat, base.col = 'cell.type', add.dat = types, add.by = 'Values')
+    #     cell.dat
+    # 
+    # ### Region annotations
+    # 
+    #     regions <- list("Background" = '65533',
+    #                     "White pulp" = '65535',
+    #                     "Red pulp" = "65534")
+    # 
+    #     regions
+    # 
+    #     regions <- do.list.switch(regions)
+    #     names(regions) <- c("Values", "Region")
+    #     regions
+    # 
+    #     cell.dat <- do.add.cols(cell.dat, base.col = 'region', add.dat = regions, add.by = 'Values')
+    #     cell.dat
         
 ###################################################################################
 ### Filtering
@@ -126,12 +116,12 @@
 
     ### Filter (if required - especially for multi-cut)
 
-        as.matrix(unique(cell.dat[['CellType']]))
+        as.matrix(unique(cell.dat[['Annotated cell type']]))
 
-        cell.dat <- cell.dat[cell.dat[['CellType']] != 'Background',]
+        cell.dat <- cell.dat[cell.dat[['Annotated cell type']] != 'Non cell',]
         cell.dat
 
-        as.matrix(unique(cell.dat[['CellType']]))
+        as.matrix(unique(cell.dat[['Annotated cell type']]))
 
 ###################################################################################
 ### Setup columns
@@ -141,7 +131,7 @@
 
         as.matrix(names(cell.dat))
 
-        cellular.cols <- names(cell.dat)[c(18:30)]
+        cellular.cols <- names(cell.dat)[c(8:20)]
         as.matrix(cellular.cols)
         
     ### Define key columns
@@ -173,7 +163,7 @@
 
         as.matrix(names(cell.dat))
 
-        cluster.cols <- names(cell.dat)[c(50:58,61:62)]
+        cluster.cols <- names(cell.dat)[c(40:48,52)]
         as.matrix(cluster.cols)
 
 ###################################################################################
@@ -199,7 +189,7 @@
         make.colour.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', group.col, 'factor')
         make.colour.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', batch.col, 'factor')
         
-        make.colour.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'CellType', 'factor', add.label = TRUE)
+        make.colour.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'Annotated cell type', 'factor', add.label = TRUE)
         make.colour.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'FlowSOM_metacluster', 'factor', add.label = TRUE)
         
     ### Multi plots
@@ -208,12 +198,12 @@
         make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', plot.by = cluster.cols, col.type = 'factor', figure.title = 'Clustering cols')
 
         make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'FlowSOM_metacluster', 'ROI', col.type = 'factor', figure.title = 'FlowSOM_metacluster by ROI')
-        make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'CellType', 'ROI', col.type = 'factor', figure.title = 'CellType by ROI')
+        make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'Annotated cell type', 'ROI', col.type = 'factor', figure.title = 'Cell type by ROI')
 
     ### Expression heatmap
 
-        exp <- do.aggregate(cell.dat, cellular.cols, 'CellType', 'mean')
-        make.pheatmap(exp, 'CellType', cellular.cols)
+        exp <- do.aggregate(cell.dat, cellular.cols, 'Annotated cell type', 'mean')
+        make.pheatmap(exp, 'Annotated cell type', cellular.cols)
         rm(exp)
 
         exp <- do.aggregate(cell.dat, cellular.cols, 'FlowSOM_metacluster', 'mean')
