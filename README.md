@@ -59,15 +59,8 @@ library("Spectre")
 Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre.
 
 ```
-## Install BiocManager to download packages from Bioconductor
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
- 
-## Download additional BioConductor packages
-if(!require('flowCore')) {BiocManager::install('flowCore')}
-if(!require('Biobase')) {BiocManager::install('Biobase')}
-if(!require('flowViz')) {BiocManager::install('flowViz')}
-if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+## Install additional packages
+Spectre::package.install()
 ```
 
 You can then check for whether all of the packages for Spectre have been loaded correctly using the following commands
