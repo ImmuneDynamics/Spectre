@@ -159,33 +159,11 @@ write.hdf5 <- function(dat, # SpectreMAP object
             temp <- as.data.table(temp)
             temp <- temp[,..channels]
             temp <- as.vector(as.matrix(temp))
-            # temp <- c(temp, rep(1, length(temp)))
             
         ## Array
             
-            # AR <- array(data = temp, dim = c(length(for.ilastik), rws, cls, 1))
-            # AR <- array(data = temp, dim = c(rws, cls, length(for.ilastik), 1))
             AR <- array(data = temp, dim = c(cls, rws, length(for.ilastik), 1))
-            
-            # AR <- array(data = temp, dim = c(length(for.ilastik),cls, rws, 1, 1))
-            # 
-            # AR <- array(data = temp, dim = c(cls, rws, length(for.ilastik), 1))
-            
-            
-            # AR[1:501,1:500,]
-            # 
-            # AR[1,,]
-            # AR[,1,] # r
-            # AR[,,1]
-            # 
-            # AR[1,,,]
-            # AR[,1,,] # r
-            # AR[,,1,]
-            # AR[,,,1] ####
-            
             AR <- aperm(AR, c(3,1,2,4))
-            
-            # AR <- aperm(AR, c(1,3,2,4))
         
             dim(AR)[1] # layers (channels)
             dim(AR)[2] # rows (y-axis)
@@ -236,12 +214,6 @@ write.hdf5 <- function(dat, # SpectreMAP object
               h5write(AR, file=paste0(i, ".h5"),
                       name="stacked_channels")
               h5ls(paste0(i, ".h5"))
-              
-              # x <- h5ls("../../../../../../../Desktop/R TIFF HDF5/HDF5 etc/output/tiffs/20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac_ilastik_s2.h5")
-              # x
-              # 
-              # x <- h5read("../../../../../../../Desktop/R TIFF HDF5/HDF5 etc/output/tiffs/20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac_ilastik_s2.h5", name = 'stacked_channels')
-              # x
             }
 
 
