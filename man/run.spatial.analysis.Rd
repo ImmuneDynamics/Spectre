@@ -11,7 +11,7 @@ run.spatial.analysis(
   annot.cols = NULL,
   region.col = NULL,
   area.table = NULL,
-  adj.dist = 100,
+  adj.dist = 20,
   x.col = "x",
   y.col = "y",
   distribution = TRUE,
@@ -36,7 +36,7 @@ run.spatial.analysis(
 
 \item{area.table}{DEFAULT = NULL. Calculate 'total' automatically}
 
-\item{adj.dist}{DEFAULT = 100}
+\item{adj.dist}{DEFAULT = 20}
 
 \item{x.col}{DEFAULT = 'x'}
 

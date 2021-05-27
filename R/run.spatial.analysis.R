@@ -6,7 +6,7 @@
 #' @param annot.cols DEFAULT = NULL. Annotation columns.
 #' @param region.col DEFAULT = NULL. Create a 'total' by default, and add specific ones if requested here
 #' @param area.table DEFAULT = NULL. Calculate 'total' automatically
-#' @param adj.dist DEFAULT = 100
+#' @param adj.dist DEFAULT = 20
 #' @param x.col DEFAULT = 'x'
 #' @param y.col DEFAULT = 'y'
 #' @param distribution DEFAULT = TRUE
@@ -31,7 +31,7 @@ run.spatial.analysis <- function(dat,
                                  region.col = NULL, # Create a 'total' by default, and add specific ones if requested here
                                  area.table = NULL, # calculate 'total' automatically
                                  
-                                 adj.dist = 100,
+                                 adj.dist = 20,
                                  
                                  x.col = 'x',
                                  y.col = 'y',
@@ -49,11 +49,11 @@ run.spatial.analysis <- function(dat,
 
       # dat <- cell.dat
       # sample.col <- "ROI"
-      # pop.col <- "CellType"
-      # region.col <- "Region"
+      # pop.col <- "Annotated metacluster"
+      # region.col <- "Annotated region"
       # 
       # area.table <- area.table
-      # adj.dist = 100
+      # adj.dist = 20
       # 
       # annot.cols = 'Group'
       # 
@@ -93,10 +93,7 @@ run.spatial.analysis <- function(dat,
       
       setorderv(dat, sample.col)
       setorderv(dat, pop.col)
-      
-      combs <- gtools::permutations(n = length(pops), r = 2, v = pops, repeats.allowed = TRUE)
-      combs # x, y
-      
+
   ### Loop PER SAMPLE
 
       all.counts <- list()
@@ -164,7 +161,8 @@ run.spatial.analysis <- function(dat,
               a.res.long
               
               a.res.long.new <- data.table()
-              a.res.long.new$measure <- paste0("Distribution of ", a.res.long$POPULATIONS, " in ", a.res.long$REGION, " -- Percent of cell type in sample")
+              a.res.long.new$measure <- paste0("Percent of cell type in region -- ", "Distribution of ", a.res.long$POPULATIONS, " in ", a.res.long$REGION)
+              
               a.res.long.new$counts <- a.res.long$value
               
               a.res.long.new <- dcast(melt(a.res.long.new, id.vars = "measure"), variable ~ measure)
@@ -206,7 +204,7 @@ run.spatial.analysis <- function(dat,
               b.res.long
               
               b.res.long.new <- data.table()
-              b.res.long.new$measure <- paste0("Composition of ", b.res.long$REGION, " - ", b.res.long$POPULATIONS, " -- Percent of cells in region")
+              b.res.long.new$measure <- paste0("Percent of total cells in region -- ", "Composition of ", b.res.long$REGION, " - ", b.res.long$POPULATIONS)
               b.res.long.new$counts <- b.res.long$value
               b.res.long.new
               
@@ -226,7 +224,7 @@ run.spatial.analysis <- function(dat,
             reg.res.long
     
             reg.res.long.new <- data.table()
-            reg.res.long.new$measure <- paste0("Cell counts in ", reg.res.long$REGION, " - ", reg.res.long$POPULATIONS, " -- Cells per region")
+            reg.res.long.new$measure <- paste0("Cells per region -- ", "Cell counts in ", reg.res.long$REGION, " - ", reg.res.long$POPULATIONS)
             reg.res.long.new$counts <- reg.res.long$value
             
             reg.res.long.new <- dcast(melt(reg.res.long.new, id.vars = "measure"), variable ~ measure)
@@ -255,7 +253,7 @@ run.spatial.analysis <- function(dat,
             reg.res.area.long
     
             reg.res.area.long.new <- data.table()
-            reg.res.area.long.new$measure <- paste0("Cells per area in ", reg.res.area.long$REGION, " - ", reg.res.area.long$POPULATIONS, " -- Cells per 100 um^2 of region")
+            reg.res.area.long.new$measure <- paste0("Cells per 100 sqr. pixels of ", reg.res.area.long$REGION, " -- ", reg.res.area.long$POPULATIONS)
             reg.res.area.long.new$counts <- reg.res.area.long$value
             
             reg.res.area.long.new <- dcast(melt(reg.res.area.long.new, id.vars = "measure"), variable ~ measure)
@@ -265,52 +263,78 @@ run.spatial.analysis <- function(dat,
             
             message(' -- Calculating distance and adjacency')
             
-            comb.dist.list <- list()
-            comb.adj.list <- list()
+            dist.res.list <- data.table()
+            adj.res.list <- data.table()
             
-            for(a in c(1:nrow(combs))){
-              # a <- 1
+            for(u in regions){
+              # u <- regions[[1]]
               
-              cell.a <- combs[a,1]
-              cell.b <- combs[a,2]
+              message("     ", paste0('Region: ', u))
               
-              nme <- paste0(cell.a, " - ", cell.b)
-              message("   ---- ", paste0(cell.a, " - ", cell.b))
+              reg.temp <- do.filter(samp.dat, region.col, u)
+              reg.pops <- unique(reg.temp[[pop.col]])
               
-              ## Setup
+              combs <- gtools::permutations(n = length(reg.pops), r = 2, v = reg.pops, repeats.allowed = TRUE)
+              combs # x, y
               
-              pop.temp <- do.filter(samp.dat, pop.col, c(cell.a, cell.b))
-              cell.types <- pop.temp[[pop.col]]
+              comb.dist.list <- list()
+              comb.adj.list <- list()
               
-              pop.temp <- pop.temp[,c(x.col, y.col),with = FALSE]
+              for(a in c(1:nrow(combs))){
+                # a <- 1
+                # a <- 7
+                
+                ## Start
+                
+                    cell.a <- combs[a,1]
+                    cell.b <- combs[a,2]
+                    
+                    nme <- paste0(cell.a, " to ", cell.b)
+                    message("     ---- ", paste0(cell.a, " to ", cell.b))
+                
+                ## Setup
+                    
+                    pop.temp <- do.filter(reg.temp, pop.col, c(cell.a, cell.b))
+                    cell.types <- pop.temp[[pop.col]]
+                    
+                    pop.temp <- pop.temp[,c(x.col, y.col),with = FALSE]
+                    
+                    A <- pop.temp[which(cell.types == cell.a),]
+                    B <- pop.temp[which(cell.types == cell.b),]
+                
+                ## Calculate distance and adjacency
+                    
+                    res <- proxy::dist(as.data.frame(A), as.data.frame(B))  # https://stackoverflow.com/questions/48117286/distance-between-two-sets-of-points
+                    
+                    # Same cell types
+                    if(cell.a == cell.b){
+                      # res <- res[lower.tri(res, diag = FALSE)]
+                      diag(res) <- NA
+                    }
+                    
+                    comb.dist.list[[nme]] <- sum(rowMeans(res, na.rm = TRUE), na.rm = TRUE) / nrow(res) # Average of all rows -- distance # Same result as mean(res)
+                    comb.adj.list[[nme]] <- sum(res < adj.dist, na.rm = TRUE) / nrow(res) # Average for all rows -- number of neighbours
+                    
+              }
               
-              A <- pop.temp[which(cell.types == cell.a),]
-              B <- pop.temp[which(cell.types == cell.b),]
+              comb.dist <- as.data.table(comb.dist.list)
+              comb.adj <- as.data.table(comb.adj.list)
               
-              ## Calculate distance
+              names(comb.dist) <- paste0('Av. Distance', ' within ', u, ' -- ', names(comb.dist))
+              names(comb.adj) <- paste0('Av. Neighbours under ', adj.dist, 'pixles in ', u,  ' -- ', names(comb.adj))
               
-              # https://stackoverflow.com/questions/48117286/distance-between-two-sets-of-points
-              res <- proxy::dist(as.data.frame(A), as.data.frame(B))
+              as.matrix(names(comb.dist))
+              as.matrix(names(comb.adj))
               
-              ## Calculate adjaceny
+              # names(comb.dist) <- paste0(names(comb.dist), " in ", u)
+              # comb.adj
               
-              adj.res <- res < adj.dist
-              table(adj.res)
-              
-              # table(adj.res)["TRUE"] / c(nrow(res) * ncol(res))     # SAME RESULT AS mean(adj.res, na.rm = TRUE)
-              
-              ## Save results
-              
-              comb.dist.list[[nme]] <- mean(res)
-              comb.adj.list[[nme]] <- mean(adj.res, na.rm = TRUE)
-            }
+              dist.res.list <- cbind(dist.res.list, comb.dist)
+              adj.res.list <- cbind(adj.res.list, comb.adj)
 
-            comb.dist <- as.data.table(comb.dist.list)
-            comb.adj <- as.data.table(comb.adj.list)
+            }
             
-            names(comb.dist) <- paste0('Av. Distance. - ', names(comb.dist))
-            names(comb.adj) <- paste0('Av. Num. Neighbours < ', adj.dist, ' - ', names(comb.adj))
-            
+
         ### WRAP UP for sample
 
             sample.all <- cbind(samp.front, 
@@ -318,8 +342,8 @@ run.spatial.analysis <- function(dat,
                                 reg.res.area.long.new, 
                                 a.res.long.new, 
                                 b.res.long.new,
-                                comb.dist,
-                                comb.adj)
+                                dist.res.list,
+                                adj.res.list)
             
             all.counts[[i]] <- sample.all
             
