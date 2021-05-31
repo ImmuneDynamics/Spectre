@@ -43,7 +43,7 @@ make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, tra
 
 \item{fold.colours}{DEFAULT = "Spectre". Character, a custom blue:black:red fold-change colour scheme. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".}
 
-\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
+\item{path}{DEFAULT = NULL. The location to save plots. By default, will save to current working directory. Can be overidden by entering a sub-directory name (e.g. if you have a subdirectory under your working directory called 'plots', you can enter this here).}
 }
 \description{
 This function allows you to create a coloured heatmap for clusters vs markers (coloured by MFI) or clusters vs samples (coloured by MFI or cell counts).
