@@ -23,7 +23,7 @@
 #' @param cell.size DEFAULT = 15. Numeric.
 #' @param standard.colours DEFAULT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
 #' @param fold.colours DEFAULT = "Spectre". Character, a custom blue:black:red fold-change colour scheme. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
-#' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
+#' @param path DEFAULT = NULL. The location to save plots. By default, will save to current working directory. Can be overidden by entering a sub-directory name (e.g. if you have a subdirectory under your working directory called 'plots', you can enter this here).
 #'
 #' @usage make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
 #'
@@ -86,7 +86,7 @@ make.pheatmap <- function(dat,
                           cell.size = 15,
                           standard.colours = "BuPu",
                           fold.colours = 'Spectre',
-                          path = getwd())
+                          path = NULL)
 
                         #n.row.groups = 2,
                         #n.col.groups = 2,
@@ -398,6 +398,14 @@ make.pheatmap <- function(dat,
 
       # Specify directory heatmap will be saved
 
+      if(is.null(path)){
+        flnm <- file.name
+      }
+      
+      if(!is.null(path)){
+        flnm <- paste0(path, '/', file.name)
+      }
+      
       pheatmap::pheatmap(mat = as.matrix(heatmap.data),
                main = title.text,
 
@@ -421,7 +429,7 @@ make.pheatmap <- function(dat,
                annotation_colors = annotation_colors,
 
                color = map.colour,
-               filename = paste0(path, '/', file.name)
+               filename = flnm
                )
 
       message(paste0("A pheatmap has been saved to your working directory", paste0(path, file.name)))
