@@ -41,6 +41,8 @@ make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, tra
 
 \item{standard.colours}{DEFAULT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".}
 
+\item{fold.colours}{DEFAULT = "Spectre". Character, a custom blue:black:red fold-change colour scheme. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".}
+
 \item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
 }
 \description{
@@ -59,7 +61,8 @@ Spectre::make.pheatmap(dat = Spectre::demo.exp,
 
 ## Z-scrore of fold-change type heatmap
 z.dat <- do.zscore(dat = Spectre::demo.sum,
-                   use.cols = names(Spectre::demo.sum)[c(4:15)])
+                   use.cols = names(Spectre::demo.sum)[c(4:15)],
+                   replace = TRUE)
 
 Spectre::make.pheatmap(dat = z.dat,
                        file.name = "z-score.png",

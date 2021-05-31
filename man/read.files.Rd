@@ -11,6 +11,8 @@ read.files(file.loc, file.type, do.embed.file.names, header)
 
 \item{file.type}{DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".}
 
+\item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of cells (rows) to be read from each file. Only works for reading CSV files.}
+
 \item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?}
 
 \item{header}{DEFAULT = TRUE. Does the first line of data contain column names?}

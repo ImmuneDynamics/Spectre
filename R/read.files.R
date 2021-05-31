@@ -6,6 +6,7 @@
 #'
 #' @param file.loc DEFAULT = getwd(). What is the location of your files?
 #' @param file.type DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".
+#' @param nrows DEFAULT = NULL. Can specify a numerical target for the number of cells (rows) to be read from each file. Only works for reading CSV files.
 #' @param do.embed.file.names DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?
 #' @param header DEFAULT = TRUE. Does the first line of data contain column names?
 #'
@@ -26,6 +27,7 @@
 
 read.files <- function(file.loc = getwd(),
                        file.type = ".csv",
+                       nrows = NULL,
                        do.embed.file.names = TRUE,
                        header = TRUE)
 {
@@ -67,7 +69,16 @@ read.files <- function(file.loc = getwd(),
           file.names <- list.files(path=wd, pattern = file.type)
 
           for (file in file.names) { # Loop to read files into the list
-            tempdata <- data.table::fread(file, check.names = FALSE, header = header)
+                  
+            if(is.null(nrows)){ ## If nrows not specified
+                tempdata <- data.table::fread(file, check.names = FALSE, header = header)
+            }
+            
+            if(!is.null(nrows)){ ## If nrows specified
+                message(paste0("Reading ", nrows, " rows (cells) per file"))
+                tempdata <- data.table::fread(file, check.names = FALSE, header = header, nrows = nrows)
+            }
+
             file <- gsub(".csv", "", file)
             data.list[[file]] <- tempdata
           }
@@ -81,13 +92,34 @@ read.files <- function(file.loc = getwd(),
         if(file.type == ".fcs"){
           if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
           require(flowCore)
+            
+            if(!is.null(nrows)){ ## If nrows specified
+                message(paste0("nrows is specified, but FCS files are being read, so nrows will be ignored"))
+                }
           
           file.names <- list.files(path=wd, pattern = file.type)
 
           for (file in file.names) { # Loop to read files into the list
-            tempdata <- exprs(flowCore::read.FCS(file, transformation = FALSE))
+            
+            x <- flowCore::read.FCS(file, transformation = FALSE)
+            
+            nms <- vector()
+            for(o in c(1:nrow(x@parameters@data))){
+                pr <- x@parameters@data$name[[o]]
+                st <- x@parameters@data$desc[[o]]
+                
+                if(!is.na(st)){
+                    nms <- c(nms, paste0(pr, "_", st))
+                } else {
+                    nms <- c(nms, pr)
+                }
+            }
+
+            tempdata <- exprs(x)
             tempdata <- tempdata[1:nrow(tempdata),1:ncol(tempdata)]
             tempdata <- as.data.table(tempdata)
+            names(tempdata) <- nms
+            
             file <- gsub(".fcs", "", file)
             data.list[[file]] <- tempdata
             #data.list[[file]] <- as.data.frame(data.list[[file]])
