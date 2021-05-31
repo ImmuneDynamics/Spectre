@@ -43,6 +43,8 @@ write.hdf5(
 \item{compression}{DEFAULT = 0}
 
 \item{plots}{DEFAULT = FALSE}
+
+\item{merge.channels}{DEFAULT = NULL. Channels to use to create an additional 'merged' channel.}
 }
 \description{
 write.hdf5

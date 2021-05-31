@@ -77,23 +77,30 @@
 ###################################################################################          
         
         nms <- names(spatial.dat[[1]]$RASTERS)
-        as.matrix(nms)
         
+        as.matrix(nms)
         for.ilastik <- nms[c(3:15)]
         as.matrix(for.ilastik)
+        
+        as.matrix(for.ilastik)
+        merge.channels <- for.ilastik[c(2:8)]
+        as.matrix(merge.channels)
         
         ## Whole ROIs for Ilastik
         
         setwd(MaskDirectory)
         write.hdf5(dat = spatial.dat, 
                    channels = for.ilastik, 
-                   plots = TRUE)
+                   merge.channels = merge.channels,
+                   plots = FALSE)
         
         ## Cropped ROIs to train Ilastik
         
         setwd(CroppedDirectory)
         write.hdf5(dat = spatial.dat, 
                    channels = for.ilastik, 
+                   merge.channels = merge.channels,
                    random.crop.x = 350, 
                    random.crop.y = 300, 
-                   plots = TRUE)
+                   plots = FALSE)
+        

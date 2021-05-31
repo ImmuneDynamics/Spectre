@@ -2,6 +2,7 @@
 #'
 #' @param dat NO DEFAULT. Spatial data list
 #' @param channels DEFAULT = NULL. Channels to include. If NULL, all channels included.
+#' @param merge.channels DEFAULT = NULL. Channels to use to create an additional 'merged' channel.
 #' @param q.max DEFAULT = 0.99
 #' @param flip.y DEFAULT = TRUE
 #' @param random.crop.x DEFAULT = NULL
@@ -21,6 +22,7 @@
 
 write.hdf5 <- function(dat, # SpectreMAP object
                        channels = NULL,
+                       merge.channels = NULL,
                        q.max = 0.99,
                        flip.y = TRUE,
                        random.crop.x = NULL,
@@ -42,8 +44,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
       require('HDF5Array')
   
   ### Testing
-      
-      # require('SpectreMAP')
+  
       # dat <- spatial.dat
       # channels = names(spatial.dat[[1]]$RASTERS)[c(13:25)]
       # q.max = 0.99
@@ -58,39 +59,49 @@ write.hdf5 <- function(dat, # SpectreMAP object
   ### Setup
 
       message('Writing HDF5 files to disk...')
+      message('...')
 
   ### Loop
-  
+      
       for(i in names(dat)){
         # i <- names(dat)[1]
+        
+        gc()
+        
+        roi.dat <- list()
+        roi.dat[[i]]<- dat[[i]]
+        
+        message('Starting ', i)
         
         ## Flip Y
         
             if(isTRUE(flip.y)){
-              dat[[i]]$RASTERS <- raster::flip(dat[[i]]$RASTERS, direction='y')
+              message("  -- flipping y-axis")
+              roi.dat[[i]]$RASTERS <- raster::flip(roi.dat[[i]]$RASTERS, direction='y')
             }
 
         ## Filtering to clip very bright pixels
         
+            message("  -- clipping bright pixels")
+            
             for(a in channels){
               # a <- for.ilastik[1]
-              
-              max(dat[[i]]$RASTERS[[a]]@data@values)
-              
-              q <- quantile(dat[[i]]$RASTERS[[a]]@data@values, q.max)
-              
-              raster::values(dat[[i]]$RASTERS[[a]])[dat[[i]]$RASTERS[[a]]@data@values > q] <- q
 
-              max(dat[[i]]$RASTERS[[a]]@data@values)
+              max(roi.dat[[i]]$RASTERS[[a]]@data@values)
               
-              if(max(raster::values(dat[[i]]$RASTERS[[a]])) > q){
+              q <- quantile(roi.dat[[i]]$RASTERS[[a]]@data@values, q.max)
+              
+              raster::values(roi.dat[[i]]$RASTERS[[a]])[roi.dat[[i]]$RASTERS[[a]]@data@values > q] <- q
+
+              max(roi.dat[[i]]$RASTERS[[a]]@data@values)
+              
+              if(max(raster::values(roi.dat[[i]]$RASTERS[[a]])) > q){
                 stop('Upper threshold clipping did not work')
               }
               
-              if(max(dat[[i]]$RASTERS[[a]]@data@values) > q){
+              if(max(roi.dat[[i]]$RASTERS[[a]]@data@values) > q){
                 stop('Upper threshold clipping did not work')
               }
-              
             }
         
         ## Cropping
@@ -99,11 +110,13 @@ write.hdf5 <- function(dat, # SpectreMAP object
               if(!is.null(random.crop.y)){
                 
                 ## Dimensions
+                
+                    message("  -- setup cropping")
                     
-                    xmin <- extent(dat[[i]]$RASTERS)[1]
-                    xmax <- extent(dat[[i]]$RASTERS)[2]
-                    ymin <- extent(dat[[i]]$RASTERS)[3]
-                    ymax <- extent(dat[[i]]$RASTERS)[4]
+                    xmin <- extent(roi.dat[[i]]$RASTERS)[1]
+                    xmax <- extent(roi.dat[[i]]$RASTERS)[2]
+                    ymin <- extent(roi.dat[[i]]$RASTERS)[3]
+                    ymax <- extent(roi.dat[[i]]$RASTERS)[4]
                 
                 ## New X
                 
@@ -145,26 +158,94 @@ write.hdf5 <- function(dat, # SpectreMAP object
                 
                 ## Crop
 
+                    message("  -- calculate new extent")
                     e <- extent(new.xmin, new.xmax, new.ymin, new.ymax)
-                    dat[[i]]$RASTERS <- crop(dat[[i]]$RASTERS, e)
+                    
+                    gc()
+                    message("  -- cropping ROI")
+                    roi.dat[[i]]$RASTERS <- crop(roi.dat[[i]]$RASTERS, e)
+                    
+                ## Clean up
+                    
+                    rm(xmin)
+                    rm(xmax)
+                    rm(ymin)
+                    rm(ymax)
+                    rm(e)
+                    
+                    gc()
               }
             }
 
         ## Adjust
             
-            rws <- dat[[i]]$RASTERS@nrows # rows = y-axis
-            cls <- dat[[i]]$RASTERS@ncols # cols = x-axis
+            message("  -- adjusting data")
+        
+            rws <- roi.dat[[i]]$RASTERS@nrows # rows = y-axis
+            cls <- roi.dat[[i]]$RASTERS@ncols # cols = x-axis
             
-            temp <- raster::values(dat[[i]]$RASTERS)
+            temp <- raster::values(roi.dat[[i]]$RASTERS)
             temp <- as.data.table(temp)
             temp <- temp[,..channels]
+            
+            if(!is.null(merge.channels)){
+              
+              # sapply(temp[,..merge.channels], max, na.rm = TRUE)
+              # colSums(temp[,..merge.channels])
+              # rw.tbl <- temp[,..merge.channels]
+              
+              rw.tbl <- do.rescale(temp, merge.channels, new.min = 0, new.max = 10)
+              
+              # rw.tbl <- do.rescale(temp, merge.channels, new.min = 0, new.max = max(temp[,..merge.channels]))
+              rw.tbl <- rw.tbl[,names(rw.tbl)[grepl('_rescaled', names(rw.tbl))], with = FALSE]
+
+              for(u in names(rw.tbl)){
+                # u <- names(rw.tbl)[[5]]
+
+                # rw.tbl[[u]][rw.tbl[[u]] > quantile(rw.tbl[[u]], 0.95)] <- quantile(rw.tbl[[u]], 0.95)
+                over.one <- rw.tbl[[u]][rw.tbl[[u]] > 0]
+                rw.tbl[[u]][rw.tbl[[u]] <= quantile(over.one, 0.05)] <- 0
+              }
+
+              # sapply(rw.tbl, max, na.rm = TRUE)
+              # rw.sms <- rowMeans(rw.tbl)
+
+              rw.sms <- rowSums(rw.tbl)
+              # rw.sms[rw.sms > length(merge.channels)] <- length(merge.channels)
+              # rw.sms[rw.sms > quantile(rw.sms, 0.95)] <- quantile(rw.sms, 0.95)
+
+              
+              
+              # rw.tbl <- temp[,..merge.channels]
+              # rw.tbl <- do.zscore(rw.tbl, merge.channels, replace = TRUE)
+              # 
+              # for(u in names(rw.tbl)){
+              #   # u <- names(rw.tbl)[[5]]
+              #   rw.tbl[[u]][rw.tbl[[u]] > quantile(rw.tbl[[u]], 0.95)] <- quantile(rw.tbl[[u]], 0.95)
+              #   rw.tbl[[u]][rw.tbl[[u]] <= quantile(rw.tbl[[u]], 0.05)] <- quantile(rw.tbl[[u]], 0.05)
+              # }
+              
+              # rw.sms <- rowSums(rw.tbl)
+              rw.sms[rw.sms > quantile(rw.sms, 0.95)] <- quantile(rw.sms, 0.95)
+              rw.sms[rw.sms <= quantile(rw.sms, 0.05)] <- 0
+              
+              temp$Merged <- rw.sms
+              temp <- temp[,c('Merged', channels), with = FALSE]
+            }
+            
+            lgth <- length(names(temp))
             temp <- as.vector(as.matrix(temp))
             
         ## Array
             
-            AR <- array(data = temp, dim = c(cls, rws, length(for.ilastik), 1))
+            message("  -- creating array")
+            
+            AR <- array(data = temp, dim = c(cls, rws, lgth, 1))
             AR <- aperm(AR, c(3,1,2,4))
         
+            rm(temp)
+            gc()
+            
             dim(AR)[1] # layers (channels)
             dim(AR)[2] # rows (y-axis)
             dim(AR)[3] # columns (x-axis)
@@ -173,6 +254,8 @@ write.hdf5 <- function(dat, # SpectreMAP object
         ## Write HDF5
             
             # h5closeAll()
+            
+            message("  -- writing HDF5 file")
             
             if(!is.null(random.crop.x)){
               if(!is.null(random.crop.y)){
@@ -221,6 +304,8 @@ write.hdf5 <- function(dat, # SpectreMAP object
             
             if(isTRUE(plots)){
               
+              message("  -- creating plots")
+              
               if(!is.null(random.crop.x)){
                 if(!is.null(random.crop.y)){
                   
@@ -228,7 +313,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
                   dir.create(paste0('HDF5 cropped plots/', i))
                   
                   for(a in channels){
-                    make.spatial.plot(dat,
+                    make.spatial.plot(roi.dat,
                                       image.roi = i,
                                       image.channel = a,
                                       image.min.threshold = 0,
@@ -245,7 +330,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
                 dir.create(paste0('HDF5 plots/', i))
                 
                 for(a in channels){
-                  make.spatial.plot(dat,
+                  make.spatial.plot(roi.dat,
                                     image.roi = i,
                                     image.channel = a,
                                     image.min.threshold = 0,
@@ -262,10 +347,21 @@ write.hdf5 <- function(dat, # SpectreMAP object
             ## Message
             if(!is.null(random.crop.x)){
               if(!is.null(random.crop.y)){
+                
                 message('  -- cropped HDF5 file for ', i, ' complete')
+                message(' ')
+                
               }
             } else {
               message('  -- HDF5 file for ', i, ' complete')
+              message(' ')
             }
+            
+            rm(roi.dat)
+            rm(AR)
+            gc()
       }
+      
+      gc()
+      
 }
