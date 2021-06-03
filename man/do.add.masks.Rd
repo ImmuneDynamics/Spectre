@@ -4,7 +4,7 @@
 \alias{do.add.masks}
 \title{do.add.masks}
 \usage{
-do.add.masks(
+\method{do}{add.masks}(
   spatial.dat,
   mask.loc,
   masks,
@@ -25,7 +25,7 @@ do.add.masks(
 
 \item{mask.label}{DEFAULT = "cell_mask"}
 
-\item{mask.ext}{DEFAULT  = "_mask.tiff"}
+\item{mask.ext}{DEFAULT  = "_mask.tif" (will also recognise the '.tiff' file type)}
 
 \item{correct.extent}{DEFAULT = TRUE}
 

@@ -19,7 +19,7 @@ read.spatial.files()
 
 \item{value.modifier}{Data modifier based on image processing. Default 65535}
 
-\item{ext}{Default = ".tiff". Could be '.tif' depending on the files.}
+\item{ext}{Default = ".tif" (which will recognise '.tiff' files as well)}
 }
 \value{
 Returns a spatial data object.

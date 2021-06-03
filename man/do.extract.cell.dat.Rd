@@ -4,7 +4,7 @@
 \alias{do.extract.cell.dat}
 \title{do.extract.cell.dat}
 \usage{
-do.extract.cell.dat(spatial.dat, target.dat)
+\method{do}{extract.cell.dat}(spatial.dat, target.dat)
 }
 \description{
 do.extract.cell.dat

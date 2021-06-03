@@ -4,7 +4,7 @@
 \alias{do.asinh}
 \title{do.asinh - Transform data in selected columns using ArcSinH}
 \usage{
-do.asinh(dat, use.cols, cofactor = 5, append.cf = FALSE, reduce.noise = FALSE)
+\method{do}{asinh}(dat, use.cols, cofactor = 5, append.cf = FALSE, reduce.noise = FALSE)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}

@@ -4,7 +4,7 @@
 \alias{do.stats}
 \title{Statistical analysis}
 \usage{
-do.stats(
+\method{do}{stats}(
   dat,
   use.cols,
   sample.col,

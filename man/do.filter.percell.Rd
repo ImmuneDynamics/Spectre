@@ -4,7 +4,7 @@
 \alias{do.filter.percell}
 \title{do.filter.percell}
 \usage{
-do.filter.percell(
+\method{do}{filter.percell}(
   spatial.dat,
   per.cell,
   to,

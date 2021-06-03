@@ -8,7 +8,7 @@
 #' @param correct.extent Correct extent so that the minimum is 0,0. Default TRUE
 #' @param flip.y Flip the data arrangement for the y-axis. Default TRUE
 #' @param value.modifier Data modifier based on image processing. Default 65535
-#' @param ext Default = ".tiff". Could be '.tif' depending on the files.
+#' @param ext Default = ".tif" (which will recognise '.tiff' files as well)
 #'
 #' @return Returns a spatial data object.
 #'

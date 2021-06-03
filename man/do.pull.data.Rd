@@ -4,7 +4,7 @@
 \alias{do.pull.data}
 \title{do.pull.data}
 \usage{
-do.pull.data(spatial.dat, target.dat)
+\method{do}{pull.data}(spatial.dat, target.dat)
 }
 \arguments{
 \item{spatial.dat}{NO DEFAULT. Spatial data list.}

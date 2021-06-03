@@ -4,7 +4,7 @@
 #' @param mask.loc NO DEFAULT. Directory of mask files.
 #' @param masks NO DEFAULT. Vector of mask file names
 #' @param mask.label DEFAULT = "cell_mask"
-#' @param mask.ext DEFAULT  = "_mask.tiff"
+#' @param mask.ext DEFAULT  = "_mask.tif" (will also recognise the '.tiff' file type)
 #' @param correct.extent DEFAULT = TRUE
 #' @param flip.y DEFAULT = TRUE
 #' @param value.modifier DEFAULT = 65535
