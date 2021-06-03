@@ -12,7 +12,7 @@ Spectre is an R package that enables comprehensive end-to-end integration and an
 
 Spectre was developed by [Thomas Ashhurst](https://tomashhurst.github.io/), [Felix Marsh-Wakefield](https://scholar.google.com/citations?user=6PaVkisAAAAJ&hl=en), and [Givanna Putri](https://scholar.google.com/citations?user=S-sNLPIAAAAJ&hl=en).
 
-### Protocols and vignettes
+### Instructions and protocols
 Usage instructions and protocols are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre).
 
 ### Citation
