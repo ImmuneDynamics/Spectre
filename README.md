@@ -1,7 +1,8 @@
 # Spectre
-A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry data.
+A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.
 
 <img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
+<img src="https://wiki.centenary.org.au/download/attachments/172228252/image2021-2-25_22-32-15.png?version=1&modificationDate=1614252735692&api=v2">
 
 ### Current version
 `v0.4.7`
