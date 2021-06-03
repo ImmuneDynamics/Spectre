@@ -4,7 +4,7 @@
 \alias{do.label.from.polygon}
 \title{do.label.from.polygon}
 \usage{
-\method{do}{label.from.polygon}(
+do.label.from.polygon(
   spatial.dat,
   cell.dat,
   mask,

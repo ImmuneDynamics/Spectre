@@ -4,7 +4,7 @@
 \alias{do.add.masks}
 \title{do.add.masks}
 \usage{
-\method{do}{add.masks}(
+do.add.masks(
   spatial.dat,
   mask.loc,
   masks,

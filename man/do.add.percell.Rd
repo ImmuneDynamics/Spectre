@@ -4,7 +4,7 @@
 \alias{do.add.percell}
 \title{do.add.percell}
 \usage{
-\method{do}{add.percell}(spatial.dat, percell.dat, roi.col, name = "per.cell")
+do.add.percell(spatial.dat, percell.dat, roi.col, name = "per.cell")
 }
 \description{
 do.add.percell
