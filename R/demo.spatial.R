@@ -9,9 +9,9 @@
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @source Thomas M Ashhurst.
-#'
-#' @references \url{https://github.com/ImmuneDynamics/SpectreMAP}.
-#'
+#' 
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' 
 #' @examples
 #' demo.spatial
 #'

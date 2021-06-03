@@ -10,8 +10,8 @@
 #'
 #' @source Thomas M Ashhurst.
 #'
-#' @references \url{https://sydneycytometry.org.au/spectre}.
-#'
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' 
 #' @examples
 #' demo.start
 #'

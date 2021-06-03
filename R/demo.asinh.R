@@ -8,9 +8,9 @@
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
-#' @source Thomas M Ashhurst.
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
-#' @references \url{https://sydneycytometry.org.au/spectre}.
+#' @source Thomas M Ashhurst.
 #'
 #' @examples
 #' demo.asinh

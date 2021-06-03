@@ -14,6 +14,11 @@
 #' @param compression DEFAULT = 0
 #' @param plots DEFAULT = FALSE
 #' 
+#' @author
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' 
 #' @import data.table
 #'
 #' @export

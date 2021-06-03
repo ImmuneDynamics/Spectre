@@ -10,6 +10,10 @@
 #' @param value.modifier DEFAULT = 65535
 #' @param array DEFAULT = FALSE
 #'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#'
 #' @import data.table
 #'
 #' @export

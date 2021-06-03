@@ -1,5 +1,9 @@
 #' do.add.percell
 #'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#'
 #' @import data.table
 #'
 #' @export
