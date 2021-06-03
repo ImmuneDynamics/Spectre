@@ -216,24 +216,24 @@
 ###################################################################################
 
     ### Clusters
-    
-    setwd(OutputDirectory)
-    dir.create('Clusters')
-    setwd('Clusters')
-    
-        for(i in unique(cell.dat$ROI)){
-            temp <- cell.dat[cell.dat[['ROI']] == i,]
-            make.spatial.plot(spatial.dat, i, 'DNA1_Ir191', mask.outlines = 'cell.mask', temp, cell.col = 'FlowSOM_metacluster', cell.col.type = 'factor')
-        }
+        
+        setwd(OutputDirectory)
+        dir.create('Clusters')
+        setwd('Clusters')
+        
+            for(i in unique(cell.dat$ROI)){
+                temp <- cell.dat[cell.dat[['ROI']] == i,]
+                make.spatial.plot(spatial.dat, i, 'DNA1_Ir191', mask.outlines = 'cell.mask', temp, cell.col = 'FlowSOM_metacluster', cell.col.type = 'factor')
+            }
     
     ### Cell type
-    
-    setwd(OutputDirectory)
-    dir.create('Annotated')
-    setwd('Annotated')
-    
-        for(i in unique(cell.dat$ROI)){
-            temp <- cell.dat[cell.dat[['ROI']] == i,]
-            make.spatial.plot(spatial.dat, i, 'DNA1_Ir191', mask.outlines = 'cell.mask', temp, cell.col = 'Annotated metacluster', cell.col.type = 'factor')
-        }
+        
+        setwd(OutputDirectory)
+        dir.create('Annotated')
+        setwd('Annotated')
+        
+            for(i in unique(cell.dat$ROI)){
+                temp <- cell.dat[cell.dat[['ROI']] == i,]
+                make.spatial.plot(spatial.dat, i, 'DNA1_Ir191', mask.outlines = 'cell.mask', temp, cell.col = 'Annotated metacluster', cell.col.type = 'factor')
+            }
 

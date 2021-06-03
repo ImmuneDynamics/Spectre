@@ -23,7 +23,7 @@ do.add.masks <- function(spatial.dat,
                          masks,
 
                          mask.label = "cell.mask",
-                         mask.ext = "_mask.tiff",
+                         mask.ext = "_mask.tif",
 
                          correct.extent = TRUE,
                          flip.y = TRUE,

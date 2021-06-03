@@ -9,7 +9,7 @@ do.add.masks(
   mask.loc,
   masks,
   mask.label = "cell.mask",
-  mask.ext = "_mask.tiff",
+  mask.ext = "_mask.tif",
   correct.extent = TRUE,
   flip.y = TRUE,
   value.modifier = 65535,
@@ -37,4 +37,10 @@ do.add.masks(
 }
 \description{
 do.add.masks
+}
+\references{
+\url{https://github.com/ImmuneDynamics/Spectre}.
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }

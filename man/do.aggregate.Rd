@@ -34,5 +34,10 @@ Spectre::make.pheatmap(dat = exp,
                        plot.title = "Pheatmap",
                        sample.col = "Population",
                        plot.cols = names(exp)[c(2:10)])
-
+}
+\references{
+\url{https://github.com/ImmuneDynamics/Spectre}.
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }

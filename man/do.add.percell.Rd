@@ -9,3 +9,9 @@ do.add.percell(spatial.dat, percell.dat, roi.col, name = "per.cell")
 \description{
 do.add.percell
 }
+\references{
+\url{https://github.com/ImmuneDynamics/Spectre}.
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+}

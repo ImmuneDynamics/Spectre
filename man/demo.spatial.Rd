@@ -21,7 +21,7 @@ demo.spatial
 
 }
 \references{
-\url{https://github.com/ImmuneDynamics/SpectreMAP}.
+\url{https://github.com/ImmuneDynamics/Spectre}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

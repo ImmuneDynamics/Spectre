@@ -7,6 +7,7 @@
 write.hdf5(
   dat,
   channels = NULL,
+  merge.channels = NULL,
   q.max = 0.99,
   flip.y = TRUE,
   random.crop.x = NULL,
@@ -23,6 +24,8 @@ write.hdf5(
 \item{dat}{NO DEFAULT. Spatial data list}
 
 \item{channels}{DEFAULT = NULL. Channels to include. If NULL, all channels included.}
+
+\item{merge.channels}{DEFAULT = NULL. Channels to use to create an additional 'merged' channel.}
 
 \item{q.max}{DEFAULT = 0.99}
 
@@ -43,9 +46,13 @@ write.hdf5(
 \item{compression}{DEFAULT = 0}
 
 \item{plots}{DEFAULT = FALSE}
-
-\item{merge.channels}{DEFAULT = NULL. Channels to use to create an additional 'merged' channel.}
 }
 \description{
 write.hdf5
+}
+\references{
+\url{https://github.com/ImmuneDynamics/Spectre}.
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }

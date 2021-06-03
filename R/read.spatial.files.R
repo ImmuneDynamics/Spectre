@@ -24,7 +24,7 @@ read.spatial.files <- function(rois,
                                correct.extent = TRUE,
                                flip.y = TRUE,
                                value.modifier = 65535,
-                               ext = ".tiff"){
+                               ext = ".tif"){
 
   ### Packages
   
