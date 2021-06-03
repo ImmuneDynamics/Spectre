@@ -7,7 +7,7 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 `v0.4.7`
 
 ### About
-Spectre is an R package that enables comprehensive end-to-end integration and analysis of high-dimensional cytometry data from different batches or experiments. Spectre streamlines the analytical stages of raw data pre-processing, batch alignment, data integration, clustering, dimensionality reduction, visualisation and population labelling, as well as quantitative and statistical analysis. To manage large cytometry datasets, Spectre was built on the data.table framework – this simple table-like structure allows for fast and easy processing of large datasets in R. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. Recently we have extended the functionality of Spectre to support the analysis of Imaging Mass Cytometry (IMC) and scRNAseq data. For more information, please see our pre-print: [Integration, exploration, and analysis of high-dimensional single-cell cytometry data using Spectre. (2020). TM Ashhurst\*, F Marsh-Wakefield\*, GH Putri\*, AG Spiteri, D Shinko, ... bioRxiv](https://www.biorxiv.org/content/10.1101/2020.10.22.349563v1.abstract).
+Spectre is an R package that enables comprehensive end-to-end integration and analysis of high-dimensional cytometry data from different batches or experiments. Spectre streamlines the analytical stages of raw data pre-processing, batch alignment, data integration, clustering, dimensionality reduction, visualisation and population labelling, as well as quantitative and statistical analysis. To manage large cytometry datasets, Spectre was built on the data.table framework – this simple table-like structure allows for fast and easy processing of large datasets in R. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. Recently we have extended the functionality of Spectre to support the analysis of Imaging Mass Cytometry (IMC) and scRNAseq data. For more information, please see our paper: [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2021). Cytometry A. DOI: 10.1002/cyto.a.24350](https://doi.org/10.1002/cyto.a.24350).
 
 Spectre was developed by [Thomas Ashhurst](https://tomashhurst.github.io/), [Felix Marsh-Wakefield](https://scholar.google.com/citations?user=6PaVkisAAAAJ&hl=en), and [Givanna Putri](https://scholar.google.com/citations?user=S-sNLPIAAAAJ&hl=en).
 
@@ -15,7 +15,7 @@ Spectre was developed by [Thomas Ashhurst](https://tomashhurst.github.io/), [Fel
 Usage instructions and protocols are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre).
 
 ### Citation
-If you use Spectre in your work, please consider citing [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2020). bioRxiv. 2020.10.22.349563](https://www.biorxiv.org/content/10.1101/2020.10.22.349563v1.abstract). To continue providing open-source tools such as Spectre, it helps us if we can demonstrate that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. CytoNorm, FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.
+If you use Spectre in your work, please consider citing [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2021). Cytometry A. DOI: 10.1002/cyto.a.24350](https://doi.org/10.1002/cyto.a.24350). To continue providing open-source tools such as Spectre, it helps us if we can demonstrate that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. CytoNorm, FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.
 
 ### Installing Spectre
 Detailed installation instructions are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre). Briefly, install and load the 'devtools' library.
@@ -51,18 +51,11 @@ If the package is sucessfully installed, you can load the library using:
 library("Spectre")
 ```
 
-Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre.
+Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre. You can install these using the `package.install()` function.
 
 ```
-## Install BiocManager to download packages from Bioconductor
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
- 
 ## Download additional BioConductor packages
-if(!require('flowCore')) {BiocManager::install('flowCore')}
-if(!require('Biobase')) {BiocManager::install('Biobase')}
-if(!require('flowViz')) {BiocManager::install('flowViz')}
-if(!require('FlowSOM')) {BiocManager::install('FlowSOM')}
+Spectre::package.install()
 ```
 
 You can then check for whether all of the packages for Spectre have been loaded correctly using the following commands
