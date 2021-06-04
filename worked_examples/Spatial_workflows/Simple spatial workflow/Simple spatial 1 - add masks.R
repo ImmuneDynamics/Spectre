@@ -105,7 +105,6 @@
         
         str(spatial.dat, 3)
         
-        spatial.dat[[1]]$RASTERS
         spatial.dat[[1]]$MASKS
 
 ###################################################################################
@@ -176,7 +175,7 @@
         
         as.matrix(names(cell.dat))
         cellular.cols <- names(cell.dat)[c(6:20)]
-        cellular.cols
+        as.matrix(cellular.cols)
     
     ### Arcsinh transformation
     
