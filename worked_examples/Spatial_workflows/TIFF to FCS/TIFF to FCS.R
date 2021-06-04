@@ -1,14 +1,14 @@
 ###################################################################################
 ### Spectre: TIFF to FCS
 ###################################################################################
-    
+        
     ### Load libraries
         
         library('Spectre')
         
         Spectre::package.check(type = 'spatial')
         Spectre::package.load(type = 'spatial')
-    
+        
     ### Set PrimaryDirectory
         
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
@@ -23,7 +23,7 @@
         setwd("data/ROIs/")
         InputDirectory <- getwd()
         InputDirectory
-    
+        
     ### Set MaskDirectory (ROI mask TIFFs)
         
         setwd(PrimaryDirectory)
@@ -34,8 +34,8 @@
     ### Create output directory
         
         setwd(PrimaryDirectory)
-        dir.create("Output - FCS files")
-        setwd("Output - FCS files")
+        dir.create("Output 1 - add masks")
+        setwd("Output 1 - add masks")
         OutputDirectory <- getwd()
         OutputDirectory
 
@@ -55,9 +55,9 @@
     ### Check channel names
         
         for(i in rois){
-          setwd(InputDirectory)
-          setwd(i)
-          tiff.list[[i]] <- list.files(getwd())
+            setwd(InputDirectory)
+            setwd(i)
+            tiff.list[[i]] <- list.files(getwd())
         }
         
         t(as.data.frame(tiff.list))
@@ -67,12 +67,12 @@
 ###################################################################################        
     
     ### Read in ROI channel TIFFs
-    
+        
         setwd(InputDirectory)
         spatial.dat <- read.spatial.files(rois = rois, roi.loc = getwd())
         
     ### Check results
-    
+        
         str(spatial.dat, 3)
         spatial.dat[[1]]$RASTERS
 
@@ -81,12 +81,12 @@
 ###################################################################################
     
     ### Define cell mask extension for different mask types
-    
+        
         setwd(MaskDirectory)
         
         all.masks <- list.files(pattern = '.tif')
         as.matrix(all.masks)
-        
+    
     ### Import CELL masks
         
         as.matrix(all.masks)
@@ -100,10 +100,11 @@
                                     masks = cell.masks,
                                     mask.label = 'cell.mask',
                                     mask.ext = cell.mask.ext)
+    
+    ### Review data
         
         str(spatial.dat, 3)
         
-        spatial.dat[[1]]$RASTERS
         spatial.dat[[1]]$MASKS
 
 ###################################################################################
@@ -118,7 +119,6 @@
         
         str(spatial.dat, 3)
         
-        spatial.dat[[1]]$RASTERS
         spatial.dat[[1]]$MASKS
 
 ###################################################################################
@@ -131,22 +131,24 @@
         dir.create('Plots - cell masks')
         setwd('Plots - cell masks')
         
+        as.matrix(names(spatial.dat[[1]]$RASTERS))
+        
         base <- 'DNA1_Ir191'
         mask <- 'cell.mask'
         
         for(i in names(spatial.dat)){
-          make.spatial.plot(spatial.dat = spatial.dat, 
-                            image.roi = i, 
-                            image.channel = base, 
-                            mask.outlines = 'cell.mask')
+            make.spatial.plot(spatial.dat = spatial.dat, 
+                              image.roi = i, 
+                              image.channel = base, 
+                              mask.outlines = 'cell.mask')
         }
 
 ###################################################################################
 ### Extract 'per cell' data
 ###################################################################################       
-    
+
     ### Extract cellular data for each cell mask
-        
+    
         spatial.dat <- do.extract(spatial.dat, 'cell.mask')
         str(spatial.dat, 3)
 
@@ -173,14 +175,14 @@
         
         as.matrix(names(cell.dat))
         cellular.cols <- names(cell.dat)[c(6:20)]
-        cellular.cols
+        as.matrix(cellular.cols)
     
     ### Arcsinh transformation
     
         cell.dat <- do.asinh(cell.dat, cellular.cols, cofactor = 1)
     
     ### Invert y axis
-    
+        
         all.neg <- function(test) -1*abs(test)
         
         y_invert <- cell.dat[['y']]
@@ -190,7 +192,7 @@
         cell.dat
     
     ### Write FCS files  
-    
+        
         setwd(OutputDirectory)
         dir.create('FCS files')
         setwd('FCS files')
@@ -224,14 +226,14 @@
         setwd('Plots - expression')
         
         for(i in plot.rois){
-          for(a in exp.plot){
-            make.spatial.plot(spatial.dat = spatial.dat, 
-                              image.roi = i, 
-                              image.channel = a, 
-                              mask.outlines = 'cell.mask')
-          }
+            for(a in exp.plot){
+                make.spatial.plot(spatial.dat = spatial.dat, 
+                                  image.roi = i, 
+                                  image.channel = a, 
+                                  mask.outlines = 'cell.mask')
+            }
         }
-    
+        
     ### Factor data point plots
         
         setwd(OutputDirectory)
@@ -239,23 +241,23 @@
         setwd('Plots - data point expression')
         
         for(i in plot.rois){
-          for(a in exp.plot){
-            make.spatial.plot(spatial.dat = spatial.dat, 
-                              image.roi = i, 
-                              image.channel = a, 
-                              mask.outlines = 'cell.mask', 
-                              cell.dat = 'CellData', 
-                              cell.col = a)
-          }
-          
-          for(a in factor.plot){
-            make.spatial.plot(spatial.dat = spatial.dat, 
-                              image.roi = i, 
-                              image.channel = a, 
-                              mask.outlines = 'cell.mask', 
-                              cell.dat = 'CellData', 
-                              cell.col = a, 
-                              cell.col.type = 'factor')
-          }
+            for(a in exp.plot){
+                make.spatial.plot(spatial.dat = spatial.dat, 
+                                  image.roi = i, 
+                                  image.channel = a, 
+                                  mask.outlines = 'cell.mask', 
+                                  cell.dat = 'CellData', 
+                                  cell.col = a)
+            }
+            
+            for(a in factor.plot){
+                make.spatial.plot(spatial.dat = spatial.dat, 
+                                  image.roi = i, 
+                                  image.channel = a, 
+                                  mask.outlines = 'cell.mask', 
+                                  cell.dat = 'CellData', 
+                                  cell.col = a, 
+                                  cell.col.type = 'factor')
+            }
         }
 
