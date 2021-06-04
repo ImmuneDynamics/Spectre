@@ -13,8 +13,8 @@
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
-#' @references \url{https://sydneycytometry.org.au/spectre}.
-#'
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' 
 #' @examples
 #' add.dt <- data.table('Files' = unique(Spectre::demo.asinh$FileName),
 #'                      'SampleNumber' = c(1:12))

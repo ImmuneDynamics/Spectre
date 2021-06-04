@@ -35,3 +35,9 @@ create.stats(
 \description{
 This function performs statistical analysis and generates an output data.table
 }
+\references{
+\url{https://github.com/ImmuneDynamics/Spectre}.
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+}

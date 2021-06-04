@@ -11,6 +11,10 @@
 #' @param pairwise.test DEFAULT = 'wilcox.test'. Currently the only option
 #' @param corrections DEFAULT = 'fdr' (false discovery rate). Currently the only option
 #'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#'
 #' @import data.table
 #'
 #' @export

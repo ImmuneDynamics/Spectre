@@ -21,7 +21,7 @@ demo.batches.1
 
 }
 \references{
-\url{https://sydneycytometry.org.au/spectre}.
+\url{https://github.com/ImmuneDynamics/Spectre}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

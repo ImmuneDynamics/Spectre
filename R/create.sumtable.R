@@ -26,10 +26,9 @@
 #'                             use.cols = names(dat)[c(11:19)],
 #'                             counts = counts)
 #' 
-#' @author
-#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
-#' @references \url{https://sydneycytometry.org.au/spectre}.
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #' 
 #' @export
 
