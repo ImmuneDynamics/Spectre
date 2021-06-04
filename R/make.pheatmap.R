@@ -22,7 +22,8 @@
 #' @param col.sep DEFAULT = c(). Numeric. Only used if not clustering columns
 #' @param cell.size DEFAULT = 15. Numeric.
 #' @param standard.colours DEFAULT = "BuPu". Character. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
-#' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
+#' @param fold.colours DEFAULT = "Spectre". Character, a custom blue:black:red fold-change colour scheme. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
+#' @param path DEFAULT = NULL. The location to save plots. By default, will save to current working directory. Can be overidden by entering a sub-directory name (e.g. if you have a subdirectory under your working directory called 'plots', you can enter this here).
 #'
 #' @usage make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
 #'
@@ -36,7 +37,8 @@
 #'
 #' ## Z-scrore of fold-change type heatmap
 #' z.dat <- do.zscore(dat = Spectre::demo.sum,
-#'                    use.cols = names(Spectre::demo.sum)[c(4:15)])
+#'                    use.cols = names(Spectre::demo.sum)[c(4:15)],
+#'                    replace = TRUE)
 #'
 #' Spectre::make.pheatmap(dat = z.dat,
 #'                        file.name = "z-score.png",
@@ -83,7 +85,8 @@ make.pheatmap <- function(dat,
                           col.sep = c(),
                           cell.size = 15,
                           standard.colours = "BuPu",
-                          path = getwd())
+                          fold.colours = 'Spectre',
+                          path = NULL)
 
                         #n.row.groups = 2,
                         #n.col.groups = 2,
@@ -105,62 +108,118 @@ make.pheatmap <- function(dat,
 
       ## Standard colour options
 
-      if(standard.colours == "BuPu"){
-        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
-      }
-
-      if(standard.colours == "RdYlBu"){
-        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdYlBu"))(31)) # 256
-        colour.palette <- rev(colour.palette)
-      }
-
-      if(standard.colours == "rev(RdBu)"){
-        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(31)) # 256
-        colour.palette <- rev(colour.palette)
-      }
-
-      if(standard.colours == "Blues"){
-        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(31)) # 256
-      }
-
-      if(standard.colours == "Reds"){
-        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Reds"))(31)) # 256
-      }
-
-      if(standard.colours == "Greys"){
-        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Greys"))(31)) # 256
-      }
-
-      if(standard.colours == "YlGnBu"){
-        colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "YlGnBu"))(31)) # 256
-      }
-
-      if(standard.colours == "viridis"){
-        colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "viridis")(50)))
-        colour.palette <- colour.palette(31)
-      }
-
-      if(standard.colours == "spectral"){
-        spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)
-        spectral.list <- rev(spectral.list)
-        colour.palette <- colorRampPalette(c(spectral.list))
-        colour.palette <- colour.palette(31)
-      }
-
-      if(standard.colours == "magma"){
-        colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "magma")(50)))
-        colour.palette <- colour.palette(31)
-      }
-
-      if(standard.colours == "inferno"){
-        colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "inferno")(50)))
-        colour.palette <- colour.palette(31)
-      }
+          if(standard.colours == "BuPu"){
+            colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
+          }
+    
+          if(standard.colours == "RdYlBu"){
+            colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdYlBu"))(31)) # 256
+            colour.palette <- rev(colour.palette)
+          }
+    
+          if(standard.colours == "rev(RdBu)"){
+            colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(31)) # 256
+            colour.palette <- rev(colour.palette)
+          }
+    
+          if(standard.colours == "Blues"){
+            colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(31)) # 256
+          }
+    
+          if(standard.colours == "Reds"){
+            colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Reds"))(31)) # 256
+          }
+    
+          if(standard.colours == "Greys"){
+            colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Greys"))(31)) # 256
+          }
+    
+          if(standard.colours == "YlGnBu"){
+            colour.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "YlGnBu"))(31)) # 256
+          }
+    
+          if(standard.colours == "viridis"){
+            colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "viridis")(50)))
+            colour.palette <- colour.palette(31)
+          }
+    
+          if(standard.colours == "spectral"){
+            spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)
+            spectral.list <- rev(spectral.list)
+            colour.palette <- colorRampPalette(c(spectral.list))
+            colour.palette <- colour.palette(31)
+          }
+    
+          if(standard.colours == "magma"){
+            colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "magma")(50)))
+            colour.palette <- colour.palette(31)
+          }
+    
+          if(standard.colours == "inferno"){
+            colour.palette <- colorRampPalette(c(scales::viridis_pal(option = "inferno")(50)))
+            colour.palette <- colour.palette(31)
+          }
 
       ## Fold-change colour options
 
-          fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
-          #fold.palette <- colorRampPalette(brewer.pal(11, "RdBu"))
+          if(fold.colours == "Spectre"){
+            fold.palette <- colorRampPalette(rev(c("#ffeda0","#fed976","#feb24c","#fd8d3c","#fc4e2a","#e31a1c","#bd0026","#800026","black","#023858","#045a8d","#0570b0","#3690c0","#74a9cf","#a6bddb","#d0d1e6","#ece7f2")))
+            fold.palette <- fold.palette(31)
+          }
+          
+          if(fold.colours == "BuPu"){
+            fold.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
+          }
+          
+          if(fold.colours == "RdYlBu"){
+            fold.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdYlBu"))(31)) # 256
+            fold.palette <- rev(fold.palette)
+          }
+          
+          if(fold.colours == "rev(RdBu)"){
+            fold.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(31)) # 256
+            fold.palette <- rev(fold.palette)
+          }
+          
+          if(fold.colours == "Blues"){
+            fold.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(31)) # 256
+          }
+          
+          if(fold.colours == "Reds"){
+            fold.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Reds"))(31)) # 256
+          }
+          
+          if(fold.colours == "Greys"){
+            fold.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "Greys"))(31)) # 256
+          }
+          
+          if(fold.colours == "YlGnBu"){
+            fold.palette <- (colorRampPalette(RColorBrewer::brewer.pal(9, "YlGnBu"))(31)) # 256
+          }
+          
+          if(fold.colours == "viridis"){
+            fold.palette <- colorRampPalette(c(scales::viridis_pal(option = "viridis")(50)))
+            fold.palette <- fold.palette(31)
+          }
+          
+          if(fold.colours == "spectral"){
+            spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)
+            spectral.list <- rev(spectral.list)
+            fold.palette <- colorRampPalette(c(spectral.list))
+            fold.palette <- fold.palette(31)
+          }
+          
+          if(fold.colours == "magma"){
+            fold.palette <- colorRampPalette(c(scales::viridis_pal(option = "magma")(50)))
+            fold.palette <- fold.palette(31)
+          }
+          
+          if(fold.colours == "inferno"){
+            fold.palette <- colorRampPalette(c(scales::viridis_pal(option = "inferno")(50)))
+            fold.palette <- fold.palette(31)
+          }
+
+           #fold.palette <- colorRampPalette(brewer.pal(11, "RdBu"))
 
       ## Grouping colour options
         # group.palette <- (colorRampPalette(brewer.pal(11, "Spectral")))
@@ -282,7 +341,7 @@ make.pheatmap <- function(dat,
   ### Set up fold-change or normal preferences
 
       if(is.fold == TRUE){
-        map.colour <- fold.palette(31)
+        map.colour <- fold.palette
         sym.key <- FALSE # TRUE need if NOT creating own breaks
         sym.breaks <- TRUE
 
@@ -338,8 +397,15 @@ make.pheatmap <- function(dat,
   ### Plot heatmap and dendrograms
 
       # Specify directory heatmap will be saved
-      setwd(path)
 
+      if(is.null(path)){
+        flnm <- file.name
+      }
+      
+      if(!is.null(path)){
+        flnm <- paste0(path, '/', file.name)
+      }
+      
       pheatmap::pheatmap(mat = as.matrix(heatmap.data),
                main = title.text,
 
@@ -363,9 +429,10 @@ make.pheatmap <- function(dat,
                annotation_colors = annotation_colors,
 
                color = map.colour,
-               filename = file.name)
+               filename = flnm
+               )
 
-      message("A pheatmap has been saved to your working directory")
+      message(paste0("A pheatmap has been saved to your working directory", paste0(path, file.name)))
 
 }
 

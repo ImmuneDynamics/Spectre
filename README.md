@@ -1,22 +1,18 @@
 # Spectre
-A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry data.
+A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.
 
+<img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
+<img src="https://wiki.centenary.org.au/download/attachments/172228252/image2021-2-25_22-32-15.png?version=1&modificationDate=1614252735692&api=v2">
 
 ### Current version
 `v0.5.0`
 
 ### About
-Spectre is an R package that enables comprehensive end-to-end integration and analysis of high-dimensional cytometry data from different batches or experiments. Spectre streamlines the analytical stages of raw data pre-processing, batch alignment, data integration, clustering, dimensionality reduction, visualisation and population labelling, as well as quantitative and statistical analysis. To manage large cytometry datasets, Spectre was built on the data.table framework – this simple table-like structure allows for fast and easy processing of large datasets in R. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. 
+Spectre is an R package that enables comprehensive end-to-end integration and analysis of high-dimensional cytometry data from different batches or experiments. Spectre streamlines the analytical stages of raw data pre-processing, batch alignment, data integration, clustering, dimensionality reduction, visualisation and population labelling, as well as quantitative and statistical analysis. To manage large cytometry datasets, Spectre was built on the data.table framework – this simple table-like structure allows for fast and easy processing of large datasets in R. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. Recently we have extended the functionality of Spectre to support the analysis of Imaging Mass Cytometry (IMC) and scRNAseq data. For more information, please see our paper: [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2021). Cytometry A. DOI: 10.1002/cyto.a.24350](https://doi.org/10.1002/cyto.a.24350).
 
-<img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
+Spectre was developed by [Thomas Ashhurst](https://immunedynamics.github.io/thomas-ashhurst/), [Felix Marsh-Wakefield](https://immunedynamics.github.io/felix-marsh-wakefield/), and [Givanna Putri](https://immunedynamics.github.io/givanna-putri/).
 
-Along with flow, spectral, or mass cytometry data, Spectre enables spatial analysis of Imaging Mass Cytometry (IMC) data. The Hyperion from Fluidigm (an Imaging Mass Cytometer, IMC) consists of a CyTOF (Helios) instrument, with an imaging module attached to the front. Within the imaging module, a pulsed laser scans and ablates the tissue section in incremental 1 um shots, which are then rastered together into an image, consisting of 30-40 metal signals representing different cellular or tissue markers. 
-
-<img src="https://wiki.centenary.org.au/download/attachments/172228252/image2021-2-25_22-32-15.png?version=1&modificationDate=1614252735692&api=v2">
-
-For more information, please see our pre-print: [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2021). Cytometry A. DOI: 10.1002/cyto.a.24350](https://doi.org/10.1002/cyto.a.24350). To continue providing open-source tools such as Spectre, it helps us if we can demonstrate that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. CytoNorm, FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work. We have provided some generic text that you can use for your methods section with each protocol and on the ‘[citation](https://immunedynamics.github.io/spectre/citation)’ page.
-
-### Protocols and vignettes
+### Instructions and protocols
 Usage instructions and protocols are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre).
 
 ### Citation
@@ -56,10 +52,10 @@ If the package is sucessfully installed, you can load the library using:
 library("Spectre")
 ```
 
-Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre.
+Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre. You can install these using the `package.install()` function.
 
 ```
-## Install additional packages
+## Download additional BioConductor packages
 Spectre::package.install()
 ```
 
