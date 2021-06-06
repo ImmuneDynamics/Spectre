@@ -21,6 +21,9 @@
 #'                        plot.title = "Pheatmap",
 #'                        sample.col = "Population",
 #'                        plot.cols = names(exp)[c(2:10)])
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
 #' @import data.table
 #'

@@ -7,8 +7,7 @@
 #' 
 #' @usage create.dt(dat, from)
 #'
-#' @author
-#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #' 

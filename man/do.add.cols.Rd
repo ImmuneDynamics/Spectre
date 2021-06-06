@@ -36,7 +36,7 @@ cell.dat <- do.add.cols(dat = Spectre::demo.asinh,
 
 }
 \references{
-\url{https://sydneycytometry.org.au/spectre}.
+\url{https://github.com/ImmuneDynamics/Spectre}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

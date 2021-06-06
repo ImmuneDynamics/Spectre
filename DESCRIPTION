@@ -1,7 +1,7 @@
 Package: Spectre
 Type: Package
-Title: A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry data. 
-Version: 0.4.5
+Title: A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data. 
+Version: 0.5.0
 Author: Thomas Ashhurst, Felix Marsh-Wakefield, Givanna Putri
 Maintainer: Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>
 Description: A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry data. 
@@ -36,7 +36,17 @@ Imports:
     ggraph,
     stringr,
     rsvd,
-    irlba
+    irlba,
+    gridExtra,
+    raster,
+    tiff,
+    rgeos,
+    tidyr,
+    sp,
+    sf,
+    stars,
+    qs,
+    exactextractr
 Suggests:
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
