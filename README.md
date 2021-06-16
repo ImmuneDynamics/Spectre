@@ -3,6 +3,8 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 
 <img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
 
+Spectre <img src="https://github.com/ImmuneDynamics/Spectre/blob/master/image/Spectre.png?raw=true" alt="logo" width="181" align="right"/>
+
 ### Current version
 `v0.5.0`
 
