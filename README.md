@@ -1,7 +1,8 @@
 # Spectre
-A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.
 
-<img src="https://github.com/ImmuneDynamics/Spectre/blob/master/image/Spectre.png?raw=true" alt="logo" width="300" align="right"/>
+<img src="https://github.com/ImmuneDynamics/Spectre/blob/master/image/Spectre.png?raw=true" alt="logo" width="250" align="right"/>
+
+A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.
 
 ### Current version
 `v0.5.0`
