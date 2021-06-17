@@ -41,7 +41,7 @@
         list.files(getwd(), '.csv')
         
         cell.dat <- fread("cell.dat.csv")
-        cell.dat
+        cell.dat 
         
     ### Read in spatial data
         

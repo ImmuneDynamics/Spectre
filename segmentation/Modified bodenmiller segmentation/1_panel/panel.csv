@@ -1,0 +1,14 @@
+Metal Tag,Target,full,ilastik,ilastik_order
+Pr141,Alpha_SMA,1,0,
+Nd143,Vimentin,1,0,
+Sm149,CD11b,1,1,1
+Sm152,CD45,1,1,2
+Gd156,CD45,1,1,3
+Tb159,CD68,1,1,4
+Dy161,CD20,1,1,5
+Dy162,CD8a,1,1,6
+Tm169,Collagen_I,1,0,
+Er170,CD3,1,1,7
+Yb176,HH3,1,1,8
+Ir191,DNA-1,1,1,9
+Ir193,DNA-2,1,1,10

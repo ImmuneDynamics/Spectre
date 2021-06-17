@@ -69,7 +69,7 @@ t(as.data.frame(tiff.list))
 ### Read in ROI channel TIFFs
 
 setwd(InputDirectory)
-spatial.dat <- read.spatial.files(rois = rois, roi.loc = getwd())
+spatial.dat <- read.spatial.files(rois = rois, roi.loc = getwd(), ext = '.tiff')
 
 ### Check results
 
@@ -84,7 +84,7 @@ spatial.dat[[1]]$RASTERS
         
         setwd(MaskDirectory)
         
-        all.masks <- list.files(pattern = '.tif')
+        all.masks <- list.files(pattern = '.tiff')
         as.matrix(all.masks)
         
     ### Import CELL masks
