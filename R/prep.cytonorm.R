@@ -54,7 +54,7 @@ prep.cytonorm <- function(dat,
       require(Spectre)
       require(data.table)
       require(CytoNorm)
-      require(flowCore)
+      # require(flowCore)
       require(Biobase)
       
   ### Directory setup

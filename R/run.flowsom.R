@@ -53,7 +53,7 @@ run.flowsom <- function(dat,
 
   ### Require packages
       require(Spectre)
-      require(flowCore)
+      # require(flowCore)
       require(Biobase)
       require(FlowSOM)
       require(data.table)
@@ -91,7 +91,7 @@ run.flowsom <- function(dat,
                      exprs=as.matrix(dat), # in order to create a flow frame, data needs to be read as matrix
                      parameters=Biobase::AnnotatedDataFrame(metadata))
 
-      head(flowCore::exprs(dat.ff))
+      #head(flowCore::exprs(dat.ff))
       dat_FlowSOM <- dat.ff
 
       rm(dat)

@@ -8,6 +8,8 @@ See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vign
 }
 \arguments{
 \item{type}{DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis.}
+
+\item{update}{DEFAULT = FALSE. If FALSE, will only install packages that are not already installed -- no updates of packages will be performed. If TRUE, will install and update packages.}
 }
 \value{
 returns an error message if one of the common use packages are not installed. Proceeds in order of package importance, and only the first error message encountered will be returned.
