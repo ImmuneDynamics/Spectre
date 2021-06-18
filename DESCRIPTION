@@ -9,6 +9,11 @@ Depends: R (>= 3.6.0)
 License: MIT Licence
 Encoding: UTF-8
 LazyData: true
+biocViews: 
+    flowCore,
+    Biobase,
+    flowViz,
+    FlowSOM,
 Imports:
     devtools,
     plyr,
