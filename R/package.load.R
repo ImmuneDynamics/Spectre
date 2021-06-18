@@ -56,5 +56,7 @@ package.load <- function(type = "general"){
     require('stars')
     require('qs')
     require('s2')
+    require('hdf5r')
+    require('HDF5Array')
   }
 }

@@ -64,6 +64,8 @@ package.install <- function(type = 'general', update = FALSE){
           if(!require('stars')) {install.packages('stars')}
           if(!require('qs')) {install.packages('qs')}
           if(!require('s2')) {install.packages('s2')}
+          if(!require('qs')) {install.packages('HDF5Array')}
+          if(!require('s2')) {install.packages('hdf5r')}
         }
       }
   
@@ -109,6 +111,8 @@ package.install <- function(type = 'general', update = FALSE){
           install.packages('stars')
           install.packages('qs')
           install.packages('s2')
+          install.packages('HDF5Array')
+          install.packages('hdf5r')
         }
       }
   
