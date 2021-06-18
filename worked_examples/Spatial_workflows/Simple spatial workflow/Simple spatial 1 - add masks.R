@@ -69,7 +69,7 @@
     ### Read in ROI channel TIFFs
     
         setwd(InputDirectory)
-        spatial.dat <- read.spatial.files(rois = rois, roi.loc = getwd())
+        spatial.dat <- read.spatial.files(rois = rois, roi.loc = InputDirectory, ext = '.tiff')
         
     ### Check results
     
@@ -113,7 +113,7 @@
     
     ### Generate polygons and outlines
     
-        spatial.dat <- do.create.outlines(spatial.dat, 'cell.mask')
+        spatial.dat <- do.create.outlines(spatial.dat = spatial.dat, mask.name = 'cell.mask')
     
     ### Checks
     

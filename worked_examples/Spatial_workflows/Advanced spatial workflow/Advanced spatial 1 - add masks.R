@@ -84,7 +84,7 @@ spatial.dat[[1]]$RASTERS
         
         setwd(MaskDirectory)
         
-        all.masks <- list.files(pattern = '.tiff')
+        all.masks <- list.files(pattern = '.tif')
         as.matrix(all.masks)
         
     ### Import CELL masks
