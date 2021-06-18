@@ -46,6 +46,7 @@ Imports:
     sf,
     stars,
     qs,
+    s2,
     exactextractr
 Suggests:
 RoxygenNote: 7.1.1
