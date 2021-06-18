@@ -9,7 +9,6 @@ Depends: R (>= 3.6.0)
 License: MIT Licence
 Encoding: UTF-8
 LazyData: true
-biocViews:
 Imports:
     devtools,
     plyr,
@@ -48,10 +47,7 @@ Imports:
     stars,
     qs,
     s2,
-    exactextractr
-    flowCore,
-    Biobase,
-    flowViz,
+    exactextractr,
 Suggests:
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
