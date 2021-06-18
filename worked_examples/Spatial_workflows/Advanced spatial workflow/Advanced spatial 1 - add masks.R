@@ -69,7 +69,7 @@ t(as.data.frame(tiff.list))
 ### Read in ROI channel TIFFs
 
 setwd(InputDirectory)
-spatial.dat <- read.spatial.files(rois = rois, roi.loc = getwd())
+spatial.dat <- read.spatial.files(rois = rois, roi.loc = getwd(), ext = '.tiff')
 
 ### Check results
 

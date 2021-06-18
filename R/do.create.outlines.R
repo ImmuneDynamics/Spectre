@@ -32,6 +32,10 @@ do.create.outlines <- function(spatial.dat,
 
       if(method == 'stars'){
         message(paste0("Creating polygons, outlines, and centroids using 'stars' method."))
+        require(stars)
+        require(sf)
+        require(sp)
+        require(s2)
       }
 
       if(method == 'raster'){
@@ -53,13 +57,13 @@ do.create.outlines <- function(spatial.dat,
 
         mask <- spatial.dat[[i]]$MASKS[[mask.name]]$maskraster
 
-        message(paste0("Processing masks for ROI ", i))
+        message(paste0("  -- Processing masks for ROI ", i))
 
         ## rasterToPolygons method
             if(method == 'raster'){
               polygon <- rasterToPolygons(mask, dissolve=TRUE) # This is the long step
               spatial.dat[[i]]$MASKS[[mask.name]][["polygons"]] <- polygon
-              message("... polygons complete")
+              message("    ... polygons complete")
             }
 
         ## stars method
@@ -68,16 +72,18 @@ do.create.outlines <- function(spatial.dat,
               require(stars)
               require(sf)
               require(sp)
+              require(s2)
 
               names(mask) <- "TEMP_MASK"
 
               stars.mask <- stars::st_as_stars(mask)
 
-              sf::st_crs(stars.mask) <- 4326
+              #sf::st_crs(stars.mask) <- 4326
 
               res <- sf::st_as_sf(stars.mask, # requires the sf, sp, raster and stars packages
                                   as_points = FALSE,
                                   merge = TRUE) #,
+                                  
                                   #na.rm = TRUE)
                                   #group = TRUE) # TRUE crashes, FALSE does not
 
@@ -94,18 +100,20 @@ do.create.outlines <- function(spatial.dat,
               crs(polygon) <- NA
 
               spatial.dat[[i]]$MASKS[[mask.name]][["polygons"]] <- polygon
-              message("... polygons complete")
+              message("     ... polygons complete")
             }
 
     ### Create outlines
-        outline <- fortify(polygon)
+        suppressMessages(
+          outline <- fortify(polygon)
+        )
         spatial.dat[[i]]$MASKS[[mask.name]][["outlines"]] <- outline
-        message("... outlines complete")
+        message("     ... outlines complete")
 
     ### Create centroids
         centroids <- gCentroid(polygon,byid=TRUE)
         spatial.dat[[i]]$MASKS[[mask.name]][["centroids"]] <- centroids
-        message("... centroids complete")
+        message("     ... centroids complete")
       }
 
   message("Returning spatial data")

@@ -1,0 +1,17 @@
+FileName,Sample,Group,Batch
+Mock_01_A.csv,Mock_01_A,Mock,A
+Mock_02_A.csv,Mock_02_A,Mock,A
+Mock_03_A.csv,Mock_03_A,Mock,A
+Mock_04_A.csv,Mock_04_A,Mock,A
+Virus_01_A.csv,WNV_01_A,Virus,A
+Virus_02_A.csv,WNV_02_A,Virus,A
+Virus_03_A.csv,WNV_03_A,Virus,A
+Virus_04_A.csv,WNV_04_A,Virus,A
+Mock_05_B.csv,Mock_05_B,Mock,B
+Mock_06_B.csv,Mock_06_B,Mock,B
+Mock_07_B.csv,Mock_07_B,Mock,B
+Mock_08_B.csv,Mock_08_B,Mock,B
+Virus_05_B.csv,WNV_05_B,Virus,B
+Virus_06_B.csv,WNV_06_B,Virus,B
+Virus_07_B.csv,WNV_07_B,Virus,B
+Virus_08_B.csv,WNV_08_B,Virus,B

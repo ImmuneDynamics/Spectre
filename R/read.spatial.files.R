@@ -29,21 +29,36 @@ read.spatial.files <- function(rois,
   ### Packages
   
       require('raster')
-  
+
   ### Checks
 
       if(multi.tiff == TRUE){
-        if(length(grep(".tif", rois)) != length(rois)){
+        if(length(grep(ext, rois)) != length(rois)){
           stop("It appears that your list of ROIs are not TIFF stack files, and might be directories full of single TIFFs (i.e. one TIFF per channel. If this is correct, please use 'multi.tiff = FALSE'")
         }
       }
+  
+      setwd(roi.loc)
+      setwd(i)
+      tiffs <- list.files(pattern = ext)
+      
+      # https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
+      substrRight <- function(x, n){
+        substr(x, nchar(x)-n+1, nchar(x))
+      }
+      
+      if(ext != substrRight(tiffs[1],nchar(ext))){
+        message(paste0("Error: Your extension '", ext, "' does not match the extensions of your TIF or TIFF files"))
+        stop(paste0("Example file name: ", tiffs[1]), call. = FALSE)
+      }
+      
+      rm(tiffs)
 
   ### Setup
-  
-      # message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
+      
+      setwd(roi.loc)
       ROI.list <- list()
       spatial.dat <- list()
-      setwd(roi.loc)
 
   ### Loop for ROIs -- one TIFF per ROI (i.e. tiff stack)
 
@@ -83,7 +98,7 @@ read.spatial.files <- function(rois,
           setwd(roi.loc)
           setwd(i)
           tiffs <- list.files(pattern = ext)
-
+          
           ## TIFF loop
           active.roi <- list()
 

@@ -158,8 +158,8 @@
         
         for(i in names(reg.dat)[c(3:ncol(reg.dat))]){
             
-            meas <- sub(".* -- ", "", i) # population
-            pop <- sub(" -- .*", "", i) # measurement
+            pop <- sub(".* -- ", "", i) # population
+            meas <- sub(" -- .*", "", i) # measurement
             
             make.autograph(reg.dat,
                            x.axis = 'Group',

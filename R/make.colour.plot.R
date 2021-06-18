@@ -364,17 +364,41 @@ make.colour.plot <- function(dat,
 
       if(col.type == "continuous"){
         p <- p + theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
-                       axis.title.x=element_text(color="Black", face="bold", size=18),
-                       axis.title.y=element_text(color="Black", face="bold", size=18),
-                       plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
+                       axis.title.x=element_text(color="Black", 
+                                                 #face="bold", 
+                                                 size=28),
+                       
+                       axis.title.y=element_text(color="Black", 
+                                                 #face="bold", 
+                                                 size=28),
+                       
+                       # axis.ticks = element_line(size = 4),
+                       # axis.line = element_line(size = 1),
+                       axis.text.x = element_text(color="Black", size=24),
+                       axis.text.y = element_text(color="Black", size=24), 
+                       panel.border = element_rect(colour = "black", fill = NA, size = 2),
+                       
+                       plot.title = element_text(color="Black", face="bold", size=32, hjust=0) # size 70 for large, # 18 for small
         )
       }
 
       if(col.type == "factor"){
         p <- p + theme(panel.background = element_rect(fill = "white", colour = "black", size = 0.5),
-                       axis.title.x=element_text(color="Black", face="bold", size=18),
-                       axis.title.y=element_text(color="Black", face="bold", size=18),
-                       plot.title = element_text(color="Black", face="bold", size=22, hjust=0) # size 70 for large, # 18 for small
+                       axis.title.x=element_text(color="Black", 
+                                                 #face="bold", 
+                                                 size=28),
+                       
+                       axis.title.y=element_text(color="Black", 
+                                                 #face="bold", 
+                                                 size=28),
+                       
+                       # axis.ticks = element_line(size = 4),
+                       # axis.line = element_line(size = 1),
+                       axis.text.x = element_text(color="Black", size=24),
+                       axis.text.y = element_text(color="Black", size=24), 
+                       panel.border = element_rect(colour = "black", fill = NA, size = 2),
+                       
+                       plot.title = element_text(color="Black", face="bold", size=32, hjust=0) # size 70 for large, # 18 for small
         )
 
         #p <- p + theme(legend.position="bottom")
@@ -392,7 +416,7 @@ make.colour.plot <- function(dat,
                        legend.position=legend.loc,
                        #legend.key.height=unit(0.7,"cm"),
                        #legend.key.width=unit(0.7,"cm"),
-                       legend.text=element_text(size=12), # large = 30 # small = 8
+                       legend.text=element_text(size=18), # large = 30 # small = 8
                        legend.title=element_blank()
                        )
       }
@@ -403,7 +427,7 @@ make.colour.plot <- function(dat,
                        legend.position=legend.loc,
                        #legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
                        #legend.key.width=unit(0.7,"cm"), # large = 1 # small = 0.4
-                       legend.text=element_text(size=12), # large = 30 # small = 8
+                       legend.text=element_text(size=18), # large = 30 # small = 8
                        legend.title=element_blank()
                        )  
       }
