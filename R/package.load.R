@@ -55,5 +55,6 @@ package.load <- function(type = "general"){
     require('sf')
     require('stars')
     require('qs')
+    require('s2')
   }
 }

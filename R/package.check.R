@@ -53,5 +53,6 @@ package.check <- function(type = "general"){
     if(!is.element('sf', installed.packages()[,1])) message('sf is required for SPATIAL analysis but is not installed')
     if(!is.element('stars', installed.packages()[,1])) message('stars is required for SPATIAL analysis but is not installed')
     if(!is.element('qs', installed.packages()[,1])) message('qs is required for SPATIAL analysis but is not installed')
+    if(!is.element('s2', installed.packages()[,1])) message('s2 is required for SPATIAL analysis but is not installed')
   }
 }
