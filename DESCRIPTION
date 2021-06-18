@@ -10,10 +10,6 @@ License: MIT Licence
 Encoding: UTF-8
 LazyData: true
 biocViews: 
-    flowCore,
-    Biobase,
-    flowViz,
-    FlowSOM,
 Imports:
     devtools,
     BiocManager,
@@ -55,5 +51,9 @@ Imports:
     s2,
     exactextractr,
 Suggests:
+    flowCore,
+    Biobase,
+    flowViz,
+    FlowSOM,
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
