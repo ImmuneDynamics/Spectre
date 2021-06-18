@@ -1,10 +1,17 @@
 Package: Spectre
 Type: Package
-Title: A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data. 
-Version: 0.5.1
-Author: Thomas Ashhurst, Felix Marsh-Wakefield, Givanna Putri
+Version: 0.5.2
+Date: 2021-06-18
+Title: High-dimensional cytometry and imaging analysis. 
+Description A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data. 
+Authors@R: c(
+  person(given = "Thomas", family = "Ashhurst", email = "thomas.ashhurst@sydney.edu.au", role = "ctb"),
+  person(given = "Felix", family = "Marsh-Wakefield", email = "felix.marsh-wakefield@sydney.edu.au", role = "ctb"),
+  person(given = "Givanna", family = "Putri", email = "givanna.putri@sydney.edu.au", role = "ctb")
+  )
+URL: https://github.com/ImmuneDynamics/Spectre
+BugReports: https://github.com/ImmuneDynamics/Spectre/issues
 Maintainer: Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>
-Description: A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data. 
 Depends: R (>= 3.6.0)
 License: MIT Licence
 Encoding: UTF-8

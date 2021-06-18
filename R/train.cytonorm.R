@@ -53,7 +53,7 @@ train.cytonorm <- function(model,
       require(Spectre)
       require(data.table)
       require(CytoNorm)
-      require(flowCore)
+      # require(flowCore)
       require(Biobase)
   
   ### Check the alignment model object
@@ -151,12 +151,18 @@ if(method == 'cytonorm'){
           if (sum(FlowSOM::GetMetaclusters(fsom_file,
                                            model$fsom$metaclustering) == cluster) > 0) {
             suppressWarnings(
-              flowCore::write.FCS(
+              write.FCS(
                 file.ff[cellClusterIDs == cluster,],
                 file=file.path(getwd(), #####
                                #outputDir,
                                paste0(gsub("[:/]","_",file),
                                       "_fsom",cluster,".fcs"))))
+              # flowCore::write.FCS(
+              #   file.ff[cellClusterIDs == cluster,],
+              #   file=file.path(getwd(), #####
+              #                  #outputDir,
+              #                  paste0(gsub("[:/]","_",file),
+              #                         "_fsom",cluster,".fcs"))))
           }
         }
       }

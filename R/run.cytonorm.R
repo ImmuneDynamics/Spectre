@@ -168,7 +168,8 @@ run.cytonorm <- function(dat,
       dir.create("tmp-target")
       setwd("tmp-target")
       
-      ff <- flowCore::read.FCS(file)
+      # ff <- flowCore::read.FCS(file)
+      ff <- read.FCS(file)
       
       setwd(dir)
       dir.create("tmp-target", showWarnings = FALSE)
@@ -188,8 +189,9 @@ run.cytonorm <- function(dat,
                          paste0(gsub("[:/]","_",file),
                                 "_fsom", cluster, ".fcs"))
           suppressWarnings(
-            flowCore::write.FCS(ff[cellClusterIDs[[file]] == cluster],
-                                file = f)
+            # flowCore::write.FCS(ff[cellClusterIDs[[file]] == cluster],
+            #                     file = f)
+            write.FCS(ff[cellClusterIDs[[file]] == cluster], file = f)
           )
         }
       }
@@ -228,7 +230,10 @@ run.cytonorm <- function(dat,
     
     for(i in cluster.files){
       # i <- cluster.files[[1]]
-      temp <- flowCore::read.FCS(i)
+      
+      #temp <- flowCore::read.FCS(i)
+      temp <- read.FCS(i)
+      
       dt <- as.data.table(temp@exprs)
       
       mc <- sub(".*.fcs_", "", i)
