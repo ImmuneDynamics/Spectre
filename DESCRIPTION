@@ -16,6 +16,7 @@ biocViews:
     FlowSOM,
 Imports:
     devtools,
+    BiocManager,
     plyr,
     dplyr,
     data.table,
