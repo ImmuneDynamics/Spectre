@@ -84,7 +84,7 @@
         
         setwd(MaskDirectory)
         
-        all.masks <- list.files(pattern = '.tif')
+        all.masks <- list.files(pattern = '.tiff')
         as.matrix(all.masks)
     
     ### Import CELL masks

@@ -22,6 +22,8 @@ Imports:
     Biobase,
     flowViz,
     FlowSOM,
+    hdf5r,
+    HDF5Array,
     devtools,
     BiocManager,
     plyr,
