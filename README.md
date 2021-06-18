@@ -35,7 +35,7 @@ Subsequently, use the 'install_github' function to install and load the Spectre 
 install_github("immunedynamics/spectre")
 ```
 
-You will see the following returned:
+You will see the following returned. We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages. You can update your packages after installation.
 ```
 Downloading GitHub repo sydneycytometry/spectre@master
 These packages have more recent versions available.
@@ -47,19 +47,10 @@ Which would you like to update?
  4: data.table (1.12.0 -> 1.12.2) [CRAN]
  ... etc
  ```
- 
-We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages.
 
 If the package is sucessfully installed, you can load the library using:
 ```
 library("Spectre")
-```
-
-Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre. You can install these using the `package.install()` function.
-
-```
-## Download additional BioConductor packages
-Spectre::package.install()
 ```
 
 You can then check for whether all of the packages for Spectre have been loaded correctly using the following commands
