@@ -5,7 +5,9 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 <img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
 
 ### Current version
-`v0.5.4-0`
+`v0.5.4`
+
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true)](https://ci.appveyor.com/project/tomashhurst/spectre)
 
 ### About
 
@@ -29,13 +31,13 @@ if(!require('devtools')) {install.packages('devtools')}
 library('devtools')
 ```
 
-Subsequently, use the 'install_github' function to install and load the Spectre package. By default this will load the 'master' branch, which is the same as the latest stable release version (listed at https://github.com/sydneycytometry/Spectre/releases). To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
+Subsequently, use the 'install_github' function to install and load the Spectre package. By default this will load the 'master' branch, which is the same as the latest stable release version (listed at https://github.com/immunedynamics/Spectre/releases). To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
 
 ```
 install_github("immunedynamics/spectre")
 ```
 
-You will see the following returned:
+You will see the following returned. We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages. You can update your packages after installation.
 ```
 Downloading GitHub repo sydneycytometry/spectre@master
 These packages have more recent versions available.
@@ -47,19 +49,10 @@ Which would you like to update?
  4: data.table (1.12.0 -> 1.12.2) [CRAN]
  ... etc
  ```
- 
-We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages.
 
 If the package is sucessfully installed, you can load the library using:
 ```
 library("Spectre")
-```
-
-Subsequently, there are a few packages from Bioconductor that you should install, which won't be installed by default when you install Spectre. You can install these using the `package.install()` function.
-
-```
-## Download additional BioConductor packages
-Spectre::package.install()
 ```
 
 You can then check for whether all of the packages for Spectre have been loaded correctly using the following commands
