@@ -28,6 +28,13 @@ do.create.outlines <- function(spatial.dat,
       # outlines.name <- paste0(mask.name, "_outlines")
       # centroids.name <- paste0(mask.name, "_centroids")
 
+  ### Initial warning
+  
+      os.deets <- session_info()
+      if(grepl('Windows', os.deets$platform$os)){
+        message("Warning: the generation of mask outlines appears to be OK on Mac, but is encountering issues on Windows. See 'https://github.com/ImmuneDynamics/Spectre/issues/56' for more information.")
+      }
+      
   ### Slow or fast version
 
       if(method == 'stars'){
@@ -89,6 +96,8 @@ do.create.outlines <- function(spatial.dat,
 
               res$TEMP_MASK
 
+              res <- st_make_valid(res)
+              
               res <- res %>%
                 group_by(TEMP_MASK) %>%
                 summarise(geometry = sf::st_union(geometry)) %>%
