@@ -1,3 +1,5 @@
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/spectre/)](https://ci.appveyor.com/project/tomashhurst/spectre)
+
 # Spectre
 
 A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.
