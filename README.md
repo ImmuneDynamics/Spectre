@@ -5,7 +5,7 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 <img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
 
 ### Current version
-`v0.5.1`
+`v0.5.3`
 
 ### About
 
