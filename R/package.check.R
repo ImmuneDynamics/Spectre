@@ -22,9 +22,6 @@ package.check <- function(type = "general"){
     deets <- package_info('Spectre', include_base = FALSE, dependencies = FALSE)
     os.deets <- session_info()
     
-    deets$ondiskversion
-    deets$ondiskversion
-    
     message(paste0('Package: ', deets$package))
     
     if(grepl('-0', deets$ondiskversion)){
@@ -45,6 +42,13 @@ package.check <- function(type = "general"){
     message(paste0(' -- R version:         ', os.deets$platform$version))
     message(paste0(' -- OS:                ', os.deets$platform$os))
     message(paste0('               '))
+    
+    if(deets$ondiskversion != deets$loadedversion){
+      message(paste0("Please note, your 'on disk' version of Spectre is different to the 'loaded' version (i.e. you appear to have had the Spectre library loaded and active while installing a new version. To address this, either:"))
+      message(paste0("    a) run 'detach('package:Spectre', unload = TRUE)' followed by 'library('Spectre'), or"))
+      message(paste0("    b) re-start RStudio"))
+      message('   ')
+    }
     
     message(paste0(('Checking dependency packages...')))
     
