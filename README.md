@@ -7,7 +7,7 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 ### Current version
 `v0.5.3`
 
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/tomashhurst/spectre/master)](https://ci.appveyor.com/project/tomashhurst/spectre)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true)](https://ci.appveyor.com/project/tomashhurst/spectre)
 
 ### About
 
