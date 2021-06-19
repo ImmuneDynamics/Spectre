@@ -34,7 +34,7 @@ do.add.masks <- function(spatial.dat,
   ### Require
   
       require('raster')
-      require('hdf5r')
+      require('rhdf5')
       require('HDF5Array')
   
   ### Setup
