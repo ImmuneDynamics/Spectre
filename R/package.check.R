@@ -22,9 +22,23 @@ package.check <- function(type = "general"){
     deets <- package_info('Spectre', include_base = FALSE, dependencies = FALSE)
     os.deets <- session_info()
     
+    deets$ondiskversion
+    deets$ondiskversion
+    
     message(paste0('Package: ', deets$package))
-    message(paste0(' -- Version (on disk): ', deets$ondiskversion))
-    message(paste0(' -- Version (loaded):  ', deets$loadedversion))
+    
+    if(grepl('-0', deets$ondiskversion)){
+      message(paste0(' -- Version (on disk): ', deets$ondiskversion, ' (development version)'))
+    } else {
+      message(paste0(' -- Version (on disk): ', deets$ondiskversion))
+    }
+
+    if(grepl('-0', deets$loadedversion)){
+      message(paste0(' -- Version (loaded):  ', deets$loadedversion,  ' (development version)'))
+    } else {
+      message(paste0(' -- Version (loaded):  ', deets$loadedversion))
+    }
+    
     message(paste0(' -- Install date:      ', deets$date))
     message(paste0(' -- Install source:    ', deets$source))
     message(paste0(' -- Install path:      ', deets$path))
