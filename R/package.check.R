@@ -19,8 +19,8 @@
 
 package.check <- function(type = "general"){
   
-    deets <- package_info('Spectre', include_base = FALSE, dependencies = FALSE)
-    os.deets <- session_info()
+    deets <- devtools::package_info('Spectre', include_base = FALSE, dependencies = FALSE)
+    os.deets <- devtools::session_info()
     
     message(paste0('Package: ', deets$package))
     
