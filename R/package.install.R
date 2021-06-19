@@ -82,7 +82,7 @@ package.install <- function(type = 'general', update = FALSE){
         install.packages('ggthemes')
         install.packages('scales')
         install.packages('colorRamps')
-        install.packages('')
+        install.packages('RColorBrewer')
         install.packages('gridExtra')
         install.packages('ggpointdensity')
         install.packages('pheatmap')
@@ -112,7 +112,7 @@ package.install <- function(type = 'general', update = FALSE){
           install.packages('qs')
           install.packages('s2')
           install.packages('HDF5Array')
-          install.packages('hdf5r')
+          install.packages('rhdf5')
         }
       }
   
