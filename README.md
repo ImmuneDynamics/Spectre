@@ -1,4 +1,4 @@
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/spectre/)](https://ci.appveyor.com/project/tomashhurst/spectre)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/tomashhurst/spectre/master)](https://ci.appveyor.com/project/tomashhurst/spectre)
 
 # Spectre
 
