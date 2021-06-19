@@ -150,9 +150,9 @@ spatial.dat[[1]]$RASTERS
 
 ### Generate polygons and outlines
 
-spatial.dat <- do.create.outlines(spatial.dat, 'cell.mask')
-spatial.dat <- do.create.outlines(spatial.dat, 'cell.type')
-spatial.dat <- do.create.outlines(spatial.dat, 'region')
+spatial.dat <- do.create.outlines(spatial.dat = spatial.dat, mask.name = 'cell.mask')
+spatial.dat <- do.create.outlines(spatial.dat = spatial.dat, mask.name = 'cell.type')
+spatial.dat <- do.create.outlines(spatial.dat = spatial.dat, mask.name = 'region')
 
 ### Checks
 
