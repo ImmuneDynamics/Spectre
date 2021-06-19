@@ -4,8 +4,7 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 
 <img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
 
-### Current version
-`v0.5.4`
+### Current version: `v0.5.4`
 
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true)](https://ci.appveyor.com/project/tomashhurst/spectre)
 
