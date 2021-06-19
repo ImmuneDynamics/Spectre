@@ -8,7 +8,6 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 `v0.5.3`
 
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/tomashhurst/spectre/master)](https://ci.appveyor.com/project/tomashhurst/spectre)
-[![Build Status](https://travis-ci.com/satijalab/seurat.svg?branch=master)](https://travis-ci.com/github/satijalab/seurat)
 
 ### About
 
