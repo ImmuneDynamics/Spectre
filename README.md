@@ -22,6 +22,8 @@ If you use Spectre in your work, please consider citing [Ashhurst TM, Marsh-Wake
 ## Instructions and protocols
 Usage instructions and protocols are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre).
 
+<br/>
+
 ## Installing Spectre
 
 Detailed installation instructions are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre). Spectre can be installed in R directly, or can be used via a pre-compiled Docker image. Brief instructions below.
