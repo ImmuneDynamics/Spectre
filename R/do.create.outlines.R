@@ -30,7 +30,7 @@ do.create.outlines <- function(spatial.dat,
 
   ### Initial warning
   
-      os.deets <- session_info()
+      os.deets <- devtools::session_info()
       if(grepl('Windows', os.deets$platform$os)){
         message("Warning: the generation of mask outlines may differ between Mac and Windows. See 'https://github.com/ImmuneDynamics/Spectre/issues/56' for more information.")
       }
