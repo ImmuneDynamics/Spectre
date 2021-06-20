@@ -16,8 +16,12 @@ Spectre is an R package that enables comprehensive end-to-end integration and an
 
 Spectre was developed by [Thomas Ashhurst](https://immunedynamics.github.io/thomas-ashhurst/), [Felix Marsh-Wakefield](https://immunedynamics.github.io/felix-marsh-wakefield/), and [Givanna Putri](https://immunedynamics.github.io/givanna-putri/).
 
+<br/>
+
 ## Citation
 If you use Spectre in your work, please consider citing [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2021). Cytometry A. DOI: 10.1002/cyto.a.24350](https://doi.org/10.1002/cyto.a.24350). To continue providing open-source tools such as Spectre, it helps us if we can demonstrate that our efforts are contributing to analysis efforts in the community. Please also consider citing the authors of the individual packages or tools (e.g. CytoNorm, FlowSOM, tSNE, UMAP, etc) that are critical elements of your analysis work.
+
+<br/>
 
 ## Instructions and protocols
 Usage instructions and protocols are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre).
@@ -75,6 +79,8 @@ Alternatively, you can go to releases (https://github.com/immunedynamics/spectre
 ### Option 2: Install Spectre using Docker
 
 Install a 'container' version of Spectre using Docker, that contains a pre-built environment with all the required packages necessary to use Spectre. Please see [this page](https://wiki.centenary.org.au/display/SPECTRE/Install+from+Docker) for instructions.
+
+<br/>
 
 ## Acknowledgements
 The Spectre package was constructed on the basis of the CAPX workflow in R (https://sydneycytometry.org.au/capx). Along with the various R packages used within Spectre, we would like to acknowledge the Seurat and cytofkit R packages from providing inspiration for elements of the package design.
