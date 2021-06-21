@@ -8,6 +8,8 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true)](https://ci.appveyor.com/project/tomashhurst/spectre)
 
+<br/>
+
 ## About
 
 <!--<img src="https://github.com/ImmuneDynamics/Spectre/blob/master/image/Spectre.png?raw=true" alt="logo" width="250" align="right"/>-->
