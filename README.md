@@ -36,7 +36,7 @@ Detailed installation instructions are available from [https://immunedynamics.gi
 
 <br/>
 
-#### Option 1: Install Spectre in R
+### Option 1: Install Spectre in R
 
 Install and load the 'devtools' library.
 
@@ -82,7 +82,7 @@ Alternatively, you can go to releases (https://github.com/immunedynamics/spectre
 
 <br/>
 
-#### Option 2: Install Spectre using Docker
+### Option 2: Install Spectre using Docker
 
 Install a 'container' version of Spectre using Docker, that contains a pre-built environment with all the required packages necessary to use Spectre. Please see [this page](https://wiki.centenary.org.au/display/SPECTRE/Install+from+Docker) for instructions.
 
