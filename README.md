@@ -53,7 +53,7 @@ install_github("immunedynamics/spectre")
 
 You will see the following returned. We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages. You can update your packages after installation.
 ```
-Downloading GitHub repo sydneycytometry/spectre@master
+Downloading GitHub repo immunedynamics/spectre@master
 These packages have more recent versions available.
 Which would you like to update?
 
