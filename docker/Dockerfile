@@ -1,13 +1,13 @@
 # Get base image. Tidyverse R studio
-FROM rocker/tidyverse
-LABEL maintainer="Givanna Putri <givanna.haryonoputri@sydney.edu.au>"
+FROM rocker/geospatial:4.1.0
+LABEL maintainer="Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>"
 
 # Set Locale to utf-8
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8 
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 # Install debian specific packages needed by Spectre
 RUN apt-get update --fix-missing && \
@@ -15,9 +15,14 @@ RUN apt-get update --fix-missing && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+
+
+
+
+
 # Install all the packages Spectre depends on
-RUN install2.r --error devtools \
-                        data.table \
+RUN install2.r --error  devtools \
+			data.table \
                         plyr \
                         dplyr \
                         tidyr \
@@ -36,25 +41,36 @@ RUN install2.r --error devtools \
                         ggpubr \
                         viridis \
                         BiocManager \
-                        gtools \
+			gtools \
                         tidygraph \
                         ggraph \
                         stringr \
                         caret \
                         FNN \
-                        factoextra
+                        factoextra \
+			raster \
+                        tiff \
+                        rgeos \
+                        tidyr \
+                        sp \
+                        stars \
+                        qs \
+                        s2 \
+                        exactextractr \
+			sf
 
-
+# Install Spectre dependencies from Bioconductor
+RUN R -e "library(BiocManager); BiocManager::install(c('flowCore', 'Biobase', 'flowViz', 'FlowSOM', 'rhdf5', 'HDF5Array'), dependencies=TRUE)"
+     
+                 
 # Install Spectre package. Master branch
 RUN R -e "library(devtools); install_github('ImmuneDynamics/Spectre')"
 
-# Install Spectre dependencies from Bioconductor
-RUN R -e "library(BiocManager); BiocManager::install(c('flowCore', 'Biobase', 'flowViz', 'FlowSOM', 'EnhancedVolcano'), dependencies=TRUE)"
 
 # Install cytonorm package.
 RUN R -e "library(devtools); install_github('saeyslab/CytoNorm')"
 
-                   
+
 # Install miniconda for ChronoClust
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ENV PATH /opt/conda/bin:$PATH
