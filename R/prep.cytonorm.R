@@ -230,7 +230,7 @@ prep.cytonorm <- function(dat,
       setwd(starting.dir)
       unlink("tmp-cytonorm-fsom", recursive = TRUE)
       
-      if(nrow(fsom$FlowSOM$data) != nrow(dat)){
+      if(nrow(fsom$data) != nrow(dat)){
         stop("Error - the numer of rows (cells) is different in the starting dataset and the FlowSOM prepared dataset")
       }
       
@@ -247,9 +247,9 @@ prep.cytonorm <- function(dat,
         fsom$metaclustering <- rep(1, length(fsom$metaclustering))
       }
       
-      A <- fsom$FlowSOM$data
-      B <- fsom$FlowSOM$map$mapping[,1]
-      C <- fsom$metaclustering[fsom$FlowSOM$map$mapping[,1]]
+      A <- fsom$data
+      B <- fsom$map$mapping[,1]
+      C <- fsom$metaclustering[fsom$map$mapping[,1]]
       
       dt <- as.data.table(A)
       dt <- cbind(A, prep.fsom.cluster = B, prep.fsom.metacluster = C)

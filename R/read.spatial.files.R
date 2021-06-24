@@ -29,6 +29,7 @@ read.spatial.files <- function(rois,
   ### Packages
   
       require('raster')
+      require('tiff')
 
   ### Checks
 
@@ -105,7 +106,7 @@ read.spatial.files <- function(rois,
           for(a in tiffs){
             # a <- tiffs[[7]]
             
-            active.roi[[a]] <- readTIFF(a)
+            active.roi[[a]] <- tiff::readTIFF(a)
             
             if('matrix' %in% class(active.roi[[a]])){
               

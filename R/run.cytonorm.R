@@ -177,7 +177,7 @@ run.cytonorm <- function(dat,
       dir.create("EachCluster", , showWarnings = FALSE)
       setwd("EachCluster")
       
-      fsom_file <- FlowSOM::NewData(model$fsom$FlowSOM,ff)
+      fsom_file <- FlowSOM::NewData(model$fsom,ff)
       
       cellClusterIDs[[file]] <- model$fsom$metaclustering[fsom_file$map$mapping[,1]]
       
