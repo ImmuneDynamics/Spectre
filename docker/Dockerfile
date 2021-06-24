@@ -64,7 +64,7 @@ RUN R -e "library(BiocManager); BiocManager::install(c('flowCore', 'Biobase', 'f
      
                  
 # Install Spectre package. Master branch
-RUN R -e "library(devtools); install_github('ImmuneDynamics/Spectre', 'pre-release')"
+RUN R -e "library(devtools); install_github('ImmuneDynamics/Spectre')"
 
 
 # Install cytonorm package.
