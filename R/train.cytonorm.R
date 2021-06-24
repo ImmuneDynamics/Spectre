@@ -59,7 +59,7 @@ train.cytonorm <- function(model,
   ### Check the alignment model object
       message("Training alignment - setup")
       
-      model$fsom$FlowSOM$data
+      model$fsom$data
   
   ### Directory setup
       
@@ -99,7 +99,7 @@ if(method == 'cytonorm'){
   ### File preparation
       message("Training alignment - file (batch) preparation")
       
-      file.dat <- model$fsom$FlowSOM$data
+      file.dat <- model$fsom$data
       file.dat <- as.data.table(file.dat)
       
       train.files <- unique(file.dat$File)
@@ -138,7 +138,7 @@ if(method == 'cytonorm'){
         file.ff <- new("flowFrame", exprs=as.matrix(file.dt), parameters=Biobase::AnnotatedDataFrame(metadata))
         file.ff
         
-        fsom_file <- FlowSOM::NewData(model$fsom$FlowSOM, file.ff)
+        fsom_file <- FlowSOM::NewData(model$fsom, file.ff)
         fsom_file
         
         cellClusterIDs <- model$fsom$metaclustering[fsom_file$map$mapping[,1]]
