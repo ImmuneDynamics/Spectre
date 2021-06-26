@@ -289,4 +289,6 @@ make.autograph <- function(dat,
     ## Save
     ggplot2::ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # width 3.6 default, height 5 default
     message(paste0("AutoGraph for `", y.axis.label, " - ", y.axis, "` saved to disk"))
+
+    return(p)
 }
