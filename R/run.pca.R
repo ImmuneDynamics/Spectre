@@ -15,7 +15,8 @@
 #' @param add.pca.col DEFAULT = FALSE. Option to add PC coordinates to input data.
 #' @param pca.col.no DEFULAT = 50. Number of PC to be added to input data.
 #' @param pca.lite DEFAULT = FALSE. Will stop running the function after PCA coordinates have been added to input data (assuming add.pca.col = TRUE).
-#' @param scree.plot DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.
+#' @param scree.plot DEFAULT = TRUE. Option to create scree plots. Will save generated scree plot. Note this will require the input of an elbow point during run if comp.no = NULL.
+#' @param comp.no DEFAULT = 2. Select number of components to be saved. If NULL, user will be asked during run to select number based on scree plot.
 #' @param variable.contribution DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.
 #' @param plot.individuals DEFAULT = TRUE. Option to create PCA plots on individuals (samples/patients).
 #' @param plot.ind.label DEFAULT = "point". Option to add text to PCA plots on individuals as an extra identifier. Use c("point", "text") to include both text and point.
@@ -37,7 +38,7 @@
 #' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, comp.no = 2, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
@@ -60,6 +61,7 @@
 #' # Compare between groups
 #' Spectre::run.pca(dat = Spectre::demo.clustered,
 #'                  use.cols = c(11:19),
+#'                  comp.no = NULL,
 #'                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
 #'                  plot.ind.group = TRUE,
 #'                  group.ind = "Group",
@@ -89,6 +91,7 @@ run.pca <- function(dat,
                     pca.col.no = 50,
                     pca.lite = FALSE,
                     scree.plot = TRUE,
+                    comp.no = 2,
                     variable.contribution = TRUE,
                     plot.individuals = TRUE,
                     plot.ind.label = "point",
@@ -162,13 +165,18 @@ run.pca <- function(dat,
     stop("PCA complete! PC coordinates have been added to input data if add.pca.col = TRUE. See you Space Cowboy...")
   }
   
-  # Create scree plot
-  if (scree.plot == TRUE) {
+  # Create scree plot (forced if comp.no == NULL)
+  if (scree.plot == TRUE || is.null(comp.no)) {
     scree_plot <- factoextra::fviz_eig(pca_out, addlabels = TRUE) #creates scree plot; addlabels adds % to plot
-    print(scree_plot)
     
-    elbow.point <- readline("Type in the elbow point based on the scree plot. Must be positive integer. ")
-    elbow.point <- as.numeric(elbow.point)
+    elbow.point <- comp.no
+    
+    if (is.null(comp.no)) {
+      print(scree_plot)
+      
+      elbow.point <- readline("Type in the elbow point based on the scree plot. Must be positive integer. ")
+      elbow.point <- as.numeric(elbow.point)
+      }
     
     # Saves scree plot
     ggplot2::ggsave(scree_plot,
