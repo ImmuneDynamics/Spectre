@@ -40,7 +40,7 @@ read.spatial.files <- function(rois,
       }
   
       setwd(roi.loc)
-      setwd(i)
+      
       tiffs <- list.files(pattern = ext)
       
       # https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
