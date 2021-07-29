@@ -41,17 +41,45 @@ read.spatial.files <- function(rois,
   
       setwd(roi.loc)
       
-      tiffs <- list.files(pattern = ext)
+      tiffs <- list.files(pattern = ext, recursive = TRUE)
       
-      # https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
-      substrRight <- function(x, n){
-        substr(x, nchar(x)-n+1, nchar(x))
-      }
+      tiff_files_ext <- sapply(tiffs, function(x) {
+        file_ext <- tools::file_ext(x)
+        
+        # https://stackoverflow.com/questions/45595272/in-r-remove-all-dots-from-string-apart-from-the-last
+        ext_to_check <- c(sub("\\.", "", ext))
+        if (ext == ".tif") {
+          ext_to_check <- c("tiff", "tif")
+        } 
+        
+        # the checking
+        if (file_ext %in% ext_to_check) {
+          return(TRUE)
+        }
+        return(FALSE)
+      })
       
-      if(ext != substrRight(tiffs[1],nchar(ext))){
-        message(paste0("Error: Your extension '", ext, "' does not match the extensions of your TIF or TIFF files"))
+      if (FALSE %in% tiff_files_ext) {
+        message(
+          paste0(
+            "Error: Your extension '",
+            ext,
+            "' does not match the extensions of your TIF or TIFF files"
+          )
+        )
         stop(paste0("Example file name: ", tiffs[1]), call. = FALSE)
       }
+      rm(tiff_files_ext)
+      
+      # # https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
+      # substrRight <- function(x, n){
+      #   substr(x, nchar(x)-n+1, nchar(x))
+      # }
+      # 
+      # if(ext != substrRight(tiffs[1],nchar(ext))){
+      #   message(paste0("Error: Your extension '", ext, "' does not match the extensions of your TIF or TIFF files"))
+      #   stop(paste0("Example file name: ", tiffs[1]), call. = FALSE)
+      # }
       
       rm(tiffs)
 
