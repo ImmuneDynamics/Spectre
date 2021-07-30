@@ -1,6 +1,6 @@
 #' do.extract
 #'
-#' @param dat NO DEFAULT. Spatial data list
+#' @param spatial.dat NO DEFAULT. Spatial data list
 #' @param mask NO DEFAULT. Name of mask to use for cell data extraction
 #' @param name DEFAULT = 'CellData'. Name of the extracted cell dataset.
 #' @param fun DEFAULT = 'mean'. Summarisation function.
@@ -9,7 +9,7 @@
 #'
 #' @export
 
-do.extract <- function(dat, # spatial.data object
+do.extract <- function(spatial.dat, # spatial.data object
                        mask, # name of the mask being summarised
                        name = "CellData",
                        fun = "mean" # type of marker summarisation (mean, median etc)
@@ -19,6 +19,7 @@ do.extract <- function(dat, # spatial.data object
 
       require('rgeos')
       require('sp')
+      require('sf')
       require('rgdal')
       require('exactextractr')
       require('data.table')
