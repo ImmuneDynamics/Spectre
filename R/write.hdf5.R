@@ -34,6 +34,13 @@ write.hdf5 <- function(dat, # SpectreMAP object
                        random.crop.y = NULL,
                        random.crop.x.seed = 42,
                        random.crop.y.seed = 21,
+                       
+                       # crop.x.min = NULL,
+                       # crop.x.max = NULL,
+                       # 
+                       # crop.y.min = NULL,
+                       # crop.y.max = NULL,
+                       
                        print.spatial.plot = TRUE,
                        chunk.size = NULL,
                        compression = 0,
@@ -109,7 +116,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
               }
             }
         
-        ## Cropping
+        ## Random cropping
             
             if(!is.null(random.crop.x)){
               if(!is.null(random.crop.y)){

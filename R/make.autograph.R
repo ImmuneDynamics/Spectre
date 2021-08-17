@@ -62,6 +62,8 @@ make.autograph <- function(dat,
                            Variance_test = NULL,
                            Pairwise_test = NULL,
 
+                           # pairing = NULL,
+                           
                            title = paste0(y.axis),
                            subtitle = NULL,
                            filename = paste0(y.axis, ".pdf"),
@@ -171,6 +173,11 @@ make.autograph <- function(dat,
 
       p <- ggplot2::ggplot(dat, ggplot2::aes(x=Xaxis, y=dat[[y.axis]])) #, fill=Species)) + # can use fill = Species -- makes coloured by Species, with block outline of point -- NEED FILL for violin plot to be filled
 
+      ## PAIRED
+      # if(!is.null(pairing)){
+      #   p <- p <- p + ggplot2::geom_line(aes(group=pairing))
+      # }
+      
       ## POINTS
       p <- p + ggplot2::geom_point(ggplot2::aes(fill=as.factor(dat[[colour.by]]),
                                                 colour = as.factor(dat[[colour.by]])),

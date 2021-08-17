@@ -79,6 +79,9 @@ make.pheatmap <- function(dat,
                           is.fold = FALSE,
                           fold.range = NULL, # c(3,-3)
                           dendrograms = "both",
+                          
+                          dendrograms.sort = FALSE, # if TRUE, will SORT dendrograms
+                          
                           cutree_rows = 1,
                           cutree_cols = 1,
                           row.sep = c(),
@@ -289,6 +292,18 @@ make.pheatmap <- function(dat,
         if(dendrograms == "both"){
           row.clustering    <- TRUE
           col.clustering    <- TRUE
+          
+          if(isTRUE(dendrograms.sort)){
+            
+            row.clustering <- hclustfunc(distfunc(heatmap.data))
+            col.clustering <- hclustfunc(distfunc(t(heatmap.data)))
+            
+            require(dendsort)
+            sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
+            
+            row.clustering <- sort_hclust(row.clustering)
+            col.clustering <- sort_hclust(col.clustering)
+          }
 
           # cl.row <- hclustfunc(distfunc(heatmap.data))
           # cl.col <- hclustfunc(distfunc(t(heatmap.data)))
@@ -306,6 +321,16 @@ make.pheatmap <- function(dat,
         if(dendrograms == "column"){
           row.clustering    <- FALSE
           col.clustering    <- TRUE
+          
+          if(isTRUE(dendrograms.sort)){
+            
+            col.clustering <- hclustfunc(distfunc(t(heatmap.data)))
+            
+            require(dendsort)
+            sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
+
+            col.clustering <- sort_hclust(col.clustering)
+          }
 
           # cl.row <- hclustfunc(distfunc(heatmap.data))
           # cl.col <- hclustfunc(distfunc(t(heatmap.data)))
@@ -323,6 +348,16 @@ make.pheatmap <- function(dat,
         if(dendrograms == "row"){
           row.clustering    <- TRUE
           col.clustering    <- FALSE
+          
+          if(isTRUE(dendrograms.sort)){
+            
+            row.clustering <- hclustfunc(distfunc(t(heatmap.data)))
+            
+            require(dendsort)
+            sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
+            
+            row.clustering <- sort_hclust(row.clustering)
+          }
 
           # cl.row <- hclustfunc(distfunc(heatmap.data))
           # cl.col <- hclustfunc(distfunc(t(heatmap.data)))
