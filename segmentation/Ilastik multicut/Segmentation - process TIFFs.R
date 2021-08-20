@@ -67,10 +67,10 @@
 
         setwd(InputDirectory)
         
-        spatial.dat <- read.spatial.files(rois = rois, roi.loc = getwd())
+        spatial.dat <- read.spatial.files(roi.dir = getwd())
         
         str(spatial.dat, 3)
-        spatial.dat[[1]]$RASTERS
+        spatial.dat[[1]]@RASTERS
 
 ###################################################################################
 ### Create HDF5 files for mask creation

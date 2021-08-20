@@ -48,8 +48,8 @@ do.extract <- function(dat, # spatial.data object
 
       for(roi in rois){
         # roi <- rois[[1]]
-        message(paste0("Processing ", roi))
-
+        message(paste0("Processing ", roi, "(", paste0(roi[which(roi == rois)], ' of ', length(rois), ')'))
+ 
         roi.stack <- dat[[roi]]@RASTERS
         roi.poly <- dat[[roi]]@MASKS[[mask]]$polygons
 
