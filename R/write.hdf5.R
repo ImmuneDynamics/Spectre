@@ -35,11 +35,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
                        random.crop.x.seed = 42,
                        random.crop.y.seed = 21,
                        
-                       # crop.x.min = NULL,
-                       # crop.x.max = NULL,
-                       # 
-                       # crop.y.min = NULL,
-                       # crop.y.max = NULL,
+                       crop.coordinates = NULL, # Xmin, Xmax, Ymin, YMax
                        
                        print.spatial.plot = TRUE,
                        chunk.size = NULL,
@@ -58,7 +54,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
   ### Testing
   
       # dat <- spatial.dat
-      # channels = names(spatial.dat[[1]]$RASTERS)[c(13:25)]
+      # channels = names(spatial.dat[[1]]@RASTERS)[c(13:25)]
       # q.max = 0.99
       # flip.y = TRUE
       # random.crop.x = 300
@@ -89,7 +85,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
         
             if(isTRUE(flip.y)){
               message("  -- flipping y-axis")
-              roi.dat[[i]]$RASTERS <- raster::flip(roi.dat[[i]]$RASTERS, direction='y')
+              roi.dat[[i]]@RASTERS <- raster::flip(roi.dat[[i]]@RASTERS, direction='y')
             }
 
         ## Filtering to clip very bright pixels
@@ -99,25 +95,56 @@ write.hdf5 <- function(dat, # SpectreMAP object
             for(a in channels){
               # a <- for.ilastik[1]
 
-              max(roi.dat[[i]]$RASTERS[[a]]@data@values)
+              max(roi.dat[[i]]@RASTERS[[a]]@data@values)
               
-              q <- quantile(roi.dat[[i]]$RASTERS[[a]]@data@values, q.max)
+              q <- quantile(roi.dat[[i]]@RASTERS[[a]]@data@values, q.max)
               
-              raster::values(roi.dat[[i]]$RASTERS[[a]])[roi.dat[[i]]$RASTERS[[a]]@data@values > q] <- q
+              raster::values(roi.dat[[i]]@RASTERS[[a]])[roi.dat[[i]]@RASTERS[[a]]@data@values > q] <- q
 
-              max(roi.dat[[i]]$RASTERS[[a]]@data@values)
+              max(roi.dat[[i]]@RASTERS[[a]]@data@values)
               
-              if(max(raster::values(roi.dat[[i]]$RASTERS[[a]])) > q){
+              if(max(raster::values(roi.dat[[i]]@RASTERS[[a]])) > q){
                 stop('Upper threshold clipping did not work')
               }
               
-              if(max(roi.dat[[i]]$RASTERS[[a]]@data@values) > q){
+              if(max(roi.dat[[i]]@RASTERS[[a]]@data@values) > q){
                 stop('Upper threshold clipping did not work')
               }
             }
         
+        ## SPECIFIC cropping
+            
+            if(!is.null(crop.coordinates)){
+              # crop.coordinates Xmin, Xmax, Ymin, YMax
+              
+              ## Dimensions
+              
+              message("  -- setup cropping")
+              
+              xmin <- extent(roi.dat[[i]]@RASTERS)[1]
+              xmax <- extent(roi.dat[[i]]@RASTERS)[2]
+              ymin <- extent(roi.dat[[i]]@RASTERS)[3]
+              ymax <- extent(roi.dat[[i]]@RASTERS)[4]
+              
+              ## Crop
+              
+              message("  -- calculate new extent")
+              e <- extent(crop.coordinates[1], crop.coordinates[2], crop.coordinates[3], crop.coordinates[4])
+              
+              gc()
+              message("  -- cropping ROI")
+              roi.dat[[i]]@RASTERS <- crop(roi.dat[[i]]@RASTERS, e)
+              
+              ## Clean up
+              rm(e)
+              gc()
+              
+            }
+    
+            
         ## Random cropping
             
+            if(is.null(crop.coordinates)){
             if(!is.null(random.crop.x)){
               if(!is.null(random.crop.y)){
                 
@@ -125,10 +152,10 @@ write.hdf5 <- function(dat, # SpectreMAP object
                 
                     message("  -- setup cropping")
                     
-                    xmin <- extent(roi.dat[[i]]$RASTERS)[1]
-                    xmax <- extent(roi.dat[[i]]$RASTERS)[2]
-                    ymin <- extent(roi.dat[[i]]$RASTERS)[3]
-                    ymax <- extent(roi.dat[[i]]$RASTERS)[4]
+                    xmin <- extent(roi.dat[[i]]@RASTERS)[1]
+                    xmax <- extent(roi.dat[[i]]@RASTERS)[2]
+                    ymin <- extent(roi.dat[[i]]@RASTERS)[3]
+                    ymax <- extent(roi.dat[[i]]@RASTERS)[4]
                 
                 ## New X
                 
@@ -175,7 +202,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
                     
                     gc()
                     message("  -- cropping ROI")
-                    roi.dat[[i]]$RASTERS <- crop(roi.dat[[i]]$RASTERS, e)
+                    roi.dat[[i]]@RASTERS <- crop(roi.dat[[i]]@RASTERS, e)
                     
                 ## Clean up
                     
@@ -188,15 +215,16 @@ write.hdf5 <- function(dat, # SpectreMAP object
                     gc()
               }
             }
+            }
 
         ## Adjust
             
             message("  -- adjusting data")
         
-            rws <- roi.dat[[i]]$RASTERS@nrows # rows = y-axis
-            cls <- roi.dat[[i]]$RASTERS@ncols # cols = x-axis
+            rws <- roi.dat[[i]]@RASTERS@nrows # rows = y-axis
+            cls <- roi.dat[[i]]@RASTERS@ncols # cols = x-axis
             
-            temp <- raster::values(roi.dat[[i]]$RASTERS)
+            temp <- raster::values(roi.dat[[i]]@RASTERS)
             temp <- as.data.table(temp)
             temp <- temp[,..channels]
             
@@ -269,6 +297,30 @@ write.hdf5 <- function(dat, # SpectreMAP object
             
             message("  -- writing HDF5 file")
             
+            
+            if(!is.null(crop.coordinates)){
+              
+              if(!paste0(i, "_crop.h5") %in% list.files(getwd())){
+                file.remove(paste0(i, "_crop.h5"))
+              }
+              
+              h5createFile(paste0(i, "_crop.h5"))
+              h5createDataset(paste0(i, "_crop.h5"), 
+                              "stacked_channels", 
+                              dim(AR),
+                              storage.mode = "integer", 
+                              chunk = c(1, dim(AR)[2],dim(AR)[3], 1),
+                              level = compression
+              )
+              h5write(AR, file=paste0(i, "_crop.h5"),
+                      name="stacked_channels")
+              h5ls(paste0(i, "_crop.h5"))
+              
+            }
+            
+            
+            
+            if(is.null(crop.coordinates)){
             if(!is.null(random.crop.x)){
               if(!is.null(random.crop.y)){
                 
@@ -309,6 +361,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
               h5write(AR, file=paste0(i, ".h5"),
                       name="stacked_channels")
               h5ls(paste0(i, ".h5"))
+            }
             }
 
 
