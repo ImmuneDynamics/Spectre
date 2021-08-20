@@ -7,17 +7,17 @@
 read.spatial.files()
 }
 \arguments{
-\item{rois}{vector of ROI names (directory names)}
-
-\item{roi.loc}{working directory for ROIs}
-
-\item{multi.tiff}{Default FALSE. Currently we don't support reading in multipage TIFF files}
-
 \item{correct.extent}{Correct extent so that the minimum is 0,0. Default TRUE}
 
 \item{flip.y}{Flip the data arrangement for the y-axis. Default TRUE}
 
 \item{value.modifier}{Data modifier based on image processing. Default 65535}
+
+\item{rois}{vector of ROI names (directory names)}
+
+\item{roi.loc}{working directory for ROIs}
+
+\item{multi.tiff}{Default FALSE. Currently we don't support reading in multipage TIFF files}
 
 \item{ext}{Default = ".tif" (which will recognise '.tiff' files as well)}
 }

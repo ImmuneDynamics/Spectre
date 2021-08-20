@@ -4,7 +4,7 @@
 \alias{run.pca}
 \title{Run the PCA algorithm (using stats::prcomp)}
 \usage{
-run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, comp.no = 2, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -19,7 +19,9 @@ run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.l
 
 \item{pca.lite}{DEFAULT = FALSE. Will stop running the function after PCA coordinates have been added to input data (assuming add.pca.col = TRUE).}
 
-\item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Note this will require the input of an elbow point during run. Will save generated scree plot.}
+\item{scree.plot}{DEFAULT = TRUE. Option to create scree plots. Will save generated scree plot. Note this will require the input of an elbow point during run if comp.no = NULL.}
+
+\item{comp.no}{DEFAULT = 2. Select number of components to be saved. If NULL, user will be asked during run to select number based on scree plot.}
 
 \item{variable.contribution}{DEFAULT = TRUE. Option to create plot showing the contribution of each variable. Horizontal red line represents the average variable contribution if all variables contributed equally. Requires scree.plot = TRUE.}
 
@@ -92,6 +94,7 @@ Spectre::run.pca(dat = Spectre::demo.clustered,
 # Compare between groups
 Spectre::run.pca(dat = Spectre::demo.clustered,
                  use.cols = c(11:19),
+                 comp.no = NULL,
                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
                  plot.ind.group = TRUE,
                  group.ind = "Group",

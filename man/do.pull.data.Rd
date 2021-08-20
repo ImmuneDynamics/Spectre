@@ -7,9 +7,9 @@
 do.pull.data(spatial.dat, target.dat)
 }
 \arguments{
-\item{spatial.dat}{NO DEFAULT. Spatial data list.}
-
 \item{target.dat}{NO DEFAULT. Dataset to pull.}
+
+\item{dat}{NO DEFAULT. Spatial data list.}
 }
 \description{
 do.pull.data

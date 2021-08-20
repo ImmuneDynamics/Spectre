@@ -5,27 +5,19 @@
 \title{do.add.masks}
 \usage{
 do.add.masks(
-  spatial.dat,
-  mask.loc,
-  masks,
-  mask.label = "cell.mask",
-  mask.ext = "_mask.tif",
+  dat,
+  mask.dir,
+  mask.pattern,
+  mask.label,
   correct.extent = TRUE,
   flip.y = TRUE,
   value.modifier = 65535,
+  HDF5 = FALSE,
   array = FALSE
 )
 }
 \arguments{
-\item{spatial.dat}{NO DEFAULT. Spatial data list.}
-
-\item{mask.loc}{NO DEFAULT. Directory of mask files.}
-
-\item{masks}{NO DEFAULT. Vector of mask file names}
-
 \item{mask.label}{DEFAULT = "cell_mask"}
-
-\item{mask.ext}{DEFAULT  = "_mask.tif" (will also recognise the '.tiff' file type)}
 
 \item{correct.extent}{DEFAULT = TRUE}
 
@@ -34,6 +26,14 @@ do.add.masks(
 \item{value.modifier}{DEFAULT = 65535}
 
 \item{array}{DEFAULT = FALSE}
+
+\item{spatial.dat}{NO DEFAULT. Spatial data list.}
+
+\item{mask.loc}{NO DEFAULT. Directory of mask files.}
+
+\item{masks}{NO DEFAULT. Vector of mask file names}
+
+\item{mask.ext}{DEFAULT  = "_mask.tif" (will also recognise the '.tiff' file type)}
 }
 \description{
 do.add.masks

@@ -5,7 +5,7 @@
 \title{make.spatial.plot}
 \usage{
 make.spatial.plot(
-  spatial.dat,
+  dat,
   image.roi,
   image.channel,
   mask.outlines = NULL,
@@ -36,7 +36,7 @@ make.spatial.plot(
 )
 }
 \arguments{
-\item{spatial.dat}{NO DEFAULT.A spatial data list}
+\item{dat}{NO DEFAULT.A spatial data list}
 
 \item{image.roi}{NO DEFAULT.The name of the ROI to plot}
 
