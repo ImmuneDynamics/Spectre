@@ -9,7 +9,7 @@
 #'
 #' @export
 
-do.extract <- function(spatial.dat, # spatial.data object
+do.extract <- function(dat, # spatial.data object
                        mask, # name of the mask being summarised
                        name = "CellData",
                        fun = "mean" # type of marker summarisation (mean, median etc)
@@ -44,14 +44,14 @@ do.extract <- function(spatial.dat, # spatial.data object
 
   ### Loop for each ROI
 
-      rois <- names(spatial.dat)
+      rois <- names(dat)
 
       for(roi in rois){
         # roi <- rois[[1]]
         message(paste0("Processing ", roi))
 
-        roi.stack <- spatial.dat[[roi]]$RASTERS
-        roi.poly <- spatial.dat[[roi]]$MASKS[[mask]]$polygons
+        roi.stack <- dat[[roi]]@RASTERS
+        roi.poly <- dat[[roi]]@MASKS[[mask]]$polygons
 
         raster.names <- names(roi.stack)
         ply.df <- as.data.frame(roi.poly)
@@ -99,7 +99,7 @@ do.extract <- function(spatial.dat, # spatial.data object
 
         ## OTHER MASK POLYGONS
 
-            other.polys <- names(spatial.dat[[roi]]$MASKS)
+            other.polys <- names(dat[[roi]]@MASKS)
             other.polys <- other.polys[!other.polys %in% mask]
 
             cols <- c("x", "y", "ID")
@@ -119,7 +119,7 @@ do.extract <- function(spatial.dat, # spatial.data object
 
                 message(paste0("... occurance in ", ply.name))
 
-                ply <- spatial.dat[[roi]]$MASKS[[ply.name]]$polygons
+                ply <- dat[[roi]]@MASKS[[ply.name]]$polygons
 
                 proj4string(roi.dat.xyid) <- proj4string(ply)
 
@@ -129,9 +129,9 @@ do.extract <- function(spatial.dat, # spatial.data object
               }
             }
 
-        spatial.dat[[roi]]$DATA[[name]] <- roi.dat
+            dat[[roi]]@DATA[[name]] <- roi.dat
       }
 
-  ### Return new spatial.dat object
-      return(spatial.dat)
+  ### Return new dat object
+      return(dat)
 }

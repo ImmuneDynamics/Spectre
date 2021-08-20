@@ -18,16 +18,15 @@
 #'
 #' @export
 
-do.add.masks <- function(spatial.dat,
-                         mask.loc,
-                         masks,
-
-                         mask.label = "cell.mask",
-                         mask.ext = "_mask.tif",
-
+do.add.masks <- function(dat, # list of spatial objects
+                         mask.dir,
+                         mask.pattern,
+                         mask.label,
+                      
                          correct.extent = TRUE,
                          flip.y = TRUE,
                          value.modifier = 65535,
+                         HDF5 = FALSE,
                          array = FALSE
                          ){
 
@@ -37,93 +36,112 @@ do.add.masks <- function(spatial.dat,
       require('rhdf5')
       require('HDF5Array')
   
+  ###
+  
+      # dat <- spatial.dat
+      # dat
+      # mask.dir <- '/Users/thomasa/OneDrive - The University of Sydney (Staff)/Library/Github (public)/Spectre/workflows/Spatial - advanced/data/masks/'
+      # mask.pattern <- 'Object Identities'
+      # mask.label <- "cell.mask"
+
+      message('Reading in mask files')
+  
+      if(class(dat) != 'list'){
+        stop("Your input data 'dat' needs to be a list of spectre spatial objects")
+      }
+
+      if(isTRUE(HDF5)){
+        all.files <-list.files(mask.dir, pattern = '.h5')
+      } else {
+        all.files <- list.files(mask.dir, pattern = '.tif')
+      }
+
+      as.matrix(all.files)
+
   ### Setup
       
-      message(paste0('Adding masks to ', mask.label))
-  
-      spat.names <- names(spatial.dat)
-      spat.names
-    
-      mask.names <- gsub(mask.ext, "", masks)
-      mask.names
-    
-      mask.check <- (spat.names == mask.names)
-      mask.check
-    
-      if(all(mask.check) == FALSE){
-        stop('Error -- list of ROIs does not match the list of masks')
-      }
+      # message(paste0('Adding masks to ', mask.label))
+      # 
+      # spat.names <- names(spatial.dat)
+      # spat.names
+      # 
+      # mask.names <- gsub(mask.ext, "", masks)
+      # mask.names
+      # 
+      # mask.check <- (spat.names == mask.names)
+      # mask.check
+      # 
+      # if(all(mask.check) == FALSE){
+      #   stop('Error -- list of ROIs does not match the list of masks')
+      # }
 
   ### Read in mask files
     
-      setwd(mask.loc)
-    
-      for(i in spat.names){
-        # i <- spat.names[[1]]
+      for(i in names(dat)){
+        # i <- 'ROI002' 
         
-        message(paste0("  -- processing ", i))
-        
-        if(grepl('.h5', mask.ext)){
-          file.ext <- '.h5'
+        fls <- all.files[grepl(i, all.files)]
+        fls <- fls[grepl(mask.pattern, fls)]
+        fls
+
+        if(substr(mask.dir, nchar(mask.dir), nchar(mask.dir)) != '/'){
+          fls <- paste0(mask.dir, '/', fls)
         } else {
-          file.ext <- 'other'
+          fls <- paste0(mask.dir, fls)
         }
- 
-        ## If HDF5 files
         
-            if(file.ext == '.h5'){
-              
-              message("     ... reading HDF5 file")
-              
-              # h5closeAll()
-              # h5ls(paste0(i, mask.ext))
-              
-              mask.img <- h5read(paste0(i, mask.ext), name = 'exported_data')
-              mask.img <- array(as.numeric(mask.img), dim(mask.img))
-              mask.img <- matrix(mask.img, nrow = dim(mask.img)[3], ncol = dim(mask.img)[2])
-              mask.img <- raster(mask.img)
-              
-            } else {
-              
-        ## If NOT HDF5 files
-              
-              if(array == FALSE){
-                mask.img <- readTIFF(paste0(i, mask.ext))
-                mask.img <- raster(mask.img)
-              }
-              
-              if(array == TRUE){
-                
-                message("     ... reading array")
-                
-                mask.img <- raster(paste0(i, mask.ext))
-              }
+        ## Read in mask files
+        
+        message("  -- reading mask '", mask.pattern, "' for ROI", i)
 
-            }
-
+        if(isTRUE(HDF5)){
+          message("     ...reading HDF5 file")
+          
+          mask.img <- h5read(fls, name = 'exported_data')
+          mask.img <- array(as.numeric(mask.img), dim(mask.img))
+          mask.img <- matrix(mask.img, nrow = dim(mask.img)[3], ncol = dim(mask.img)[2])
+          mask.img <- raster(mask.img)
+          
+        } else {
+          
+          if(array == FALSE){
+            message("     ...reading image file")
+            mask.img <- readTIFF(fls)
+            mask.img <- raster(mask.img)
+          }
+          
+          if(array == TRUE){
+            message("     ... reading array")
+            mask.img <- raster(fls)
+          }
+          
+        }
+        
         ## Correct extent
         
-            if(correct.extent == TRUE){
-              message("     ... correcting extent")
-              extent(mask.img) <- c(0, dim(mask.img)[2], 0,dim(mask.img)[1]) # Y axis - X axis
-            }
-    
+        if(correct.extent == TRUE){
+          message("     ...correcting extent")
+          extent(mask.img) <- c(0, dim(mask.img)[2], 0,dim(mask.img)[1]) # Y axis - X axis
+        }
+        
         ## Flip Y
         
-            if(flip.y == TRUE){
-              message("     ... flipping Y")
-              mask.img <- flip(mask.img, 'y')
-            }
-    
+        if(flip.y == TRUE){
+          message("     ...flipping Y")
+          mask.img <- flip(mask.img, 'y')
+        }
+        
         ## Finalise
         
-            raster::values(mask.img) <- raster::values(mask.img) * value.modifier
-            names(mask.img) <- mask.label
-            spatial.dat[[i]]$MASKS[[mask.label]]$maskraster <- mask.img
-    
+        raster::values(mask.img) <- raster::values(mask.img) * value.modifier
+        names(mask.img) <- mask.label
+        
+        spatial.dat[[i]]@MASKS[[mask.label]]$maskraster <- mask.img
       }
-    
-      message("Returning spatial data object with added masks")
+      
+  ### Return
+      
       return(spatial.dat)
+      
 }
 

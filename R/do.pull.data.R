@@ -1,6 +1,6 @@
 #' do.pull.data
 #'
-#' @param spatial.dat NO DEFAULT. Spatial data list.
+#' @param dat NO DEFAULT. Spatial data list.
 #' @param target.dat NO DEFAULT. Dataset to pull.
 #'
 #' @import data.table
@@ -20,7 +20,7 @@ do.pull.data <- function(spatial.dat,
   dat.list <- list()
 
   for(i in names(spatial.dat)){
-    roi.dat <- spatial.dat[[i]]$DATA[[target.dat]]
+    roi.dat <- spatial.dat[[i]]@DATA[[target.dat]]
     nme.vec <- rep(i, nrow(roi.dat))
 
     roi.dat <- cbind("ROI" = nme.vec, roi.dat)
