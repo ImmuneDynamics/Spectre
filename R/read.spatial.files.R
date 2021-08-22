@@ -33,12 +33,7 @@ read.spatial.files <- function(dir,
       require('raster')
       require('raster')
       require('tiff')
-      
-      spatial <- setClass(Class = 'spatial', 
-                          slots = c(RASTERS = 'RasterStack', 
-                                    MASKS = 'list',
-                                    DATA = 'list'
-                          ))
+
 
   ### Setup
   
