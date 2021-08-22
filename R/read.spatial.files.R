@@ -28,7 +28,7 @@ read.spatial.files <- function(dir,
 
   ### Packages
   
-      library('Spectre')
+      require('Spectre')
       require('data.table')
       require('raster')
       require('raster')
