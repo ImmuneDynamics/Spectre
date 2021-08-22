@@ -91,7 +91,6 @@ run.harmony <- function(dat,
       
   ### Require packages
   
-      require(Spectre)
       require(data.table)
       require(harmony)
   

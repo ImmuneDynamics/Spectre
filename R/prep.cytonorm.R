@@ -51,7 +51,6 @@ prep.cytonorm <- function(dat,
       if(!is.element('Biobase', installed.packages()[,1])) stop('Biobase is required but not installed')
       
   ### Require packages
-      require(Spectre)
       require(data.table)
       require(CytoNorm)
       # require(flowCore)

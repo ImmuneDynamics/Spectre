@@ -49,7 +49,6 @@ create.sumtable <- function(dat,
       if(!is.element('Spectre', installed.packages()[,1])) stop('pheatmap is required but not installed')
       if(!is.element('data.table', installed.packages()[,1])) stop('pheatmap is required but not installed')
       
-      require(Spectre)
       require(data.table)
   
   ### Demo data

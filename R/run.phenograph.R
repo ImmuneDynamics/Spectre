@@ -38,7 +38,6 @@ run.phenograph <- function(dat,
       if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
       if(!is.element('Rcpp', installed.packages()[,1])) stop('Rcpp is required but not installed')
   
-      require(Spectre)
       require(Rphenograph)
       require(data.table)
       require(Rcpp)

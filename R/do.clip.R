@@ -25,7 +25,6 @@ do.clip <- function(dat,
 
   ### Packages
   
-      require('Spectre')
       require('data.table')
   
   ### Demo data

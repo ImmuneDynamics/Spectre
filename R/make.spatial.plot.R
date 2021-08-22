@@ -105,7 +105,6 @@ make.spatial.plot <- function(dat, # spatial data object
       if(!is.element('rgeos', installed.packages()[,1])) stop('rgeos is required but not installed')
 
   ### Require packages
-      require(Spectre)
       require(ggplot2)
       require(scales)
       require(colorRamps)

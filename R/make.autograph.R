@@ -106,7 +106,6 @@ make.autograph <- function(dat,
       if(!is.element('ggpubr', installed.packages()[,1])) stop('ggpubr is required but not installed')
 
   ### Require packages
-      require(Spectre)
       require(ggplot2)
       require(data.table)
       require(ggpubr)

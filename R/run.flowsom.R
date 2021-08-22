@@ -52,7 +52,6 @@ run.flowsom <- function(dat,
       if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
 
   ### Require packages
-      require(Spectre)
       # require(flowCore)
       require(Biobase)
       require(FlowSOM)

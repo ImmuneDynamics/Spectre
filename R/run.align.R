@@ -80,7 +80,6 @@ run.align <- function(ref.dat,
   
   ### Packages
   
-      require('Spectre')
       require('data.table')
       require('flowCore')
 
