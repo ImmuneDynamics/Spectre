@@ -85,7 +85,8 @@ write.hdf5 <- function(dat, # SpectreMAP object
         
             if(isTRUE(flip.y)){
               message("  -- flipping y-axis")
-              roi.dat[[i]]@RASTERS <- raster::flip(roi.dat[[i]]@RASTERS, direction='y')
+              rs <- raster::flip(roi.dat[[i]]@RASTERS, direction='y')
+              roi.dat[[i]]@RASTERS <- raster::stack(rs)
             }
 
         ## Filtering to clip very bright pixels
@@ -133,7 +134,8 @@ write.hdf5 <- function(dat, # SpectreMAP object
               
               gc()
               message("  -- cropping ROI")
-              roi.dat[[i]]@RASTERS <- crop(roi.dat[[i]]@RASTERS, e)
+              rs <- crop(roi.dat[[i]]@RASTERS, e)
+              roi.dat[[i]]@RASTERS <- raster::stack(rs)
               
               ## Clean up
               rm(e)
@@ -202,7 +204,8 @@ write.hdf5 <- function(dat, # SpectreMAP object
                     
                     gc()
                     message("  -- cropping ROI")
-                    roi.dat[[i]]@RASTERS <- crop(roi.dat[[i]]@RASTERS, e)
+                    rs <- crop(roi.dat[[i]]@RASTERS, e)
+                    roi.dat[[i]]@RASTERS <- raster::stack(rs)
                     
                 ## Clean up
                     

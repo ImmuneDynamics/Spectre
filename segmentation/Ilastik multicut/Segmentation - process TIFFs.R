@@ -67,7 +67,7 @@
 
         setwd(InputDirectory)
         
-        spatial.dat <- read.spatial.files(roi.dir = getwd())
+        spatial.dat <- read.spatial.files(dir = getwd())
         
         str(spatial.dat, 3)
         spatial.dat[[1]]@RASTERS
@@ -76,7 +76,7 @@
 ### Create HDF5 files for mask creation
 ###################################################################################          
         
-        nms <- names(spatial.dat[[1]]$RASTERS)
+        nms <- names(spatial.dat[[1]]@RASTERS)
         
         as.matrix(nms)
         for.ilastik <- nms[c(3:15)]
@@ -94,6 +94,9 @@
                    merge.channels = merge.channels,
                    plots = FALSE)
         
+        fwrite(data.table('Channels' = for.ilastik), 'ilastik.channels.csv')
+        
+        
         ## Cropped ROIs to train Ilastik
         
         setwd(CroppedDirectory)
@@ -102,5 +105,7 @@
                    merge.channels = merge.channels,
                    random.crop.x = 350, 
                    random.crop.y = 300, 
-                   plots = FALSE)
+                   plots = TRUE)
+        
+        fwrite(data.table('Channels' = for.ilastik), 'ilastik.channels.csv')
         
