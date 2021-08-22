@@ -31,9 +31,9 @@ do.calculate.area <- function(dat,
         
             if(!is.null(region)){
               
-              poly.names <- dat[[i]]$MASKS[[region]]$polygons@data
+              poly.names <- dat[[i]]@MASKS[[region]]$polygons@data
               
-              areas <- area(dat[[i]]$MASKS[[region]]$polygons)
+              areas <- area(dat[[i]]@MASKS[[region]]$polygons)
               areas <- sqrt(areas)
               areas <- as.data.table(t(areas))
               
@@ -50,7 +50,7 @@ do.calculate.area <- function(dat,
         ## If region masks are NOT present
             if(is.null(region)){
               
-              total.area <- sqrt(dim(dat[[i]]$RASTERS[[1]])[1] * dim(dat[[i]]$RASTERS[[1]])[2])
+              total.area <- sqrt(dim(dat[[i]]@RASTERS[[1]])[1] * dim(dat[[i]]@RASTERS[[1]])[2])
               total.area <- as.data.table(total.area)
               
               names(total.area) <- 'Total'

@@ -1,9 +1,8 @@
 ##########################################################################################################
 #### Spectre - Simple Discovery Workflow
-#### Clustering, dimensionality reduction, plotting, and summarise data
 ##########################################################################################################
 
-    # Spectre R package: https://sydneycytometry.org.au/spectre
+    # Spectre R package: https://immunedynamics.io/spectre
     # Thomas Myles Ashhurst, Felix Marsh-Wakefield, Givanna Putri
 
 ##########################################################################################################
@@ -21,16 +20,17 @@
         setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
         getwd()
         PrimaryDirectory <- getwd()
-
+        PrimaryDirectory
+        
     ### Set 'input' directory
         setwd(PrimaryDirectory)
-        setwd("data/")
+        setwd("../data/")
         InputDirectory <- getwd()
         setwd(PrimaryDirectory)
 
     ### Set 'metadata' directory
         setwd(PrimaryDirectory)
-        setwd("metadata/")
+        setwd("../metadata/")
         MetaDirectory <- getwd()
         setwd(PrimaryDirectory)
 
@@ -134,6 +134,8 @@
 
         data.frame(table(cell.dat[[group.col]])) # Check number of cells per sample.
 
+        unique(cell.dat[[group.col]])
+        
         sub.targets <- c(2000, 20000) # target subsample numbers from each group
         sub.targets
 

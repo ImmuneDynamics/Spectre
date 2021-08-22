@@ -18,8 +18,8 @@
 #'
 #' @export
 
-read.spatial.files <- function(roi.dir,
-                               files = NULL,
+read.spatial.files <- function(dir,
+                               rois = NULL,
                                correct.extent = TRUE,
                                flip.y = TRUE,
                                value.modifier = 65535
@@ -28,21 +28,27 @@ read.spatial.files <- function(roi.dir,
 
   ### Packages
   
+      library('Spectre')
+      require('data.table')
+      require('raster')
       require('raster')
       require('tiff')
+      
+      spatial <- setClass(Class = 'spatial', 
+                          slots = c(RASTERS = 'RasterStack', 
+                                    MASKS = 'list',
+                                    DATA = 'list'
+                          ))
 
   ### Setup
   
-      # roi.dir <- '~/OneDrive - The University of Sydney (Staff)/Library/Github (public)/Spectre/workflows/Spatial - advanced/data/ROIs/ROI002'
-      # roi.dir
-
-      if(is.null(files)){
-        files <- list.files(roi.dir)
+      if(is.null(rois)){
+        rois <- list.files(dir)
       }
 
       spatial.dat <- spatial()
       
-      message('Reading TIFFs from:', roi.dir)
+      message('Reading TIFFs from:', dir)
       
       if(correct.extent == TRUE){
         message("  ...with extent correction")
@@ -54,75 +60,83 @@ read.spatial.files <- function(roi.dir,
       
   ### Read in files
       
-      file.list <- list()
+      roi.list <- list()
       
-      for(a in files){
-        # a <- files[[1]]
+      for(a in rois){
+        # a <- rois[[1]]
         
-        ext <- tools::file_ext(a)
-        ext <- paste0('.', ext)
+        message("Reading ROI: ", a)
         
-        if(substr(roi.dir, nchar(roi.dir), nchar(roi.dir)) != '/'){
-          file.list[[a]] <- tiff::readTIFF(paste0(roi.dir, '/', a))
+        if(substr(dir, nchar(dir), nchar(dir)) != '/'){
+          fls <- list.files(paste0(dir, '/', a))
         } else {
-          file.list[[a]] <- tiff::readTIFF(paste0(roi.dir, a))
+          fls <- list.files(paste0(dir, a))
         }
+
+        tiff.list <- list()
         
-        
-        if('matrix' %in% class(file.list[[a]])){
+        for(i in fls){
+          # i <- fls[[1]]
           
-          message("  -- reading single band in TIFF:", a)
-          file.list[[a]] <- raster(file.list[[a]])
-        }
-        
-        
-        if(class(file.list[[a]]) != 'matrix'){
-          if('array' %in% class(file.list[[a]])){
-            
-            message("  -- merging multiple bands in TIFF:", a)
-            
-            file.list[[a]] <- raster(a)
-            
-            nbands <- file.list[[a]]@file@nbands
-            # nbands
-            
-            band.list <- list()
-            
-            for(u in c(1:nbands)){
-              band.list[[u]] <- values(raster(a, band = u))
-            }
-            
-            band.res <- band.list[[1]]
-            
-            for(u in c(2:nbands)){
-              band.res <- band.res + band.list[[u]]
-            }
-            
-            values(file.list[[a]]) <- band.res
-            
+          ext <- tools::file_ext(i)
+          ext <- paste0('.', ext)
+          
+          tiff.list[[i]] <- tiff::readTIFF(paste0(dir, '/', a, '/', i))
+          
+          if('matrix' %in% class(tiff.list[[i]])){
+            message("  -- reading single band in TIFF:", i)
+            tiff.list[[i]] <- raster(tiff.list[[i]])
           }
+
+          if(class(tiff.list[[i]]) != 'matrix'){
+            if('array' %in% class(tiff.list[[i]])){
+
+              message("  -- merging multiple bands in TIFF:", i)
+
+              tiff.list[[i]] <- raster(i)
+
+              nbands <- tiff.list[[i]]@file@nbands
+              # nbands
+
+              band.list <- list()
+
+              for(u in c(1:nbands)){
+                band.list[[u]] <- values(raster(a, band = u))
+              }
+
+              band.res <- band.list[[1]]
+
+              for(u in c(2:nbands)){
+                band.res <- band.res + band.list[[u]]
+              }
+
+              values(tiff.list[[i]]) <- band.res
+
+            }
+          }
+          
+          if(correct.extent == TRUE){
+            extent(tiff.list[[i]]) <- c(0, dim(tiff.list[[i]])[2], 0,dim(tiff.list[[i]])[1]) # Y axis - X axis
+          }
+          
+          if(flip.y == TRUE){
+            tiff.list[[i]] <- flip(tiff.list[[i]], 'y')
+          }
+          
+          raster::values(tiff.list[[i]]) <- raster::values(tiff.list[[i]]) * value.modifier
+          
+          for(n in c(1:length(names(tiff.list)))){
+            names(tiff.list)[n] <- gsub(ext, "", names(tiff.list)[n])
+          }
+          
         }
         
-        if(correct.extent == TRUE){
-          extent(file.list[[a]]) <- c(0, dim(file.list[[a]])[2], 0,dim(file.list[[a]])[1]) # Y axis - X axis
-        }
+        raster.stack <- stack(tiff.list)
+        spatial.dat@RASTERS <- raster.stack
+        roi.list[[a]] <- spatial.dat
         
-        if(flip.y == TRUE){
-          file.list[[a]] <- flip(file.list[[a]], 'y')
-        }
-        
-        raster::values(file.list[[a]]) <- raster::values(file.list[[a]]) * value.modifier
-        
-        for(n in c(1:length(names(file.list)))){
-          names(file.list)[n] <- gsub(ext, "", names(file.list)[n])
-        }
       }
       
-  ### Condense    
-  
-      raster.stack <- stack(file.list)
-      spatial.dat@RASTERS <- raster.stack
-
-      return(spatial.dat)
+      return(roi.list)
 
 }
