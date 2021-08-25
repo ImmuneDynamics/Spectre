@@ -415,7 +415,7 @@ create.sumtable <- function(dat,
               }
             
             ## Double positive
-              if(!is.null(perc.pos)){
+              if(!is.null(double.pos)){
                 dt <- do.add.cols(dt, pop.col, double.res, pop.col, show.status = FALSE)
               }
             

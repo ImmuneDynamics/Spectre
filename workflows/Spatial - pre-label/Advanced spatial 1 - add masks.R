@@ -193,7 +193,7 @@
         }
         
 ###################################################################################
-### Caclulate cellular data and plot
+### Calculate cellular data and plot
 ###################################################################################       
     
     ### Calculate cellular data for each cell mask (this step may take some time)
