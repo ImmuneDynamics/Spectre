@@ -14,6 +14,7 @@ write.hdf5(
   random.crop.y = NULL,
   random.crop.x.seed = 42,
   random.crop.y.seed = 21,
+  crop.coordinates = NULL,
   print.spatial.plot = TRUE,
   chunk.size = NULL,
   compression = 0,

@@ -7,13 +7,13 @@
 do.extract(dat, mask, name = "CellData", fun = "mean")
 }
 \arguments{
+\item{dat}{NO DEFAULT. Spatial data list}
+
 \item{mask}{NO DEFAULT. Name of mask to use for cell data extraction}
 
 \item{name}{DEFAULT = 'CellData'. Name of the extracted cell dataset.}
 
 \item{fun}{DEFAULT = 'mean'. Summarisation function.}
-
-\item{spatial.dat}{NO DEFAULT. Spatial data list}
 }
 \description{
 do.extract
