@@ -2,6 +2,7 @@
 
 export()
 export(create.dt)
+export(create.spectre)
 export(create.stats)
 export(create.sumtable)
 export(do.add.cols)
