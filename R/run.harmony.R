@@ -114,6 +114,8 @@ run.harmony <- function(dat,
       
       message("run.harmony - running harmony (2/4)")
       
+      set.seed(42)
+      
       hrm.res <- harmony::HarmonyMatrix(data_mat = dat, 
                                         meta_data = meta, 
                                         vars_use = batch.col, 

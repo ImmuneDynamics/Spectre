@@ -11,6 +11,10 @@ spectre <- setClass(Class = 'spectre',
                               info = 'list'
                     ))
 
+create.spectre <- function(){
+  dat <- spectre()
+  return(dat)
+}
 
 setMethod("show",
           "spectre",
