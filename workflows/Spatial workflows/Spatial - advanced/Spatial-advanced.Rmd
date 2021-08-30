@@ -1,14 +1,74 @@
+---
+title: "Spectre - advanced spatial analysis"
+author: "Thomas Ashhurst"
+date: "30/08/2021"
+output:
+  html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+---
+
+[<- Back to Spectre home page](https://immunedynamics.io/spectre)
+
+<br />
+<br />
+
+
+
+
+
+## Introduction
+
+---
+
+Here we provide instructions for analysing spatial data after [cell segmentation](https://immunedynamics.io/spectre/spatial/advanced) as part of [Spectre's advanced segmentation and spatial analysis](https://immunedynamics.io/spectre/spatial/advanced) workflow. This workflow is split into 3x scripts:
+
+  1. Extract cellular data from ROIs and masks
+  2. Cellular analysis
+  3. Spatial analysis
+
+<br />
+<br />
+
+
+
+
+
+
+## Script 1. Extract cellular data
+
+---
+
+### Load libraries
+...
+
+```{r, results = 'hide', message=FALSE}
 ###################################################################################
 ### Spectre: spatial 1 - add masks and extract cellular data
 ###################################################################################
-    
+```
+
+First, load the Spectre package and associated packages.
+
+```{r, results = 'hide', message=FALSE}
     ### Load libraries
     
     library('Spectre')
     
     Spectre::package.check(type = 'spatial')
     Spectre::package.load(type = 'spatial')
-    
+```
+
+Next, set directories.
+
+```{r, results = 'hide', message=FALSE}
     ### Set PrimaryDirectory
     
     dirname(rstudioapi::getActiveDocumentContext()$path)
@@ -16,21 +76,27 @@
     getwd()
     PrimaryDirectory <- getwd()
     PrimaryDirectory
-    
+```
+
+```{r, results = 'hide', message=FALSE}
     ### Set InputDirectory (ROI TIFFs)
     
     setwd(PrimaryDirectory)
     setwd("data/ROIs/")
     InputDirectory <- getwd()
     InputDirectory
-    
+```
+
+```{r, results = 'hide', message=FALSE}
     ### Set MaskDirectory (ROI mask TIFFs)
     
     setwd(PrimaryDirectory)
     setwd("data/masks")
     MaskDirectory <- getwd()
     MaskDirectory
-    
+```
+
+```{r, results = 'hide', message=FALSE, warning=FALSE}
     ### Create output directory
     
     setwd(PrimaryDirectory)
@@ -38,20 +104,31 @@
     setwd("Output 1 - add masks")
     OutputDirectory <- getwd()
     OutputDirectory
+```
 
+<br />
+
+
+### Check ROIs and TIFFs
+
+```{r, results = 'hide', message=FALSE, warning=FALSE}
 ###################################################################################
 ### Check ROIs and TIFFs
 ###################################################################################
-    
-    ### Initialise the spatial data object with channel TIFF files
+```
+
+```{r, warning=FALSE}
+### Initialise the spatial data object with channel TIFF files
 
     setwd(InputDirectory)
 
     rois <- list.dirs(full.names = FALSE, recursive = FALSE)
     as.matrix(rois)
+```
 
+```{r, warning=FALSE}
     ### Check channel names
-    
+
     tiff.list <- list()
 
     for(i in rois){
@@ -61,25 +138,46 @@
     }
 
     t(as.data.frame(tiff.list))
+```
 
+### Read in TIFF files
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Read in TIFF files and create spatial objects
-###################################################################################        
-    
+################################################################################### 
+```
+
+```{r, results = 'hide', message=FALSE, warning=FALSE}
     ### Read in ROI channel TIFFs
 
     setwd(InputDirectory)
     spatial.dat <- read.spatial.files(dir = InputDirectory)
+```
 
+As the files are read in, you will see feedback like this:
+
+```{r, echo = FALSE, message=TRUE, warning=FALSE}
+    ### Read in ROI channel TIFFs
+    x <- read.spatial.files(dir = InputDirectory, rois = 'ROI002')
+```
+
+```{r, warning=FALSE}
     ### Check results
 
     str(spatial.dat, 3)
     spatial.dat[[1]]@RASTERS
+```
 
+### Read in masks files
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Read in masks files
 ###################################################################################
+```
 
+```{r, warning=FALSE}
     ### Define cell mask extension for different mask types
     
         setwd(MaskDirectory)
@@ -92,7 +190,9 @@
                            'regions' = '_ilastik_s2_Simple Segmentation.tif')
         
         mask.types
-        
+```
+
+```{r, warning=FALSE, message=FALSE}
     ### Read in masks
         
         for(i in names(mask.types)){
@@ -104,11 +204,19 @@
         
         str(spatial.dat, 3)
         str(spatial.dat[[1]]@MASKS, 3)
-        
+```
+
+### Rename rasters (if required)
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Rename rasters (if required)
 ###################################################################################
+```
 
+Here you can check the consistency of the raster names, and if required, adjust those names.
+
+```{r, warning=FALSE}
     ### Check channel names
     
         channel.names <- list()
@@ -118,8 +226,10 @@
         }
     
         t(as.data.frame(channel.names))
-        
-    ### List of corrections (first entry is the 'correct' one)
+```
+
+```{r, warning=FALSE}
+ ### List of corrections (first entry is the 'correct' one)
         
         # corrections <- list(c('CD4','Cd4'),
         #                     c('CD8','CD8a')
@@ -149,26 +259,42 @@
         # }
         # 
         # t(as.data.frame(channel.names))      
-        
+```
+
+### Generate outlines
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Generate polygons and outlines
 ###################################################################################
+```
 
+```{r, warning=FALSE, results = 'hide', message=FALSE}
     ### Generate polygons and outlines
         
         for(i in names(mask.types)){
           spatial.dat <- do.create.outlines(dat = spatial.dat, mask.name = i)
         }
-        
+```
+
+```{r, warning=FALSE}
     ### Checks
         
         str(spatial.dat, 3)
         str(spatial.dat[[1]]@MASKS, 2)
-        
+```
+
+### Mask QC plots
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Mask QC plots
-###################################################################################       
-    
+###################################################################################      
+```
+
+Here you can choose a 'base' raster to use for the spatial plot, and which mask you would like to plot.
+
+```{r, warning=FALSE}
     ### Mask plot setup
           
         setwd(OutputDirectory)
@@ -183,6 +309,9 @@
         mask <- 'cell.mask'
         mask    
         
+```
+
+```{r, warning=FALSE, fig.show = 'hide'}
     ### Create plots
         
         for(i in names(spatial.dat)){
@@ -191,18 +320,26 @@
                             image.channel = base, 
                             mask.outlines = mask)
         }
-        
+```
+
+### Calculate cellular data
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Calculate cellular data and plot
-###################################################################################       
-    
+###################################################################################   
+```
+
+```{r, warning=FALSE, results = 'hide', message=FALSE}
     ### Calculate cellular data for each cell mask (this step may take some time)
         
         spatial.dat <- do.extract(spatial.dat, 'cell.mask')
         str(spatial.dat, 3)
         
         spatial.dat[[1]]@DATA
-        
+```
+
+```{r, warning=FALSE}
     ### Factor plot setup
       
         setwd(OutputDirectory)
@@ -221,7 +358,9 @@
         
         plot.exp <- names(spatial.dat[[1]]@RASTERS)
         plot.exp
-        
+```
+
+```{r, results = 'hide', warning=FALSE, message=FALSE, fig.show = 'hide'}
     ### Make factor plots
         
         for(i in plot.rois){
@@ -242,7 +381,9 @@
                               title = paste0(a, ' - ', i))
           }
         }
-        
+```
+
+```{r, results = 'hide', warning=FALSE, message=FALSE, fig.show = 'hide'}
     ### Make exp plots
         
         for(i in plot.rois){
@@ -262,17 +403,24 @@
                               title = paste0(a, ' - ', i))
           }
         }
-        
-        
+```
+
+### Extract cellular data and annotate
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Extract cellular data and annotate
-###################################################################################       
+###################################################################################  
+```
 
+```{r, warning=FALSE}
     ### Extract cellular data
         
         cell.dat <- do.pull.data(spatial.dat, 'CellData')
         cell.dat
-        
+```
+
+```{r, warning=FALSE}
     ### Annotate cell types
         
         cell.type.annot <- list('Cell' = c(65534),
@@ -284,7 +432,9 @@
         
         cell.dat <- do.add.cols(cell.dat, 'cell.type', cell.type.annot, 'Values')
         cell.dat
-       
+```
+
+```{r, warning=FALSE}
     ### Annotate regions
         
         region.annot <- list('Background' = c(65533),
@@ -297,11 +447,17 @@
         
         cell.dat <- do.add.cols(cell.dat, 'regions', region.annot, 'Values')
         cell.dat
+```
 
+### Area calculation
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Area calculation
 ###################################################################################       
+```
 
+```{r, warning=FALSE}
         area.totals <- do.calculate.area(spatial.dat)
         area.totals
         
@@ -319,11 +475,17 @@
         }
         
         area.table
-        
+```
+
+### Save data
+
+```{r, warning=FALSE}
 ###################################################################################
 ### Save data
-###################################################################################       
+###################################################################################  
+```
 
+```{r, warning=FALSE}
     ### Output QS and CSV file
         
         setwd(OutputDirectory)
@@ -334,7 +496,9 @@
         fwrite(cell.dat, 'cell.dat.csv')
         fwrite(area.totals, 'area.totals.csv')
         fwrite(area.table, 'area.table.csv')
+```
 
+```{r, results = 'hide', warning=FALSE, message=FALSE}
     ### Pull cellular data and write FCS file from each ROI independently
     
         setwd(OutputDirectory)
@@ -365,5 +529,34 @@
               rm(cell.dat)
               rm(i)
         }
+```
 
-    
+
+<br />
+<br />
+
+
+
+
+
+## Script 2. Cellular analysis
+
+---
+
+Coming soon!
+
+<br />
+<br />
+
+
+
+
+
+## Script 3. Spatial analysis
+
+---
+
+Coming soon!
+
+<br />
+<br />

@@ -20,7 +20,7 @@
     ### Set InputDirectory
 
         setwd(PrimaryDirectory)
-        setwd("Output 2 - cellular analysis/Data")
+        setwd("Output 2 - cellular analysis/")
         InputDirectory <- getwd()
         InputDirectory
 
@@ -45,22 +45,26 @@
         
     ### Read in spatial data
         
-        setwd(InputDirectory)
-        list.files(getwd(), '.qs')
-        
-        spatial.dat <- qread('spatial.dat.qs')
-        str(spatial.dat, 3)
-        
-    ### Read in area data
-        
         setwd(PrimaryDirectory)
-        setwd('Output 1 - add masks/Data/')
+        setwd("Output 1 - add masks/QS file/")
         
-        area.totals <- fread('area.totals.csv')
-        area.totals
+        list.files(getwd(), '.qs')
+    
+        spatial.dat <- qread('spatial.dat.qs')
+        
+    ### Read in data.table
 
-        area.table <- fread('area.table.csv')
+        area.totals <- do.calculate.area(spatial.dat)
+        area.totals
+        
+        area.table <- do.calculate.area(spatial.dat, region = 'region')
         area.table
+        
+        as.matrix(unique(cell.dat[,c('region', 'Annotated region'),with = FALSE]))
+        
+        names(area.table) <- c('ROI', 'Background', 'Red pulp', 'White pulp')
+        area.table
+
         
 ###################################################################################
 ### Spatial analysis
@@ -77,7 +81,7 @@
         group.col <- 'Group'
         batch.col <- 'Batch'
         
-        pop.col <- 'Annotated cell type'
+        pop.col <- 'Annotated metacluster'
         region.col <- 'Annotated region'
         
     ### Some checks
