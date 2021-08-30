@@ -33,7 +33,6 @@ read.spatial.files <- function(dir,
       require('raster')
       require('tiff')
 
-
   ### Setup
   
       if(is.null(rois)){
@@ -87,15 +86,16 @@ read.spatial.files <- function(dir,
 
               message("  -- merging multiple bands in TIFF:", i)
 
-              tiff.list[[i]] <- raster(i)
-
+              tiff.list[[i]] <- NULL
+              tiff.list[[i]] <- raster(paste0(dir, '/', a, '/', i))
               nbands <- tiff.list[[i]]@file@nbands
               # nbands
 
               band.list <- list()
 
               for(u in c(1:nbands)){
-                band.list[[u]] <- values(raster(a, band = u))
+                # band.list[[u]] <- raster::values(raster(tiff.list[[i]], band = u))
+                band.list[[u]] <- raster::values(raster(paste0(dir, '/', a, '/', i), band = u))
               }
 
               band.res <- band.list[[1]]
@@ -104,7 +104,9 @@ read.spatial.files <- function(dir,
                 band.res <- band.res + band.list[[u]]
               }
 
-              values(tiff.list[[i]]) <- band.res
+              # tiff.list[[i]] <- NULL
+              # tiff.list[[i]] <- raster(paste0(dir, '/', a, '/', i))
+              raster::values(tiff.list[[i]]) <- band.res
 
             }
           }
