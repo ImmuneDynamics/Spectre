@@ -2,7 +2,6 @@
 
 export()
 export(create.dt)
-export(create.spectre)
 export(create.stats)
 export(create.sumtable)
 export(do.add.cols)
@@ -66,5 +65,4 @@ export(write.files)
 export(write.hdf5)
 export(write.sumtables)
 exportClasses(spatial)
-exportClasses(spectre)
 import(data.table)
