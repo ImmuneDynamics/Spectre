@@ -37,7 +37,6 @@ read.files <- function(file.loc = getwd(),
         if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
 
     ## Require packages
-        require(Spectre)
         require(data.table)
 
     ## Initial warnings

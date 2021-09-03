@@ -8,7 +8,7 @@
 #'
 #' @export
 
-do.create.outlines <- function(spatial.dat,
+do.create.outlines <- function(dat,
                                mask.name,
                                method = 'stars' # 'stars' 'raster'
 ){
@@ -58,18 +58,18 @@ do.create.outlines <- function(spatial.dat,
 
   ### Run
 
-      for(i in names(spatial.dat)){
+      for(i in names(dat)){
         # i <- names(spatial.dat)[[1]]
         start.time <- Sys.time()
 
-        mask <- spatial.dat[[i]]$MASKS[[mask.name]]$maskraster
+        mask <- dat[[i]]@MASKS[[mask.name]]$maskraster
 
         message(paste0("  -- Processing masks for ROI ", i))
 
         ## rasterToPolygons method
             if(method == 'raster'){
               polygon <- rasterToPolygons(mask, dissolve=TRUE) # This is the long step
-              spatial.dat[[i]]$MASKS[[mask.name]][["polygons"]] <- polygon
+              dat[[i]]@MASKS[[mask.name]][["polygons"]] <- polygon
               message("    ... polygons complete")
             }
 
@@ -108,7 +108,7 @@ do.create.outlines <- function(spatial.dat,
               names(polygon) <- mask.name
               crs(polygon) <- NA
 
-              spatial.dat[[i]]$MASKS[[mask.name]][["polygons"]] <- polygon
+              dat[[i]]@MASKS[[mask.name]][["polygons"]] <- polygon
               message("     ... polygons complete")
             }
 
@@ -116,15 +116,15 @@ do.create.outlines <- function(spatial.dat,
         suppressMessages(
           outline <- fortify(polygon)
         )
-        spatial.dat[[i]]$MASKS[[mask.name]][["outlines"]] <- outline
+        dat[[i]]@MASKS[[mask.name]][["outlines"]] <- outline
         message("     ... outlines complete")
 
     ### Create centroids
         centroids <- gCentroid(polygon,byid=TRUE)
-        spatial.dat[[i]]$MASKS[[mask.name]][["centroids"]] <- centroids
+        dat[[i]]@MASKS[[mask.name]][["centroids"]] <- centroids
         message("     ... centroids complete")
       }
 
   message("Returning spatial data")
-  return(spatial.dat)
+  return(dat)
 }

@@ -101,8 +101,8 @@ run.spatial.analysis <- function(dat,
       for(i in samples){
         # i <- samples[[1]]
 
-        message('Processing ', i)
-        
+        message('Processing ', i, ' -- (', which(samples == i), ' / ', length(samples), ')')
+
         ### Setup
         
             ## Subset sample data

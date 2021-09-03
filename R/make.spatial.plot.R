@@ -1,6 +1,6 @@
 #' make.spatial.plot
 #' 
-#' @param spatial.dat NO DEFAULT.A spatial data list
+#' @param dat NO DEFAULT.A spatial data list
 #' @param image.roi NO DEFAULT.The name of the ROI to plot
 #' @param image.channel NO DEFAULT.Name of the channel to plot
 #' @param mask.outlines DEFAULT = NULL. Name of the mask for outlines
@@ -33,15 +33,15 @@
 #'
 #' @export
 
-make.spatial.plot <- function(spatial.dat, # spatial data object
+make.spatial.plot <- function(dat, # spatial data object
                               image.roi, # name of ROI
                               image.channel, # name of channel
 
                               ## Options for adding cell outlines
-                              mask.outlines = NULL, # character -- the outlines in spatial.dat object
+                              mask.outlines = NULL, # character -- the outlines in dat object
 
                               ## Options for adding cellular data
-                              cell.dat = NULL, # can be character (if it's data within spatial.dat) or a data.table
+                              cell.dat = NULL, # can be character (if it's data within dat) or a data.table
                               cell.col = NULL, # column for colouration
 
                               ## Other settings (with defaults)
@@ -77,14 +77,14 @@ make.spatial.plot <- function(spatial.dat, # spatial data object
       # library(tiff)
       # library(ggplot2)
       #
-      # spatial.dat = spatial.dat
+      # dat = dat
       #
-      # spatial.dat$meta.data
+      # dat$meta.data
       #
       # roi = "20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac"
       # roi.marker = "CD20_Dy161"
     
-      # cell.dat <- spatial.dat$cell.dat.means.filtered
+      # cell.dat <- dat$cell.dat.means.filtered
       # cell.dat <- cell.dat[cell.dat[["ImageName"]] == "20171228_spleen315_500x500_editedforFAS_s1_p9_r2_a2_ac_ilastik_s2_Probabilities_mask.tiff",]
       # cell.dat = cell.dat
       # cell.x = "X"
@@ -105,7 +105,6 @@ make.spatial.plot <- function(spatial.dat, # spatial data object
       if(!is.element('rgeos', installed.packages()[,1])) stop('rgeos is required but not installed')
 
   ### Require packages
-      require(Spectre)
       require(ggplot2)
       require(scales)
       require(colorRamps)
@@ -120,6 +119,10 @@ make.spatial.plot <- function(spatial.dat, # spatial data object
       roi.marker <- image.channel
     
       #cell.dat
+      # if('data.table' %in% class(cell.dat)){
+      #   cell.dat <- cell.dat[cell.dat[['ROI']] == image.roi,]
+      # }
+      
       cell.colour <- cell.col
     
       add.outlines <- image.outlines <- mask.outlines
@@ -171,7 +174,7 @@ make.spatial.plot <- function(spatial.dat, # spatial data object
       if(!is.null(cell.dat)){
     
         if(is.character(cell.dat) == TRUE){
-          temp <- spatial.dat[[roi]]$DATA[[cell.dat]]
+          temp <- dat[[roi]]@DATA[[cell.dat]]
           cell.dat <- temp
         }
     
@@ -198,7 +201,7 @@ make.spatial.plot <- function(spatial.dat, # spatial data object
     
       ## Image prep
     
-      raster.image <- spatial.dat[[roi]]$RASTERS[[roi.marker]]
+      raster.image <- dat[[roi]]@RASTERS[[roi.marker]]
     
       tiff.p <- rasterToPoints(raster.image)
       tiff.df <- data.frame(tiff.p)
@@ -207,8 +210,8 @@ make.spatial.plot <- function(spatial.dat, # spatial data object
     
       ## Create cell outlines
       if(!is.null(mask.outlines)){
-        outline <- spatial.dat[[roi]]$MASKS[[mask.outlines]]$outlines
-        centroids <- spatial.dat[[roi]]$MASKS[[mask.outlines]]$centroids
+        outline <- dat[[roi]]@MASKS[[mask.outlines]]$outlines
+        centroids <- dat[[roi]]@MASKS[[mask.outlines]]$centroids
     
         centroid.xmin <- centroids@bbox[1]
         centroid.xmax <- centroids@bbox[3]

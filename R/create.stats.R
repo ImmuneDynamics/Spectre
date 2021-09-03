@@ -31,6 +31,7 @@ create.stats <- function(dat,
                          corrections = "fdr"){
 
   ### Test data
+  
       # dat <- merged.dat
       # names(merged.dat)
       # use.cols <- names(dat)[c(2:147)]
@@ -59,8 +60,17 @@ create.stats <- function(dat,
         temp <- dat[[nm]]
         temp <- data.table("Group" = strt, "Value" = temp)
 
-        k.res <- kruskal.test(x = c(temp[[2]]), g = c(temp[[1]]))
-        k.res <- as.data.frame(k.res$p.value)
+        na.test <- do.aggregate(temp, use.cols = 'Value', by = 'Group')
+        
+        if(any(is.na(na.test$Value))){
+          k.res <- data.frame(NA)
+          names(k.res) <- nm
+          rownames(k.res) <- 'Kruskal'
+        } else {
+          k.res <- kruskal.test(x = c(temp[[2]]), g = c(temp[[1]]))
+          k.res <- as.data.frame(k.res$p.value)
+        }
+
 
         colnames(k.res) <- nm
         rownames(k.res) <- "Kruskal"
@@ -77,8 +87,12 @@ create.stats <- function(dat,
           grp1 <- temp[temp[["Group"]] == grp1nme,]
           grp2 <- temp[temp[["Group"]] == grp2nme,]
 
-          w.res <- wilcox.test(grp1[[2]], grp2[[2]])
-          w.res.list[[paste0(a[[1]], " to ", a[[2]])]] <- w.res$p.value
+          if(all(is.na(grp1$Value)) | all(is.na(grp2$Value))){
+            w.res.list[[paste0(a[[1]], " to ", a[[2]])]] <- NA
+          } else {
+            w.res <- wilcox.test(grp1[[2]], grp2[[2]])
+            w.res.list[[paste0(a[[1]], " to ", a[[2]])]] <- w.res$p.value
+          }
         }
 
         res.w <- cbind(w.res.list)

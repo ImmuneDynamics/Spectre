@@ -243,9 +243,9 @@ make.multi.plot <- function(dat,
   #top = figure.title) #top = "Main Title" -- need to fix size issues
 
   ### Save to disk
-  if (save.each.plot == TRUE) {
-    message("The option to save each plot individually is not currently available")
-  }
+  # if (save.each.plot == TRUE) {
+  #   message("The option to save each plot individually is not currently available")
+  # }
 
   # width = 9 per graph (4 graphs across max, so 4 cols max)
   wdth <- num.cols*plot.width

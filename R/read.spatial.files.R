@@ -2,15 +2,13 @@
 #'
 #' @usage read.spatial.files()
 #'
-#' @param rois vector of ROI names (directory names)
-#' @param roi.loc working directory for ROIs
-#' @param multi.tiff Default FALSE. Currently we don't support reading in multipage TIFF files
+#' @param dir Directory location of where the ROI files are located
+#' @param lois Default = NULL. You can provide a list of only some of the ROI folders to read in.
 #' @param correct.extent Correct extent so that the minimum is 0,0. Default TRUE
 #' @param flip.y Flip the data arrangement for the y-axis. Default TRUE
 #' @param value.modifier Data modifier based on image processing. Default 65535
-#' @param ext Default = ".tif" (which will recognise '.tiff' files as well)
 #'
-#' @return Returns a spatial data object.
+#' @return Returns a list of spatial data objects.
 #'
 #' @examples
 #'
@@ -18,156 +16,120 @@
 #'
 #' @export
 
-read.spatial.files <- function(rois,
-                               roi.loc = getwd(),
-                               multi.tiff = FALSE,
+read.spatial.files <- function(dir,
+                               rois = NULL,
                                correct.extent = TRUE,
                                flip.y = TRUE,
-                               value.modifier = 65535,
-                               ext = ".tif"){
+                               value.modifier = 65535
+                               ){
 
   ### Packages
   
+      require('data.table')
+      require('raster')
       require('raster')
       require('tiff')
 
-  ### Checks
-
-      if(multi.tiff == TRUE){
-        if(length(grep(ext, rois)) != length(rois)){
-          stop("It appears that your list of ROIs are not TIFF stack files, and might be directories full of single TIFFs (i.e. one TIFF per channel. If this is correct, please use 'multi.tiff = FALSE'")
-        }
-      }
-  
-      setwd(roi.loc)
-      setwd(i)
-      tiffs <- list.files(pattern = ext)
-      
-      # https://stackoverflow.com/questions/7963898/extracting-the-last-n-characters-from-a-string-in-r
-      substrRight <- function(x, n){
-        substr(x, nchar(x)-n+1, nchar(x))
-      }
-      
-      if(ext != substrRight(tiffs[1],nchar(ext))){
-        message(paste0("Error: Your extension '", ext, "' does not match the extensions of your TIF or TIFF files"))
-        stop(paste0("Example file name: ", tiffs[1]), call. = FALSE)
-      }
-      
-      rm(tiffs)
-
   ### Setup
-      
-      setwd(roi.loc)
-      ROI.list <- list()
-      spatial.dat <- list()
-
-  ### Loop for ROIs -- one TIFF per ROI (i.e. tiff stack)
-
-      if(multi.tiff == TRUE){
-        message("Multi.tiff is not currently supported")
-        #
-        #   setwd(roi.loc)
-        #   ROI.list <- list()
-        #
-        #   for(i in rois){
-        #     # i <- rois[[1]]
-        #     message(paste0("Reading TIFF file for ", i))
-        #
-        #     temp <- readTIFF(i, all = TRUE)
-        #     str(temp)
-        #
-        #     temp <- raster(temp[[1]])
-        #
-        #     raster.stack <- stack(active.roi)
-        #
-        #
-        #
-        #
-        #
-        #     raster.stack <- stack(active.roi)
-        #     ROI.list[[i]]$rasters <- raster.stack
-        #   }
+  
+      if(is.null(rois)){
+        rois <- list.files(dir)
       }
 
-  ### Loop for ROIs -- one FOLDER per ROI
+      spatial.dat <- spatial()
+      
+      message('Reading TIFFs from:', dir)
+      
+      if(correct.extent == TRUE){
+        message("  ...with extent correction")
+      }
+      
+      if(flip.y == TRUE){
+        message("  ...with y-axis orientation flipping")
+      }
+      
+  ### Read in files
+      
+      roi.list <- list()
+      
+      for(a in rois){
+        # a <- rois[[1]]
+        
+        message("Reading ROI: ", a)
+        
+        if(substr(dir, nchar(dir), nchar(dir)) != '/'){
+          fls <- list.files(paste0(dir, '/', a))
+        } else {
+          fls <- list.files(paste0(dir, a))
+        }
 
-      if(multi.tiff == FALSE){
-        for(i in rois){
-          # i <- rois[[1]]
-          message(paste0("Reading TIFF files for ", i))
-
-          setwd(roi.loc)
-          setwd(i)
-          tiffs <- list.files(pattern = ext)
+        tiff.list <- list()
+        
+        for(i in fls){
+          # i <- fls[[1]]
           
-          ## TIFF loop
-          active.roi <- list()
-
-          for(a in tiffs){
-            # a <- tiffs[[7]]
-            
-            active.roi[[a]] <- tiff::readTIFF(a)
-            
-            if('matrix' %in% class(active.roi[[a]])){
-              
-              message("  -- ", a, " - single band in TIFF")
-              active.roi[[a]] <- raster(active.roi[[a]])
-              
-            }
-            
-            
-            if(class(active.roi[[a]]) != 'matrix'){
-              if('array' %in% class(active.roi[[a]])){
-                
-                message("  -- ", a, " - merging multiple bands in TIFF ")
-                
-                active.roi[[a]] <- raster(a)
-                
-                nbands <- active.roi[[a]]@file@nbands
-                # nbands
-                
-                band.list <- list()
-  
-                for(u in c(1:nbands)){
-                  band.list[[u]] <- values(raster(a, band = u))
-                }
-                
-                band.res <- band.list[[1]]
-       
-                for(u in c(2:nbands)){
-                  band.res <- band.res + band.list[[u]]
-                }
-                
-                values(active.roi[[a]]) <- band.res
-              
-              }
-            }
-            
-            if(correct.extent == TRUE){
-              message("    ...correcting extent")
-              extent(active.roi[[a]]) <- c(0, dim(active.roi[[a]])[2], 0,dim(active.roi[[a]])[1]) # Y axis - X axis
-            }
-
-            if(flip.y == TRUE){
-              message("    ...flipping y-axis orientation")
-              active.roi[[a]] <- flip(active.roi[[a]], 'y')
-            }
-
-            raster::values(active.roi[[a]]) <- raster::values(active.roi[[a]]) * value.modifier
-
-            for(n in c(1:length(names(active.roi)))){
-              names(active.roi)[n] <- gsub(ext, "", names(active.roi)[n])
-            }
+          ext <- tools::file_ext(i)
+          ext <- paste0('.', ext)
+          
+          tiff.list[[i]] <- tiff::readTIFF(paste0(dir, '/', a, '/', i))
+          
+          if('matrix' %in% class(tiff.list[[i]])){
+            message("  -- reading single band in TIFF:", i)
+            tiff.list[[i]] <- raster(tiff.list[[i]])
           }
 
-          raster.stack <- stack(active.roi)
-          ROI.list[[i]]$RASTERS <- raster.stack
+          if(class(tiff.list[[i]]) != 'matrix'){
+            if('array' %in% class(tiff.list[[i]])){
+
+              message("  -- merging multiple bands in TIFF:", i)
+
+              tiff.list[[i]] <- NULL
+              tiff.list[[i]] <- raster(paste0(dir, '/', a, '/', i))
+              nbands <- tiff.list[[i]]@file@nbands
+              # nbands
+
+              band.list <- list()
+
+              for(u in c(1:nbands)){
+                # band.list[[u]] <- raster::values(raster(tiff.list[[i]], band = u))
+                band.list[[u]] <- raster::values(raster(paste0(dir, '/', a, '/', i), band = u))
+              }
+
+              band.res <- band.list[[1]]
+
+              for(u in c(2:nbands)){
+                band.res <- band.res + band.list[[u]]
+              }
+
+              # tiff.list[[i]] <- NULL
+              # tiff.list[[i]] <- raster(paste0(dir, '/', a, '/', i))
+              raster::values(tiff.list[[i]]) <- band.res
+
+            }
+          }
+          
+          if(correct.extent == TRUE){
+            extent(tiff.list[[i]]) <- c(0, dim(tiff.list[[i]])[2], 0,dim(tiff.list[[i]])[1]) # Y axis - X axis
+          }
+          
+          if(flip.y == TRUE){
+            tiff.list[[i]] <- flip(tiff.list[[i]], 'y')
+          }
+          
+          raster::values(tiff.list[[i]]) <- raster::values(tiff.list[[i]]) * value.modifier
+          
+          for(n in c(1:length(names(tiff.list)))){
+            names(tiff.list)[n] <- gsub(ext, "", names(tiff.list)[n])
+          }
+          
         }
+        
+        raster.stack <- stack(tiff.list)
+        spatial.dat@RASTERS <- raster.stack
+        roi.list[[a]] <- spatial.dat
+        
       }
-
-
-  ### Return
-      message("Spatial data object construction complete")
-      return(ROI.list)
+      
+      return(roi.list)
 
 }

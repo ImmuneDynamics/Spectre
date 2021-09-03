@@ -62,6 +62,8 @@ make.autograph <- function(dat,
                            Variance_test = NULL,
                            Pairwise_test = NULL,
 
+                           # pairing = NULL,
+                           
                            title = paste0(y.axis),
                            subtitle = NULL,
                            filename = paste0(y.axis, ".pdf"),
@@ -104,7 +106,6 @@ make.autograph <- function(dat,
       if(!is.element('ggpubr', installed.packages()[,1])) stop('ggpubr is required but not installed')
 
   ### Require packages
-      require(Spectre)
       require(ggplot2)
       require(data.table)
       require(ggpubr)
@@ -171,6 +172,11 @@ make.autograph <- function(dat,
 
       p <- ggplot2::ggplot(dat, ggplot2::aes(x=Xaxis, y=dat[[y.axis]])) #, fill=Species)) + # can use fill = Species -- makes coloured by Species, with block outline of point -- NEED FILL for violin plot to be filled
 
+      ## PAIRED
+      # if(!is.null(pairing)){
+      #   p <- p <- p + ggplot2::geom_line(aes(group=pairing))
+      # }
+      
       ## POINTS
       p <- p + ggplot2::geom_point(ggplot2::aes(fill=as.factor(dat[[colour.by]]),
                                                 colour = as.factor(dat[[colour.by]])),
@@ -289,4 +295,6 @@ make.autograph <- function(dat,
     ## Save
     ggplot2::ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # width 3.6 default, height 5 default
     message(paste0("AutoGraph for `", y.axis.label, " - ", y.axis, "` saved to disk"))
+
+    return(p)
 }

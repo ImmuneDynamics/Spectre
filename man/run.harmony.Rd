@@ -15,7 +15,7 @@ run.harmony()
 
 \item{append.name}{DEFAULT = '_aligned'. Text that will be appended to the new columns containing aligned data}
 
-\item{do_pca}{DEFAULT = FALSE. Whether to perform PCA on input matrix.}
+\item{do_pca}{DEFAULT = TRUE. Whether to perform PCA on input matrix.}
 
 \item{npcs}{If doing PCA on input matrix, number of PCs to compute.}
 

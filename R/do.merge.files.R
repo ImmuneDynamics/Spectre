@@ -23,7 +23,7 @@ do.merge.files <- function(dat, remove.duplicates = TRUE){
     if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
 
   ## Require packages
-    require(Spectre)
+    
     require(data.table)
 
   ## Data table (fastest) row binding solution

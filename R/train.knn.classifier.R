@@ -81,8 +81,8 @@ train.knn.classifier <- function(dat,
       message(paste("Evaluating", n))
       res.knn <- Spectre::run.knn.classifier(train.dat = train.dat,
                                              unlabelled.dat = valid.dat,
-                                             use.cols = cols,
-                                             label.col = "population",
+                                             use.cols = use.cols,
+                                             label.col = 'population',
                                              num.neighbours = n)
       knn.res[[n]] <- res.knn
     }

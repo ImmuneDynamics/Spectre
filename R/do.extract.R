@@ -1,6 +1,6 @@
 #' do.extract
 #'
-#' @param dat NO DEFAULT. Spatial data list
+#' @param dat NO DEFAULT. List of spatial data objects
 #' @param mask NO DEFAULT. Name of mask to use for cell data extraction
 #' @param name DEFAULT = 'CellData'. Name of the extracted cell dataset.
 #' @param fun DEFAULT = 'mean'. Summarisation function.
@@ -13,12 +13,13 @@ do.extract <- function(dat, # spatial.data object
                        mask, # name of the mask being summarised
                        name = "CellData",
                        fun = "mean" # type of marker summarisation (mean, median etc)
-){
+                       ){
 
   #message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
       require('rgeos')
       require('sp')
+      require('sf')
       require('rgdal')
       require('exactextractr')
       require('data.table')
@@ -43,14 +44,15 @@ do.extract <- function(dat, # spatial.data object
 
   ### Loop for each ROI
 
-      rois <- names(spatial.dat)
+      rois <- names(dat)
 
       for(roi in rois){
         # roi <- rois[[1]]
-        message(paste0("Processing ", roi))
-
-        roi.stack <- spatial.dat[[roi]]$RASTERS
-        roi.poly <- spatial.dat[[roi]]$MASKS[[mask]]$polygons
+        
+        message(paste0("Processing ", paste0(which(roi == rois), ' of ', length(rois)), ':  ', roi))
+ 
+        roi.stack <- dat[[roi]]@RASTERS
+        roi.poly <- dat[[roi]]@MASKS[[mask]]$polygons
 
         raster.names <- names(roi.stack)
         ply.df <- as.data.frame(roi.poly)
@@ -65,9 +67,11 @@ do.extract <- function(dat, # spatial.data object
 
         ## RASTERS
 
+            message(" -- running rasters")
+        
             for(i in raster.names){
               # i <- raster.names[[1]]
-              message(paste0("... ", i))
+              message(paste0("     ... ", i))
               temp.dat <- roi.stack[[i]]
 
               ## Slower method
@@ -98,7 +102,9 @@ do.extract <- function(dat, # spatial.data object
 
         ## OTHER MASK POLYGONS
 
-            other.polys <- names(spatial.dat[[roi]]$MASKS)
+            message(" -- running mask polygons")
+            
+            other.polys <- names(dat[[roi]]@MASKS)
             other.polys <- other.polys[!other.polys %in% mask]
 
             cols <- c("x", "y", "ID")
@@ -114,11 +120,12 @@ do.extract <- function(dat, # spatial.data object
             if(length(other.polys) != 0){
               for(i in c(1:(length(other.polys)))){
                 # i <- 1
+                
                 ply.name <- other.polys[[i]]
 
-                message(paste0("... occurance in ", ply.name))
+                message(paste0("     ... occurance in ", ply.name))
 
-                ply <- spatial.dat[[roi]]$MASKS[[ply.name]]$polygons
+                ply <- dat[[roi]]@MASKS[[ply.name]]$polygons
 
                 proj4string(roi.dat.xyid) <- proj4string(ply)
 
@@ -128,9 +135,9 @@ do.extract <- function(dat, # spatial.data object
               }
             }
 
-        spatial.dat[[roi]]$DATA[[name]] <- roi.dat
+            dat[[roi]]@DATA[[name]] <- roi.dat
       }
 
-  ### Return new spatial.dat object
-      return(spatial.dat)
+  ### Return new dat object
+      return(dat)
 }

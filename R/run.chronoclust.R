@@ -68,7 +68,6 @@ run.chronoclust <- function(dat,
   if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
   
   require(reticulate)
-  require(Spectre)
   require(data.table)
   
   # testing

@@ -34,7 +34,6 @@ make.network.plot <- function(dat,
                               arrow.length = 3,
                               arrow.head.gap = 4,
                               standard.colours = 'Spectral') {
-  require(Spectre)
   require(gtools)
   require(tidygraph)
   require(ggraph)

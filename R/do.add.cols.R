@@ -43,7 +43,7 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
       if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
 
   ### Require packages
-      require(Spectre)
+  
       require(data.table)
 
   ### Test data

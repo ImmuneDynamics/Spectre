@@ -8,7 +8,7 @@
 #' @param align.cols NO default. The columns you wish to align. For cytometry data, this can be the markers themselves or principle components. For single-cell seq data, principle components are recommended.
 #' @param batch.col NO default. The column that denotes the batch or dataset that each cell belongs to
 #' @param append.name DEFAULT = '_aligned'. Text that will be appended to the new columns containing aligned data
-#' @param do_pca DEFAULT = FALSE. Whether to perform PCA on input matrix. 
+#' @param do_pca DEFAULT = TRUE. Whether to perform PCA on input matrix. 
 #' @param npcs If doing PCA on input matrix, number of PCs to compute. 
 #' @param theta Diversity clustering penalty parameter. Specify for each
 #'  variable in vars_use Default theta=2. theta=0 does not encourage any 
@@ -65,7 +65,7 @@ run.harmony <- function(dat,
                         align.cols,
                         batch.col,
                         append.name = '_aligned',
-                        do_pca = FALSE, 
+                        do_pca = TRUE, 
                         npcs = 20, 
                         theta = NULL, 
                         lambda = NULL, 
@@ -91,7 +91,6 @@ run.harmony <- function(dat,
       
   ### Require packages
   
-      require(Spectre)
       require(data.table)
       require(harmony)
   
@@ -114,6 +113,8 @@ run.harmony <- function(dat,
   ### Run harmony
       
       message("run.harmony - running harmony (2/4)")
+      
+      set.seed(42)
       
       hrm.res <- harmony::HarmonyMatrix(data_mat = dat, 
                                         meta_data = meta, 
