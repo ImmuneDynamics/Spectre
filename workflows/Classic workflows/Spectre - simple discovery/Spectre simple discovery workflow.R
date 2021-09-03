@@ -16,6 +16,7 @@
         Spectre::package.load()     # Load required packages
 
     ### Set PrimaryDirectory
+        
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
         setwd(dirname(rstudioapi::getActiveDocumentContext()$path))     # Sets the working directory to where the script is located
         getwd()
@@ -23,18 +24,21 @@
         PrimaryDirectory
         
     ### Set 'input' directory
+        
         setwd(PrimaryDirectory)
         setwd("../data/")
         InputDirectory <- getwd()
         setwd(PrimaryDirectory)
 
     ### Set 'metadata' directory
+        
         setwd(PrimaryDirectory)
         setwd("../metadata/")
         MetaDirectory <- getwd()
         setwd(PrimaryDirectory)
 
     ### Create output directory
+        
         dir.create("Output_Spectre", showWarnings = FALSE)
         setwd("Output_Spectre")
         OutputDirectory <- getwd()
@@ -106,9 +110,11 @@
 
     ### Add metadata to data.table
 
+        meta.dat
         sample.info <- meta.dat[,c(1:4)]
         sample.info
         
+        meta.dat
         counts <- meta.dat[,c(2,5)]
         counts
 
@@ -150,14 +156,15 @@
     ### Clustering
 
         cell.dat <- run.flowsom(cell.dat, cluster.cols, meta.k = 8)
-        fwrite(cell.dat, "clustered.data.csv")
-
+        cell.dat
+        
     ### Dimensionality reduction
 
         cell.sub <- do.subsample(cell.dat, sub.targets, group.col)
+        cell.sub
+        
         cell.sub <- run.umap(cell.sub, cluster.cols)
-
-        fwrite(cell.sub, "clustered.data.DR.csv")
+        cell.sub
 
     ### DR plots
 
@@ -198,11 +205,11 @@
         cell.dat <- do.add.cols(cell.dat, "FlowSOM_metacluster", annots, "Values")
         cell.dat
         
-        fwrite(cell.dat, "Annotated.data.csv")
+        
 
         cell.sub <- do.add.cols(cell.sub, "FlowSOM_metacluster", annots, "Values")
         cell.sub
-        fwrite(cell.sub, "Annotated.data.DR.csv")
+        
 
         make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", col.type = 'factor', add.label = TRUE)
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", group.col, col.type = 'factor')
@@ -217,6 +224,9 @@
         
         setwd(OutputDirectory)
         setwd("Output 3 - annotation")
+        
+        fwrite(cell.dat, "Annotated.data.csv")
+        fwrite(cell.sub, "Annotated.data.DR.csv")
         
         dir.create('FCS files')
         setwd('FCS files')

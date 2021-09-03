@@ -17,7 +17,13 @@ do.add.masks(
 )
 }
 \arguments{
-\item{mask.label}{DEFAULT = "cell_mask"}
+\item{dat}{NO DEFAULT. A list of spatial data objects}
+
+\item{mask.dir}{NO DEFAULT. Directory of mask files.}
+
+\item{mask.pattern}{NO DEFAULT. A character pattern that identifies the mask type (e.g. '_mask')}
+
+\item{mask.label}{NO DEFAULT. What do you want to call the mask}
 
 \item{correct.extent}{DEFAULT = TRUE}
 
@@ -25,15 +31,9 @@ do.add.masks(
 
 \item{value.modifier}{DEFAULT = 65535}
 
-\item{array}{DEFAULT = FALSE}
+\item{HDF5}{DEFAULT = FALSE. Can read in HDF5 mask files if desired (advanced use).}
 
-\item{spatial.dat}{NO DEFAULT. Spatial data list.}
-
-\item{mask.loc}{NO DEFAULT. Directory of mask files.}
-
-\item{masks}{NO DEFAULT. Vector of mask file names}
-
-\item{mask.ext}{DEFAULT  = "_mask.tif" (will also recognise the '.tiff' file type)}
+\item{array}{DEFAULT = FALSE. If the mask TIFF is an array (advanced use).}
 }
 \description{
 do.add.masks

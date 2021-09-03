@@ -1,6 +1,6 @@
 #' do.extract
 #'
-#' @param dat NO DEFAULT. Spatial data list
+#' @param dat NO DEFAULT. List of spatial data objects
 #' @param mask NO DEFAULT. Name of mask to use for cell data extraction
 #' @param name DEFAULT = 'CellData'. Name of the extracted cell dataset.
 #' @param fun DEFAULT = 'mean'. Summarisation function.
