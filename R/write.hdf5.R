@@ -300,24 +300,23 @@ write.hdf5 <- function(dat, # SpectreMAP object
             
             message("  -- writing HDF5 file")
             
-            
             if(!is.null(crop.coordinates)){
               
               if(!paste0(i, "_crop.h5") %in% list.files(getwd())){
                 file.remove(paste0(i, "_crop.h5"))
               }
               
-              h5createFile(paste0(i, "_crop.h5"))
-              h5createDataset(paste0(i, "_crop.h5"), 
+              suppressMessages(h5createFile(paste0(i, "_crop.h5")))
+              suppressMessages(h5createDataset(paste0(i, "_crop.h5"), 
                               "stacked_channels", 
                               dim(AR),
                               storage.mode = "integer", 
                               chunk = c(1, dim(AR)[2],dim(AR)[3], 1),
                               level = compression
-              )
-              h5write(AR, file=paste0(i, "_crop.h5"),
-                      name="stacked_channels")
-              h5ls(paste0(i, "_crop.h5"))
+              ))
+              suppressMessages(h5write(AR, file=paste0(i, "_crop.h5"),
+                      name="stacked_channels"))
+              suppressMessages(h5ls(paste0(i, "_crop.h5")))
               
             }
             
@@ -331,17 +330,17 @@ write.hdf5 <- function(dat, # SpectreMAP object
                   file.remove(paste0(i, "_crop.h5"))
                 }
 
-                h5createFile(paste0(i, "_crop.h5"))
-                h5createDataset(paste0(i, "_crop.h5"), 
+                suppressMessages(h5createFile(paste0(i, "_crop.h5")))
+                suppressMessages(h5createDataset(paste0(i, "_crop.h5"), 
                                 "stacked_channels", 
                                 dim(AR),
                                 storage.mode = "integer", 
                                 chunk = c(1, dim(AR)[2],dim(AR)[3], 1),
                                 level = compression
-                                )
-                h5write(AR, file=paste0(i, "_crop.h5"),
-                        name="stacked_channels")
-                h5ls(paste0(i, "_crop.h5"))
+                                ))
+                suppressMessages(h5write(AR, file=paste0(i, "_crop.h5"),
+                        name="stacked_channels"))
+                suppressMessages(h5ls(paste0(i, "_crop.h5")))
                 
                   
               }
@@ -352,18 +351,18 @@ write.hdf5 <- function(dat, # SpectreMAP object
                 file.remove(paste0(i, ".h5"))
               }
               
-              h5createFile(paste0(i, ".h5"))
-              h5createDataset(paste0(i, ".h5"), 
+              suppressMessages(h5createFile(paste0(i, ".h5")))
+              suppressMessages(h5createDataset(paste0(i, ".h5"), 
                               "stacked_channels", 
                               dim(AR),
                               maxdims = dim(AR),
                               storage.mode = "integer", 
                               chunk = c(1, dim(AR)[2],dim(AR)[3], 1),
                               level = compression
-                              )
-              h5write(AR, file=paste0(i, ".h5"),
-                      name="stacked_channels")
-              h5ls(paste0(i, ".h5"))
+                              ))
+              suppressMessages(h5write(AR, file=paste0(i, ".h5"),
+                      name="stacked_channels"))
+              suppressMessages(h5ls(paste0(i, ".h5")))
             }
             }
 
