@@ -51,6 +51,8 @@
         rois <- list.dirs(full.names = FALSE, recursive = FALSE)
         as.matrix(rois)
 
+    ### List of TIFF files
+        
         tiff.list <- list()
         
         for(i in rois){
