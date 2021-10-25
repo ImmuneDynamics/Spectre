@@ -1,0 +1,52 @@
+---
+title: "Importing Single Cell Experiment Object"
+author: "Givanna Putri"
+date: "25/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this tutorial, we will explore how to import a Single Cell Experiment (SCE) object into Spectre for further downstream analysis.
+
+As a starting point, we will create a SCE object following the tutorial provided by chapter 5 of Orchestrating Single Cell Analysis (OSCA) book <http://bioconductor.org/books/release/OSCA/>.
+
+The dataset used in this tutorial is a droplet-based single cell RNA sequencing (scRNAseq) retina dataset from Macosko et.al:
+> #### Macosko, E. Z., A. Basu, R. Satija, J. Nemesh, K. Shekhar, M. Goldman, I. Tirosh, et al. 2015. “Highly parallel genome-wide expression profiling of individual cells using nanoliter droplets.” Cell 161 (5): 1202–14.
+
+We will load the dataset using *scRNAseq* package, perform some basic quality control (QC) to remove cells with high mitochondrial gene expression and log based normalisation using *scatter* package, and finally feature selection using *scran* package and PCA.
+
+Reading data:
+```{r message=FALSE, warning=FALSE}
+library(scRNAseq)
+sce_dat <- MacoskoRetinaData()
+```
+
+Perform QC and log normalisation:
+```{r}
+library(scater)
+mito_genes <- grepl("^MT-", rownames(sce_dat))
+qc_stats <- perCellQCMetrics(sce_dat, subsets=list(Mito = mito_genes))
+to_filter <- quickPerCellQC(qc_stats, percent_subsets="subsets_Mito_percent")
+sce_dat <- sce_dat[, !to_filter$discard]
+sce_dat <- logNormCounts(sce_dat)
+```
+
+Perform feature selection:
+```{r}
+set.seed(42)
+library(scran)
+dec <- modelGeneVar(sce_dat)
+hvg <- getTopHVGs(dec, prop=0.1)
+sce_dat <- runPCA(sce_dat, ncomponents=25, subset_row=hvg)
+```
+
+Now, we will convert it into data.table using Spectre for further processing:
+```{r}
+sce_dat <- SingleCellExperiment(counts = logcounts(sce_dat))
+library(Spectre)
+dat <- create.dt(dat = sce_dat, from = 'SingleCellExperiment')
+```
+
