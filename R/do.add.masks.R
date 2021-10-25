@@ -1,14 +1,14 @@
 #' do.add.masks
 #'
-#' @param spatial.dat NO DEFAULT. Spatial data list.
-#' @param mask.loc NO DEFAULT. Directory of mask files.
-#' @param masks NO DEFAULT. Vector of mask file names
-#' @param mask.label DEFAULT = "cell_mask"
-#' @param mask.ext DEFAULT  = "_mask.tif" (will also recognise the '.tiff' file type)
+#' @param dat NO DEFAULT. A list of spatial data objects
+#' @param mask.dir NO DEFAULT. Directory of mask files.
+#' @param mask.pattern NO DEFAULT. A character pattern that identifies the mask type (e.g. '_mask')
+#' @param mask.label NO DEFAULT. What do you want to call the mask
 #' @param correct.extent DEFAULT = TRUE
 #' @param flip.y DEFAULT = TRUE
 #' @param value.modifier DEFAULT = 65535
-#' @param array DEFAULT = FALSE
+#' @param HDF5 DEFAULT = FALSE. Can read in HDF5 mask files if desired (advanced use).
+#' @param array DEFAULT = FALSE. If the mask TIFF is an array (advanced use).
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'

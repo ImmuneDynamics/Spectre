@@ -7,7 +7,7 @@
 do.extract(dat, mask, name = "CellData", fun = "mean")
 }
 \arguments{
-\item{dat}{NO DEFAULT. Spatial data list}
+\item{dat}{NO DEFAULT. List of spatial data objects}
 
 \item{mask}{NO DEFAULT. Name of mask to use for cell data extraction}
 

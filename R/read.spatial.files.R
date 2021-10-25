@@ -2,15 +2,13 @@
 #'
 #' @usage read.spatial.files()
 #'
-#' @param rois vector of ROI names (directory names)
-#' @param roi.loc working directory for ROIs
-#' @param multi.tiff Default FALSE. Currently we don't support reading in multipage TIFF files
+#' @param dir Directory location of where the ROI files are located
+#' @param lois Default = NULL. You can provide a list of only some of the ROI folders to read in.
 #' @param correct.extent Correct extent so that the minimum is 0,0. Default TRUE
 #' @param flip.y Flip the data arrangement for the y-axis. Default TRUE
 #' @param value.modifier Data modifier based on image processing. Default 65535
-#' @param ext Default = ".tif" (which will recognise '.tiff' files as well)
 #'
-#' @return Returns a spatial data object.
+#' @return Returns a list of spatial data objects.
 #'
 #' @examples
 #'
@@ -23,7 +21,6 @@ read.spatial.files <- function(dir,
                                correct.extent = TRUE,
                                flip.y = TRUE,
                                value.modifier = 65535
-                               #ext = ".tif"
                                ){
 
   ### Packages

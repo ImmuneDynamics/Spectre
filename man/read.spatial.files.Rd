@@ -7,7 +7,7 @@
 read.spatial.files()
 }
 \arguments{
-\item{rois}{vector of ROI names (directory names)}
+\item{dir}{Directory location of where the ROI files are located}
 
 \item{correct.extent}{Correct extent so that the minimum is 0,0. Default TRUE}
 
@@ -15,14 +15,10 @@ read.spatial.files()
 
 \item{value.modifier}{Data modifier based on image processing. Default 65535}
 
-\item{roi.loc}{working directory for ROIs}
-
-\item{multi.tiff}{Default FALSE. Currently we don't support reading in multipage TIFF files}
-
-\item{ext}{Default = ".tif" (which will recognise '.tiff' files as well)}
+\item{lois}{Default = NULL. You can provide a list of only some of the ROI folders to read in.}
 }
 \value{
-Returns a spatial data object.
+Returns a list of spatial data objects.
 }
 \description{
 Read TIFF files into R and and create spatial data object
