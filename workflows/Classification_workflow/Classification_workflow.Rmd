@@ -1,8 +1,12 @@
 ---
 title: "Automated Cell Classification Workflow"
+author: Givanna Putri
+date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  html_document:
-    df_print: paged
+    html_document:
+      toc: true
+      toc_float: true
+      df_print: paged
 ---
 
 In this workflow, we provide an example on how to use classification to transfer the cell annotation of a dataset to another. 
