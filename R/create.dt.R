@@ -3,10 +3,10 @@
 #' This function converts a Seurat or SingleCellExperiment object into a list
 #' containing a data.table, with vectors of gene and dimensionality reduction
 #'
-#' @param dat NO DEFAULT. A Seurat or SingleCellExperiment object.
+#' @param dat NO DEFAULT. A Seurat or SingleCellExperiment or flowFrame object.
 #' @param from DEFAULT = NULL. By default, the class of object will be detected
 #'   automatically, but this can be overwritten using from. Can be from =
-#'   'Seurat' or 'SingleCellExperiment'.
+#'   'Seurat' or 'SingleCellExperiment' or 'flowFrame'.
 #' 
 #' @return A list containing several elements.
 #' The first element is a data.table which concatenates all components of dat into a single data.table.
@@ -24,8 +24,7 @@
 #'
 #' @export
 
-create.dt <- function(dat,
-                      from = c(NULL, 'Seurat', 'SingleCellExperiment', 'flowFrame'))
+create.dt <- function(dat, from = NULL)
 {
     ######################################################################################################
     ### Setup
@@ -57,29 +56,41 @@ create.dt <- function(dat,
     
     ### Determine class of object
     
+    supported_type <- c("Seurat", "SingleCellExperiment", "flowFrame")
+    error_msg <- paste("Could not determine the object type.", 
+                       "Currently only Seurat objects are supported.", 
+                       "You can also try manually specifying the object type using the 'from' argument.",
+                       "(e.g. from = 'Seurat' or from = 'SingleCellExperiment')")
     
-    object.type <- tryCatch({
-        match.arg(from)
-    },
-    error = function(e) {
-        # Can't infer object type. Just stop and give warning.
-        stop(
-            "Could not determine the object type. Currently only Seurat, SingleCellExperiment, and flowFrame objects are supported. Maybe try manually specifying the object type using the 'from' argument (e.g. from = 'Seurat') if your data is one of the above."
-        )
-        
-    })
-    
-    if (is.null(object.type)) {
-        # Infer the object type automatically
-        if (class(dat)[1] == 'Seurat') {
-            object.type <- "Seurat"
-        } else if (class(dat)[1] == 'SingleCellExperiment') {
-            object.type <- "SingleCellExperiment"
-        } else if (class(dat)[1] == 'flowFrame') {
-            object.type <- "flowFrame"
-        }
+    if (!is.null(from) && !(from %in% supported_type)) {
+        # The object type is not supported then
+        stop(error_msg)
     }
     
+    # Will only get here if the given from is supported
+    if (!is.null(from)) {
+        object.type <- from
+    }
+    else {
+        # Automatically detect
+        message("Inferring dat type")
+        if(class(dat)[1] == 'Seurat'){
+            object.type <- "Seurat"
+        }
+        
+        else if(class(dat)[1] == 'SingleCellExperiment'){
+            object.type <- "SingleCellExperiment"
+        }
+        
+        else if(class(dat)[1] == 'flowFrame'){
+            object.type <- "flowFrame"
+        }
+        
+        else {
+            stop(error_msg)
+        }
+    }
+
     ######################################################################################################
     ### OPTION: Seurat objects
     ######################################################################################################

@@ -6,9 +6,24 @@ library(Spectre)
 library(SeuratData)
 library(Seurat)
 
+library(SingleCellExperiment)
+library(scRNAseq)
+library(Rtsne)
+
+
+test_that("Non supported objects are not converted", {
+    to_convert <- c(1:20)
+    expect_error(create.dt(to_convert, from = 'Vector'))
+    expect_error(create.dt(to_convert))
+})
+
 test_that("Seurat RNA only object is converted", {
-    InstallData("pbmc3k")
-    pbmc <- LoadData("pbmc3k", type = "pbmc3k.final")
+    # Ok suppress warnings is not great, but seurat data need to fix this!
+    suppressWarnings(InstallData("pbmc3k"))
+    pbmc <- suppressWarnings(LoadData("pbmc3k", type = "pbmc3k.final"))
+    
+    # Should succeed
+    expect_error(create.dt(pbmc, from = 'Seurat'), NA)
     
     dat <- create.dt(pbmc)
     
@@ -62,6 +77,75 @@ test_that("Seurat RNA only object is converted", {
         names(obj) <- dat[['data.table']][['cellNames']]
         expect_true(identical(expected, obj))
     }
+})
+
+test_that("SCE object is converted", {
+    sce <- ReprocessedAllenData("tophat_counts")
+    # Quick prep to get counts and dim red.
+    # See https://bioconductor.org/packages/release/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html
+    counts(sce) <- assay(sce, "tophat_counts")
+    assay(sce, "tophat_counts") <- NULL
     
+    libsizes <- colSums(counts(sce))
+    size.factors <- libsizes/mean(libsizes)
+    logcounts(sce) <- log2(t(t(counts(sce))/size.factors) + 1)
+    pca_data <- prcomp(t(logcounts(sce)), rank=50)
+    set.seed(42)
+    tsne_data <- Rtsne(pca_data$x[,1:50], pca = FALSE)
+    reducedDims(sce) <- list(PCA=pca_data$x, TSNE=tsne_data$Y)
+    
+    # Should succeed
+    expect_error(create.dt(sce, from = 'SingleCellExperiment'), NA)
+    
+    dat <- create.dt(sce)
+    
+    # Meant to return a list
+    expect_equal(typeof(dat), "list")
+    
+    # Check number of cells
+    expect_equal(dim(assay(sce))[2], nrow(dat[['data.table']]))
+    
+    # Check all the genes are captured
+    gene_names <- c(paste0(rownames(sce), "_counts"),
+                    paste0(rownames(sce), "_logcounts"))
+    expect_true(all(gene_names %in% colnames(dat[['data.table']])))
+    # There is an element in the list that stores the gene names
+    expect_true(all(rownames(sce) %in% dat[['geneNames']]))
+    
+    # Check all cell barcodes are captured
+    expect_true(all(colnames(sce) %in% dat[['data.table']][['cellNames']]))
+    expect_true(all(colnames(sce) %in% dat[['cellNames']]))
+    
+    # Check metadata
+    expect_true(all(colnames(colData(sce)) %in% dat[['meta.data']]))
+    for (meta_dat in colnames(colData(sce))) {
+        expected <- colData(sce)[[meta_dat]]
+        obj <- dat[['data.table']][[meta_dat]]
+        expect_true(all.equal(obj, expected))
+    }
+    
+    # Check all counts assays are captured
+    expect_true(all(c("_counts", "_logcounts") %in% dat[['assays']]))
+    
+    # Check dimreds
+    expect_true(all(c("PCA_", "TSNE_") %in% dat[['dim.reds']]))
+    
+    # We set up the PCA to have 50 PCs
+    pca_coordinates <- reducedDim(sce, "PCA")
+    for (i in c(1:50)) {
+        expected <- pca_coordinates[,paste0('PC', i) ]
+        obj <- dat[['data.table']][[paste0('PCA_', i)]]
+        names(obj) <- dat[['data.table']][['cellNames']]
+        expect_true(identical(expected, obj))
+    }
+    
+    # By default, the data has 2 TSNE coordinates
+    tsne_coordinates <- reducedDim(sce, "TSNE")
+    for (i in c(1:2)) {
+        expected <- tsne_coordinates[,i ]
+        obj <- dat[['data.table']][[paste0('TSNE_', i)]]
+        names(obj) <- dat[['data.table']][['cellNames']]
+        expect_true(identical(expected, obj))
+    }
     
 })
