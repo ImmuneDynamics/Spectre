@@ -167,22 +167,16 @@ pre code {
 </div>
 
 
-<div id="unit-tests" class="section level1">
-<h1>Unit tests</h1>
-<p>This folder contains all the unit tests for the Spectre package.</p>
+<div id="test-scripts" class="section level1">
+<h1>Test scripts</h1>
+<p>This folder contains all the unit and manual tests for the Spectre package. Unit tests are stored in <code>testthat</code> folder while manual tests are stored in <code>manual_tests</code> folder.</p>
+<p><strong>Please</strong> do not change the <code>testthat</code> folder name as it is crucial for it to be named <code>testthat</code> for <code>devtools</code> to automatically run them.</p>
+<p>Unit tests are well unit tests. These are tests which validation and execution can be automated. Manual tests are the ones which validation must be done manually, e.g. drawing colour plots requires manual inspection to see if certain features work.</p>
 <div id="developer-guidelines" class="section level2">
 <h2>Developer guidelines</h2>
-<p>If you would like to contribute to the package, please make sure that all the existing unit tests are all passing. This is the minimal step to ensure that your changes has not broken existing features. If there are unit tests that are not relevant to your changes, but are failing, please raise an issue or if you are feeling inclined, fix them.</p>
-<p>In addition, if you are fixing a bug or introducing new features, please kindly update or add and run the relevant unit tests. It makes life easier for everyone!</p>
-<p>To avoid cluttering or overcrowding, please maintain (as much as possible) 1 unit test file per function, and name them sensibly.</p>
-</div>
-<div id="how-to-run-all-the-unit-tests" class="section level2">
-<h2>How to run all the unit tests</h2>
-<ol style="list-style-type: decimal">
-<li>Install devtools and testthat.</li>
-<li>Set your working directory to the package’s root directory.</li>
-<li>Run <code>devtools::test()</code>.</li>
-</ol>
+<p>If you would like to contribute to the package, please make sure that at least all the existing unit tests are all passing. This is the minimal step to ensure that your changes has not broken existing features.</p>
+<p>In addition, if you are fixing a bug or introducing new features, please kindly update or add and run the relevant unit or manual tests. It makes life easier for everyone! If you find any broken tests that are not relevant to your changes, either fix it (thank you!) or post an issue so someone can attend to it.</p>
+<p>To avoid cluttering or overcrowding, please name your test file sensibly and provide a short description within the file as to what you are testing.</p>
 </div>
 </div>
 
