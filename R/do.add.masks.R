@@ -9,6 +9,8 @@
 #' @param value.modifier DEFAULT = 65535
 #' @param HDF5 DEFAULT = FALSE. Can read in HDF5 mask files if desired (advanced use).
 #' @param array DEFAULT = FALSE. If the mask TIFF is an array (advanced use).
+#' 
+#' @usage do.add.mask(dat, mask.dir, mask.pattern, mask.label)
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
@@ -16,7 +18,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.add.masks
 
 do.add.masks <- function(dat, # list of spatial objects
                          mask.dir,

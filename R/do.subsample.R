@@ -28,7 +28,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.subsample
 
 do.subsample <- function(dat,
                          targets,

@@ -14,7 +14,7 @@
 #' @examples
 #' cell.dat <- do.merge.files(dat = data.list, remove.duplicates = TRUE)
 #'
-#' @export
+#' @export do.merge.files
 
 do.merge.files <- function(dat, remove.duplicates = TRUE){
   

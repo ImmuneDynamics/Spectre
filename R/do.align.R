@@ -26,7 +26,7 @@
 #' @examples
 #' aligned.dat <- do.align()
 #'
-#' @export
+#' @export do.align
 
 do.align <- function(ref.dat,
                      target.dat,

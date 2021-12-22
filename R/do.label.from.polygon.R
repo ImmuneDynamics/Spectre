@@ -1,8 +1,10 @@
 #' do.label.from.polygon
 #' 
+#' 
+#' @usage do.label.from.polygon(spatial.dat, cell.dat, mask, labels)
 #' @import data.table
 #' 
-#' @export
+#' @export do.label.from.polygon
 
 do.label.from.polygon <- function(spatial.dat,
                                   cell.dat,

@@ -1,70 +1,76 @@
-Package: Spectre
 Type: Package
+Package: Spectre
+Title: High-dimensional cytometry and imaging analysis.
 Version: 1.0.0-0
 Date: 2021-09-03
-Title: High-dimensional cytometry and imaging analysis. 
-Description: A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data. 
 Authors@R: c(
-  person(given = "Thomas", family = "Ashhurst", email = "thomas.ashhurst@sydney.edu.au", role = c("aut", "cre")),
-  person(given = "Felix", family = "Marsh-Wakefield", email = "felix.marsh-wakefield@sydney.edu.au", role = "aut"),
-  person(given = "Givanna", family = "Putri", email = "givanna.putri@sydney.edu.au", role = "aut")
+    person("Thomas", "Ashhurst", , "thomas.ashhurst@sydney.edu.au", role = c("aut", "cre")),
+    person("Felix", "Marsh-Wakefield", , "felix.marsh-wakefield@sydney.edu.au", role = "aut"),
+    person("Givanna", "Putri", , "g.putri@unsw.edu.au", role = c("aut", "cre"))
   )
+Description: A computational toolkit in R for the integration,
+    exploration, and analysis of high-dimensional single-cell cytometry
+    and imaging data.
+License: MIT Licence
 URL: https://github.com/ImmuneDynamics/Spectre
 BugReports: https://github.com/ImmuneDynamics/Spectre/issues
-Maintainer: Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>
-Depends: R (>= 3.6.0)
-License: MIT Licence
+Depends: 
+    R (>= 3.6.0)
+Imports:
+    Biobase,
+    BiocManager,
+    caret,
+    class,
+    colorRamps,
+    data.table,
+    devtools,
+    dplyr,
+    exactextractr,
+    factoextra,
+    flowCore,
+    FlowSOM,
+    flowViz,
+    FNN,
+    ggplot2,
+    ggpointdensity,
+    ggpubr,
+    ggraph,
+    ggthemes,
+    gridExtra,
+    gridExtra,
+    gtools,
+    HDF5Array,
+    irlba,
+    pheatmap,
+    plyr,
+    qs,
+    raster,
+    RColorBrewer,
+    rgdal,
+    rgeos,
+    rhdf5,
+    rstudioapi,
+    rsvd,
+    Rtsne,
+    s2,
+    scales,
+    sf,
+    sp,
+    stars,
+    stringr,
+    tidygraph,
+    tidyr,
+    tidyr,
+    tiff,
+    umap
+Suggests:
+    scRNAseq,
+    Seurat,
+    SeuratData,
+    SingleCellExperiment,
+    testthat
+biocViews: flowCore
 Encoding: UTF-8
 LazyData: true
-biocViews: flowCore
-Imports:
-    flowCore,
-    Biobase,
-    flowViz,
-    FlowSOM,
-    rhdf5,
-    HDF5Array,
-    devtools,
-    BiocManager,
-    plyr,
-    dplyr,
-    data.table,
-    tidyr,
-    rstudioapi,
-    Rtsne,
-    umap,
-    ggplot2,
-    ggthemes,
-    scales,
-    colorRamps,
-    RColorBrewer,
-    gridExtra,
-    pheatmap,
-    ggpubr,
-    class,
-    caret,
-    FNN,
-    ggpointdensity,
-    factoextra,
-    gtools,
-    tidygraph,
-    ggraph,
-    stringr,
-    rsvd,
-    irlba,
-    gridExtra,
-    raster,
-    rgdal,
-    tiff,
-    rgeos,
-    tidyr,
-    sp,
-    sf,
-    stars,
-    qs,
-    s2,
-    exactextractr,
-Suggests:
-    testthat,
-RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2

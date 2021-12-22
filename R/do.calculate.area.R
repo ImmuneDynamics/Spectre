@@ -3,9 +3,11 @@
 #' @param dat NO DEFAULT. Spatial data list
 #' @param region DEFAULT = NULL. Name of the region mask, if present.
 #'
+#'
+#' @usage do.calculate.area(dat)
 #' @import data.table
 #'
-#' @export
+#' @export do.calculate.area
 
 do.calculate.area <- function(dat,
                               region = NULL){

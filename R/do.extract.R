@@ -4,10 +4,12 @@
 #' @param mask NO DEFAULT. Name of mask to use for cell data extraction
 #' @param name DEFAULT = 'CellData'. Name of the extracted cell dataset.
 #' @param fun DEFAULT = 'mean'. Summarisation function.
+#' 
+#' @usage do.extract(dat, mask)
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.extract
 
 do.extract <- function(dat, # spatial.data object
                        mask, # name of the mask being summarised

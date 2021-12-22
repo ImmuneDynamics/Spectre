@@ -26,7 +26,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.add.cols
 
 do.add.cols <- function(dat, # the list of dataframes (samples) where each dataframe will have the columns embedded
                          base.col, # column name in the actual dataset
@@ -199,7 +199,7 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.embed.columns
 
 do.embed.columns <- function(dat, # the list of dataframes (samples) where each dataframe will have the columns embedded
                              base.col, # column name in the actual dataset
@@ -207,10 +207,11 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
                              add.dat,
                              add.by,
                              rmv.ext = FALSE,
-                             mem.ctrl = TRUE)
-{
+                             mem.ctrl = TRUE) {
+    
+    .Deprecated("do.add.cols")
   
-  message("Warning: Please note, the 'do.embed.columns' function has been depreciated. Please use 'do.add.cols' instead")
+  # stop("Warning: Please note, the 'do.embed.columns' function has been depreciated. Please use 'do.add.cols' instead")
   
 #   ## Packages
 #   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')

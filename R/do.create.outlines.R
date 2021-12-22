@@ -4,9 +4,10 @@
 #' @param mask.name NO DEFAULT. Name of the mask to create outlines for
 #' @param method DEFAULT = 'stars'. Can be 'stars' or 'raster'
 #'
+#' @usage do.create.outlines(dat, mask.name)
 #' @import data.table
 #'
-#' @export
+#' @export do.create.outlines
 
 do.create.outlines <- function(dat,
                                mask.name,

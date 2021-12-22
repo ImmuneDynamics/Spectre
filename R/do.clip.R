@@ -13,9 +13,11 @@
 #'
 #' @return A data.table with new columns added, that contain the clipped data.
 #'
+#' @usage do.clip(dat, use.cols)
+#'
 #' @import data.table
 #'
-#' @export
+#' @export do.clip
 
 do.clip <- function(dat,
                     use.cols,

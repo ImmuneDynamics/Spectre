@@ -1,8 +1,12 @@
-#' Statistical analysis
+#' do.stats
+#' 
+#' The function has been depreciated. Please use 'create.stats' instead
+#' 
+#' @usage do.stats(dat, use.cols, sample.col, grp.col, comparisons)
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.stats
 
 do.stats <- function(dat,
                      use.cols,
@@ -14,7 +18,7 @@ do.stats <- function(dat,
                      variance.test = "kruskal.test", ## add ANOVA
                      pairwise.test = "wilcox.text", ## Add t-test
                      corrections = "fdr"){
-  
- message("The 'do.stats' function has been depreciated. Please use 'create.stats' instead")
+    .Deprecated("create.stats")
+    # stop("The 'do.stats' function has been depreciated. Please use 'create.stats' instead")
   
 }

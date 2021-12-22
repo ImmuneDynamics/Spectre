@@ -55,5 +55,5 @@ dat_lgcl = do.logicle(dat, use.cols = use.cols)
 Parks, David R., Mario Roederer, and Wayne A. Moore. "A new “Logicle” display method avoids deceptive effects of logarithmic scaling for low signals and compensated data." Cytometry Part A: The Journal of the International Society for Analytical Cytology 69.6 (2006): 541-551.
 }
 \author{
-Givanna Putri, \email{givanna.haryonoputri@sydney.edu.au}
+Givanna Putri, \email{g.putri@unsw.edu.au}
 }

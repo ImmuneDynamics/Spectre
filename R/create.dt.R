@@ -22,7 +22,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export create.dt
 
 create.dt <- function(dat, from = NULL)
 {

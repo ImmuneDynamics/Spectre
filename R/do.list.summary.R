@@ -12,7 +12,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.list.summary
 
 do.list.summary <- function(dat)
 

@@ -1,8 +1,14 @@
 #' do.extract.cell.dat
 #' 
+#' This is a developmental Spectre-spatial function that is still in testing
+#' phase with limited documentation. We recommend only using this function if
+#' you know what you are doing.
+#' 
+#' @usage do.extract.cell.dat(spatial.dat, target.dat)
+#' 
 #' @import data.table
 #' 
-#' @export
+#' @export do.extract.cell.dat
 
 do.extract.cell.dat <- function(spatial.dat,
                                 target.dat){

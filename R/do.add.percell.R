@@ -3,10 +3,12 @@
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' 
+#' @usage do.add.percell(spatial.dat, percell.dat, roi.col)
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.add.percell
 
 do.add.percell <- function(spatial.dat,
                            percell.dat,

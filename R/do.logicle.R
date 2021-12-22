@@ -43,9 +43,9 @@
 #' dat_lgcl = do.logicle(dat, use.cols = use.cols)
 #' 
 #' @author
-#' Givanna Putri, \email{givanna.haryonoputri@@sydney.edu.au}
+#' Givanna Putri, \email{g.putri@unsw.edu.au}
 #'   
-#' @export
+#' @export do.logicle
 
 do.logicle <- function(dat, 
                        use.cols,

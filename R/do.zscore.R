@@ -15,7 +15,7 @@
 #' 
 #' @import data.table
 #'
-#' @export
+#' @export do.zscore
 
 do.zscore <- function(dat,
                       use.cols,

@@ -1,21 +1,28 @@
-#' do.rescale - Re-scale data in selected columns between two values, usually 0 and 1.
+#' do.rescale 
+#' 
+#' Re-scale data in selected columns between two values, usually 0
+#' and 1.
+#' This function allows you to re-scale the data in selected columns between two
+#' values, usually 0 and 1.
 #'
-#' This function allows you to re-scale the data in selected columns between two values, usually 0 and 1.
-#'
-#' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+#' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions
+#'   and vignettes.
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
 #' @param dat NO DEFAULT. data.table Input sample.
-#' @param use.cols NO DEFAULT. Vector of character column names -- these columns will be normalised and added to the data.table as new columns.
+#' @param use.cols NO DEFAULT. Vector of character column names -- these columns
+#'   will be normalised and added to the data.table as new columns.
 #' @param new.min DEFAULT = 0. The new minimum value.
 #' @param new.max DEFAULT = 1. The new maximum value.
-#' @param append.name DEFAULT = '_rescaled'. Text to be appended to the column names of re-scaled data.
-#' 
+#' @param append.name DEFAULT = '_rescaled'. Text to be appended to the column
+#'   names of re-scaled data.
+#'
 #' @return A data.table with new columns added, that contain the re-scaled data.
 #'
+#' @usage do.rescale(dat, use.cols)
 #' @import data.table
 #'
-#' @export
+#' @export do.rescale
 
 do.rescale <- function(dat,
                        use.cols,
