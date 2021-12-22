@@ -88,5 +88,10 @@ Install a 'container' version of Spectre using Docker, that contains a pre-built
 
 <br/>
 
+## Contributing
+Want to contribute to Spectre? Please read our contributing guidelines [here](CONTRIBUTING.md).
+
+<br />
+
 ## Acknowledgements
 The Spectre package was constructed on the basis of the CAPX workflow in R (https://sydneycytometry.org.au/capx). Along with the various R packages used within Spectre, we would like to acknowledge the Seurat and cytofkit R packages from providing inspiration for elements of the package design.
