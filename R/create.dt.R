@@ -7,6 +7,12 @@
 #' @param from DEFAULT = NULL. By default, the class of object will be detected
 #'   automatically, but this can be overwritten using from. Can be from =
 #'   'Seurat' or 'SingleCellExperiment'.
+#' 
+#' @return A list containing several elements.
+#' The first element is a data.table which concatenates all components of dat into a single data.table.
+#' The remaining elements contain the metadata of the dat such as the gene names,
+#' cell barcodes, top x highly expressed genes, assays, etc.
+#' 
 #'
 #' @usage create.dt(dat, from)
 #'

@@ -64,5 +64,7 @@ Imports:
     qs,
     s2,
     exactextractr,
+Suggests:
+    testthat,
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
