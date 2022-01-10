@@ -14,8 +14,18 @@ It makes life easier for everyone!
 
 To avoid cluttering or overcrowding, please maintain (as much as possible) 1 unit test file per function, and name them sensibly.
 
-## How to run all the unit tests
-
+## Preparation steps
+These need to be done regardless of whether you are running only 1 unit test or all the unit tests:
 1. Install devtools and testthat.
 2. Set your working directory to the package's root directory.
-3. Run `devtools::test()`.
+
+Please do the above steps before proceeding.
+
+## How to run all the unit tests
+
+Run `devtools::test()`.
+
+## How to run just one test file.
+1. Open the test file.
+2. Go to console and run `devtools::test_active_file()`.
+

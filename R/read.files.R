@@ -1,22 +1,31 @@
 #' read.files - Function to read data from CSV or FCS files into a list.
 #'
-#' This function allows you to read in sample files (.csv or .fcs) into a list, where each file is saved as a data.table.
+#' This function allows you to read in sample files (.csv or .fcs) into a list,
+#' where each file is saved as a data.table.
 #'
 #' @usage read.files(file.loc, file.type, do.embed.file.names, header)
 #'
 #' @param file.loc DEFAULT = getwd(). What is the location of your files?
-#' @param file.type DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".
-#' @param nrows DEFAULT = NULL. Can specify a numerical target for the number of cells (rows) to be read from each file. Please note, order is random in FCS files.
-#' @param do.embed.file.names DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?
-#' @param header DEFAULT = TRUE. Does the first line of data contain column names?
+#' @param file.type DEFAULT = ".csv". What type of files do you want to read.
+#'   Can be ".csv" or ".fcs".
+#' @param nrows DEFAULT = NULL. Can specify a numerical target for the number of
+#'   cells (rows) to be read from each file. Please note, order is random in FCS
+#'   files.
+#' @param do.embed.file.names DEFAULT = TRUE. Do you want to embed each row
+#'   (cell) of each file with the name name?
+#' @param header DEFAULT = TRUE. Does the first line of data contain column
+#'   names?
+#' @param truncate_max_range DEFAULT = TRUE. Whether to truncate the extreme
+#'   positive value to the instrument measurement range. Only used when reading
+#'   from FCS files.
 #'
 #' @return Returns a list of data.tables -- one per CSV file.
 #'
-#' @author
-#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au} Felix
+#' Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
-#' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
+#' @references Ashhurst, T. M., et al. (2019).
+#'   \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
 #' @examples
 #' data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
@@ -29,7 +38,8 @@ read.files <- function(file.loc = getwd(),
                        file.type = ".csv",
                        nrows = NULL,
                        do.embed.file.names = TRUE,
-                       header = TRUE)
+                       header = TRUE,
+                       truncate_max_range = TRUE)
 {
 
     ## Check that necessary packages are installed
@@ -75,7 +85,10 @@ read.files <- function(file.loc = getwd(),
             
             if(!is.null(nrows)){ ## If nrows specified
                 message(paste0("Reading ", nrows, " rows (cells) per file"))
-                tempdata <- data.table::fread(file, check.names = FALSE, header = header, nrows = nrows)
+                tempdata <- data.table::fread(file, 
+                                              check.names = FALSE, 
+                                              header = header, 
+                                              nrows = nrows)
             }
 
             file <- gsub(".csv", "", file)
@@ -97,12 +110,17 @@ read.files <- function(file.loc = getwd(),
           for (file in file.names) { # Loop to read files into the list
             
               if(is.null(nrows)){ ## If nrows not specified
-                  x <- flowCore::read.FCS(file, transformation = FALSE)
+                  x <- flowCore::read.FCS(file,
+                                          transformation = FALSE,
+                                          truncate_max_range = truncate_max_range)
               }
               
               if(!is.null(nrows)){ ## If nrows specified
                   message(paste0("Reading ", nrows, " rows (cells) per file"))
-                  x <- flowCore::read.FCS(file, transformation = FALSE, which.lines = nrows)
+                  x <- flowCore::read.FCS(file, 
+                                          transformation = FALSE, 
+                                          which.lines = nrows,
+                                          truncate_max_range = truncate_max_range)
               }
 
             nms <- vector()
