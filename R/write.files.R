@@ -101,35 +101,55 @@ write.files <- function(dat,      # data to save
 
 
         if(write.fcs == TRUE){
-
-          divide.list.fcs <- unique(dat.for.fcs[[divide.by]])
-
-          for(a in c(1:length(divide.list.fcs))){
-            nme <- divide.list[[a]]
-            num <- divide.list.fcs[[a]]
-
-            data_subset_fcs <- dat.for.fcs[dat.for.fcs[[divide.by]] == num,]
-
-            dim(data_subset_fcs)
-
-            ## Check data and data column names
-            head(data_subset_fcs)
-            dimnames(data_subset_fcs)[[2]]
-
-            ## Create FCS file metadata - column names with descriptions
-            metadata <- data.frame(name=dimnames(data_subset_fcs)[[2]], desc=paste('column',dimnames(data_subset_fcs)[[2]],'from dataset'))
-
-            ## Create FCS file metadata - ranges, min, and max settings
-            metadata$range <- apply(apply(data_subset_fcs,2,range),2,diff)
-            metadata$minRange <- apply(data_subset_fcs,2,min)
-            metadata$maxRange <- apply(data_subset_fcs,2,max)
-
-        data_subset.ff <- new("flowFrame", exprs=as.matrix(data_subset_fcs), parameters=Biobase::AnnotatedDataFrame(metadata))
-
-            ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
-            if(isTRUE(exists("file.prefix"))){write.FCS(data_subset.ff,  paste0(file.prefix, "_", divide.by, "_", nme, ".fcs"))}
-            if(isFALSE(exists("file.prefix"))){write.FCS(data_subset.ff,  paste0(divide.by, "_", nme, ".fcs"))}
-          }
+            if(!is.element('flowCore', installed.packages()[, 1]))
+                stop('flowCore is required but not installed')
+            
+            require(flowCore)
+            
+            divide.list.fcs <- unique(dat.for.fcs[[divide.by]])
+            
+            for (a in c(1:length(divide.list.fcs))) {
+                nme <- divide.list[[a]]
+                num <- divide.list.fcs[[a]]
+                
+                data_subset_fcs <-
+                    dat.for.fcs[dat.for.fcs[[divide.by]] == num, ]
+                
+                dim(data_subset_fcs)
+                
+                ## Check data and data column names
+                head(data_subset_fcs)
+                dimnames(data_subset_fcs)[[2]]
+                
+                ## Create FCS file metadata - column names with descriptions
+                metadata <-
+                    data.frame(
+                        name = dimnames(data_subset_fcs)[[2]],
+                        desc = paste('column', dimnames(data_subset_fcs)[[2]], 'from dataset')
+                    )
+                
+                ## Create FCS file metadata - ranges, min, and max settings
+                metadata$range <-
+                    apply(apply(data_subset_fcs, 2, range), 2, diff)
+                metadata$minRange <- apply(data_subset_fcs, 2, min)
+                metadata$maxRange <- apply(data_subset_fcs, 2, max)
+                
+                data_subset.ff <-
+                    new(
+                        "flowFrame",
+                        exprs = as.matrix(data_subset_fcs),
+                        parameters = Biobase::AnnotatedDataFrame(metadata)
+                    )
+                
+                ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
+                if (isTRUE(exists("file.prefix"))) {
+                    write.FCS(data_subset.ff,
+                              paste0(file.prefix, "_", divide.by, "_", nme, ".fcs"))
+                }
+                if (isFALSE(exists("file.prefix"))) {
+                    write.FCS(data_subset.ff,  paste0(divide.by, "_", nme, ".fcs"))
+                }
+            }
         }
       }
 }
