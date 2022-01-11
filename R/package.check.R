@@ -10,10 +10,9 @@
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+#' @seealso See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
-#' @examples
-#' package.check()
+#' @usage package.check()
 #'
 #' @export
 

@@ -4,7 +4,7 @@
 \alias{package.install}
 \title{package.install - a function to install packages required for Spectre.}
 \usage{
-See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+package.install()
 }
 \arguments{
 \item{type}{DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis.}
@@ -24,6 +24,9 @@ package.install(type = 'spatial')
 }
 \references{
 \url{https://sydneycytometry.org.au/spectre}
+}
+\seealso{
+See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

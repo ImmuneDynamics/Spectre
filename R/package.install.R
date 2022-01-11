@@ -11,7 +11,9 @@
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+#' @seealso See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+#'
+#' @usage package.install()
 #'
 #' @examples
 #' package.install()

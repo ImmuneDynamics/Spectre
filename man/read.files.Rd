@@ -9,28 +9,39 @@ read.files(file.loc, file.type, do.embed.file.names, header)
 \arguments{
 \item{file.loc}{DEFAULT = getwd(). What is the location of your files?}
 
-\item{file.type}{DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".}
+\item{file.type}{DEFAULT = ".csv". What type of files do you want to read.
+Can be ".csv" or ".fcs".}
 
-\item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of cells (rows) to be read from each file. Please note, order is random in FCS files.}
+\item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of
+cells (rows) to be read from each file. Please note, order is random in FCS
+files.}
 
-\item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?}
+\item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row
+(cell) of each file with the name name?}
 
-\item{header}{DEFAULT = TRUE. Does the first line of data contain column names?}
+\item{header}{DEFAULT = TRUE. Does the first line of data contain column
+names?}
+
+\item{truncate_max_range}{DEFAULT = TRUE. Whether to truncate the extreme
+positive value to the instrument measurement range. Only used when reading
+from FCS files.}
 }
 \value{
 Returns a list of data.tables -- one per CSV file.
 }
 \description{
-This function allows you to read in sample files (.csv or .fcs) into a list, where each file is saved as a data.table.
+This function allows you to read in sample files (.csv or .fcs) into a list,
+where each file is saved as a data.table.
 }
 \examples{
 data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
 
 }
 \references{
-Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
+Ashhurst, T. M., et al. (2019).
+\url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 }
 \author{
-Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
-Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au} Felix
+Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }
