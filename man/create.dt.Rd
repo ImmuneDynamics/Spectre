@@ -2,7 +2,7 @@
 % Please edit documentation in R/create.dt.R
 \name{create.dt}
 \alias{create.dt}
-\title{create.dt - convert a Seurat or SingleCellExperiment to a data.table}
+\title{Create a data.table}
 \usage{
 create.dt(dat, from)
 }
@@ -20,12 +20,16 @@ The remaining elements contain the metadata of the dat such as the gene names,
 cell barcodes, top x highly expressed genes, assays, etc.
 }
 \description{
-This function converts a Seurat or SingleCellExperiment object into a list
-containing a data.table, with vectors of gene and dimensionality reduction
+Function to convert a Seurat or SingleCellExperiment or flowFrame object into a list
+containing a data.table object storing the data, as well as a bunch of vectors grouping
+the various features (columns) in the data.table, e.g. dim.reds vector will list
+the kind of dimensionality reduction (by PCA or UMAP for instance) that have been applied
+to the data and henceforth the columns in the data.table associated with them.
 }
 \references{
-\url{https://github.com/ImmuneDynamics/Spectre}.
+\url{https://immunedynamics.io/spectre/}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Givanna Putri
 }

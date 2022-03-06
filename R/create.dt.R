@@ -1,7 +1,10 @@
-#' create.dt - convert a Seurat or SingleCellExperiment to a data.table
+#' Create a data.table
 #'
-#' This function converts a Seurat or SingleCellExperiment object into a list
-#' containing a data.table, with vectors of gene and dimensionality reduction
+#' Function to convert a Seurat or SingleCellExperiment or flowFrame object into a list
+#' containing a data.table object storing the data, as well as a bunch of vectors grouping
+#' the various features (columns) in the data.table, e.g. dim.reds vector will list
+#' the kind of dimensionality reduction (by PCA or UMAP for instance) that have been applied
+#' to the data and henceforth the columns in the data.table associated with them.
 #'
 #' @param dat NO DEFAULT. A Seurat or SingleCellExperiment or flowFrame object.
 #' @param from DEFAULT = NULL. By default, the class of object will be detected
@@ -16,9 +19,11 @@
 #'
 #' @usage create.dt(dat, from)
 #'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' @author 
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Givanna Putri
 #'
-#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' @references \url{https://immunedynamics.io/spectre/}.
 #'
 #' @import data.table
 #'
@@ -156,6 +161,7 @@ create.dt <- function(dat, from = NULL)
                 names(x1) <-
                     paste0(names(x1), "_", i, "_", 'counts')
                 res <- cbind(res, x1)
+                rm(x1)
             }
             
             if (ncol(dat@assays[[i]]@data) > 0) {
@@ -170,6 +176,8 @@ create.dt <- function(dat, from = NULL)
                 names(x2) <- geneNames
                 names(x2) <- paste0(names(x2), "_", i, "_", 'data')
                 res <- cbind(res, x2)
+                rm(x2)
+                
             }
             
             if (ncol(dat@assays[[i]]@scale.data) > 0) {
@@ -185,12 +193,10 @@ create.dt <- function(dat, from = NULL)
                 names(x3) <-
                     paste0(names(x3), "_", i, "_", 'scale.data')
                 res <- cbind(res, x3)
+                rm(x3)
             }
             
             rm(i)
-            rm(x1)
-            rm(x2)
-            rm(x3)
         }
         
         ### Add dim reductions
@@ -220,9 +226,15 @@ create.dt <- function(dat, from = NULL)
             final.res$var.features.top10 <- var.features.top10
         }
         
-        final.res$assays <- paste0('_', assays)
-        final.res$slots <- paste0('_', types)
-        final.res$dim.reds <- paste0(dim.reds, '_')
+        if (!is.null(assays)) {
+            final.res$assays <- paste0('_', assays)    
+        }
+        if (!is.null(types)) {
+            final.res$slots <- paste0('_', types)    
+        }
+        if (!is.null(dim.reds)) {
+            final.res$dim.reds <- paste0(dim.reds, '_')
+        }
         
         message(paste0(
             "Converted a ",

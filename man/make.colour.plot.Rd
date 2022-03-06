@@ -19,7 +19,7 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{add.label}{DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".}
 
-\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.}
+\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently only works when specifying col.axis, so does not work with density plots.}
 
 \item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
 
@@ -33,7 +33,11 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{align.col.by}{DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.}
 
+\item{regression.line}{DEFAULT = NULL. Regression line to add to show the trend of the data. This will be passed on to ggplot2::geom_smooth function, and accepts either NULL or a character vector, e.g. "lm", "glm", "gam", "loess" or a function.}
+
 \item{title}{DEFAULT = col.axis. Character. Title for the plot.}
+
+\item{filename}{DEFAULT = NULL. Character. The name of the file to save the plot to.}
 
 \item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
@@ -73,7 +77,7 @@ cell.dat <- as.data.table(cell.dat)
 # Draw plot
 Spectre::make.colour.plot(dat = cell.dat,
                           x.axis = "UMAP_42_X",
-                          y.axis = "UMAP__42Y",
+                          y.axis = "UMAP_42_Y",
                           col.axis = "BV605.Ly6C")
 
 
