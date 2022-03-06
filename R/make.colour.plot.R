@@ -22,7 +22,9 @@
 #' @param col.max.threshold DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.
 #' @param align.xy.by DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.
 #' @param align.col.by DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.
+#' @param regression.line DEFAULT = NULL. Regression line to add to show the trend of the data. This will be passed on to ggplot2::geom_smooth function, and accepts either NULL or a character vector, e.g. "lm", "glm", "gam", "loess" or a function.
 #' @param title DEFAULT = col.axis. Character. Title for the plot.
+#' @param filename DEFAULT = NULL. Character. The name of the file to save the plot to.
 #' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
 #' @param plot.width DEFAULT = 9. Width of the ggplot when saved to disk.
 #' @param plot.height DEFAULT = 7. Height of the ggplot when saved to disk.
@@ -30,13 +32,10 @@
 #' @param nudge_y DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.
 #' @param square DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.
 #' @param legend.loc DEFAULT = 'right'. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.
-#' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
 #' @param save.to.disk DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.
 #' @param path DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.
-#'
-#' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.
-#' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
-#'
+#' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
+
 #' @usage make.colour.plot(dat, x.axis, y.axis, col.axis)
 #'
 #' @examples
@@ -52,7 +51,7 @@
 #' # Draw plot
 #' Spectre::make.colour.plot(dat = cell.dat,
 #'                           x.axis = "UMAP_42_X",
-#'                           y.axis = "UMAP__42Y",
+#'                           y.axis = "UMAP_42_Y",
 #'                           col.axis = "BV605.Ly6C")
 #'
 #'
