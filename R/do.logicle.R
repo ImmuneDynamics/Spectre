@@ -43,7 +43,7 @@
 #' dat_lgcl = do.logicle(dat, use.cols = use.cols)
 #' 
 #' @author
-#' Givanna Putri, \email{g.putri@unsw.edu.au}
+#' Givanna Putri
 #'   
 #' @export do.logicle
 

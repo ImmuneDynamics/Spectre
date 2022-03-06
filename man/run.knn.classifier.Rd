@@ -31,5 +31,5 @@ run.knn.classifier - Run KNN classifier
 \url{https://sydneycytometry.org.au/spectre}.
 }
 \author{
-Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
+Givanna Putri
 }

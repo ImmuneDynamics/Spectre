@@ -35,5 +35,5 @@ Method to draw a network diagram.
 This rely on a clustering performed by ChronoClust.
 }
 \author{
-Givanna Putri, \email{givanna.haryonoputri@sydney.edu.au}
+Givanna Putri
 }

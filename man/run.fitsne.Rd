@@ -123,5 +123,5 @@ dat.reduced <- run.fitsne(dat = dat.sub, use.cols = use.cols)
 
 }
 \author{
-Givanna Putri, \email{givanna.haryonoputri@sydney.edu.au}
+Givanna Putri
 }

@@ -58,7 +58,7 @@
 #'
 #' @author
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#' Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
+#' Givanna Putri
 #'
 #' @import data.table
 #'
