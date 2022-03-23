@@ -177,13 +177,6 @@ make.autograph <- function(dat,
       #   p <- p <- p + ggplot2::geom_line(aes(group=pairing))
       # }
       
-      ## POINTS
-      p <- p + ggplot2::geom_point(ggplot2::aes(fill=as.factor(dat[[colour.by]]),
-                                                colour = as.factor(dat[[colour.by]])),
-                          shape = 21,
-                          stroke = 0,
-                          size = dot.size,
-                          position = ggplot2::position_jitter(width = 0.1, height = 0))
       ## VIOLIN
       if(violin == TRUE){
         message("AutoGraph - adding violin plot")
@@ -193,6 +186,20 @@ make.autograph <- function(dat,
                              show.legend = FALSE,
                              alpha = 0.1)
       }
+      
+      
+      ## POINTS
+      p <- p + ggplot2::geom_point(ggplot2::aes(fill=as.factor(dat[[colour.by]]),
+                                                colour = as.factor(dat[[colour.by]])),
+                          shape = 21,
+                          #stroke = 0,
+                          
+                          colour = 'Black',
+                          stroke = 1, 
+                          alpha = 0.9,
+                          
+                          size = dot.size,
+                          position = ggplot2::position_jitter(width = 0.1, height = 0))
 
 
       ## COLOUR CONTROL

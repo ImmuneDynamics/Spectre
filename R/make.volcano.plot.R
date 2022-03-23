@@ -59,7 +59,7 @@ make.volcano.plot <- function(dat.p,
   x[,2] <- as.numeric(x[,2])
 
   ### Plot
-  v <- EnhancedVolcano(x,
+  v <- EnhancedVolcano::EnhancedVolcano(x,
                        lab = rownames(x),
                        x = 'log2FoldChange',
                        y = 'p-value',

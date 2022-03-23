@@ -20,14 +20,14 @@
     ### Set InputDirectory (ROI TIFFs)
     
     setwd(PrimaryDirectory)
-    setwd("data/ROIs/")
+    setwd("../data/ROIs/")
     InputDirectory <- getwd()
     InputDirectory
     
     ### Set MaskDirectory (ROI mask TIFFs)
     
     setwd(PrimaryDirectory)
-    setwd("data/masks")
+    setwd("../data/masks")
     MaskDirectory <- getwd()
     MaskDirectory
     
@@ -289,7 +289,7 @@
         
         region.annot <- list('Background' = c(65533),
                                 'Red pulp' = c(65534),
-                                'White pup' = c(65535)
+                                'White pulp' = c(65535)
                                 )
         
         region.annot <- do.list.switch(region.annot)

@@ -93,7 +93,9 @@ make.colour.plot <- function(dat,
                              legend.loc = 'right', # 'right' and 'bottom'
                              save.to.disk = TRUE,
                              path = getwd(),
-                             blank.axis = FALSE){
+                             blank.axis = FALSE,
+                             
+                             col.tab = NULL){
 
   ### Check for packages
       if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
@@ -222,7 +224,97 @@ make.colour.plot <- function(dat,
       if(colours == "rocket"){
         colour.scheme <- colorRampPalette(c(viridis_pal(option = "rocket")(50)))
       }
+       
+  
+  
+  
+     
+      #
+      if(colours == "RdYlGn"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdYlGn"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
       
+      #
+      if(colours == "RdYlBu"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdYlBu"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
+      
+      #
+      if(colours == "RdGy"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdGy"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
+      
+      #
+      if(colours == "RdBu"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
+      
+      #
+      if(colours == "PuOr"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "PuOr"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
+      
+      #
+      if(colours == "PRGn"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "PRGn"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
+      
+      #
+      if(colours == "PiYG"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "PiYG"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
+          
+      #
+      if(colours == "BrBg"){
+        colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "PiYG"))(31)) # 256
+        colour.list <- rev(colour.list)
+        colour.scheme <- colorRampPalette(c(colour.list))
+      }
+      
+  
+      if(colours == "Custom"){
+        #
+        if(length(unique(dat[[col.axis]])) >= 7){
+          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred', 'tomato'))(length(unique(dat[[col.axis]])))
+        }
+        
+        if(length(unique(dat[[col.axis]])) == 6){
+          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
+        }
+        
+        if(length(unique(dat[[col.axis]])) == 5){
+          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
+        }
+        
+        if(length(unique(dat[[col.axis]])) == 4){
+          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'darkred'))(length(unique(dat[[col.axis]])))
+        }
+        
+        if(length(unique(dat[[col.axis]])) <= 3){
+          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'darkred'))(length(unique(dat[[col.axis]])))
+        }
+        
+        
+        colour.scheme <- colorRampPalette(c(spectral.list))
+        
+      }
+        
+
+  
       
 
   ### Define limits
@@ -311,6 +403,72 @@ make.colour.plot <- function(dat,
 
             geom_point(size = dot.size) +
             lims(colour = colRange)
+          
+          # #######            #######            #######
+
+                        p <- p + geom_point(size = dot.size)
+                        p <- p + scale_color_manual(values = colour.scheme(length(unique(dat[[col.axis]]))),
+                                                    na.value = "grey50")
+          
+          
+            # #######            #######            #######
+            #                       
+            #             if(is.null(col.tab)){
+            #               # 
+            #               # spectral.list <- colorRampPalette(colors = c('khaki2 ', 'cyan3 ', 'tan4', 'tomato', 'darkred', 'mediumorchid4'))(length(unique(dat[[col.axis]])))
+            #               # #spectral.list <- rev(spectral.list)
+            #               # colour.scheme <- colorRampPalette(c(spectral.list))
+            #               
+            #               
+            #               # spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(8, "Dark2"))
+            #               # colour.scheme <- spectral.list
+            #               
+            #               # spectral.list <- colorRampPalette(c("#FFDB6D", "#C4961A", "#F4EDCA", "#D16103", "#C3D7A4", "#52854C", "#4E84C4", "#293352"))
+            #               # colour.scheme <- spectral.list
+            #               
+            #               if(length(unique(dat[[col.axis]])) >= 7){
+            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred', 'tomato'))(length(unique(dat[[col.axis]])))
+            #               }
+            #               
+            #               if(length(unique(dat[[col.axis]])) == 6){
+            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
+            #               }
+            #               
+            #               if(length(unique(dat[[col.axis]])) == 5){
+            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
+            #               }
+            #               
+            #               if(length(unique(dat[[col.axis]])) == 4){
+            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'darkred'))(length(unique(dat[[col.axis]])))
+            #               }
+            #               
+            #               if(length(unique(dat[[col.axis]])) <= 3){
+            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'darkred'))(length(unique(dat[[col.axis]])))
+            #               }
+            #               
+            #               
+            #               colour.scheme <- colorRampPalette(c(spectral.list))
+            #               
+            #               p <- p + geom_point(size = dot.size)
+            #               p <- p + scale_color_manual(values = colour.scheme(length(unique(dat[[col.axis]]))),
+            #                                           na.value = "grey50")
+            #             }
+            # 
+            #             if(!is.null(col.tab)){
+            #               
+            #               setorder(col.tab)
+            #               spectral.list <- colorRampPalette(col.tab[[2]])
+            #               colour.scheme <- spectral.list
+            #               
+            #               p <- p + geom_point(size = dot.size)
+            #               p <- p + scale_color_manual(values = colour.scheme(length(unique(dat[[col.axis]]))),
+            #                                           na.value = "grey50")
+            #             }
+            # 
+            #             
+            # #######            #######            #######
+          
+          
         }
       }
 
