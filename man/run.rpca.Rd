@@ -4,7 +4,7 @@
 \alias{run.rpca}
 \title{run rpca}
 \usage{
-run.rpca(dat, use.cols, batch.col)
+run.rpca(dat, use.cols, batch.col, reference = NULL, k.anchor = 5)
 }
 \description{
 run rpca

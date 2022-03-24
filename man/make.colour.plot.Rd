@@ -23,7 +23,7 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
 
-\item{colours}{DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu".}
+\item{colours}{DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu". Can also provide a data.table with the first column being the factors, and the second column being the corresponding colour code.}
 
 \item{col.min.threshold}{DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.}
 
