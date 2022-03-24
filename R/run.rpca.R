@@ -1,5 +1,7 @@
 #' run rpca
 #'
+#' @import data.table
+#'
 #' @export
 
 run.rpca <- function(dat,
@@ -67,8 +69,6 @@ run.rpca <- function(dat,
         dat.batch <- dat[dat[[batch.col]] == i,use.cols, with = FALSE]
         
         counts <- as.matrix(dat.batch)
-
-        message(str(counts))
         
         counts <- Matrix::Matrix(counts, sparse = TRUE)
         rownames(counts) <- paste0('Cell-', i, '-', c(1:nrow(counts)))
