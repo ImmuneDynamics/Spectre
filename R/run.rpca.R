@@ -1,6 +1,6 @@
 #' run rpca
 #'
-#' @import data.table
+#' @import data.table Matrix
 #'
 #' @export
 
