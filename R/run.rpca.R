@@ -66,7 +66,7 @@ run.rpca <- function(dat,
         
         rws <- dat[[batch.col]] == i
         
-        dat.batch <- dat[dat[[batch.col]] == i,use.cols, with = FALSE]
+        dat.batch <- dat[rws,use.cols, with = FALSE]
         
         counts <- as.matrix(dat.batch)
         
