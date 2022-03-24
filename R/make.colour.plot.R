@@ -17,7 +17,7 @@
 #' @param add.label DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".
 #' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently only works when specifying col.axis, so does not work with density plots.
 #' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
-#' @param colours DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu".
+#' @param colours DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu". Can also provide a data.table with the first column being the factors, and the second column being the corresponding colour code.
 #' @param col.min.threshold DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.
 #' @param col.max.threshold DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.
 #' @param align.xy.by DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.
@@ -224,10 +224,6 @@ make.colour.plot <- function(dat,
       if(colours == "rocket"){
         colour.scheme <- colorRampPalette(c(viridis_pal(option = "rocket")(50)))
       }
-       
-  
-  
-  
      
       #
       if(colours == "RdYlGn"){
@@ -284,39 +280,11 @@ make.colour.plot <- function(dat,
         colour.list <- rev(colour.list)
         colour.scheme <- colorRampPalette(c(colour.list))
       }
-      
   
-      if(colours == "Custom"){
-        #
-        if(length(unique(dat[[col.axis]])) >= 7){
-          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred', 'tomato'))(length(unique(dat[[col.axis]])))
-        }
-        
-        if(length(unique(dat[[col.axis]])) == 6){
-          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
-        }
-        
-        if(length(unique(dat[[col.axis]])) == 5){
-          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
-        }
-        
-        if(length(unique(dat[[col.axis]])) == 4){
-          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'darkred'))(length(unique(dat[[col.axis]])))
-        }
-        
-        if(length(unique(dat[[col.axis]])) <= 3){
-          spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'darkred'))(length(unique(dat[[col.axis]])))
-        }
-        
-        
-        colour.scheme <- colorRampPalette(c(spectral.list))
-        
-      }
-        
-
+      # if('data.table' %in% class(colours)){
+      #   
+      # }
   
-      
-
   ### Define limits
 
       # X AXIS
@@ -396,79 +364,27 @@ make.colour.plot <- function(dat,
         }
 
         else if(col.type == "factor"){
-          p <- ggplot(data = dat,
-                      aes(x = .data[[x.axis]],
-                          y = .data[[y.axis]],
-                          colour = as.factor(.data[[col.axis]]))) +
-
-            geom_point(size = dot.size) +
-            lims(colour = colRange)
           
-          # #######            #######            #######
-
-                        p <- p + geom_point(size = dot.size)
-                        p <- p + scale_color_manual(values = colour.scheme(length(unique(dat[[col.axis]]))),
-                                                    na.value = "grey50")
-          
-          
-            # #######            #######            #######
-            #                       
-            #             if(is.null(col.tab)){
-            #               # 
-            #               # spectral.list <- colorRampPalette(colors = c('khaki2 ', 'cyan3 ', 'tan4', 'tomato', 'darkred', 'mediumorchid4'))(length(unique(dat[[col.axis]])))
-            #               # #spectral.list <- rev(spectral.list)
-            #               # colour.scheme <- colorRampPalette(c(spectral.list))
-            #               
-            #               
-            #               # spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(8, "Dark2"))
-            #               # colour.scheme <- spectral.list
-            #               
-            #               # spectral.list <- colorRampPalette(c("#FFDB6D", "#C4961A", "#F4EDCA", "#D16103", "#C3D7A4", "#52854C", "#4E84C4", "#293352"))
-            #               # colour.scheme <- spectral.list
-            #               
-            #               if(length(unique(dat[[col.axis]])) >= 7){
-            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred', 'tomato'))(length(unique(dat[[col.axis]])))
-            #               }
-            #               
-            #               if(length(unique(dat[[col.axis]])) == 6){
-            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'skyblue3', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
-            #               }
-            #               
-            #               if(length(unique(dat[[col.axis]])) == 5){
-            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'tan4', 'darkred'))(length(unique(dat[[col.axis]])))
-            #               }
-            #               
-            #               if(length(unique(dat[[col.axis]])) == 4){
-            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'khaki2', 'darkred'))(length(unique(dat[[col.axis]])))
-            #               }
-            #               
-            #               if(length(unique(dat[[col.axis]])) <= 3){
-            #                 spectral.list <- colorRampPalette(colors = c('mediumorchid4', 'cyan3', 'darkred'))(length(unique(dat[[col.axis]])))
-            #               }
-            #               
-            #               
-            #               colour.scheme <- colorRampPalette(c(spectral.list))
-            #               
-            #               p <- p + geom_point(size = dot.size)
-            #               p <- p + scale_color_manual(values = colour.scheme(length(unique(dat[[col.axis]]))),
-            #                                           na.value = "grey50")
-            #             }
+          if('data.table' %in% class(colours)){
+            # p <- ggplot(data = dat,
+            #             aes(x = .data[[x.axis]],
+            #                 y = .data[[y.axis]],
+            #                 colour = as.factor(.data[[col.axis]]))) +
+            #   
+            #   geom_point(size = dot.size) +
+            #   lims(colour = colRange)
             # 
-            #             if(!is.null(col.tab)){
-            #               
-            #               setorder(col.tab)
-            #               spectral.list <- colorRampPalette(col.tab[[2]])
-            #               colour.scheme <- spectral.list
-            #               
-            #               p <- p + geom_point(size = dot.size)
-            #               p <- p + scale_color_manual(values = colour.scheme(length(unique(dat[[col.axis]]))),
-            #                                           na.value = "grey50")
-            #             }
-            # 
-            #             
-            # #######            #######            #######
-          
-          
+            # scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07"))
+            
+          } else {
+            p <- ggplot(data = dat,
+                        aes(x = .data[[x.axis]],
+                            y = .data[[y.axis]],
+                            colour = as.factor(.data[[col.axis]]))) +
+              
+              geom_point(size = dot.size) +
+              lims(colour = colRange)
+          }
         }
       }
 
