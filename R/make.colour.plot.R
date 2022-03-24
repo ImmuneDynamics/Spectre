@@ -366,17 +366,28 @@ make.colour.plot <- function(dat,
         else if(col.type == "factor"){
           
           if('data.table' %in% class(colours)){
-            # p <- ggplot(data = dat,
-            #             aes(x = .data[[x.axis]],
-            #                 y = .data[[y.axis]],
-            #                 colour = as.factor(.data[[col.axis]]))) +
-            #   
-            #   geom_point(size = dot.size) +
-            #   lims(colour = colRange)
+            
+            p <- ggplot(data = dat,
+                        aes(x = .data[[x.axis]],
+                            y = .data[[y.axis]],
+                            colour = as.factor(.data[[col.axis]]))) +
+                            geom_point(size = dot.size) +
+                            lims(colour = colRange)
+
+            # colours <- c('Microglia' = "#333BFF", 'NK cells' = "#CC6600", 'Neutrophils' ="#9633FF", 'CD4 T cells' = "#E2FF33", 'Infil Macrophages' = "#E3DB71", 'CD8 T cells' = "#E2FF33")
+            # colours
             # 
-            # scale_color_manual(values = c("#00AFBB", "#E7B800", "#FC4E07"))
+            # colours <- data.table('A' = c('Microglia', 'NK cells', 'Neutrophils', 'CD4 T cells', 'Infil Macrophages', 'CD8 T cells'),
+            #                            'B' = c('#333BFF', '#CC6600', '#9633FF', '#E2FF33', '#E3DB71', '#E2FF33'))
+            # colours
+            
+            col.vc <- setNames(as.character(colours[[1]]), colours[[2]])
+            col.vc
+            
+            p <- p + scale_colour_manual(values=group.colors)
             
           } else {
+            
             p <- ggplot(data = dat,
                         aes(x = .data[[x.axis]],
                             y = .data[[y.axis]],
