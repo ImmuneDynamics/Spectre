@@ -64,7 +64,7 @@ run.rpca <- function(dat,
         
         rws <- dat[[batch.col]] == i
         
-        dat.batch <- dat[dat[[batch.col]] == i,..use.cols]
+        dat.batch <- dat[dat[[batch.col]] == i,use.cols, with = FALSE]
         
         message(paste0('    ...    counts'))
         
