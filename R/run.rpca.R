@@ -43,12 +43,10 @@ run.rpca <- function(dat,
       #   stop("'dat' must be a 'spectre' object")
       # }
   
-  ### Split data by batch/dataset and create Seurat objects
+  ### Setup
       
       message('Running rPCA')
       message(' -- setting up data')
-      
-      dat$CELLBARCODE <- c(1:nrow(dat))
       
       batches <- unique(dat[[batch.col]])
       batches
@@ -56,17 +54,34 @@ run.rpca <- function(dat,
       org.list <- list()
       res.list <- list()
       
+  ### Adjust names and subset
+      
+      clnm <- c(1:length(use.cols))
+      clnm <- paste0('Col', sprintf("%05d",clnm))
+      
+      x <- dat[,use.cols, with = FALSE]
+      names(x) <- clnm
+      x <- cbind(x, dat[,..batch.col])
+      x$CELLBARCODE <- c(1:nrow(x))
+      
+      start.cols <- use.cols
+      use.cols <- clnm
+      
+      gc()
+      
+  ### Split data by batch/dataset and create Seurat objects
+      
       for(i in batches){
         # i <- batches[[1]]
         
         message(paste0('    ...', i))
         
-        rw.org <- dat[dat[[batch.col]] == i, 'CELLBARCODE', with = FALSE]
+        rw.org <- x[x[[batch.col]] == i, 'CELLBARCODE', with = FALSE]
         org.list[[i]] <- rw.org
         
-        rws <- dat[[batch.col]] == i
+        rws <- x[[batch.col]] == i
         
-        dat.batch <- dat[rws,use.cols, with = FALSE]
+        dat.batch <- x[rws,use.cols, with = FALSE]
         
         counts <- as.matrix(dat.batch)
         
@@ -79,9 +94,12 @@ run.rpca <- function(dat,
         res.list[[i]] <- srt
       }
       
-      org.list
-      res.list
-  
+      rm(x)
+      gc()
+      
+      use.cols
+      new.names <- rownames(res.list$A@assays$cyto@counts)
+      
   ### Select integration features, scale data, and run PCA
       
       message(' -- performing scaling and PCA')
@@ -125,6 +143,9 @@ run.rpca <- function(dat,
         immune.anchors
       }
       
+      rm(res.list)
+      gc()
+      
   ### Integrate the data
       
       message(' -- integrating data')
@@ -137,13 +158,21 @@ run.rpca <- function(dat,
       message(' -- constructing final data')
       
       ordr <- rbindlist(org.list)
+      rm(org.list)
       
       final <- as.data.table(t(immune.combined@assays$integrated@data))
+      rm(immune.combined)
+      gc()
+      
       final$CELLBARCODE <- ordr
       
       setorderv(final, 'CELLBARCODE')
       final[['CELLBARCODE']] <- NULL
       
+  ### Correct names
+      
+      final <- final[,sort(names(final)), with = FALSE]
+      names(final) <- start.cols
       names(final) <- paste0(names(final), '_rPCA_aligned')
       
       dat <- cbind(dat, final)
