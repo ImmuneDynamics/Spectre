@@ -4,8 +4,7 @@
 
 run.rpca <- function(dat,
                      use.cols,
-                     #type, # data.table from the 'data' slot -- 'asinh'
-                     batch.col, # Column from the 'meta' table -- Batch,
+                     batch.col,
                      reference = NULL,
                      k.anchor = 5
 ){
@@ -66,6 +65,8 @@ run.rpca <- function(dat,
         rws <- dat[[batch.col]] == i
         
         dat.batch <- dat[dat[[batch.col]] == i,..use.cols]
+        
+        message(paste0('    ...    counts'))
         
         counts <- as.matrix(dat.batch)
         counts <- Matrix::Matrix(counts, sparse = TRUE)
@@ -149,7 +150,6 @@ run.rpca <- function(dat,
   ### Return
   
       return(dat)
-  
 }
 
 
