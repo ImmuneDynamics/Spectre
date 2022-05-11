@@ -11,7 +11,7 @@
 #' @source Thomas M Ashhurst.
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
-#' 
+#'
 #' @examples
 #' demo.exp
 #'

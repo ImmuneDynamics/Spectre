@@ -35,62 +35,63 @@
 #' # Run tSNE on a subset of the  demonstration dataset
 #'
 #' cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
-#' cell.dat <- Spectre::run.tsne(dat = cell.dat,
-#'                               use.cols = names(demo.asinh)[c(2:10)])
+#' cell.dat <- Spectre::run.tsne(
+#'   dat = cell.dat,
+#'   use.cols = names(demo.asinh)[c(2:10)]
+#' )
 #'
 #' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
 run.tsne <- function(dat,
-                 use.cols,
-                 tsne.x.name = "tSNE_X",
-                 tsne.y.name = "tSNE_Y",
-                 tsne.seed = 42,
-                 dims = 2,
-                 initial_dims = 50,
-                 perplexity = 30,
-                 theta = 0.5,
-                 check_duplicates = FALSE,
-                 pca = TRUE,
-                 max_iter = 1000,
-                 verbose = TRUE,
-                 is_distance = FALSE,
-                 Y_init = NULL,
-                 stop_lying_iter = 250,
-                 mom_switch_iter = 250,
-                 momentum = 0.5,
-                 final_momentum = 0.8,
-                 eta = 200,
-                 exaggeration_factor = 12.0
-                 ){
+                     use.cols,
+                     tsne.x.name = "tSNE_X",
+                     tsne.y.name = "tSNE_Y",
+                     tsne.seed = 42,
+                     dims = 2,
+                     initial_dims = 50,
+                     perplexity = 30,
+                     theta = 0.5,
+                     check_duplicates = FALSE,
+                     pca = TRUE,
+                     max_iter = 1000,
+                     verbose = TRUE,
+                     is_distance = FALSE,
+                     Y_init = NULL,
+                     stop_lying_iter = 250,
+                     mom_switch_iter = 250,
+                     momentum = 0.5,
+                     final_momentum = 0.8,
+                     eta = 200,
+                     exaggeration_factor = 12.0) {
 
   ## Check that necessary packages are installed
-  if(!is.element('Rtsne', installed.packages()[,1])) stop('Rtsne is required but not installed')
+  if (!is.element("Rtsne", installed.packages()[, 1])) stop("Rtsne is required but not installed")
 
   ## Require packages
   require(Rtsne)
-  
+
   ## Set the seed
   set.seed(tsne.seed)
 
   ## Run tSNE
   tsne_out <- Rtsne::Rtsne(as.matrix(dat[, use.cols, with = FALSE]),
-        dims = dims,
-        initial_dims = initial_dims,
-        perplexity = perplexity,
-        theta = theta,
-        check_duplicates = check_duplicates,
-        pca = pca,
-        max_iter = max_iter,
-        verbose = verbose,
-        is_distance = is_distance,
-        Y_init = Y_init,
-        stop_lying_iter = stop_lying_iter,
-        mom_switch_iter = mom_switch_iter,
-        momentum = momentum,
-        final_momentum = final_momentum,
-        eta = eta,
-        exaggeration_factor = exaggeration_factor
+    dims = dims,
+    initial_dims = initial_dims,
+    perplexity = perplexity,
+    theta = theta,
+    check_duplicates = check_duplicates,
+    pca = pca,
+    max_iter = max_iter,
+    verbose = verbose,
+    is_distance = is_distance,
+    Y_init = Y_init,
+    stop_lying_iter = stop_lying_iter,
+    mom_switch_iter = mom_switch_iter,
+    momentum = momentum,
+    final_momentum = final_momentum,
+    eta = eta,
+    exaggeration_factor = exaggeration_factor
   )
 
   tsne_out_Y <- tsne_out$Y

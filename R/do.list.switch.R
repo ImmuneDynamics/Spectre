@@ -11,7 +11,7 @@
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
 #' @examples
-#' lst <- list("A" = c(1,2,3), "B" = c(4,5,6), "C" = c(7,8,9))
+#' lst <- list("A" = c(1, 2, 3), "B" = c(4, 5, 6), "C" = c(7, 8, 9))
 #' lst
 #'
 #' res <- do.list.switch(lst)
@@ -21,17 +21,18 @@
 #'
 #' @export do.list.switch
 
-do.list.switch <- function(dat){
-
+do.list.switch <- function(dat) {
   res.list <- list()
 
-  for(i in c(1:length(dat))){
+  for (i in c(1:length(dat))) {
     # i <- 1
     a <- names(dat)[[i]]
 
     temp <- dat[[a]]
-    temp.dt <- data.table('Values' = temp,
-                          'New' = rep(a, length(temp)))
+    temp.dt <- data.table(
+      "Values" = temp,
+      "New" = rep(a, length(temp))
+    )
 
     res.list[[i]] <- temp.dt
   }

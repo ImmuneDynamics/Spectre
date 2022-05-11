@@ -39,136 +39,141 @@ read.files <- function(file.loc = getwd(),
                        nrows = NULL,
                        do.embed.file.names = TRUE,
                        header = TRUE,
-                       truncate_max_range = TRUE)
-{
+                       truncate_max_range = TRUE) {
 
-    ## Check that necessary packages are installed
-        if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
-        if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+  ## Check that necessary packages are installed
+  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
+  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
 
-    ## Require packages
-        require(data.table)
+  ## Require packages
+  require(data.table)
 
-    ## Initial warnings
-        orig_wd <- getwd()
-        
-        if (!dir.exists(paste(orig_wd, file.loc, sep='/')) &
-            !dir.exists(file.loc)) {
-            warning("We were not able to find the directory specified by file.loc. Are you sure that location exists?")
+  ## Initial warnings
+  orig_wd <- getwd()
+
+  if (!dir.exists(paste(orig_wd, file.loc, sep = "/")) &
+    !dir.exists(file.loc)) {
+    warning("We were not able to find the directory specified by file.loc. Are you sure that location exists?")
+  }
+
+  setwd(file.loc)
+  wd <- getwd()
+
+  if (length(list.files(path = wd, pattern = file.type)) == 0) {
+    warning("We did not find any files in that directory, are you sure this is the right place?")
+  }
+
+  ## Read data from Files into list of data frames
+
+  data.list <- list() # Creates and empty list to start
+
+  ncol.check <- list() # creates an empty list
+  colName.check <- list()
+  nrow.check <- list()
+
+  ## For reading CSV files
+
+  if (file.type == ".csv") {
+    file.names <- list.files(path = wd, pattern = file.type)
+
+    for (file in file.names) { # Loop to read files into the list
+
+      if (is.null(nrows)) { ## If nrows not specified
+        tempdata <- data.table::fread(file, check.names = FALSE, header = header)
+      }
+
+      if (!is.null(nrows)) { ## If nrows specified
+        message(paste0("Reading ", nrows, " rows (cells) per file"))
+        tempdata <- data.table::fread(file,
+          check.names = FALSE,
+          header = header,
+          nrows = nrows
+        )
+      }
+
+      file <- gsub(".csv", "", file)
+      data.list[[file]] <- tempdata
+    }
+
+    rm(tempdata)
+    msg <- "CSV files have been imported into a list"
+  }
+
+  ## For reading FCS files
+
+  if (file.type == ".fcs") {
+    if (!is.element("flowCore", installed.packages()[, 1])) stop("flowCore is required but not installed")
+    require(flowCore)
+
+    file.names <- list.files(path = wd, pattern = file.type)
+
+    for (file in file.names) { # Loop to read files into the list
+
+      if (is.null(nrows)) { ## If nrows not specified
+        x <- flowCore::read.FCS(file,
+          transformation = FALSE,
+          truncate_max_range = truncate_max_range
+        )
+      }
+
+      if (!is.null(nrows)) { ## If nrows specified
+        message(paste0("Reading ", nrows, " rows (cells) per file"))
+        x <- flowCore::read.FCS(file,
+          transformation = FALSE,
+          which.lines = nrows,
+          truncate_max_range = truncate_max_range
+        )
+      }
+
+      nms <- vector()
+      for (o in c(1:nrow(x@parameters@data))) {
+        pr <- x@parameters@data$name[[o]]
+        st <- x@parameters@data$desc[[o]]
+
+        if (!is.na(st)) {
+          nms <- c(nms, paste0(pr, "_", st))
+        } else {
+          nms <- c(nms, pr)
         }
-        
-        setwd(file.loc)
-        wd <- getwd()
+      }
 
-        if(length(list.files(path=wd, pattern = file.type)) == 0){
-          warning("We did not find any files in that directory, are you sure this is the right place?")
-        }
+      tempdata <- exprs(x)
+      tempdata <- tempdata[1:nrow(tempdata), 1:ncol(tempdata)]
+      tempdata <- as.data.table(tempdata)
+      names(tempdata) <- nms
 
-    ## Read data from Files into list of data frames
-        
-        data.list=list() # Creates and empty list to start
+      file <- gsub(".fcs", "", file)
+      data.list[[file]] <- tempdata
+      # data.list[[file]] <- as.data.frame(data.list[[file]])
+    }
 
-        ncol.check = list() # creates an empty list
-        colName.check = list()
-        nrow.check = list()
+    rm(tempdata)
+    msg <- "FCS files have been imported into a list"
+  }
 
-    ## For reading CSV files
-        
-        if(file.type == ".csv"){
-          file.names <- list.files(path=wd, pattern = file.type)
+  ## For embedding file names
 
-          for (file in file.names) { # Loop to read files into the list
-                  
-            if(is.null(nrows)){ ## If nrows not specified
-                tempdata <- data.table::fread(file, check.names = FALSE, header = header)
-            }
-            
-            if(!is.null(nrows)){ ## If nrows specified
-                message(paste0("Reading ", nrows, " rows (cells) per file"))
-                tempdata <- data.table::fread(file, 
-                                              check.names = FALSE, 
-                                              header = header, 
-                                              nrows = nrows)
-            }
+  if (do.embed.file.names == TRUE) {
 
-            file <- gsub(".csv", "", file)
-            data.list[[file]] <- tempdata
-          }
+    ## Create a list of 'SampleName' and SampleNo' entries -- 1:n of samples, these will be matched in order
+    all.file.names <- c(names(data.list))
+    all.file.names # Character (words)
 
-          rm(tempdata)
-          msg <- "CSV files have been imported into a list"
-        }
+    all.file.nums <- c(1:(length(data.list))) ### <-- changed to 4+ to match with sample
+    all.file.nums # Intiger/numeric (numbers)
 
-    ## For reading FCS files
-        
-        if(file.type == ".fcs"){
-          if(!is.element('flowCore', installed.packages()[,1])) stop('flowCore is required but not installed')
-          require(flowCore)
+    ## Add 'SampleNo' and SampleName' to each
+    for (a in all.file.names) {
+      data.list[[a]]$FileName <- a
+    } # Inserting names doesn't stop the rest working, just messes with some auto visual stuff
+    for (i in all.file.nums) {
+      data.list[[i]]$FileNo <- i
+    }
+  }
 
-          file.names <- list.files(path=wd, pattern = file.type)
+  ## Return result and result message
+  setwd(orig_wd)
 
-          for (file in file.names) { # Loop to read files into the list
-            
-              if(is.null(nrows)){ ## If nrows not specified
-                  x <- flowCore::read.FCS(file,
-                                          transformation = FALSE,
-                                          truncate_max_range = truncate_max_range)
-              }
-              
-              if(!is.null(nrows)){ ## If nrows specified
-                  message(paste0("Reading ", nrows, " rows (cells) per file"))
-                  x <- flowCore::read.FCS(file, 
-                                          transformation = FALSE, 
-                                          which.lines = nrows,
-                                          truncate_max_range = truncate_max_range)
-              }
-
-            nms <- vector()
-            for(o in c(1:nrow(x@parameters@data))){
-                pr <- x@parameters@data$name[[o]]
-                st <- x@parameters@data$desc[[o]]
-                
-                if(!is.na(st)){
-                    nms <- c(nms, paste0(pr, "_", st))
-                } else {
-                    nms <- c(nms, pr)
-                }
-            }
-
-            tempdata <- exprs(x)
-            tempdata <- tempdata[1:nrow(tempdata),1:ncol(tempdata)]
-            tempdata <- as.data.table(tempdata)
-            names(tempdata) <- nms
-            
-            file <- gsub(".fcs", "", file)
-            data.list[[file]] <- tempdata
-            #data.list[[file]] <- as.data.frame(data.list[[file]])
-          }
-
-          rm(tempdata)
-          msg <- "FCS files have been imported into a list"
-        }
-
-    ## For embedding file names
-
-        if(do.embed.file.names == TRUE){
-
-          ## Create a list of 'SampleName' and SampleNo' entries -- 1:n of samples, these will be matched in order
-          all.file.names <- c(names(data.list))
-          all.file.names # Character (words)
-
-          all.file.nums <- c(1:(length(data.list)))       ### <-- changed to 4+ to match with sample
-          all.file.nums # Intiger/numeric (numbers)
-
-          ## Add 'SampleNo' and SampleName' to each
-          for (a in all.file.names) {data.list[[a]]$FileName <- a} # Inserting names doesn't stop the rest working, just messes with some auto visual stuff
-          for (i in all.file.nums) {data.list[[i]]$FileNo <- i}
-
-        }
-
-    ## Return result and result message
-        setwd(orig_wd)
-        
-        return(data.list)
-        message(msg)
+  return(data.list)
+  message(msg)
 }

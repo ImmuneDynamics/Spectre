@@ -1,5 +1,5 @@
 #' Run the PCA algorithm (using stats::prcomp)
-#' 
+#'
 #' Method to run a PCA dimensionality reduction algorithm.
 #' A principal component analysis (PCA) is capable of reducing the number of dimensions (i.e. parameters) with minimal effect on the variation of the given dataset.
 #' This function will run a PCA calculation (extremely fast) and generate plots (takes time).
@@ -37,50 +37,53 @@
 #' @param repel DEFAULT = FALSE. Option to avoid overlapping text in PCA plots. Can greatly increase plot time if there is a large number of samples.
 #' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
-#' 
+#'
 #' @usage run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, comp.no = 2, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
 #' setwd("/Users/felixmarsh-wakefield/Desktop")
-#' 
+#'
 #' # Run PCA on demonstration dataset, adding PC to dataset
 #' dat <- Spectre::demo.clustered
-#' dat <- test.pca(dat = dat,
-#'                         use.cols = c(11:19),
-#'                         add.pca.col = TRUE,
-#'                         pca.lite = TRUE
-#'                         )
-#'                         
+#' dat <- test.pca(
+#'   dat = dat,
+#'   use.cols = c(11:19),
+#'   add.pca.col = TRUE,
+#'   pca.lite = TRUE
+#' )
+#'
 #' # Run PCA on demonstration dataset
-#' Spectre::run.pca(dat = Spectre::demo.clustered,
-#'                 use.cols = c(11:19),
-#'                 repel = TRUE
-#'                 )
-#' 
+#' Spectre::run.pca(
+#'   dat = Spectre::demo.clustered,
+#'   use.cols = c(11:19),
+#'   repel = TRUE
+#' )
+#'
 #' # Compare between groups
-#' Spectre::run.pca(dat = Spectre::demo.clustered,
-#'                  use.cols = c(11:19),
-#'                  comp.no = NULL,
-#'                  plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
-#'                  plot.ind.group = TRUE,
-#'                  group.ind = "Group",
-#'                  mean.point = FALSE,
-#'                  randomise.order = TRUE
-#'                  )
-#'         
+#' Spectre::run.pca(
+#'   dat = Spectre::demo.clustered,
+#'   use.cols = c(11:19),
+#'   comp.no = NULL,
+#'   plot.ind.label = c("point", "text"), # individual cells will be labelled as numbers
+#'   plot.ind.group = TRUE,
+#'   group.ind = "Group",
+#'   mean.point = FALSE,
+#'   randomise.order = TRUE
+#' )
+#'
 #' # When prompted, type in "5" and click enter to continue function (this selects the elbow point based off the scree plot)
-#' 
+#'
 #' ## Possible issues ##
 #' # Remove any NA present
 #' na.omit(dat)
-#' 
+#'
 #' # Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
 #' dat <- data.table::as.data.table(dat)
-#' dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
-#' 
+#' dat <- dat[, lapply(.SD, function(v) if (data.table::uniqueN(v, na.rm = TRUE) > 1) v)] # for data table format
+#'
 #' # Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
-#' 
+#'
 #' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
 
@@ -107,22 +110,21 @@ run.pca <- function(dat,
                     randomise.order = TRUE,
                     order.seed = 42,
                     plot.variables = TRUE,
-                    colour.var  = "solid",
+                    colour.var = "solid",
                     plot.combined = TRUE,
                     repel = FALSE,
                     var.numb = 20,
-                    path = getwd()
-                    ) {
+                    path = getwd()) {
 
   ## Check that necessary packages are installed
-  if(!is.element('stats', installed.packages()[,1])) stop('stats is required but not installed')
-  if(!is.element('factoextra', installed.packages()[,1])) stop('factoextra is required but not installed')
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
-  if(!is.element('gtools', installed.packages()[,1])) stop('gtools is required but not installed')
-  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('viridis', installed.packages()[,1])) stop('viridis is required but not installed')
-  
+  if (!is.element("stats", installed.packages()[, 1])) stop("stats is required but not installed")
+  if (!is.element("factoextra", installed.packages()[, 1])) stop("factoextra is required but not installed")
+  if (!is.element("ggplot2", installed.packages()[, 1])) stop("ggplot2 is required but not installed")
+  if (!is.element("gtools", installed.packages()[, 1])) stop("gtools is required but not installed")
+  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
+  if (!is.element("RColorBrewer", installed.packages()[, 1])) stop("RColorBrewer is required but not installed")
+  if (!is.element("viridis", installed.packages()[, 1])) stop("viridis is required but not installed")
+
   ## Require packages
   require(stats)
   require(factoextra)
@@ -131,257 +133,262 @@ run.pca <- function(dat,
   require(data.table)
   require(RColorBrewer)
   require(viridis)
-  
+
   # Make sure dat is a dataframe
   dat <- as.data.frame(dat)
-  
+
   # Change rownames of dat
   if (is.null(row.names) == FALSE) {
     rownames(dat) <- dat[, row.names]
   }
-  
+
   ## Run PCA
   pca_out <- stats::prcomp(dat[, use.cols],
-                           scale = scale
-                           )
-  
+    scale = scale
+  )
+
   # Add PCA coordinates to input data
-  if(add.pca.col == TRUE) {
+  if (add.pca.col == TRUE) {
     # Extract coordinates of individuals
     pca_out_ind <- factoextra::get_pca_ind(pca_out)
-    pca_ind_coord <- data.table::as.data.table(pca_out_ind$coord) #coordinates of each point for PCA plot
-    
+    pca_ind_coord <- data.table::as.data.table(pca_out_ind$coord) # coordinates of each point for PCA plot
+
     # Select number of columns to add to input data
-    if(ncol(pca_ind_coord) > pca.col.no){
-      pca_ind_coord <- pca_ind_coord[,1:pca.col.no]
+    if (ncol(pca_ind_coord) > pca.col.no) {
+      pca_ind_coord <- pca_ind_coord[, 1:pca.col.no]
     }
-    
+
     dat.merge.ind <- cbind(dat, pca_ind_coord)
     return(dat.merge.ind)
   }
-  
+
   # Stop the function!
-  if(pca.lite == TRUE) {
+  if (pca.lite == TRUE) {
     stop("PCA complete! PC coordinates have been added to input data if add.pca.col = TRUE. See you Space Cowboy...")
   }
-  
+
   # Create scree plot (forced if comp.no == NULL)
   if (scree.plot == TRUE || is.null(comp.no)) {
-    scree_plot <- factoextra::fviz_eig(pca_out, addlabels = TRUE) #creates scree plot; addlabels adds % to plot
-    
+    scree_plot <- factoextra::fviz_eig(pca_out, addlabels = TRUE) # creates scree plot; addlabels adds % to plot
+
     elbow.point <- comp.no
-    
+
     if (is.null(comp.no)) {
       print(scree_plot)
-      
+
       elbow.point <- readline("Type in the elbow point based on the scree plot. Must be positive integer. ")
       elbow.point <- as.numeric(elbow.point)
-      }
-    
+    }
+
     # Saves scree plot
     ggplot2::ggsave(scree_plot,
-           filename = "Scree plot.pdf",
-           path = path,
-           useDingbats = FALSE)
-    
+      filename = "Scree plot.pdf",
+      path = path,
+      useDingbats = FALSE
+    )
+
     if (variable.contribution == TRUE) {
       # Creates plot with contributions of each variable
-      pca.contrib <- factoextra::fviz_contrib(pca_out, #red dashed line represents the expected average row contributions if the contributions were uniform: 1/nrow(markers)
-                                  choice = "var", #variable ("var") or individual ("ind")
-                                  axes = 1:elbow.point, #axes refer to PCA number
-                                  top = var.numb #top number of variables to be plotted
-                                  )
-      
+      pca.contrib <- factoextra::fviz_contrib(pca_out, # red dashed line represents the expected average row contributions if the contributions were uniform: 1/nrow(markers)
+        choice = "var", # variable ("var") or individual ("ind")
+        axes = 1:elbow.point, # axes refer to PCA number
+        top = var.numb # top number of variables to be plotted
+      )
+
       ggplot2::ggsave(pca.contrib,
-             filename = "PCA plot-contribution.pdf",
-             width = 16,
-             height = 5,
-             path = path,
-             useDingbats = FALSE)
-      
+        filename = "PCA plot-contribution.pdf",
+        width = 16,
+        height = 5,
+        path = path,
+        useDingbats = FALSE
+      )
+
       # Extract contribution of variables
       pca_out_var <- factoextra::get_pca_var(pca_out)
-      pca_var_contrib <- as.data.frame(pca_out_var$contrib) #coordinates of each point for PCA plot
+      pca_var_contrib <- as.data.frame(pca_out_var$contrib) # coordinates of each point for PCA plot
 
       data.table::fwrite(pca_var_contrib,
-                         "PCA-contributions.csv",
-                         row.names = TRUE)
-      
+        "PCA-contributions.csv",
+        row.names = TRUE
+      )
+
       # Extract raw eigenvalues
       pca_eig <- factoextra::get_eig(pca_out)
-      
+
       data.table::fwrite(pca_eig,
-                         "PCA-eigenvalues.csv",
-                         row.names = TRUE)
-      
+        "PCA-eigenvalues.csv",
+        row.names = TRUE
+      )
+
       # Extract corrected contributions
       pca_eig_contrib <- facto_summarize(pca_out,
-                                         element = "var",
-                                         result = "contrib",
-                                         axes = 1:elbow.point
-                                         )
-      
+        element = "var",
+        result = "contrib",
+        axes = 1:elbow.point
+      )
+
       data.table::fwrite(pca_eig_contrib,
-                         paste0("PCA-eig-contrib_", elbow.point, "-dim.csv"),
-                         row.names = TRUE)
-      
+        paste0("PCA-eig-contrib_", elbow.point, "-dim.csv"),
+        row.names = TRUE
+      )
     }
-    
   }
-  
+
   # Create PCA plot with individuals
   if (plot.individuals == TRUE) {
     pca_plot_ind <- factoextra::fviz_pca_ind(pca_out,
-                                             repel = repel,
-                                             geom = plot.ind.label,
-                                             pointsize = pointsize.ind
-                                             )
-    
+      repel = repel,
+      geom = plot.ind.label,
+      pointsize = pointsize.ind
+    )
+
     ggplot2::ggsave(pca_plot_ind,
-                    filename = "PCA plot-individuals.pdf",
-                    path = path,
-                    useDingbats = FALSE)
-    
+      filename = "PCA plot-individuals.pdf",
+      path = path,
+      useDingbats = FALSE
+    )
+
     # Extract coordinates of individuals
     pca_out_ind <- factoextra::get_pca_ind(pca_out)
-    pca_ind_coord <- data.table::as.data.table(pca_out_ind$coord) #coordinates of each point for PCA plot
-    
+    pca_ind_coord <- data.table::as.data.table(pca_out_ind$coord) # coordinates of each point for PCA plot
+
     dat.merge.ind <- cbind(dat, pca_ind_coord)
-    data.table::fwrite(dat.merge.ind,
-                       "PCA-individuals.csv")
+    data.table::fwrite(
+      dat.merge.ind,
+      "PCA-individuals.csv"
+    )
   }
-  
+
   # Create PCA plot with individuals (with groups)
   if (plot.ind.group == TRUE && !is.null(group.ind)) {
     col.factor <- as.factor(dat[, group.ind])
-    
+
     # Set group colours
     if (colour.group == "jet") {
       group.colour.scheme <- c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
     }
-    
+
     if (colour.group == "spectral") {
-      group.colour.scheme <- rev(RColorBrewer::brewer.pal(length(levels(col.factor)),"Spectral"))
+      group.colour.scheme <- rev(RColorBrewer::brewer.pal(length(levels(col.factor)), "Spectral"))
     }
-    
+
     if (colour.group == "viridis") {
       group.colour.scheme <- c(viridis::viridis_pal(option = "viridis")(length(levels(col.factor))))
     }
-    
+
     if (colour.group == "inferno") {
       group.colour.scheme <- c(viridis::viridis_pal(option = "inferno")(length(levels(col.factor))))
     }
-    
+
     if (colour.group == "magma") {
       group.colour.scheme <- c(viridis::viridis_pal(option = "magma")(length(levels(col.factor))))
     }
-    
+
     pca_out_ind_group <- factoextra::fviz_pca_ind(pca_out,
-                                                  col.ind = col.factor, # color by groups
-                                                  palette = group.colour.scheme,
-                                                  addEllipses = TRUE, # Concentration ellipses
-                                                  ellipse.type = ellipse.type,
-                                                  ellipse.level = ellipse.level,
-                                                  legend.title = "Groups",
-                                                  repel = repel,
-                                                  geom = plot.ind.label,
-                                                  pointsize = pointsize.group,
-                                                  mean.point = mean.point
-                                                  )
-    
-    if(randomise.order == TRUE) {
+      col.ind = col.factor, # color by groups
+      palette = group.colour.scheme,
+      addEllipses = TRUE, # Concentration ellipses
+      ellipse.type = ellipse.type,
+      ellipse.level = ellipse.level,
+      legend.title = "Groups",
+      repel = repel,
+      geom = plot.ind.label,
+      pointsize = pointsize.group,
+      mean.point = mean.point
+    )
+
+    if (randomise.order == TRUE) {
       # Breakdown plot
-      #https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
+      # https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
       edit.plot <- ggplot2::ggplot_build(pca_out_ind_group)
-      
+
       # Randomise order
       set.seed(order.seed)
       nsub <- sample(nrow(edit.plot[["data"]][[1]]))
-      edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub,]
-      
+      edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub, ]
+
       # Re-create plot
       pca_out_ind_group <- ggplot2::ggplot_gtable(edit.plot)
     }
-    
+
     ggplot2::ggsave(pca_out_ind_group,
-                    filename = "PCA plot-ind-groups.pdf",
-                    path = path,
-                    useDingbats = FALSE)
-    
+      filename = "PCA plot-ind-groups.pdf",
+      path = path,
+      useDingbats = FALSE
+    )
   }
-  
+
   # Create PCA plot with variables
   if (plot.variables == TRUE) {
     # Set colour scheme for variables
     if (colour.var == "solid") {
       var.colour.scheme <- c("#00AFBB", "#E7B800", "#FC4E07")
     }
-    
+
     if (colour.var == "jet") {
       var.colour.scheme <- c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")
     }
-    
+
     if (colour.var == "spectral") {
-      var.colour.scheme <- rev(RColorBrewer::brewer.pal(11,"Spectral"))
+      var.colour.scheme <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
     }
-    
+
     if (colour.var == "viridis") {
       var.colour.scheme <- c(viridis::viridis_pal(option = "viridis")(50))
     }
-    
+
     if (colour.var == "inferno") {
       var.colour.scheme <- c(viridis::viridis_pal(option = "inferno")(50))
     }
-    
+
     if (colour.var == "magma") {
       var.colour.scheme <- c(viridis::viridis_pal(option = "magma")(50))
     }
-    
+
     if (colour.var == "BuPu") {
       var.colour.scheme <- c(colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31))
     }
-    
+
     loading_plot <- factoextra::fviz_pca_var(pca_out,
-                                             col.var = "contrib",
-                                             gradient.cols = var.colour.scheme,
-                                             repel = repel,
-                                             select.var = list(contrib = var.numb) #plots the top number of contributors
-                                             )
-    
+      col.var = "contrib",
+      gradient.cols = var.colour.scheme,
+      repel = repel,
+      select.var = list(contrib = var.numb) # plots the top number of contributors
+    )
+
     # Save loadings plot
     ggplot2::ggsave(loading_plot,
-           filename = "PCA plot-variables.pdf",
-           path = path,
-           useDingbats = FALSE)
-    
+      filename = "PCA plot-variables.pdf",
+      path = path,
+      useDingbats = FALSE
+    )
+
     # Extract coordinates of variables
     pca_out_var <- factoextra::get_pca_var(pca_out)
-    pca_var_coord <- as.data.frame(pca_out_var$coord) #coordinates of each point for PCA plot
+    pca_var_coord <- as.data.frame(pca_out_var$coord) # coordinates of each point for PCA plot
     rownames(pca_var_coord) <- colnames(dat[, use.cols])
-    
+
     data.table::fwrite(pca_var_coord,
-                       "PCA-variables.csv",
-                       row.names = TRUE)
-    
+      "PCA-variables.csv",
+      row.names = TRUE
+    )
   }
-  
+
   # Create combined PCA plot with individuals and variables
   if (plot.combined == TRUE) {
     pca_out_comb <- factoextra::fviz_pca_biplot(pca_out,
-                                col.var = "Grey", # Variables color
-                                col.ind = "Black",  # Individuals color
-                                repel = repel,
-                                geom = plot.ind.label,
-                                pointsize = pointsize.ind,
-                                select.var = list(contrib = var.numb) #plots the top number of contributors
-                                )
-    
+      col.var = "Grey", # Variables color
+      col.ind = "Black", # Individuals color
+      repel = repel,
+      geom = plot.ind.label,
+      pointsize = pointsize.ind,
+      select.var = list(contrib = var.numb) # plots the top number of contributors
+    )
+
     ggplot2::ggsave(pca_out_comb,
-                    filename = "PCA plot-combined.pdf",
-                    path = path,
-                    useDingbats = FALSE)
+      filename = "PCA plot-combined.pdf",
+      path = path,
+      useDingbats = FALSE
+    )
   }
-  
 }
-
-

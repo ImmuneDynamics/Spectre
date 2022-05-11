@@ -39,8 +39,10 @@
 #' # Run UMAP on a subset of the  demonstration dataset
 #'
 #' cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
-#' cell.dat <- Spectre::run.umap(dat = cell.dat,
-#'                               use.cols = names(demo.asinh)[c(2:10)])
+#' cell.dat <- Spectre::run.umap(
+#'   dat = cell.dat,
+#'   use.cols = names(demo.asinh)[c(2:10)]
+#' )
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
@@ -70,18 +72,16 @@ run.umap <- function(dat,
                      transform_state = 42,
                      knn.repeats = 1,
                      verbose = TRUE,
-                     umap_learn_args = NA
-                     )
-{
+                     umap_learn_args = NA) {
 
   ### Test data
-      # dat <- iris
-      # umap.seed <- 42
-      # use.cols <- c(1:4)
+  # dat <- iris
+  # umap.seed <- 42
+  # use.cols <- c(1:4)
 
   ## Check that necessary packages are installed
-  if(!is.element('umap', installed.packages()[,1])) stop('umap is required but not installed')
-  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
+  if (!is.element("umap", installed.packages()[, 1])) stop("umap is required but not installed")
+  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
 
   ## Require packages
   require(umap)
@@ -117,8 +117,10 @@ run.umap <- function(dat,
 
   dat.bk <- dat.bk[, ..use.cols]
 
-  res <- umap::umap(d = dat.bk,
-              config = custom.config)
+  res <- umap::umap(
+    d = dat.bk,
+    config = custom.config
+  )
 
   umap.res <- res$layout
   head(umap.res)
@@ -129,7 +131,7 @@ run.umap <- function(dat,
   names(umap.res)[names(umap.res) == "V1"] <- umap.x.name
   names(umap.res)[names(umap.res) == "V2"] <- umap.y.name
 
-  #assign("umap.res", umap.res, envir = globalenv())
+  # assign("umap.res", umap.res, envir = globalenv())
   res <- cbind(dat.start, umap.res) # Merge UMAP results with data
   return(res)
 }
