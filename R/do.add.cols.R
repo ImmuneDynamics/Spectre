@@ -5,7 +5,7 @@
 #' @param dat NO DEFAULT. A data.table (or data.frame) containing the data to have new values added to.
 #' @param base.col NO DEFAULT. Name of the column containing values that new values will be matched to.
 #' @param add.dat NO DEFAULT. A data table of new values to embed as a new columns, with one column containing values used for matching with the target data.table.
-#' @param add.by NO DEFAULT. Character, name of the column in add.dat that is used for matching to the taret dataset.
+#' @param add.by NO DEFAULT. Character, name of the column in add.dat that is used for matching to the target dataset.
 #' @param rmv.ext DEFAULTS TO FALSE. Logical, can be TRUE or FALSE. Removes a ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.
 #' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
@@ -28,14 +28,13 @@
 #'
 #' @export do.add.cols
 
-do.add.cols <- function(dat, # the list of dataframes (samples) where each dataframe will have the columns embedded
-                         base.col, # column name in the actual dataset
-
-                         add.dat,
-                         add.by,
-                         rmv.ext = FALSE,
-                         mem.ctrl = TRUE,
-                         show.status = TRUE)
+do.add.cols <- function(dat, 
+                        base.col,
+                        add.dat,
+                        add.by,
+                        rmv.ext = FALSE,
+                        mem.ctrl = TRUE,
+                        show.status = TRUE)
 {
 
   ## Packages
@@ -90,7 +89,7 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
       check.dup <- c(dat.names, add.dat.names[-pos])
 
       if(any(duplicated(check.dup))){
-        stop("You have duplciate column names in your 'dat' and 'add.dat' entries. The 'base.col', and 'add.by' column names may be identical, but all other columns should unique.")
+        stop("You have duplicated column names in your 'dat' and 'add.dat' entries. The 'base.col', and 'add.by' column names may be identical, but all other columns should unique.")
       }
 
   ### Prep
@@ -146,7 +145,7 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
         warning(paste0("The column '", base.col, "' in your main dataset", " is ", class(dat[[base.col]]), ", whereas the column '", add.by, "' in the 'to add' data is ", class(add.dat[[base.col]]), ". You may need to adjust their types to ensure they are the same. If you are matching based on character values (filenames, popualtion names etc, then both need to be character."))
       }
 
-  ### Mergind data
+  ### Merging data
       if(show.status == TRUE){
         message("Step 2/3. Merging data")
       }
@@ -209,7 +208,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
                              rmv.ext = FALSE,
                              mem.ctrl = TRUE) {
     
-    .Deprecated("do.add.cols")
+    .Deprecated("do.add.cols", package = "Spectre")
   
   # stop("Warning: Please note, the 'do.embed.columns' function has been depreciated. Please use 'do.add.cols' instead")
   

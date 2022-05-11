@@ -1,6 +1,6 @@
-#' do.align - Function to align multiple batches of a dataset.
+#' Align multiple batches of a dataset.
 #'
-#' This function allows you to align multiple batches of a dataset, using either a "Quantile" approach, or using "CytoNorm"
+#' This function allows you to align multiple batches of a dataset, using either a "Quantile" approach, or "CytoNorm" algorithm.
 #'
 #' @usage do.align(ref.dat, target.dat, batch.col, align.cols, method, goal, nQ, Qmin, Qmax, write.ref.fcs, write.target.fcs)
 #'
@@ -54,8 +54,9 @@ do.align <- function(ref.dat,
                      write.target.fcs = TRUE,
                      mem.ctrl = TRUE
 ){
-
-  message("The 'do.align' function has been depreciated. Please use 'run.align' instead. Use '? run.align' for more information.")
+    .Deprecated("run.align", package = "Spectre")
+    
+  # message("The 'do.align' function has been depreciated. Please use 'run.align' instead. Use '? run.align' for more information.")
   
   
 #   ###########################################################################################

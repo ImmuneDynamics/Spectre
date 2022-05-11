@@ -1,6 +1,7 @@
-#' do.clip - Clips data using a specified lower and upper value
-#'
-#' This function allows you to clip data using specified lower and upper values. E.g. if the upper value is set to 1000, then any values above 1000 will be converted to 1000. No rows are lost, rather the values in those rows are converted.
+#' Clip data
+#' 
+#' Clips data using a specified lower and upper value. 
+#' E.g. if the upper value is set to 1000, then any values above 1000 will be converted to 1000. No rows are lost, rather the values in those rows are converted.
 #'
 #' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #' @references \url{https://sydneycytometry.org.au/spectre}

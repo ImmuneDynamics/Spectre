@@ -1,6 +1,6 @@
-#' do.combine.cols - Combine the values of two columns into a single column
-#'
-#' This function allows you to combine the values of two columns, with an option to remove any 'NA' values
+#' Combine two columns
+#' 
+#' Combine the values of two columns into a single column, with an option to remove any 'NA' values.
 #'
 #' @usage do.combine.cols(dat, col1, col2, na.rm)
 #'
@@ -15,7 +15,10 @@
 #'
 #' @export do.combine.cols
 
-do.combine.cols <- function(dat, col1, col2, na.rm = TRUE){
+do.combine.cols <- function(dat, 
+                            col1, 
+                            col2, 
+                            na.rm = TRUE){
       
   ### NA checks  
       

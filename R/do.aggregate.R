@@ -1,4 +1,6 @@
-#' Aggregate data using data.table functions -- summarises the mean, median, or sum expression of each marker on each cluster/population
+#' Aggregate data 
+#' 
+#' Aggregate data using data.table functions, e.g. to summarise the mean, median, or sum expression of each marker on each cluster/population
 #'
 #' @usage do.aggregate(dat, use.cols, by, func, dt)
 #'
@@ -30,10 +32,10 @@
 #' @export do.aggregate
 
 do.aggregate <- function(dat,
-                             use.cols,
-                             by,
-                             func = 'median',
-                             dt = TRUE
+                         use.cols,
+                         by,
+                         func = 'median',
+                         dt = TRUE
 ) {
 
   ### Testing

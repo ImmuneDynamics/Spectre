@@ -1,11 +1,11 @@
-#' do.asinh - Transform data in selected columns using ArcSinH
-#'
-#' This function allows you to transform the data in selected columns using ArcSinH with a specified co-factor
+#' Run ArcSinh transformation
+#' 
+#' Transform data in selected columns using ArcSinh transformation with a specified co-factor.
 #'
 #' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @param dat NO DEFAULT. data.table Input sample.
+#' @param dat NO DEFAULT. data.table input sample.
 #' @param use.cols NO DEFAULT. Vector of character column names -- these columns will be transformed and added to the data.table as new columns.
 #' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
 #' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.
