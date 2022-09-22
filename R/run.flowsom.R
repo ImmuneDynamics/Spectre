@@ -110,11 +110,13 @@ run.flowsom <- function(dat,
       ## run FlowSOM (initial steps prior to meta-clustering)
       FlowSOM_out <- FlowSOM::ReadInput(dat_FlowSOM, transform = FALSE, scale = FALSE)
 
+      set.seed(clust.seed) # set seed for reproducibility
       FlowSOM_out <- FlowSOM::BuildSOM(FlowSOM_out,
                                        colsToUse = FlowSOM_cols,
                                        xdim = xdim,
                                        ydim = ydim)
 
+      set.seed(clust.seed) # set seed for reproducibility
       FlowSOM_out <- FlowSOM::BuildMST(FlowSOM_out)
 
       ## extract cluster labels (pre meta-clustering) from output object

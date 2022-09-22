@@ -98,7 +98,7 @@ run.rpca <- function(dat,
       gc()
       
       use.cols
-      new.names <- rownames(res.list$A@assays$cyto@counts)
+      new.names <- rownames(res.list[[1]]@assays$cyto@counts)
       
   ### Select integration features, scale data, and run PCA
       
