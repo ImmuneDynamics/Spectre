@@ -187,12 +187,12 @@
 
     ### Annotate
 
-        annots <- list("CD4 T cells" = c(3),
-                       "CD8 T cells" = c(2),
+        annots <- list("CD4 T cells" = c(2),
+                       "CD8 T cells" = c(8,3),
                        "NK cells" = c(1),
-                       "Neutrophils" = c(8),
+                       "Neutrophils" = c(7),
                        "Infil Macrophages" = c(4),
-                       "Microglia" = c(5,6,7)
+                       "Microglia" = c(5,6)
         )
 
         annots <- do.list.switch(annots)
@@ -205,12 +205,9 @@
         cell.dat <- do.add.cols(cell.dat, "FlowSOM_metacluster", annots, "Values")
         cell.dat
         
-        
-
         cell.sub <- do.add.cols(cell.sub, "FlowSOM_metacluster", annots, "Values")
         cell.sub
         
-
         make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", col.type = 'factor', add.label = TRUE)
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", group.col, col.type = 'factor')
 
