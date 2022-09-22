@@ -11,120 +11,120 @@
 
 do.create.outlines <- function(dat,
                                mask.name,
-                               method = 'stars' # 'stars' 'raster'
-){
+                               method = "stars" # 'stars' 'raster'
+) {
 
   ### Setup
 
-      #message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
+  # message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
-      require(raster)
-      require(tiff)
-      require(rgeos)
-      require(tidyr)
-      require(ggplot2)
-      require(dplyr)
+  require(raster)
+  require(tiff)
+  require(rgeos)
+  require(tidyr)
+  require(ggplot2)
+  require(dplyr)
 
-      # polygons.name <- paste0(mask.name, "_polygons")
-      # outlines.name <- paste0(mask.name, "_outlines")
-      # centroids.name <- paste0(mask.name, "_centroids")
+  # polygons.name <- paste0(mask.name, "_polygons")
+  # outlines.name <- paste0(mask.name, "_outlines")
+  # centroids.name <- paste0(mask.name, "_centroids")
 
   ### Initial warning
-  
-      os.deets <- devtools::session_info()
-      if(grepl('Windows', os.deets$platform$os)){
-        message("Warning: the generation of mask outlines may differ between Mac and Windows. See 'https://github.com/ImmuneDynamics/Spectre/issues/56' for more information.")
-      }
-      
+
+  os.deets <- devtools::session_info()
+  if (grepl("Windows", os.deets$platform$os)) {
+    message("Warning: the generation of mask outlines may differ between Mac and Windows. See 'https://github.com/ImmuneDynamics/Spectre/issues/56' for more information.")
+  }
+
   ### Slow or fast version
 
-      if(method == 'stars'){
-        message(paste0("Creating polygons, outlines, and centroids using 'stars' method."))
-        require(stars)
-        require(sf)
-        require(sp)
-        require(s2)
-      }
+  if (method == "stars") {
+    message(paste0("Creating polygons, outlines, and centroids using 'stars' method."))
+    require(stars)
+    require(sf)
+    require(sp)
+    require(s2)
+  }
 
-      if(method == 'raster'){
-        message(paste0("Creating polygons, outlines, and centroids using standard method -- this step may take some time, please be patient"))
-      }
+  if (method == "raster") {
+    message(paste0("Creating polygons, outlines, and centroids using standard method -- this step may take some time, please be patient"))
+  }
 
-      if(method == 'gdal'){
-        message("GDAL version not currently supportedb -- reverting to stars method")
-        # if(length(Sys.which("gdal_polygonize.py")) > 1){
-        #   message(paste0("Creating polygons, outlines, and centroids using GDAL -- this step may take some time, please be patient"))
-        # }
-      }
+  if (method == "gdal") {
+    message("GDAL version not currently supportedb -- reverting to stars method")
+    # if(length(Sys.which("gdal_polygonize.py")) > 1){
+    #   message(paste0("Creating polygons, outlines, and centroids using GDAL -- this step may take some time, please be patient"))
+    # }
+  }
 
   ### Run
 
-      for(i in names(dat)){
-        # i <- names(spatial.dat)[[1]]
-        start.time <- Sys.time()
+  for (i in names(dat)) {
+    # i <- names(spatial.dat)[[1]]
+    start.time <- Sys.time()
 
-        mask <- dat[[i]]@MASKS[[mask.name]]$maskraster
+    mask <- dat[[i]]@MASKS[[mask.name]]$maskraster
 
-        message(paste0("  -- Processing masks for ROI ", i))
+    message(paste0("  -- Processing masks for ROI ", i))
 
-        ## rasterToPolygons method
-            if(method == 'raster'){
-              polygon <- rasterToPolygons(mask, dissolve=TRUE) # This is the long step
-              dat[[i]]@MASKS[[mask.name]][["polygons"]] <- polygon
-              message("    ... polygons complete")
-            }
+    ## rasterToPolygons method
+    if (method == "raster") {
+      polygon <- rasterToPolygons(mask, dissolve = TRUE) # This is the long step
+      dat[[i]]@MASKS[[mask.name]][["polygons"]] <- polygon
+      message("    ... polygons complete")
+    }
 
-        ## stars method
-            if(method == 'stars'){
+    ## stars method
+    if (method == "stars") {
+      require(stars)
+      require(sf)
+      require(sp)
+      require(s2)
 
-              require(stars)
-              require(sf)
-              require(sp)
-              require(s2)
+      names(mask) <- "TEMP_MASK"
 
-              names(mask) <- "TEMP_MASK"
+      stars.mask <- stars::st_as_stars(mask)
 
-              stars.mask <- stars::st_as_stars(mask)
+      # sf::st_crs(stars.mask) <- 4326
 
-              #sf::st_crs(stars.mask) <- 4326
+      res <- sf::st_as_sf(stars.mask, # requires the sf, sp, raster and stars packages
+        as_points = FALSE,
+        merge = TRUE
+      ) # ,
 
-              res <- sf::st_as_sf(stars.mask, # requires the sf, sp, raster and stars packages
-                                  as_points = FALSE,
-                                  merge = TRUE) #,
-                                  
-                                  #na.rm = TRUE)
-                                  #group = TRUE) # TRUE crashes, FALSE does not
+      # na.rm = TRUE)
+      # group = TRUE) # TRUE crashes, FALSE does not
 
-              res$TEMP_MASK
+      res$TEMP_MASK
 
-              res <- st_make_valid(res)
-              
-              res <- res %>%
-                group_by(TEMP_MASK) %>%
-                summarise(geometry = sf::st_union(geometry)) %>%
-                ungroup()
+      res <- st_make_valid(res)
 
-              polygon <- sf::as_Spatial(res)
+      res <- res %>%
+        group_by(TEMP_MASK) %>%
+        summarise(geometry = sf::st_union(geometry)) %>%
+        ungroup()
 
-              names(polygon) <- mask.name
-              crs(polygon) <- NA
+      polygon <- sf::as_Spatial(res)
 
-              dat[[i]]@MASKS[[mask.name]][["polygons"]] <- polygon
-              message("     ... polygons complete")
-            }
+      names(polygon) <- mask.name
+      crs(polygon) <- NA
+
+      dat[[i]]@MASKS[[mask.name]][["polygons"]] <- polygon
+      message("     ... polygons complete")
+    }
 
     ### Create outlines
-        suppressMessages(
-          outline <- fortify(polygon)
-        )
-        dat[[i]]@MASKS[[mask.name]][["outlines"]] <- outline
-        message("     ... outlines complete")
+    suppressMessages(
+      outline <- fortify(polygon)
+    )
+    dat[[i]]@MASKS[[mask.name]][["outlines"]] <- outline
+    message("     ... outlines complete")
 
     ### Create centroids
-        centroids <- gCentroid(polygon,byid=TRUE)
-        dat[[i]]@MASKS[[mask.name]][["centroids"]] <- centroids
-        message("     ... centroids complete")
-      }
+    centroids <- gCentroid(polygon, byid = TRUE)
+    dat[[i]]@MASKS[[mask.name]][["centroids"]] <- centroids
+    message("     ... centroids complete")
+  }
 
   message("Returning spatial data")
   return(dat)

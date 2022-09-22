@@ -4,7 +4,7 @@
 #' @param mask NO DEFAULT. Name of mask to use for cell data extraction
 #' @param name DEFAULT = 'CellData'. Name of the extracted cell dataset.
 #' @param fun DEFAULT = 'mean'. Summarisation function.
-#' 
+#'
 #' @usage do.extract(dat, mask)
 #'
 #' @import data.table
@@ -15,131 +15,131 @@ do.extract <- function(dat, # spatial.data object
                        mask, # name of the mask being summarised
                        name = "CellData",
                        fun = "mean" # type of marker summarisation (mean, median etc)
-                       ){
+) {
 
-  #message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
+  # message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
-      require('rgeos')
-      require('sp')
-      require('sf')
-      require('rgdal')
-      require('exactextractr')
-      require('data.table')
+  require("rgeos")
+  require("sp")
+  require("sf")
+  require("rgdal")
+  require("exactextractr")
+  require("data.table")
 
   ### Demo data
 
-      # spatial.dat <- demo.spatial
-      # str(spatial.dat, 3)
-      # 
-      # for(i in names(spatial.dat)){
-      #   spatial.dat[[i]]$DATA <- NULL
-      # }
-      # 
-      # str(spatial.dat, 3)
-      # 
-      # dat <- spatial.dat
-      # mask <- "cell.mask"
-      # name = "CellData"
-      # fun = "mean"
-      # 
-      # str(dat, 4)
+  # spatial.dat <- demo.spatial
+  # str(spatial.dat, 3)
+  #
+  # for(i in names(spatial.dat)){
+  #   spatial.dat[[i]]$DATA <- NULL
+  # }
+  #
+  # str(spatial.dat, 3)
+  #
+  # dat <- spatial.dat
+  # mask <- "cell.mask"
+  # name = "CellData"
+  # fun = "mean"
+  #
+  # str(dat, 4)
 
   ### Loop for each ROI
 
-      rois <- names(dat)
+  rois <- names(dat)
 
-      for(roi in rois){
-        # roi <- rois[[1]]
-        
-        message(paste0("Processing ", paste0(which(roi == rois), ' of ', length(rois)), ':  ', roi))
- 
-        roi.stack <- dat[[roi]]@RASTERS
-        roi.poly <- dat[[roi]]@MASKS[[mask]]$polygons
+  for (roi in rois) {
+    # roi <- rois[[1]]
 
-        raster.names <- names(roi.stack)
-        ply.df <- as.data.frame(roi.poly)
-        ply.df
+    message(paste0("Processing ", paste0(which(roi == rois), " of ", length(rois)), ":  ", roi))
 
-        ply.centroids <- gCentroid(roi.poly,byid=TRUE)
-        ply.centroids.df <- as.data.frame(ply.centroids)
-        ply.centroids.df # mask number, with X and Y coordinates
+    roi.stack <- dat[[roi]]@RASTERS
+    roi.poly <- dat[[roi]]@MASKS[[mask]]$polygons
 
-        ply.centroids.df <- cbind(ply.centroids.df, as.data.frame(area(roi.poly)))
-        names(ply.centroids.df)[3] <- "Area"
+    raster.names <- names(roi.stack)
+    ply.df <- as.data.frame(roi.poly)
+    ply.df
 
-        ## RASTERS
+    ply.centroids <- gCentroid(roi.poly, byid = TRUE)
+    ply.centroids.df <- as.data.frame(ply.centroids)
+    ply.centroids.df # mask number, with X and Y coordinates
 
-            message(" -- running rasters")
-        
-            for(i in raster.names){
-              # i <- raster.names[[1]]
-              message(paste0("     ... ", i))
-              temp.dat <- roi.stack[[i]]
+    ply.centroids.df <- cbind(ply.centroids.df, as.data.frame(area(roi.poly)))
+    names(ply.centroids.df)[3] <- "Area"
 
-              ## Slower method
+    ## RASTERS
 
-                  # extracted.dat <- raster::extract(x = temp.dat, y = roi.poly, df = TRUE) # this is the time consuming step
-                  # extracted.dat.res <- aggregate(. ~ID, data = extracted.dat, FUN = fun)
-                  # # #colnames(extracted.dat.res)[2] <- i # should we be removing .tiff here? If we do should be the same in the other read.spatial function, to ensure matching consistency
-                  #
-                  # ply.centroids.df <- cbind(ply.centroids.df, extracted.dat.res[2]) ## doing this would remove the necessity to calculate centroids within the 'make.spatial.plot' function
+    message(" -- running rasters")
 
-              ## FAST method
-              
-                  ## Faster options
+    for (i in raster.names) {
+      # i <- raster.names[[1]]
+      message(paste0("     ... ", i))
+      temp.dat <- roi.stack[[i]]
 
-                  # vx <- velox(temp.dat)
-                  # res <- vx$extract(sp=roi.poly, fun=mean) # 3293 polygons #3294?
-                  
-                  res <- exactextractr::exact_extract(temp.dat, st_as_sf(roi.poly), fun=fun)
-                  res <- as.data.table(res)
-                  
-                  names(res) <- i
-                  ply.centroids.df <- cbind(ply.centroids.df, res) ## doing this would remove the necessity to calculate centroids within the 'make.spatial.plot' function
-            }
+      ## Slower method
 
-            ID <- c(1:nrow(ply.centroids.df))
-            roi.dat <- cbind(ID, ply.centroids.df)
-            roi.dat <- as.data.table(roi.dat)
+      # extracted.dat <- raster::extract(x = temp.dat, y = roi.poly, df = TRUE) # this is the time consuming step
+      # extracted.dat.res <- aggregate(. ~ID, data = extracted.dat, FUN = fun)
+      # # #colnames(extracted.dat.res)[2] <- i # should we be removing .tiff here? If we do should be the same in the other read.spatial function, to ensure matching consistency
+      #
+      # ply.centroids.df <- cbind(ply.centroids.df, extracted.dat.res[2]) ## doing this would remove the necessity to calculate centroids within the 'make.spatial.plot' function
 
-        ## OTHER MASK POLYGONS
+      ## FAST method
 
-            message(" -- running mask polygons")
-            
-            other.polys <- names(dat[[roi]]@MASKS)
-            other.polys <- other.polys[!other.polys %in% mask]
+      ## Faster options
 
-            cols <- c("x", "y", "ID")
+      # vx <- velox(temp.dat)
+      # res <- vx$extract(sp=roi.poly, fun=mean) # 3293 polygons #3294?
 
-            roi.dat.xyid <- roi.dat[,..cols]
-            names(roi.dat.xyid) <- c('Longitude', 'Latitude', 'Names')
-            roi.dat.xyid
+      res <- exactextractr::exact_extract(temp.dat, st_as_sf(roi.poly), fun = fun)
+      res <- as.data.table(res)
 
-            Longitude <- roi.dat.xyid$Longitude
-            Latitude <- roi.dat.xyid$Latitude
-            coordinates(roi.dat.xyid) <- ~ Longitude + Latitude
+      names(res) <- i
+      ply.centroids.df <- cbind(ply.centroids.df, res) ## doing this would remove the necessity to calculate centroids within the 'make.spatial.plot' function
+    }
 
-            if(length(other.polys) != 0){
-              for(i in c(1:(length(other.polys)))){
-                # i <- 1
-                
-                ply.name <- other.polys[[i]]
+    ID <- c(1:nrow(ply.centroids.df))
+    roi.dat <- cbind(ID, ply.centroids.df)
+    roi.dat <- as.data.table(roi.dat)
 
-                message(paste0("     ... occurance in ", ply.name))
+    ## OTHER MASK POLYGONS
 
-                ply <- dat[[roi]]@MASKS[[ply.name]]$polygons
+    message(" -- running mask polygons")
 
-                proj4string(roi.dat.xyid) <- proj4string(ply)
+    other.polys <- names(dat[[roi]]@MASKS)
+    other.polys <- other.polys[!other.polys %in% mask]
 
-                over.res <- over(roi.dat.xyid, ply)
-                over.res <- as.data.table(over.res)
-                roi.dat <- cbind(roi.dat, over.res)
-              }
-            }
+    cols <- c("x", "y", "ID")
 
-            dat[[roi]]@DATA[[name]] <- roi.dat
+    roi.dat.xyid <- roi.dat[, ..cols]
+    names(roi.dat.xyid) <- c("Longitude", "Latitude", "Names")
+    roi.dat.xyid
+
+    Longitude <- roi.dat.xyid$Longitude
+    Latitude <- roi.dat.xyid$Latitude
+    coordinates(roi.dat.xyid) <- ~ Longitude + Latitude
+
+    if (length(other.polys) != 0) {
+      for (i in c(1:(length(other.polys)))) {
+        # i <- 1
+
+        ply.name <- other.polys[[i]]
+
+        message(paste0("     ... occurance in ", ply.name))
+
+        ply <- dat[[roi]]@MASKS[[ply.name]]$polygons
+
+        proj4string(roi.dat.xyid) <- proj4string(ply)
+
+        over.res <- over(roi.dat.xyid, ply)
+        over.res <- as.data.table(over.res)
+        roi.dat <- cbind(roi.dat, over.res)
       }
+    }
+
+    dat[[roi]]@DATA[[name]] <- roi.dat
+  }
 
   ### Return new dat object
-      return(dat)
+  return(dat)
 }

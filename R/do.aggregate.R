@@ -1,4 +1,6 @@
-#' Aggregate data using data.table functions -- summarises the mean, median, or sum expression of each marker on each cluster/population
+#' Aggregate data
+#'
+#' Aggregate data using data.table functions, e.g. to summarise the mean, median, or sum expression of each marker on each cluster/population
 #'
 #' @usage do.aggregate(dat, use.cols, by, func, dt)
 #'
@@ -11,16 +13,20 @@
 #' @return Returns a new data.table with values of use.cols aggregated per cluster/population.
 #'
 #' @examples
-#' exp <- do.aggregate(dat = Spectre::demo.clustered,
-#'                     use.cols = names(demo.clustered)[c(11:19)],
-#'                     by = "Population")
+#' exp <- do.aggregate(
+#'   dat = Spectre::demo.clustered,
+#'   use.cols = names(demo.clustered)[c(11:19)],
+#'   by = "Population"
+#' )
 #'
 #' # Typically followed up by making an expression heatmap
-#' Spectre::make.pheatmap(dat = exp,
-#'                        file.name = "Pheatmap.png",
-#'                        plot.title = "Pheatmap",
-#'                        sample.col = "Population",
-#'                        plot.cols = names(exp)[c(2:10)])
+#' Spectre::make.pheatmap(
+#'   dat = exp,
+#'   file.name = "Pheatmap.png",
+#'   plot.title = "Pheatmap",
+#'   sample.col = "Population",
+#'   plot.cols = names(exp)[c(2:10)]
+#' )
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
@@ -30,48 +36,46 @@
 #' @export do.aggregate
 
 do.aggregate <- function(dat,
-                             use.cols,
-                             by,
-                             func = 'median',
-                             dt = TRUE
-) {
+                         use.cols,
+                         by,
+                         func = "median",
+                         dt = TRUE) {
 
   ### Testing
-      # dat <- as.data.table(demo.umap)
-      # use.cols <- c("UMAP_42_X", "UMAP_42_Y")
-      # by = "FlowSOM_metacluster"
-      # func = 'median'
-      # dt = FALSE
+  # dat <- as.data.table(demo.umap)
+  # use.cols <- c("UMAP_42_X", "UMAP_42_Y")
+  # by = "FlowSOM_metacluster"
+  # func = 'median'
+  # dt = FALSE
 
   ### Setup
 
-      if(func == 'median'){
-        res <- dat[, lapply(.SD, 'median', na.rm=TRUE), by=by, .SDcols=use.cols  ]
-      }
+  if (func == "median") {
+    res <- dat[, lapply(.SD, "median", na.rm = TRUE), by = by, .SDcols = use.cols]
+  }
 
-      if(func == 'mean'){
-        res <- dat[, lapply(.SD, 'mean', na.rm=TRUE), by=by, .SDcols=use.cols  ]
-      }
+  if (func == "mean") {
+    res <- dat[, lapply(.SD, "mean", na.rm = TRUE), by = by, .SDcols = use.cols]
+  }
 
-      if(func == 'sum'){
-        res <- dat[, lapply(.SD, 'sum', na.rm=TRUE), by=by, .SDcols=use.cols  ]
-      }
+  if (func == "sum") {
+    res <- dat[, lapply(.SD, "sum", na.rm = TRUE), by = by, .SDcols = use.cols]
+  }
 
   ### Setup result
 
-      if(dt == TRUE){
-        res
-      }
+  if (dt == TRUE) {
+    res
+  }
 
-      if(dt == FALSE){
-        rnms <- res[[by]]
-        res <- as.data.frame(res)
-        rownames(res) <- rnms
-        res[[by]] <- NULL
-        res
-      }
+  if (dt == FALSE) {
+    rnms <- res[[by]]
+    res <- as.data.frame(res)
+    rownames(res) <- rnms
+    res[[by]] <- NULL
+    res
+  }
 
   ### Return
-      return(res)
-
+  return(res)
 }

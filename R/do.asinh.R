@@ -1,11 +1,11 @@
-#' do.asinh - Transform data in selected columns using ArcSinH
+#' Run ArcSinh transformation
 #'
-#' This function allows you to transform the data in selected columns using ArcSinH with a specified co-factor
+#' Transform data in selected columns using ArcSinh transformation with a specified co-factor.
 #'
 #' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @param dat NO DEFAULT. data.table Input sample.
+#' @param dat NO DEFAULT. data.table input sample.
 #' @param use.cols NO DEFAULT. Vector of character column names -- these columns will be transformed and added to the data.table as new columns.
 #' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
 #' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.
@@ -26,53 +26,54 @@ do.asinh <- function(dat,
                      reduce.noise = FALSE) {
 
   ### Setup data
-      value <- dat[,use.cols,with = FALSE]
+  value <- dat[, use.cols, with = FALSE]
 
   ### Numeric checks
-  
-      if(isFALSE(all(sapply(value, is.numeric)))){
-          message("It appears that one column in your dataset is non numeric")
-          print(sapply(value, is.numeric))
-          stop("do.asinh stopped")
-      }
-  
+
+  if (isFALSE(all(sapply(value, is.numeric)))) {
+    message("It appears that one column in your dataset is non numeric")
+    print(sapply(value, is.numeric))
+    stop("do.asinh stopped")
+  }
+
   ### Optional noise reduction
-  
-      # https://github.com/JinmiaoChenLab/cytofkit/issues/71
-      if(reduce.noise == TRUE){
-        message("This noise reduction function is experimental, and should be used with caution")
-        value <- value-1
-        loID <- which(value < 0)
-        if(length(loID) > 0)
-          value[loID] <- rnorm(length(loID), mean = 0, sd = 0.01)
-      }
+
+  # https://github.com/JinmiaoChenLab/cytofkit/issues/71
+  if (reduce.noise == TRUE) {
+    message("This noise reduction function is experimental, and should be used with caution")
+    value <- value - 1
+    loID <- which(value < 0)
+    if (length(loID) > 0) {
+      value[loID] <- rnorm(length(loID), mean = 0, sd = 0.01)
+    }
+  }
 
   ### Arcsinh calculation
-  
-      value <- value / cofactor
-      value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
+
+  value <- value / cofactor
+  value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
 
   ### Options to append the CF used
-  
-      if(append.cf == TRUE){
-        if(length(use.cols) > 1){
-          names(value) <- paste0(names(value), "_asinh_cf", cofactor)
-        }
-        if(length(use.cols) == 1){
-          names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
-        }
-      }
 
-      if(append.cf == FALSE){
-        if(length(use.cols) > 1){
-          names(value) <- paste0(names(value), "_asinh")
-        }
-        if(length(use.cols) == 1){
-          names(value) <- paste0(use.cols, "_asinh")
-        }
-      }
+  if (append.cf == TRUE) {
+    if (length(use.cols) > 1) {
+      names(value) <- paste0(names(value), "_asinh_cf", cofactor)
+    }
+    if (length(use.cols) == 1) {
+      names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
+    }
+  }
+
+  if (append.cf == FALSE) {
+    if (length(use.cols) > 1) {
+      names(value) <- paste0(names(value), "_asinh")
+    }
+    if (length(use.cols) == 1) {
+      names(value) <- paste0(use.cols, "_asinh")
+    }
+  }
 
   ### Wrap up
-      dat <- cbind(dat, value)
-      return(dat)
+  dat <- cbind(dat, value)
+  return(dat)
 }
