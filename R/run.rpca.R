@@ -1,9 +1,8 @@
-#' run rpca
+#' run.rpca
 #'
 #' @import data.table Matrix Seurat
 #'
 #' @export
-#' run rpca
 
 run.rpca <- function(dat,
                      use.cols,
