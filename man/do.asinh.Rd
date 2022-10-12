@@ -2,12 +2,12 @@
 % Please edit documentation in R/do.asinh.R
 \name{do.asinh}
 \alias{do.asinh}
-\title{do.asinh - Transform data in selected columns using ArcSinH}
+\title{Run ArcSinh transformation}
 \usage{
 do.asinh(dat, use.cols)
 }
 \arguments{
-\item{dat}{NO DEFAULT. data.table Input sample.}
+\item{dat}{NO DEFAULT. data.table input sample.}
 
 \item{use.cols}{NO DEFAULT. Vector of character column names -- these columns will be transformed and added to the data.table as new columns.}
 
@@ -16,12 +16,14 @@ do.asinh(dat, use.cols)
 \item{append.cf}{DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.}
 
 \item{reduce.noise}{DEFAULT = FALSE. This is an experimental calculation which should reduce noise from negative values. Use with caution.}
+
+\item{digits}{DEFAULT = 9. Number of decimal places as a limit. Values beyond will be rounded. Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, then 5 digits will be used). Important to control for small floating point error differences in different OS.}
 }
 \value{
 A data.table with new columns added, that contain the asinh transformed data.
 }
 \description{
-This function allows you to transform the data in selected columns using ArcSinH with a specified co-factor
+Transform data in selected columns using ArcSinh transformation with a specified co-factor.
 }
 \references{
 \url{https://sydneycytometry.org.au/spectre}

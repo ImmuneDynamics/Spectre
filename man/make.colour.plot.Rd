@@ -75,11 +75,12 @@ cell.dat <- Spectre::demo.umap
 cell.dat <- as.data.table(cell.dat)
 
 # Draw plot
-Spectre::make.colour.plot(dat = cell.dat,
-                          x.axis = "UMAP_42_X",
-                          y.axis = "UMAP_42_Y",
-                          col.axis = "BV605.Ly6C")
-
+Spectre::make.colour.plot(
+  dat = cell.dat,
+  x.axis = "UMAP_42_X",
+  y.axis = "UMAP_42_Y",
+  col.axis = "BV605.Ly6C"
+)
 
 }
 \references{

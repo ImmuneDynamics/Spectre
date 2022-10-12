@@ -42,17 +42,18 @@ Makes use of the packages 'data.table' and 'tidyr' to handle the data.
 }
 \examples{
 # Calculate and export results from demonstration data
-Spectre::write.sumtables(dat = Spectre::demo.clustered,
-                         sample.col = "Sample",
-                         pop.col = "FlowSOM_metacluster",
-                         measure.col = c(2,5:6,8:9,11:13,16:19,21:30,32),
-                         annot.col = c(33:34,36:37),
-                         group.col = "Group",
-                         cell.counts = c(rep(2.0e+07, 6), rep(1.8e+07, 6)),
-                         do.mfi.per.marker = TRUE,
-                         perc.pos.markers = c("BV711.SCA.1","APC.BrdU"),
-                         perc.pos.cutoff = c(580, 450)
-                         )
+Spectre::write.sumtables(
+  dat = Spectre::demo.clustered,
+  sample.col = "Sample",
+  pop.col = "FlowSOM_metacluster",
+  measure.col = c(2, 5:6, 8:9, 11:13, 16:19, 21:30, 32),
+  annot.col = c(33:34, 36:37),
+  group.col = "Group",
+  cell.counts = c(rep(2.0e+07, 6), rep(1.8e+07, 6)),
+  do.mfi.per.marker = TRUE,
+  perc.pos.markers = c("BV711.SCA.1", "APC.BrdU"),
+  perc.pos.cutoff = c(580, 450)
+)
 
 }
 \references{

@@ -2,7 +2,7 @@
 % Please edit documentation in R/create.sumtable.R
 \name{create.sumtable}
 \alias{create.sumtable}
-\title{create.sumtables - create a data.table 'summarising' cellular data by sample and population/cluster.}
+\title{create.sumtable - create a data.table 'summarising' cellular data by sample and population/cluster.}
 \usage{
 create.sumtable(dat, sample.col, pop.col, use.cols, annot.cols, counts, func, sep)
 }

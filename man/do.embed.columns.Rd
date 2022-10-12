@@ -25,9 +25,6 @@ Returns the data.table with new columns embedded..
 \description{
 do.embed.columns
 }
-\examples{
-
-}
 \references{
 \url{https://sydneycytometry.org.au/spectre}.
 }

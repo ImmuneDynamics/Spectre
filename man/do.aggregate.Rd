@@ -2,7 +2,7 @@
 % Please edit documentation in R/do.aggregate.R
 \name{do.aggregate}
 \alias{do.aggregate}
-\title{Aggregate data using data.table functions -- summarises the mean, median, or sum expression of each marker on each cluster/population}
+\title{Aggregate data}
 \usage{
 do.aggregate(dat, use.cols, by, func, dt)
 }
@@ -21,19 +21,23 @@ do.aggregate(dat, use.cols, by, func, dt)
 Returns a new data.table with values of use.cols aggregated per cluster/population.
 }
 \description{
-Aggregate data using data.table functions -- summarises the mean, median, or sum expression of each marker on each cluster/population
+Aggregate data using data.table functions, e.g. to summarise the mean, median, or sum expression of each marker on each cluster/population
 }
 \examples{
-exp <- do.aggregate(dat = Spectre::demo.clustered,
-                    use.cols = names(demo.clustered)[c(11:19)],
-                    by = "Population")
+exp <- do.aggregate(
+  dat = Spectre::demo.clustered,
+  use.cols = names(demo.clustered)[c(11:19)],
+  by = "Population"
+)
 
 # Typically followed up by making an expression heatmap
-Spectre::make.pheatmap(dat = exp,
-                       file.name = "Pheatmap.png",
-                       plot.title = "Pheatmap",
-                       sample.col = "Population",
-                       plot.cols = names(exp)[c(2:10)])
+Spectre::make.pheatmap(
+  dat = exp,
+  file.name = "Pheatmap.png",
+  plot.title = "Pheatmap",
+  sample.col = "Population",
+  plot.cols = names(exp)[c(2:10)]
+)
 }
 \references{
 \url{https://github.com/ImmuneDynamics/Spectre}.

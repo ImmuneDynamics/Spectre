@@ -61,8 +61,10 @@ Uses the R package "Rtsne" to calculate plots.
 # Run tSNE on a subset of the  demonstration dataset
 
 cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
-cell.dat <- Spectre::run.tsne(dat = cell.dat,
-                              use.cols = names(demo.asinh)[c(2:10)])
+cell.dat <- Spectre::run.tsne(
+  dat = cell.dat,
+  use.cols = names(demo.asinh)[c(2:10)]
+)
 
 }
 \author{

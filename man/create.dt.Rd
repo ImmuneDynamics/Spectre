@@ -9,7 +9,7 @@ create.dt(dat, from)
 \arguments{
 \item{dat}{NO DEFAULT. A Seurat or SingleCellExperiment or flowFrame object.}
 
-\item{from}{DEFAULT = NULL. By default, the class of object will be detected
+\item{from}{DEFAULT = NULL. The class of the dat parameter. By default, this will be detected
 automatically, but this can be overwritten using from. Can be from =
 'Seurat' or 'SingleCellExperiment' or 'flowFrame'.}
 }

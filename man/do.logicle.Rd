@@ -46,9 +46,9 @@ For more information on what logicle transformation does, please read the manusc
 }
 \examples{
 library(Spectre)
-dat = demo.asinh
-use.cols = names(dat)[c(2:10)]
-dat_lgcl = do.logicle(dat, use.cols = use.cols)
+dat <- demo.asinh
+use.cols <- names(dat)[c(2:10)]
+dat_lgcl <- do.logicle(dat, use.cols = use.cols)
 
 }
 \references{

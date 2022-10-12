@@ -19,7 +19,7 @@ This function allows you to check to see if all the common use packages dependen
 }
 \examples{
 package.install()
-package.install(type = 'spatial')
+package.install(type = "spatial")
 
 }
 \references{

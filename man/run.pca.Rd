@@ -79,29 +79,32 @@ setwd("/Users/felixmarsh-wakefield/Desktop")
 
 # Run PCA on demonstration dataset, adding PC to dataset
 dat <- Spectre::demo.clustered
-dat <- test.pca(dat = dat,
-                        use.cols = c(11:19),
-                        add.pca.col = TRUE,
-                        pca.lite = TRUE
-                        )
-                        
+dat <- test.pca(
+  dat = dat,
+  use.cols = c(11:19),
+  add.pca.col = TRUE,
+  pca.lite = TRUE
+)
+
 # Run PCA on demonstration dataset
-Spectre::run.pca(dat = Spectre::demo.clustered,
-                use.cols = c(11:19),
-                repel = TRUE
-                )
+Spectre::run.pca(
+  dat = Spectre::demo.clustered,
+  use.cols = c(11:19),
+  repel = TRUE
+)
 
 # Compare between groups
-Spectre::run.pca(dat = Spectre::demo.clustered,
-                 use.cols = c(11:19),
-                 comp.no = NULL,
-                 plot.ind.label = c("point", "text"), #individual cells will be labelled as numbers
-                 plot.ind.group = TRUE,
-                 group.ind = "Group",
-                 mean.point = FALSE,
-                 randomise.order = TRUE
-                 )
-        
+Spectre::run.pca(
+  dat = Spectre::demo.clustered,
+  use.cols = c(11:19),
+  comp.no = NULL,
+  plot.ind.label = c("point", "text"), # individual cells will be labelled as numbers
+  plot.ind.group = TRUE,
+  group.ind = "Group",
+  mean.point = FALSE,
+  randomise.order = TRUE
+)
+
 # When prompted, type in "5" and click enter to continue function (this selects the elbow point based off the scree plot)
 
 ## Possible issues ##
@@ -110,7 +113,7 @@ na.omit(dat)
 
 # Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
 dat <- data.table::as.data.table(dat)
-dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
+dat <- dat[, lapply(.SD, function(v) if (data.table::uniqueN(v, na.rm = TRUE) > 1) v)] # for data table format
 
 # Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
 
