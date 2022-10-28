@@ -13,6 +13,8 @@
 #' 
 #' @return ggplot object containing the plot
 #' 
+#' @author Givanna Putri
+#' 
 #' @export make.bubble.plot
 
 make.bubble.plot <- function(dt, markers_to_plot, cluster, col.scheme='viridis') {
