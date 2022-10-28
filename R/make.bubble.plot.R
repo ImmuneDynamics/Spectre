@@ -16,7 +16,7 @@
 make.bubble.plot <- function(dt, markers_to_plot, cluster, col.scheme='viridis') {
     
     require(data.table)
-    required(ggplot2)
+    require(ggplot2)
     require(viridis)
     
     avg_exp <- dt[, lapply(.SD, mean), .SDcols = markers_to_plot, by = cluster]
