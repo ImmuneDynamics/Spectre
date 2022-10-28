@@ -12,6 +12,8 @@
 #' Default to 'viridis'
 #' 
 #' @return ggplot object containing the plot
+#' 
+#' @export make.bubble.plot
 
 make.bubble.plot <- function(dt, markers_to_plot, cluster, col.scheme='viridis') {
     
