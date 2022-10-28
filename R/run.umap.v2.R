@@ -26,7 +26,7 @@ run.umap.v2 <- function(dat,
     
     
     ## Check that necessary packages are installed
-    necessary_packages <- c("uwot", "data.table", "parallel")
+    necessary_packages <- c("uwot", "data.table")
     check_packages_installed(necessary_packages)
     
     # Check input
@@ -36,19 +36,8 @@ run.umap.v2 <- function(dat,
     ## Require packages
     require(uwot)
     require(data.table)
-    require(parallel)
     
     set.seed(umap.seed)
-    
-    # set up the number of threads so we run parallel by default
-    # unless the user has specified the n_threads parameter as part of the
-    # ellipsis, which then we pass on.
-    ellipsis_params <- list(...)
-    if (! 'n_threads' %in% names(ellipsis_params)) {
-        n_threads <- parallel::detectCores() - 1
-    } else {
-        n_threads <- ellipsis_params[['n_threads']]
-    }
     
     dat.copy <- copy(dat)
     
@@ -56,8 +45,7 @@ run.umap.v2 <- function(dat,
     # dat.copy.sub <- dat.copy[, ..use.cols][sample(.N, 1000)]
     
     dat.umap <- uwot::umap(
-        X=dat.copy[, ..use.cols], 
-        n_threads=n_threads,
+        X=dat.copy[, ..use.cols],
         ...)
     
     # Preparing data to return
