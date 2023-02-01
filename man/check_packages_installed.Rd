@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{check_packages_installed}
 \alias{check_packages_installed}
-\title{To check required packages are installed}
+\title{Check packages are installed}
 \usage{
 check_packages_installed(packages_name)
 }

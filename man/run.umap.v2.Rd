@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.umap.v2.R
 \name{run.umap.v2}
 \alias{run.umap.v2}
-\title{V2 version of run umap. Experimental. Use at your own risk.}
+\title{V2 version of run umap.}
 \usage{
 run.umap.v2(
   dat,
@@ -18,5 +18,17 @@ run.umap.v2(
 See their vignette for more info.}
 }
 \description{
-V2 version of run umap. Experimental. Use at your own risk.
+Experimental feature. Use at your own risk!
+\emph{Note, by default, uwot will be run in parallel by default.}
+To be more specific, \code{n_threads} will be automatically set to maximum number
+of cores in your computer - 1.
+However, you can override this by just passing the n_threads parameter.
+Just a reminder, by default, we do not modify the \code{n_sgd_threads} parameter.
+It will be set to 1 unless you explicitly modify it.
+Thus by default, stochastic gradient descent will be calculated serially, which
+is better for result reproducibility as the same seed passed as \code{umap.seed} will be used.
+See uwot::umap vignette for more information
+}
+\author{
+Givanna Putri
 }
