@@ -121,6 +121,7 @@ create.dt <- function(dat, from = NULL) {
 #' @return A list of data.table objects.
 #'
 #' @import Seurat patchwork
+#' @noRd
 #' 
 convert.seurat.object <- function(dat) {
     a <- GetAssayData(object = dat)
@@ -264,8 +265,9 @@ convert.seurat.object <- function(dat) {
 #'
 #' @return A list of data.table objects.
 #'
-#' @import SingleCellExperiment
-#'
+#' @import SingleCellExperiment Matrix
+#' @noRd
+#' 
 convert.sce <- function(dat) {
     geneNames <- rownames(dat) # genes
     geneNames
@@ -306,7 +308,7 @@ convert.sce <- function(dat) {
         # i <- assays[[1]]
 
         tmp <- dat@assays@data[[i]]
-        tmp <- as.matrix(tmp)
+        tmp <- Matrix::as.matrix(tmp)
         # dim(tmp)
         # colnames(tmp) # columns = cells
         tmp <- as.data.table(tmp)
@@ -367,6 +369,7 @@ convert.sce <- function(dat) {
 #' @return A list of data.table objects.
 #' 
 #' @import flowCore
+#' @noRd
 #' 
 convert.flowframe <- function(dat) {
     ### Extract 'exprs'

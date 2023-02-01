@@ -41,6 +41,7 @@ Imports:
     HDF5Array,
     irlba,
     Matrix,
+    parallel,
     patchwork,
     pheatmap,
     plyr,

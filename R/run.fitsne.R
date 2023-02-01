@@ -188,7 +188,8 @@ run.fitsne <- function(dat,
 #'   \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6402590/}.
 #' 
 #' @import rsvd irlba
-#'
+#' @noRd
+#' 
 fftRtsne <- function(X,
                      dims = 2,
                      perplexity = 30,
