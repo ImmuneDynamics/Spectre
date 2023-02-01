@@ -1,21 +1,34 @@
-# Test scripts
+# Unit tests
 
-This folder contains all the unit and manual tests for the Spectre package.
-Unit tests are stored in `testthat` folder while manual tests are stored in `manual_tests` folder.
+This folder contains all the unit tests for the Spectre package.
 
-**Please** do not change the `testthat` folder name as it is crucial for it to be named `testthat` for `devtools` to automatically run them.
-
-Unit tests are well unit tests.
-These are tests which validation and execution can be automated.
-Manual tests are the ones which validation must be done manually, e.g. drawing colour plots requires manual inspection to see if certain features work.
 
 ## Developer guidelines
 
-If you would like to contribute to the package, please make sure that at least all the existing unit tests are all passing.
+If you would like to contribute to the package, please make sure that all the existing unit tests are all passing.
 This is the minimal step to ensure that your changes has not broken existing features.
+If there are unit tests that are not relevant to your changes, but are failing, please raise an issue or if you are feeling inclined, fix them.
 
-In addition, if you are fixing a bug or introducing new features, please kindly update or add and run the relevant unit or manual tests.
+In addition, if you are fixing a bug or introducing new features, please kindly update or add and run the relevant unit tests.
 It makes life easier for everyone! 
-If you find any broken tests that are not relevant to your changes, either fix it (thank you!) or post an issue so someone can attend to it.
 
-To avoid cluttering or overcrowding, please name your test file sensibly and provide a short description within the file as to what you are testing.
+To avoid cluttering or overcrowding, please maintain (as much as possible) 1 unit test file per function, and name them sensibly.
+
+## Preparation steps
+These need to be done regardless of whether you are running only 1 unit test or all the unit tests:
+1. Install devtools, testthat, and usethis packages.
+2. Set your working directory to the package's root directory.
+
+Please do the above steps before proceeding.
+
+## How to run all the unit tests
+
+Run `devtools::test()`.
+
+## How to run just one test file
+1. Open the test file.
+2. Go to console and run `devtools::test_active_file()`.
+
+## How to create a new unit test file
+Run `usethat::use_test(name='whatever_testname')`
+Change the `name` parameter to whatever test name you want to use.
