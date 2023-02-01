@@ -5,8 +5,8 @@ Version: 1.0.0-0
 Date: 2022-03-23
 Authors@R: c(
     person("Thomas", "Ashhurst", , "thomas.ashhurst@sydney.edu.au", role = c("aut", "cre")),
-    person("Felix", "Marsh-Wakefield", , "felix.marsh-wakefield@sydney.edu.au", role = c("aut")),
-    person("Givanna", "Putri", , "putri.g@wehi.edu.au", role = c("aut"))
+    person("Felix", "Marsh-Wakefield", , "felix.marsh-wakefield@sydney.edu.au", role = "aut"),
+    person("Givanna", "Putri", , "putri.g@wehi.edu.au", role = "aut")
   )
 Description: A computational toolkit in R for the integration,
     exploration, and analysis of high-dimensional single-cell cytometry
@@ -40,6 +40,8 @@ Imports:
     gtools,
     HDF5Array,
     irlba,
+    Matrix,
+    patchwork,
     pheatmap,
     plyr,
     qs,
@@ -53,7 +55,9 @@ Imports:
     Rtsne,
     s2,
     scales,
+    Seurat,
     sf,
+    SingleCellExperiment,
     sp,
     stars,
     stringr,
@@ -63,12 +67,12 @@ Imports:
     umap
 Suggests:
     scRNAseq,
-    Seurat,
     SeuratData,
-    SingleCellExperiment,
-    testthat
+    styler,
+    testthat (>= 3.0.0)
 biocViews: flowCore
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
