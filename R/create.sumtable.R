@@ -333,3 +333,4 @@ create.sumtable <- function(dat,
   return(final)
    
 }
+
