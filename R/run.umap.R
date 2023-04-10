@@ -154,6 +154,10 @@ run.umap <- function(dat,
       n_threads = n_threads,
       n_sgd_threads = n_sgd_threads,
       batch = batch,
+      n_neighbors = n_neighbors, 
+      n_components = n_components, 
+      metric = metric,
+      n_epochs = n_epochs,
       ...
     )
 
