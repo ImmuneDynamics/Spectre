@@ -329,20 +329,20 @@ make.colour.plot <- function(dat,
     
     # X AXIS
     if (is.null(align.xy.by)) {
-        Xmax <- max(dat[[x.axis]], na.rm = TRUE))
-        Xmin <- min(dat[[x.axis]], na.rm = TRUE))
+        Xmax <- max(dat[[x.axis]], na.rm = TRUE)
+        Xmin <- min(dat[[x.axis]], na.rm = TRUE)
     } else {
-        Xmax <- max(align.xy.by[[x.axis]], na.rm = TRUE))
-        Xmin <- min(align.xy.by[[x.axis]], na.rm = TRUE))
+        Xmax <- max(align.xy.by[[x.axis]], na.rm = TRUE)
+        Xmin <- min(align.xy.by[[x.axis]], na.rm = TRUE)
     }
     
     # Y AXIS
     if (is.null(align.xy.by)) {
-        Ymax <- max(dat[[y.axis]], na.rm = TRUE))
-        Ymin <- min(dat[[y.axis]], na.rm = TRUE))
+        Ymax <- max(dat[[y.axis]], na.rm = TRUE)
+        Ymin <- min(dat[[y.axis]], na.rm = TRUE)
     } else {
-        Ymax <- max(align.xy.by[[y.axis]], na.rm = TRUE))
-        Ymin <- min(align.xy.by[[y.axis]], na.rm = TRUE))
+        Ymax <- max(align.xy.by[[y.axis]], na.rm = TRUE)
+        Ymin <- min(align.xy.by[[y.axis]], na.rm = TRUE)
     }
     
     # COLOUR
