@@ -46,6 +46,9 @@ run.fast.umap <- function(dat,
         stop("dat must be of type data.frame or data.table")
     }
   
+    if(!is.element('parallel', installed.packages()[,1])) stop('parallel is required but not installed')
+    require('parallel')
+  
     dat.copy <- copy(dat)
 
     # for testing only
