@@ -45,14 +45,13 @@ run.fast.umap <- function(dat,
     if (!"data.frame" %in% class(dat)) {
         stop("dat must be of type data.frame or data.table")
     }
-
-    set.seed(umap.seed)
-
+  
     dat.copy <- copy(dat)
 
     # for testing only
     # dat.copy.sub <- dat.copy[, ..use.cols][sample(.N, 1000)]
 
+    set.seed(umap.seed)
     dat.umap <- uwot::umap(
         X = dat.copy[, use.cols, with = FALSE],
         n_threads = n_threads,
