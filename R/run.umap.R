@@ -157,8 +157,7 @@ run.umap <- function(dat,
       n_neighbors = n_neighbors, 
       n_components = n_components, 
       metric = metric,
-      n_epochs = n_epochs,
-      ...
+      n_epochs = n_epochs
     )
 
     # Preparing data to return
