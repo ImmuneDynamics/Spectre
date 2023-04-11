@@ -51,6 +51,8 @@ run.rpca <- function(dat,
       
       dat.start <- dat
       
+      raw.cols <- use.cols
+      
       new.names <- paste0('Col', c(1:length(raw.cols)))
       match <- data.table('Start' = raw.cols, 'New' = new.names)
       match

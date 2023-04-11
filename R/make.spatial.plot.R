@@ -47,6 +47,10 @@ make.spatial.plot <- function(dat, # spatial data object
                               image.mask.colour = "gold",
                               image.min.threshold = 0.00,
                               image.max.threshold = 0.99,
+                              
+                              max = NA,
+                              min = NA,
+                              
                               image.blank = FALSE,
                               cell.x = "x",
                               cell.y = "y",
@@ -233,8 +237,18 @@ make.spatial.plot <- function(dat, # spatial data object
 
   ## Raster colour limits
 
-  RastMin <- quantile(tiff.df[[3]], probs = c(raster.min.threshold))
-  RastMax <- quantile(tiff.df[[3]], probs = c(raster.max.threshold))
+  if(is.na(max)){
+    RastMax <- quantile(tiff.df[[3]], probs = c(raster.max.threshold))
+  } else {
+    RastMax <- max
+  }
+  
+  if(is.na(min)){
+    RastMin <- quantile(tiff.df[[3]], probs = c(raster.min.threshold))
+  } else {
+    RastMin <- min
+  }
+
 
   ###############################################
   ### Add a check to see if centroids line up ###
