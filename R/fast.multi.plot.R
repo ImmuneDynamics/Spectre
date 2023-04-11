@@ -83,6 +83,7 @@ fast.multi.plot <- function(dat,
   if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
   if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
   if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
+  if(!is.element('scattermore', installed.packages()[,1])) stop('scattermore is required but not installed')
   
   ### Load packages
   require(ggplot2)
@@ -91,6 +92,7 @@ fast.multi.plot <- function(dat,
   require(ggthemes)
   require(RColorBrewer)
   require(ggpointdensity)
+  require(scattermore)
   
   ### Overall plot settings
   #title <- figure.title

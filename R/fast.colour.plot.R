@@ -107,6 +107,8 @@ fast.colour.plot <- function(dat,
         stop("ggthemes is required but not installed")
     if (!is.element("RColorBrewer", installed.packages()[, 1]))
         stop("RColorBrewer is required but not installed")
+    if (!is.element("scattermore", installed.packages()[, 1]))
+      stop("scattermore is required but not installed")
     
     ### Load packages
     require(ggplot2)
@@ -114,6 +116,7 @@ fast.colour.plot <- function(dat,
     require(colorRamps)
     require(ggthemes)
     require(RColorBrewer)
+    require(scattermore)
     
     ### Demo data
     
