@@ -376,7 +376,7 @@ create.sumtable <- function(dat,
         }
         
         final <- do.add.cols(final, sample.col, ann, sample.col, show.status = FALSE)
-        final <- final[,c(sample.col, annot.cols, res.cols), with = FALSE] 
+        final <- final[,c(sample.col, annot.cols, sort(res.cols)), with = FALSE] 
       }
   
   ### Return
