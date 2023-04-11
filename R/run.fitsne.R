@@ -84,6 +84,8 @@
 #'
 #' @author
 #' Givanna Putri
+#' 
+#' @import data.table
 #'
 #' @export
 run.fitsne <- function(dat,
@@ -121,12 +123,6 @@ run.fitsne <- function(dat,
                        perplexity_list = NULL,
                        get_costs = FALSE,
                        df = 1.0) {
-  if (!is.element("rsvd", installed.packages()[, 1])) stop("rsvd is required but not installed")
-  if (!is.element("irlba", installed.packages()[, 1])) stop("irlba is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-
-  require("rsvd")
-  require("irlba")
 
   if (is.null(fast_tsne_path)) {
     # use pre-compiled one given in Spectre
@@ -176,4 +172,222 @@ run.fitsne <- function(dat,
   dat_bk[[fitsne.y.name]] <- fitsne_out[, 2]
 
   return(dat_bk)
+}
+
+#' FIt-SNE Based on Kluger Lab FIt-SNE
+#'
+#' Modified version of \url{https://github.com/KlugerLab/FIt-SNE/}
+#' Please do not directly call this function as it requires compiled FIt-SNE code to run.
+#' If you want to run FIt-SNE, please have a look at \code{\link{run.fitsne}} function.
+#'
+#' @seealso \code{\link{run.fitsne}}
+#'
+#' @references Linderman, G., Rachh, M., Hoskins, J., Steinerberger, S.,
+#'   Kluger., Y. (2019). Fast interpolation-based t-SNE for improved
+#'   visualization of single-cell RNA-seq data. Nature Methods.
+#'   \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6402590/}.
+#' 
+#' @import rsvd irlba
+#' @noRd
+#' 
+fftRtsne <- function(X,
+                     dims = 2,
+                     perplexity = 30,
+                     theta = 0.5,
+                     max_iter = 750,
+                     fft_not_bh = TRUE,
+                     ann_not_vptree = TRUE,
+                     stop_early_exag_iter = 250,
+                     exaggeration_factor = 12.0,
+                     no_momentum_during_exag = FALSE,
+                     start_late_exag_iter = -1,
+                     late_exag_coeff = 1.0,
+                     mom_switch_iter = 250,
+                     momentum = 0.5,
+                     final_momentum = 0.8,
+                     learning_rate = "auto",
+                     n_trees = 50,
+                     search_k = -1,
+                     rand_seed = -1,
+                     nterms = 3,
+                     intervals_per_integer = 1,
+                     min_num_intervals = 50,
+                     K = -1,
+                     sigma = -30,
+                     initialization = "pca",
+                     max_step_norm = 5,
+                     data_path = NULL,
+                     result_path = NULL,
+                     load_affinities = NULL,
+                     fast_tsne_path = NULL,
+                     nthreads = 0,
+                     perplexity_list = NULL,
+                     get_costs = FALSE,
+                     df = 1.0) {
+    version_number <- "1.2.1"
+    
+    if (is.null(data_path)) {
+        data_path <- tempfile(pattern = 'fftRtsne_data_', fileext = '.dat')
+    }
+    if (is.null(result_path)) {
+        result_path <- tempfile(pattern = 'fftRtsne_result_', fileext = '.dat')
+    }
+    
+    if (is.null(fast_tsne_path)) {
+        fast_tsne_path <- system2('which', 'fast_tsne', stdout = TRUE)
+    }
+    fast_tsne_path <- normalizePath(fast_tsne_path)
+    if (!file_test("-x", fast_tsne_path)) {
+        stop(fast_tsne_path, " does not exist or is not executable; check your fast_tsne_path parameter")
+    }
+    
+    is.wholenumber <- function(x, tol = .Machine$double.eps^0.5)  abs(x - round(x)) < tol
+    
+    if (!is.numeric(theta) || (theta < 0.0) || (theta > 1.0) ) { stop("Incorrect theta.")}
+    if (nrow(X) - 1 < 3 * perplexity) { stop("Perplexity is too large.")}
+    if (!is.matrix(X)) { stop("Input X is not a matrix")}
+    if (!(max_iter > 0)) { stop("Incorrect number of iterations.")}
+    if (!is.wholenumber(stop_early_exag_iter) || stop_early_exag_iter < 0) { stop("stop_early_exag_iter should be a positive integer")}
+    if (!is.numeric(exaggeration_factor)) { stop("exaggeration_factor should be numeric")}
+    if (!is.numeric(df)) { stop("df should be numeric")}
+    if (!is.wholenumber(dims) || dims <= 0) { stop("Incorrect dimensionality.")}
+    if (search_k == -1) {
+        if (perplexity > 0) {
+            search_k <- n_trees * perplexity * 3
+        } else if (perplexity == 0) {
+            search_k <- n_trees * max(perplexity_list) * 3
+        } else { 
+            search_k <- n_trees * K
+        }
+    }
+    
+    if (is.character(learning_rate) && learning_rate =='auto') {
+        learning_rate = max(200, nrow(X)/exaggeration_factor)
+    }
+    if (is.character(start_late_exag_iter) && start_late_exag_iter =='auto') {
+        if (late_exag_coeff > 0) {
+            start_late_exag_iter = stop_early_exag_iter
+        }else {
+            start_late_exag_iter = -1
+        }
+    }
+    
+    if (is.character(initialization) && initialization =='pca') {
+        if (rand_seed != -1)  {
+            set.seed(rand_seed)
+        }
+        if ("rsvd" %in% utils::installed.packages()) {
+            message('Using rsvd() to compute the top PCs for initialization.')
+            X_c <- scale(X, center=T, scale=F)
+            rsvd_out <- rsvd::rsvd(X_c, k=dims)
+            X_top_pcs <- rsvd_out$u %*% diag(rsvd_out$d, nrow=dims)
+        }else if("irlba" %in% utils::installed.packages()) { 
+            message('Using irlba() to compute the top PCs for initialization.')
+            X_colmeans <- colMeans(X)
+            irlba_out <- irlba::irlba(X,nv=dims, center=X_colmeans)
+            X_top_pcs <- irlba_out$u %*% diag(irlba_out$d, nrow=dims)
+        }else{
+            stop("By default, FIt-SNE initializes the embedding with the
+                     top PCs. We use either rsvd or irlba for fast computation.
+                     To use this functionality, please install the rsvd package
+                     with install.packages('rsvd') or the irlba package with
+                     install.packages('ilrba').  Otherwise, set initialization
+                     to NULL for random initialization, or any N by dims matrix
+                     for custom initialization.")
+        }
+        initialization <- 0.0001*(X_top_pcs/sd(X_top_pcs[,1])) 
+        
+    }else if (is.character(initialization) && initialization == 'random'){
+        message('Random initialization')
+        initialization = NULL
+    }
+    
+    if (fft_not_bh) {
+        nbody_algo <- 2
+    } else {
+        nbody_algo <- 1
+    }
+    
+    if (is.null(load_affinities)) {
+        load_affinities <- 0
+    } else {
+        if (load_affinities == 'load') {
+            load_affinities <- 1
+        } else if (load_affinities == 'save') {
+            load_affinities <- 2
+        } else {
+            load_affinities <- 0
+        }
+    }
+    
+    if (ann_not_vptree) {
+        knn_algo <- 1
+    } else {
+        knn_algo <- 2
+    }
+    tX <- as.numeric(t(X))
+    
+    f <- file(data_path, "wb")
+    n <- nrow(X)
+    D <- ncol(X)
+    writeBin(as.integer(n), f, size = 4)
+    writeBin(as.integer(D), f, size = 4)
+    writeBin(as.numeric(theta), f, size = 8) #theta
+    writeBin(as.numeric(perplexity), f, size = 8)
+    
+    if (perplexity == 0) {
+        writeBin(as.integer(length(perplexity_list)), f, size = 4)
+        writeBin(perplexity_list, f) 
+    }
+    
+    writeBin(as.integer(dims), f, size = 4)
+    writeBin(as.integer(max_iter), f, size = 4)
+    writeBin(as.integer(stop_early_exag_iter), f, size = 4)
+    writeBin(as.integer(mom_switch_iter), f, size = 4)
+    writeBin(as.numeric(momentum), f, size = 8)
+    writeBin(as.numeric(final_momentum), f, size = 8)
+    writeBin(as.numeric(learning_rate), f, size = 8)
+    writeBin(as.numeric(max_step_norm), f, size = 8)
+    writeBin(as.integer(K), f, size = 4) #K
+    writeBin(as.numeric(sigma), f, size = 8) #sigma
+    writeBin(as.integer(nbody_algo), f, size = 4)  #not barnes hut
+    writeBin(as.integer(knn_algo), f, size = 4) 
+    writeBin(as.numeric(exaggeration_factor), f, size = 8) #compexag
+    writeBin(as.integer(no_momentum_during_exag), f, size = 4) 
+    writeBin(as.integer(n_trees), f, size = 4) 
+    writeBin(as.integer(search_k), f, size = 4) 
+    writeBin(as.integer(start_late_exag_iter), f, size = 4) 
+    writeBin(as.numeric(late_exag_coeff), f, size = 8) 
+    
+    writeBin(as.integer(nterms), f, size = 4) 
+    writeBin(as.numeric(intervals_per_integer), f, size = 8) 
+    writeBin(as.integer(min_num_intervals), f, size = 4) 
+    writeBin(tX, f) 
+    writeBin(as.integer(rand_seed), f, size = 4) 
+    writeBin(as.numeric(df), f, size = 8)
+    writeBin(as.integer(load_affinities), f, size = 4) 
+    if (!is.null(initialization) ) { writeBin( c(t(initialization)), f) }		
+    close(f) 
+    
+    flag <- system2(command = fast_tsne_path, 
+                    args = c(version_number, data_path, result_path, nthreads))
+    if (flag != 0) {
+        stop('tsne call failed')
+    }
+    f <- file(result_path, "rb")
+    n <- readBin(f, integer(), n = 1, size = 4)
+    d <- readBin(f, integer(), n = 1, size = 4)
+    Y <- readBin(f, numeric(), n = n * d)
+    Y <- t(matrix(Y, nrow = d))
+    if (get_costs) {
+        readBin(f, integer(), n = 1, size = 4)
+        costs <- readBin(f, numeric(), n = max_iter, size = 8)
+        Yout <- list(Y = Y, costs = costs)
+    } else {
+        Yout <- Y
+    }
+    close(f)
+    file.remove(data_path)
+    file.remove(result_path)
+    Yout
 }

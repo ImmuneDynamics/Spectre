@@ -5,3 +5,5 @@
 Spectre.Rproj
 **/.DS_Store
 .DS_Store
+.Rdata
+.httr-oauth

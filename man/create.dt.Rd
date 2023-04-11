@@ -4,7 +4,7 @@
 \alias{create.dt}
 \title{Create a data.table}
 \usage{
-create.dt(dat, from)
+create.dt(dat, from = NULL)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A Seurat or SingleCellExperiment or flowFrame object.}
@@ -25,6 +25,17 @@ containing a data.table object storing the data, as well as a bunch of vectors g
 the various features (columns) in the data.table, e.g. dim.reds vector will list
 the kind of dimensionality reduction (by PCA or UMAP for instance) that have been applied
 to the data and henceforth the columns in the data.table associated with them.
+}
+\examples{
+devtools::install_github("satijalab/seurat-data")
+library(SeuratData)
+InstallData("pbmc3k")
+pbmc <- LoadData("pbmc3k", type = "pbmc3k.final")
+cell.dat <- create.dt(pbmc)
+
+library(scRNAseq)
+sce <- ReprocessedAllenData("tophat_counts")
+
 }
 \references{
 \url{https://immunedynamics.io/spectre/}.

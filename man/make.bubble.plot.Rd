@@ -22,3 +22,6 @@ percentage of cells captured across different clusters.
 Experimental feature.
 Use at your own risk.
 }
+\author{
+Givanna Putri
+}

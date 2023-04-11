@@ -10,8 +10,8 @@ Now before you do that we just have a few guidelines that will make life much be
 1. Make sure all the unit tests are passing. See the `tests/testthat` folder for the unit tests and how to run them. If you find tests that are failing but has nothing to do with your changes, raise an issue, or fix them (thanks!)
 2. Fix up all the unit/manual tests relevant to your changes. If they don't exist, create one. This will certainly future proof further code changes.
 3. Update the documentations. This is especially important. Read more below.
-4. Test building the package by running `devtools::check()`. This is to make sure the package can be installed properly.
-
+4. Test building the package by running `devtools::check()` or `devtools::test()`. This is to make sure the package can be installed properly.
+5. Run `styer::tidyverse_style(indent_by=4L)` on the files you modified. This is to make sure that the style of the file is consistent throughout the package.
 
 We're aware that there are functions which documentations need to be updated. 
 We're constantly working on them.
