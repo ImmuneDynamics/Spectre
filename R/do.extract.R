@@ -13,6 +13,7 @@
 
 do.extract <- function(dat, # spatial.data object
                        mask, # name of the mask being summarised
+                       measure.masks = NULL,
                        name = "CellData",
                        fun = "mean" # type of marker summarisation (mean, median etc)
 ) {
@@ -109,6 +110,10 @@ do.extract <- function(dat, # spatial.data object
     other.polys <- names(dat[[roi]]@MASKS)
     other.polys <- other.polys[!other.polys %in% mask]
 
+    if(!is.null(measure.masks)){
+      other.polys <- measure.masks
+    }
+    
     cols <- c("x", "y", "ID")
 
     roi.dat.xyid <- roi.dat[, ..cols]

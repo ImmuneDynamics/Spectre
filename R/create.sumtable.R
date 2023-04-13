@@ -145,6 +145,14 @@ create.sumtable <- function(dat,
       
       template <- do.add.cols(template, 'NAME', props, 'NAME', show.status = FALSE)
     
+          # template
+          # 
+          # test <- tidyr::separate(template, 'NAME', sep = ' -- ', into = c(pop.col, sample.col))
+          # test$nrows <- NULL
+          # test <- reshape(test, idvar = sample.col, timevar = pop.col, direction = "wide", sep = sep)
+          # test <- as.data.table(test)
+          # test    
+      
       gc()
   
   ### Percent of parent
@@ -160,7 +168,9 @@ create.sumtable <- function(dat,
           
           message(paste0("   ... ", i))
           
-          tmp <- dat[dat[[parent.col]] == i,]
+          rws <- dat[[parent.col]] == i
+          
+          tmp <- dat[rws,]
           unique(tmp[[pop.col]])
           
           res.1 <- data.frame(with(tmp, table(tmp[[parent.col]], tmp[[sample.col]])))
@@ -179,15 +189,17 @@ create.sumtable <- function(dat,
           res.3$PopCounts <- NULL
           res.3$ParentCounts <- NULL
           res.list[[i]] <- res.3
+          
+          rm(res.1)
+          rm(res.2)
+          rm(res.3)
+          rm(tmp)
+          rm(rws)
         }
         
         template <- do.add.cols(template, 'NAME', rbindlist(res.list), 'NAME', show.status = FALSE)
         
         rm(res.list)
-        rm(res.1)
-        rm(res.2)
-        rm(res.3)
-        rm(tmp)
         gc()
       }
   
@@ -362,6 +374,7 @@ create.sumtable <- function(dat,
       final <- tidyr::separate(template, 'NAME', sep = ' -- ', into = c(pop.col, sample.col))
       final$nrows <- NULL
       final <- reshape(final, idvar = sample.col, timevar = pop.col, direction = "wide", sep = sep)
+      final <- as.data.table(final)
       
       if(!is.null(annot.cols)){
         res.cols <- names(final)[-1]
