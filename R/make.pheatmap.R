@@ -101,11 +101,13 @@ make.pheatmap <- function(dat,
   if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
   if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
   if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
+  if(!is.element('dendsort', installed.packages()[,1])) stop('dendsort is required but not installed')
   
   ### Require packages
   require(pheatmap)
   require(RColorBrewer)
   require(scales)
+  require(dendsort)
   
   ### Setup color scheme
   

@@ -383,7 +383,7 @@ create.sumtable <- function(dat,
         
         for(i in unique(dat[[sample.col]])){
           # i <- unique(dat[[sample.col]])[1]
-          tp <- dat[dat[['Sample']] == i,]
+          tp <- dat[dat[[sample.col]] == i,]
           tp <- tp[1,c(sample.col, annot.cols), with = FALSE]  
           ann <- rbind(ann, tp)
         }
