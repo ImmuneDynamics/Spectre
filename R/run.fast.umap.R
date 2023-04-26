@@ -6,8 +6,8 @@
 #' of cores in your computer - 1.
 #' However, you can override this by setting both to NULL to run it in serial.
 #' See uwot::umap vignette for more information.
-#' This umap implementation is ***much much*** faster than the one provided by the 
-#' umap package. 
+#' This umap implementation is ***much much*** faster than the one provided by the
+#' umap package.
 #' Once this has been long established, we will deprecate the old one.
 #'
 #' @param dat Data.table containing your cytometry data.
@@ -19,10 +19,10 @@
 #' @param n_sgd_threads DEFAULT "auto". Number of threads to use during stochastic gradient descent. If set to > 1, then be aware that if `batch = FALSE`, results will not be reproducible, even if `set.seed` is called with a fixed seed before running. Set to "auto" to use the same value as n_threads.
 #' @param batch DEFAULT TRUE. If set to TRUE, then embedding coordinates are updated at the end of each epoch rather than during the epoch. In batch mode, results are reproducible with a fixed random seed even with n_sgd_threads > 1, at the cost of a slightly higher memory use. You may also have to modify learning_rate and increase n_epochs, so whether this provides a speed increase over the single-threaded optimization is likely to be dataset and hardware-dependent.
 #' @param ... Parameters to be passed to uwot::umap. See their vignette for more info.
-#' 
-#' @details 
-#' As of Version 0.1.11, it is now possible to get reproducible results (for a given value of set.seed) when running the optimization step with multiple threads (`n_sgd_threads` greater than 1). 
-#' You may need to increase n_epochs to get similar levels of convergence. 
+#'
+#' @details
+#' As of Version 0.1.11, it is now possible to get reproducible results (for a given value of set.seed) when running the optimization step with multiple threads (`n_sgd_threads` greater than 1).
+#' You may need to increase n_epochs to get similar levels of convergence.
 #' To run in this mode, set batch = TRUE.
 #'
 #' @import data.table
@@ -33,30 +33,29 @@
 #' @export
 
 run.fast.umap <- function(dat,
-                        use.cols,
-                        umap.x.name = "UMAP_X",
-                        umap.y.name = "UMAP_Y",
-                        umap.seed = 42,
-                        n_threads = detectCores() - 1,
-                        n_sgd_threads = 'auto',
-                        batch = TRUE,
-                        ...) {
+                          use.cols,
+                          umap.x.name = "UMAP_X",
+                          umap.y.name = "UMAP_Y",
+                          umap.seed = 42,
+                          n_threads = detectCores() - 1,
+                          n_sgd_threads = "auto",
+                          batch = TRUE,
+                          ...) {
     # Check input
     if (!"data.frame" %in% class(dat)) {
         stop("dat must be of type data.frame or data.table")
     }
-  
-    if(!is.element('parallel', installed.packages()[,1])) stop('parallel is required but not installed')
-    require('parallel')
-  
-    dat.copy <- copy(dat)
+
+    # Check package dependencies
+    check_packages_installed("parallel")
+    check_packages_installed("uwot")
 
     # for testing only
     # dat.copy.sub <- dat.copy[, ..use.cols][sample(.N, 1000)]
 
     set.seed(umap.seed)
     dat.umap <- uwot::umap(
-        X = dat.copy[, use.cols, with = FALSE],
+        X = dat[, use.cols, with = FALSE],
         n_threads = n_threads,
         n_sgd_threads = n_sgd_threads,
         batch = batch,
@@ -65,7 +64,7 @@ run.fast.umap <- function(dat,
 
     # Preparing data to return
     colnames(dat.umap) <- c(umap.x.name, umap.y.name)
-    dat.copy <- cbind(dat.copy, dat.umap)
+    dat <- cbind(dat, dat.umap)
 
-    return(dat.copy)
+    return(dat)
 }
