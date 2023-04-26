@@ -464,7 +464,7 @@ fast.colour.plot <- function(dat,
         p <- ggplot(data = dat,
                     aes(x = .data[[x.axis]],
                         y = .data[[y.axis]])) +
-            ggpointdensity::geom_point(size = dot.size)
+            ggpointdensity::geom_pointdensity(size = dot.size)
         
         if (colours == "viridis" ||
             colours == "magma" || colours == "inferno") {
