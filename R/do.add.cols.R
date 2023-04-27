@@ -4,8 +4,8 @@
 #'
 #' @param dat NO DEFAULT. A data.table (or data.frame) containing the data to have new values added to.
 #' @param base.col NO DEFAULT. Name of the column containing values that new values will be matched to.
-#' @param add.dat NO DEFAULT. A data.table (or data.frame) of new values to embed as a new columns, with one column containing values used for matching with the target data.table.
-#' @param add.by NO DEFAULT. Character, name of the column in add.dat that is used for matching to the target dataset.
+#' @param add.dat NO DEFAULT. A data table of new values to embed as a new columns, with one column containing values used for matching with the target data.table.
+#' @param add.by NO DEFAULT. Character, name of the column in add.dat that is used for matching to the taret dataset.
 #' @param rmv.ext DEFAULTS TO FALSE. Logical, can be TRUE or FALSE. Removes a ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.
 #' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
