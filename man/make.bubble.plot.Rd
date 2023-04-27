@@ -4,7 +4,7 @@
 \alias{make.bubble.plot}
 \title{Make Bubble Plot}
 \usage{
-make.bubble.plot(dt, markers_to_plot, cluster, col.scheme = "viridis")
+make.bubble.plot(dt, markers_to_plot, cluster, col.scheme = "RdYlBu")
 }
 \arguments{
 \item{dt}{Data.table object containing the data to plot}
@@ -20,7 +20,6 @@ ggplot object containing the plot
 Dot (or bubble) plot which visualises the marker expression changes and the
 percentage of cells captured across different clusters.
 Experimental feature.
-Use at your own risk.
 }
 \author{
 Givanna Putri
