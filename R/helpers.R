@@ -2,7 +2,6 @@
 #' 
 #' To check required packages are installed
 #' 
-#' @NoRd
 check_packages_installed <- function(packages_name) {
     for (p in packages_name) {
         if (!is.element(p, installed.packages()[, 1])) 
