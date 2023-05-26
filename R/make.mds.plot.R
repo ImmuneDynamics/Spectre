@@ -16,12 +16,13 @@
 make.mds.plot <- function(dat,
                           sample_col,
                           markers,
-                          colour_by) {
+                          colour_by,
+                          font_size = 4) {
     pseudobulk <- dat[, lapply(.SD, mean), by = sample_col, .SDcols = markers]
     pseudobulk_transposed <- t(pseudobulk[, markers, with = FALSE])
     colnames(pseudobulk_transposed) <- pseudobulk[[sample_col]]
     
-    mds <- plotMDS(pseudobulk_transposed)
+    mds <- plotMDS(pseudobulk_transposed, plot = FALSE)
     
     # To get unique combination of sample and colour by
     sample_colour_by_combo <- unique(dat[, c(sample_col, colour_by), with = FALSE])
@@ -42,14 +43,16 @@ make.mds.plot <- function(dat,
     
     plt <- ggplot(mds_df, aes(x = dim1, y = dim2, color = !! sym(colour_by))) +
         geom_point() +
-        geom_label_repel(aes(label = !! sym(sample_col)), show.legend = FALSE, max.overlaps = 20) +
-        theme_bw() +
-        labs(
-            x = paste0("MDS1 (", round( 100 * mds$var.explained[1]), "%)"), 
-            y = paste0("MDS2 (", round( 100 * mds$var.explained[2]), "%)"),
-            color = colour_by,
-            title = "MDS plot of pseudobulk protein expression of samples")
-    
-    return(plt)
-    
+        geom_label_repel(aes(label = !! sym(sample_col)), 
+                         show.legend = FALSE, max.overlaps = 50, size = font_size, 
+                         box.padding = unit(0.1, "lines")) +
+    theme_bw() +
+    labs(
+        x = paste0("MDS1 (", round( 100 * mds$var.explained[1]), "%)"), 
+        y = paste0("MDS2 (", round( 100 * mds$var.explained[2]), "%)"),
+        color = colour_by,
+        title = "MDS plot of pseudobulk protein expression of samples")
+
+return(plt)
+
 }
