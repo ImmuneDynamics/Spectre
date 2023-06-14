@@ -2,7 +2,7 @@
 % Please edit documentation in R/run.fast.umap.R
 \name{run.fast.umap}
 \alias{run.fast.umap}
-\title{Faster version of run umap.}
+\title{DEPRECATED Faster version of run umap.}
 \usage{
 run.fast.umap(
   dat,
@@ -36,6 +36,10 @@ run.fast.umap(
 \item{...}{Parameters to be passed to uwot::umap. See their vignette for more info.}
 }
 \description{
+15/6/2023: This function has been merged into run.umap.
+To use, please run run.umap with parameter fast set to TRUE.
+}
+\details{
 This umap function runs the implementation provided by the uwot package.
 \emph{Note, by default, the calculation will be run in parallel.}
 To be more specific, \code{n_threads} and \code{n_sgd_threads} will be automatically set to maximum number
@@ -45,8 +49,7 @@ See uwot::umap vignette for more information.
 This umap implementation is \emph{\strong{much much}} faster than the one provided by the
 umap package.
 Once this has been long established, we will deprecate the old one.
-}
-\details{
+
 As of Version 0.1.11, it is now possible to get reproducible results (for a given value of set.seed) when running the optimization step with multiple threads (\code{n_sgd_threads} greater than 1).
 You may need to increase n_epochs to get similar levels of convergence.
 To run in this mode, set batch = TRUE.

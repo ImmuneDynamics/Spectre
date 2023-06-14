@@ -1,5 +1,8 @@
-#' Faster version of run umap.
+#' DEPRECATED Faster version of run umap.
 #'
+#' 15/6/2023: This function has been merged into run.umap. 
+#' To use, please run run.umap with parameter fast set to TRUE.
+#' 
 #' This umap function runs the implementation provided by the uwot package.
 #' *Note, by default, the calculation will be run in parallel.*
 #' To be more specific, `n_threads` and `n_sgd_threads` will be automatically set to maximum number

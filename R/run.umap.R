@@ -74,6 +74,7 @@ run.umap <- function(dat,
                      verbose = TRUE,
                      umap_learn_args = NA,
                      
+                     # For Fast UMAP
                      fast = FALSE,
                      n_threads = detectCores() - 1,
                      n_sgd_threads = 'auto',
@@ -85,9 +86,9 @@ run.umap <- function(dat,
   # use.cols <- c(1:4)
 
   ## Check that necessary packages are installed
-  if (!is.element("umap", installed.packages()[, 1])) stop("umap is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-
+  check_packages_installed(c("data.table"))
+  require(data.table)
+  
   if (!"data.frame" %in% class(dat)) {
     stop("dat must be of type data.frame or data.table")
   }
@@ -96,14 +97,14 @@ run.umap <- function(dat,
     if (!is.element("parallel", installed.packages()[, 1])){
       message("For 'fast' UMAP, parallel is required but not installed. Switching to slow UMAP")
       fast <- FALSE
-      }
     }
-    
-  ## Require packages
-  require(umap)
-  require(data.table)
+  }
+  
   
   if(fast == FALSE){
+    
+    check_packages_installed(c("umap"))
+    require(umap)
   
     ###
     custom.config <- umap::umap.defaults
@@ -133,7 +134,7 @@ run.umap <- function(dat,
     ###
     
     res <- umap::umap(
-      d = dat.bk[, ..use.cols],
+      d = dat[, ..use.cols],
       config = custom.config
     )
 
@@ -149,15 +150,35 @@ run.umap <- function(dat,
   
   if(fast == TRUE){
     
+    # Irritating. Can't peeps just settle on using either NA or NULL?
+    if (is.na(a_gradient)) {
+      a_gradient <- NULL
+    }
+    if (is.na(b_gradient)) {
+      b_gradient <- NULL
+    }
+    
+    set.seed(umap.seed)
+    
     dat.umap <- uwot::umap(
       X = dat[, use.cols, with = FALSE],
       n_threads = n_threads,
       n_sgd_threads = n_sgd_threads,
       batch = batch,
-      n_neighbors = n_neighbors, 
-      n_components = n_components, 
+      n_neighbors = neighbours,
+      n_components = n_components,
       metric = metric,
-      n_epochs = n_epochs
+      n_epochs = n_epochs,
+      init = init,
+      min_dist = min_dist,
+      set_op_mix_ratio = set_op_mix_ratio,
+      local_connectivity = local_connectivity,
+      bandwidth = bandwidth,
+      negative_sample_rate = negative_sample_rate,
+      a = a_gradient,
+      b = b_gradient,
+      spread = spread,
+      verbose = verbose
     )
 
     # Preparing data to return

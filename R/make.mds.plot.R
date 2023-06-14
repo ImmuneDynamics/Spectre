@@ -18,11 +18,11 @@ make.mds.plot <- function(dat,
                           markers,
                           colour_by,
                           font_size = 4) {
-    pseudobulk <- dat[, lapply(.SD, mean), by = sample_col, .SDcols = markers]
-    pseudobulk_transposed <- t(pseudobulk[, markers, with = FALSE])
-    colnames(pseudobulk_transposed) <- pseudobulk[[sample_col]]
+    agg_dat <- dat[, lapply(.SD, mean), by = sample_col, .SDcols = markers]
+    agg_dat_transposed <- t(agg_dat[, markers, with = FALSE])
+    colnames(agg_dat_transposed) <- agg_dat[[sample_col]]
     
-    mds <- plotMDS(pseudobulk_transposed, plot = FALSE)
+    mds <- plotMDS(agg_dat_transposed, plot = FALSE)
     
     # To get unique combination of sample and colour by
     sample_colour_by_combo <- unique(dat[, c(sample_col, colour_by), with = FALSE])
@@ -31,7 +31,7 @@ make.mds.plot <- function(dat,
         x = data.frame(
             dim1 = mds$x,
             dim2 = mds$y,
-            sample_id = pseudobulk[[sample_col]]
+            sample_id = agg_dat[[sample_col]]
         ),
         y = sample_colour_by_combo,
         by = sample_col
@@ -51,7 +51,7 @@ make.mds.plot <- function(dat,
         x = paste0("MDS1 (", round( 100 * mds$var.explained[1]), "%)"), 
         y = paste0("MDS2 (", round( 100 * mds$var.explained[2]), "%)"),
         color = colour_by,
-        title = "MDS plot of pseudobulk protein expression of samples")
+        title = "MDS plot of mean protein expression of samples")
 
 return(plt)
 

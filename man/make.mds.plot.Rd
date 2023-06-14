@@ -4,7 +4,7 @@
 \alias{make.mds.plot}
 \title{Draw MDS plot}
 \usage{
-make.mds.plot(dat, sample_col, markers, colour_by)
+make.mds.plot(dat, sample_col, markers, colour_by, font_size = 4)
 }
 \arguments{
 \item{dat}{}
