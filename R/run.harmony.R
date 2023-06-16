@@ -98,6 +98,10 @@ run.harmony <- function(dat,
 
   message("run.harmony - preparing data (1/4)")
 
+  if(length(align.cols) <= npcs){
+    npcs <- length(align.cols) -1
+  }
+  
   start.dat <- dat
 
   dat <- dat[, align.cols, with = FALSE]
