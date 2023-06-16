@@ -26,20 +26,20 @@ do.asinh <- function(dat,
                      append.cf = FALSE,
                      reduce.noise = FALSE,
                      digits = 9) {
-
+  
   ### Setup data
   value <- dat[, use.cols, with = FALSE]
-
+  
   ### Numeric checks
-
+  
   if (isFALSE(all(sapply(value, is.numeric)))) {
     message("It appears that one column in your dataset is non numeric")
     print(sapply(value, is.numeric))
     stop("do.asinh stopped")
   }
-
+  
   ### Optional noise reduction
-
+  
   # https://github.com/JinmiaoChenLab/cytofkit/issues/71
   if (reduce.noise == TRUE) {
     message("This noise reduction function is experimental, and should be used with caution")
@@ -49,9 +49,9 @@ do.asinh <- function(dat,
       value[loID] <- rnorm(length(loID), mean = 0, sd = 0.01)
     }
   }
-
+  
   ### Arcsinh calculation
-
+  
   value <- as.matrix(value)
   value <- value / cofactor
   value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
@@ -59,7 +59,7 @@ do.asinh <- function(dat,
   value <- as.data.table(value)
   
   ### Options to append the CF used
-
+  
   if (append.cf == TRUE) {
     if (length(use.cols) > 1) {
       names(value) <- paste0(names(value), "_asinh_cf", cofactor)
@@ -68,7 +68,7 @@ do.asinh <- function(dat,
       names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
     }
   }
-
+  
   if (append.cf == FALSE) {
     if (length(use.cols) > 1) {
       names(value) <- paste0(names(value), "_asinh")
@@ -77,7 +77,7 @@ do.asinh <- function(dat,
       names(value) <- paste0(use.cols, "_asinh")
     }
   }
-
+  
   ### Wrap up
   dat <- cbind(dat, value)
   return(dat)
