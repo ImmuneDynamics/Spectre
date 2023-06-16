@@ -1,10 +1,10 @@
-#' run.rpca
+#' run.cca
 #'
 #' @import data.table Matrix Seurat
 #'
 #' @export
 
-run.rpca <- function(dat,
+run.cca <- function(dat,
                      use.cols,
                      #type, # data.table from the 'data' slot -- 'asinh'
                      batch.col, # Column from the 'meta' table -- Batch,
@@ -46,7 +46,7 @@ run.rpca <- function(dat,
   
   ### Split data by batch/dataset and create Seurat objects
       
-      message('Running rPCA')
+      message('Running CCA')
       message(' -- setting up data (1/5)')
       
       dat.start <- dat
@@ -125,7 +125,7 @@ run.rpca <- function(dat,
                                                  anchor.features = features, 
                                                  dims = 1:(length(features)-1), 
                                                  k.anchor = k.anchor,
-                                                 reduction = 'rpca')
+                                                 reduction = 'cca')
         
         immune.anchors
         
@@ -136,7 +136,7 @@ run.rpca <- function(dat,
                                                  anchor.features = features, 
                                                  dims = 1:(length(features)-1), 
                                                  k.anchor = k.anchor,
-                                                 reduction = 'rpca', 
+                                                 reduction = 'cca', 
                                                  reference = which(names(res.list) == reference))
         
         immune.anchors
@@ -162,7 +162,7 @@ run.rpca <- function(dat,
       final[['CELLBARCODE']] <- NULL
       
       final <- final[,c(match[[2]]), with = FALSE]
-      names(final) <- paste0(match[[1]], '_rPCA_aligned')
+      names(final) <- paste0(match[[1]], '_CCA_aligned')
       final
 
       dat.start <- cbind(dat.start, final)
