@@ -4,7 +4,7 @@
 #'
 #' @param dat NO DEFAULT. A data.table
 #' @param use.col DEFAULT = NULL. The column to use for re-ordering
-#' @param values DEFAULT = NULL. A vector of values to use for filtering -- all cells that contain any of the match values will be filtered, and provided in a new data.table. Up to 30 match values can be provided
+#' @param values DEFAULT = NULL. A vector of values to use for filtering -- all cells that contain any of the match values will be filtered, and provided in a new data.table. Up to 35 match values can be provided
 #'
 #' @usage do.filter(dat, use.col, values)
 #'
@@ -36,8 +36,8 @@ do.filter <- function(dat,
 
   ### Warnings
 
-  if (n.values > 30) {
-    stop("do.filter function cannot take more than 20 target values")
+  if (n.values > 35) {
+    stop("do.filter function cannot take more than 35 target values")
   }
 
   ### Filtering
@@ -596,6 +596,186 @@ do.filter <- function(dat,
                  dat[[use.col]] == values[28] |
                  dat[[use.col]] == values[29] |
                  dat[[use.col]] == values[30], ]
+  }
+  
+  if (n.values == 31) {
+    res <- dat[dat[[use.col]] == values[1] |
+                 dat[[use.col]] == values[2] |
+                 dat[[use.col]] == values[3] |
+                 dat[[use.col]] == values[4] |
+                 dat[[use.col]] == values[5] |
+                 dat[[use.col]] == values[6] |
+                 dat[[use.col]] == values[7] |
+                 dat[[use.col]] == values[8] |
+                 dat[[use.col]] == values[9] |
+                 dat[[use.col]] == values[10] |
+                 dat[[use.col]] == values[11] |
+                 dat[[use.col]] == values[12] |
+                 dat[[use.col]] == values[13] |
+                 dat[[use.col]] == values[14] |
+                 dat[[use.col]] == values[15] |
+                 dat[[use.col]] == values[16] |
+                 dat[[use.col]] == values[17] |
+                 dat[[use.col]] == values[18] |
+                 dat[[use.col]] == values[19] |
+                 dat[[use.col]] == values[20] |
+                 dat[[use.col]] == values[21] |
+                 dat[[use.col]] == values[22] |
+                 dat[[use.col]] == values[23] |
+                 dat[[use.col]] == values[24] |
+                 dat[[use.col]] == values[25] |
+                 dat[[use.col]] == values[26] |
+                 dat[[use.col]] == values[27] |
+                 dat[[use.col]] == values[28] |
+                 dat[[use.col]] == values[29] |
+                 dat[[use.col]] == values[30] |
+                 dat[[use.col]] == values[31], ]
+  }
+  
+  if (n.values == 32) {
+    res <- dat[dat[[use.col]] == values[1] |
+                 dat[[use.col]] == values[2] |
+                 dat[[use.col]] == values[3] |
+                 dat[[use.col]] == values[4] |
+                 dat[[use.col]] == values[5] |
+                 dat[[use.col]] == values[6] |
+                 dat[[use.col]] == values[7] |
+                 dat[[use.col]] == values[8] |
+                 dat[[use.col]] == values[9] |
+                 dat[[use.col]] == values[10] |
+                 dat[[use.col]] == values[11] |
+                 dat[[use.col]] == values[12] |
+                 dat[[use.col]] == values[13] |
+                 dat[[use.col]] == values[14] |
+                 dat[[use.col]] == values[15] |
+                 dat[[use.col]] == values[16] |
+                 dat[[use.col]] == values[17] |
+                 dat[[use.col]] == values[18] |
+                 dat[[use.col]] == values[19] |
+                 dat[[use.col]] == values[20] |
+                 dat[[use.col]] == values[21] |
+                 dat[[use.col]] == values[22] |
+                 dat[[use.col]] == values[23] |
+                 dat[[use.col]] == values[24] |
+                 dat[[use.col]] == values[25] |
+                 dat[[use.col]] == values[26] |
+                 dat[[use.col]] == values[27] |
+                 dat[[use.col]] == values[28] |
+                 dat[[use.col]] == values[29] |
+                 dat[[use.col]] == values[30] |
+                 dat[[use.col]] == values[31] |
+                 dat[[use.col]] == values[32], ]
+  }
+  
+  if (n.values == 33) {
+    res <- dat[dat[[use.col]] == values[1] |
+                 dat[[use.col]] == values[2] |
+                 dat[[use.col]] == values[3] |
+                 dat[[use.col]] == values[4] |
+                 dat[[use.col]] == values[5] |
+                 dat[[use.col]] == values[6] |
+                 dat[[use.col]] == values[7] |
+                 dat[[use.col]] == values[8] |
+                 dat[[use.col]] == values[9] |
+                 dat[[use.col]] == values[10] |
+                 dat[[use.col]] == values[11] |
+                 dat[[use.col]] == values[12] |
+                 dat[[use.col]] == values[13] |
+                 dat[[use.col]] == values[14] |
+                 dat[[use.col]] == values[15] |
+                 dat[[use.col]] == values[16] |
+                 dat[[use.col]] == values[17] |
+                 dat[[use.col]] == values[18] |
+                 dat[[use.col]] == values[19] |
+                 dat[[use.col]] == values[20] |
+                 dat[[use.col]] == values[21] |
+                 dat[[use.col]] == values[22] |
+                 dat[[use.col]] == values[23] |
+                 dat[[use.col]] == values[24] |
+                 dat[[use.col]] == values[25] |
+                 dat[[use.col]] == values[26] |
+                 dat[[use.col]] == values[27] |
+                 dat[[use.col]] == values[28] |
+                 dat[[use.col]] == values[29] |
+                 dat[[use.col]] == values[30] |
+                 dat[[use.col]] == values[31] |
+                 dat[[use.col]] == values[32] |
+                 dat[[use.col]] == values[33], ]
+  }
+  
+  if (n.values == 34) {
+    res <- dat[dat[[use.col]] == values[1] |
+                 dat[[use.col]] == values[2] |
+                 dat[[use.col]] == values[3] |
+                 dat[[use.col]] == values[4] |
+                 dat[[use.col]] == values[5] |
+                 dat[[use.col]] == values[6] |
+                 dat[[use.col]] == values[7] |
+                 dat[[use.col]] == values[8] |
+                 dat[[use.col]] == values[9] |
+                 dat[[use.col]] == values[10] |
+                 dat[[use.col]] == values[11] |
+                 dat[[use.col]] == values[12] |
+                 dat[[use.col]] == values[13] |
+                 dat[[use.col]] == values[14] |
+                 dat[[use.col]] == values[15] |
+                 dat[[use.col]] == values[16] |
+                 dat[[use.col]] == values[17] |
+                 dat[[use.col]] == values[18] |
+                 dat[[use.col]] == values[19] |
+                 dat[[use.col]] == values[20] |
+                 dat[[use.col]] == values[21] |
+                 dat[[use.col]] == values[22] |
+                 dat[[use.col]] == values[23] |
+                 dat[[use.col]] == values[24] |
+                 dat[[use.col]] == values[25] |
+                 dat[[use.col]] == values[26] |
+                 dat[[use.col]] == values[27] |
+                 dat[[use.col]] == values[28] |
+                 dat[[use.col]] == values[29] |
+                 dat[[use.col]] == values[30] |
+                 dat[[use.col]] == values[31] |
+                 dat[[use.col]] == values[32] |
+                 dat[[use.col]] == values[33] |
+                 dat[[use.col]] == values[34], ]
+  }
+  
+  if (n.values == 35) {
+    res <- dat[dat[[use.col]] == values[1] |
+                 dat[[use.col]] == values[2] |
+                 dat[[use.col]] == values[3] |
+                 dat[[use.col]] == values[4] |
+                 dat[[use.col]] == values[5] |
+                 dat[[use.col]] == values[6] |
+                 dat[[use.col]] == values[7] |
+                 dat[[use.col]] == values[8] |
+                 dat[[use.col]] == values[9] |
+                 dat[[use.col]] == values[10] |
+                 dat[[use.col]] == values[11] |
+                 dat[[use.col]] == values[12] |
+                 dat[[use.col]] == values[13] |
+                 dat[[use.col]] == values[14] |
+                 dat[[use.col]] == values[15] |
+                 dat[[use.col]] == values[16] |
+                 dat[[use.col]] == values[17] |
+                 dat[[use.col]] == values[18] |
+                 dat[[use.col]] == values[19] |
+                 dat[[use.col]] == values[20] |
+                 dat[[use.col]] == values[21] |
+                 dat[[use.col]] == values[22] |
+                 dat[[use.col]] == values[23] |
+                 dat[[use.col]] == values[24] |
+                 dat[[use.col]] == values[25] |
+                 dat[[use.col]] == values[26] |
+                 dat[[use.col]] == values[27] |
+                 dat[[use.col]] == values[28] |
+                 dat[[use.col]] == values[29] |
+                 dat[[use.col]] == values[30] |
+                 dat[[use.col]] == values[31] |
+                 dat[[use.col]] == values[32] |
+                 dat[[use.col]] == values[33] |
+                 dat[[use.col]] == values[34] |
+                 dat[[use.col]] == values[35], ]
   }
 
   gc()
