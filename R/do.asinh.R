@@ -56,7 +56,7 @@ do.asinh <- function(dat,
   value <- value / cofactor
   value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
   
-  if(!isnull(digits)){
+  if(!is.null(digits)){
     value <- round(value, digits = digits)
   }
   
