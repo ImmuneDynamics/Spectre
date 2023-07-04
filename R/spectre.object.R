@@ -1,14 +1,24 @@
-# #' spectre object
-# #'
-# #' @export
+#' Spectre object
+#'
+#' @export
 
-setClass("spectre",representation(data='list',
+# Spectre <- setClass(Class = "Spectre",
+#                     slots = c(
+#                       data = "list",
+#                       analysis = "list",
+#                       other = "list",
+#                       cellid ='vector'
+#                     )
+
+Spectre <- setClass(Class = "Spectre",representation(data='list',
                                   analysis="list",
                                   other='list',
                                   cellid='vector'))
 
+#' @import Spectre
+  
 setMethod("show",
-          "spectre",
+          "Spectre",
           function(object){
 
             ###
@@ -20,7 +30,7 @@ setMethod("show",
             s <- round(s, 2)
 
             message(' ')
-            message("SPECTRE OBJECT")
+            message("Spectre OBJECT")
             message(' ')
             message(' - Name  : ', 'Test object')
             # message(' - Date  : ')
@@ -70,5 +80,3 @@ setMethod("show",
             # message(" ")
 
           })
-
-
