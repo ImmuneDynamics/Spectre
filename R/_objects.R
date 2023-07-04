@@ -2,7 +2,7 @@
 #'
 #' @export
 
-setClass("spectre",representation(data='list',
+spectre <- setClass("spectre",representation(data='list',
                                   analysis="list",
                                   other='list',
                                   cellid='vector'))
