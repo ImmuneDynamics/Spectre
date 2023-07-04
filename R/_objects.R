@@ -2,7 +2,10 @@
 #'
 #' @export
 
-setClass("spectre",representation(data='list',analysis="list",other='list',cellid='vector'))
+setClass("spectre",representation(data='list',
+                                  analysis="list",
+                                  other='list',
+                                  cellid='vector'))
 
 setMethod("show",
           "spectre",
@@ -19,9 +22,10 @@ setMethod("show",
             message(' ')
             message("SPECTRE OBJECT")
             message(' ')
-            message(' - Name: ', 'Test object')
-            message(' - Date: ')
-            message(' - Size: ', s, ' Gb')
+            message(' - Name  : ', 'Test object')
+            # message(' - Date  : ')
+            message(' - Size  : ', s, ' Gb')
+            message(' - CellID: ', dat@cellid)
             
             ### @data
             
@@ -61,9 +65,9 @@ setMethod("show",
             }
             
             ### 
-            message(' ')
-            message(paste0("cellid =", dat@cellid))
-            message(" ")
+            # message(' ')
+            # message(paste0("cellid =", dat@cellid))
+            # message(" ")
             
           })
 

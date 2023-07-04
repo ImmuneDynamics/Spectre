@@ -21,64 +21,85 @@
 #' @export do.asinh
 
 do.asinh <- function(dat,
-                     use.cols,
+                     use.cols = NULL,
                      cofactor = 5,
-                     append.cf = FALSE,
-                     reduce.noise = FALSE,
+                     assay = NULL,
+                     clip.min = NULL,
+                     clip.max = NULL,
+                     name = '_asinh',
                      digits = 9) {
   
-  ### Setup data
-  value <- dat[, use.cols, with = FALSE]
+  ### Evaluation
   
+      if(class(dat)[1] == 'data.table'){
+        if(!is.null(use.cols)){
+          value <- as.matrix(dat)
+        } else {
+          value <- as.matrix(dat[,use.cols, with = FALSE])
+        }
+      }
+  
+      if(class(dat)[1] == 'spectre'){
+        if(is.null(assay)){
+          stop('assay required')
+        }
+        value <- as.matrix(dat@data[[assay]])
+        if(!is.null(use.cols)){
+          value <- value[,use.cols]
+        }
+      }
+  
+      if(class(dat)[1] == 'Seurat'){
+        if(is.null(assay)){
+          stop('assay required')
+        }
+        value <- as.matrix(dat@assays[[assay]]@counts)
+        if(!is.null(use.cols)){
+          value <- value[,use.cols]
+          value <- t(value)
+        }
+      }
+
   ### Numeric checks
   
-  if (isFALSE(all(sapply(value, is.numeric)))) {
-    message("It appears that one column in your dataset is non numeric")
-    print(sapply(value, is.numeric))
-    stop("do.asinh stopped")
-  }
-  
-  ### Optional noise reduction
-  
-  # https://github.com/JinmiaoChenLab/cytofkit/issues/71
-  if (reduce.noise == TRUE) {
-    message("This noise reduction function is experimental, and should be used with caution")
-    value <- value - 1
-    loID <- which(value < 0)
-    if (length(loID) > 0) {
-      value[loID] <- rnorm(length(loID), mean = 0, sd = 0.01)
-    }
-  }
+      if (isFALSE(all(sapply(value, is.numeric)))) {
+        message("It appears that one column in your dataset is non numeric")
+        print(sapply(value, is.numeric))
+        stop("do.asinh stopped")
+      }
   
   ### Arcsinh calculation
   
-  value <- as.matrix(value)
-  value <- value / cofactor
-  value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
-  value <- round(value, digits = digits)
-  value <- as.data.table(value)
-  
-  ### Options to append the CF used
-  
-  if (append.cf == TRUE) {
-    if (length(use.cols) > 1) {
-      names(value) <- paste0(names(value), "_asinh_cf", cofactor)
-    }
-    if (length(use.cols) == 1) {
-      names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
-    }
-  }
-  
-  if (append.cf == FALSE) {
-    if (length(use.cols) > 1) {
-      names(value) <- paste0(names(value), "_asinh")
-    }
-    if (length(use.cols) == 1) {
-      names(value) <- paste0(use.cols, "_asinh")
-    }
-  }
-  
+      value <- value / cofactor
+      value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
+      value <- round(value, digits = digits)
+
+  ### Clipping
+      
+      if(!is.null(clip.min)){
+        
+      }
+      
+      if(!is.null(clip.max)){
+        
+      }
+      
   ### Wrap up
-  dat <- cbind(dat, value)
-  return(dat)
+      
+      if(class(dat)[1] == 'data.table'){
+        names(value) <- paste0(names(value), '_', name)
+        # Add test to see if those cols are there, if so, replace
+        dat <- rbind(dat, value)
+      }
+      if(class(dat)[1] == 'spectre'){
+        dat@data[[paste0(assay, '_', name)]] <- value
+      }
+      if(class(dat)[1] == 'Seurat'){
+        dat@assays[[assay]]@data <- value
+      }
+      
+  ### Return
+
+      return(dat)
+
 }
