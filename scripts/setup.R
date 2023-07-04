@@ -1,6 +1,5 @@
 
 setwd('/Users/thomasa/Documents/GitHub/Spectre/')
-
 devtools::document()
 
 

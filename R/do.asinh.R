@@ -32,31 +32,42 @@ do.asinh <- function(dat,
   ### Evaluation
   
       if(class(dat)[1] == 'data.table'){
-        if(!is.null(use.cols)){
+        if(is.null(use.cols)){
           value <- as.matrix(dat)
         } else {
-          value <- as.matrix(dat[,use.cols, with = FALSE])
+          value <- dat[,use.cols, with = FALSE]
+          value <- as.matrix(value)
         }
       }
   
-      if(class(dat)[1] == 'spectre'){
+      if(class(dat)[1] == 'Spectre'){
         if(is.null(assay)){
           stop('assay required')
         }
-        value <- as.matrix(dat@data[[assay]])
-        if(!is.null(use.cols)){
-          value <- value[,use.cols]
+        if(is.null(key)){
+          stop('key must be set')
         }
+        
+        value <- dat@data[[assay]]
+        value <- value[,which(names(value) != key), with = FALSE]
+        
+        if(!is.null(use.cols)){
+          value <- as.matrix(value[,..use.cols])
+        } else {
+          value <- as.matrix(value)
+        }
+        key <- dat@key
       }
   
       if(class(dat)[1] == 'Seurat'){
         if(is.null(assay)){
           stop('assay required')
         }
-        value <- as.matrix(dat@assays[[assay]]@counts)
         if(!is.null(use.cols)){
           value <- value[,use.cols]
           value <- t(value)
+        } else {
+          value <- as.matrix(dat@assays[[assay]]@counts)
         }
       }
 
@@ -72,8 +83,13 @@ do.asinh <- function(dat,
   
       value <- value / cofactor
       value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
-      value <- round(value, digits = digits)
-
+      
+  ### Rounding
+      
+      if(!is.null(digits)){
+        value <- round(value, digits = digits)
+      }
+      
   ### Clipping
       
       if(!is.null(clip.min)){
@@ -87,15 +103,17 @@ do.asinh <- function(dat,
   ### Wrap up
       
       if(class(dat)[1] == 'data.table'){
-        names(value) <- paste0(names(value), '_', name)
+        value <- as.data.table(value)
+        names(value) <- paste0(names(value), name)
         # Add test to see if those cols are there, if so, replace
-        dat <- rbind(dat, value)
+        #dat <- cbind(dat, value)
+        dat[,names(value)] <- value
       }
-      if(class(dat)[1] == 'spectre'){
-        dat@data[[paste0(assay, '_', name)]] <- value
+      if(class(dat)[1] == 'Spectre'){
+        dat@data[[paste0(assay, name)]] <- cbind(dat@data[[assay]][,..key],as.data.table(value))
       }
       if(class(dat)[1] == 'Seurat'){
-        dat@assays[[assay]]@data <- value
+        dat@assays[[assay]]@data <- as.data.table(value)
       }
       
   ### Return
