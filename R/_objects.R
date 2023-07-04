@@ -2,7 +2,7 @@
 #'
 #' @export
 
-spectre <- setClass("spectre",representation(data='list',
+setClass("spectre",representation(data='list',
                                   analysis="list",
                                   other='list',
                                   cellid='vector'))
@@ -13,7 +13,7 @@ setMethod("show",
             
             ###
             
-            require(data.table)
+            require('data.table')
             
             ### 
             s <- object.size(object)/1000/1000/1000
