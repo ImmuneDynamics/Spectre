@@ -34,6 +34,132 @@
 #'
 #' @export
 
+read.files <- function(dir,
+                       files, 
+                       rename = NULL,
+                       nrows = NULL,
+                       verbose = TRUE){
+  
+  ### Testing
+  
+      # dir <- getwd()
+      # files <- files
+      # rename <- new.names
+      
+      # files <- 'export_Macrophage_066 V1 Immunophynotype_006_Cleanup 2.csv'
+  
+  ### Files
+  
+      file.table <- data.table('FileName' = files)
+      setorderv(file.table, "FileName")
+      file.table
+      
+  ### Input
+  
+      tempdat.list <- list()
+      colcheck.list <- list()
+      colname.list <- list()
+      
+      for(i in files){
+        # i <- files[1]
+        
+        num <- which(files == i)
+        
+        ## Reading in data (no renaming)
+        if(is.null(rename)){
+          if(isTRUE(verbose)){
+            message(paste0(' -- reading ', num, ' of ', length(files), ': ', i))
+          }
+          tempdat.list[[i]] <- fread(i, nrows = nrows)
+        }
+        
+        ## Reading in data (possible renaming)
+        if(!is.null(rename)){
+          if(isTRUE(verbose)){
+            message(paste0(' -- reading and renaming ', num, ' of ', length(files), ': ', i))
+          }
+          tempdat.list[[i]] <- fread(i, nrows = nrows)
+          
+          for(o in c(1:nrow(new.names))){
+            # i <- 1
+            old <- new.names[o,1][[1]]
+            new <- new.names[o,2][[1]]
+            
+            if(length(which(names(tempdat.list[[i]]) == old)) == 1){
+              names(tempdat.list[[i]])[which(names(tempdat.list[[i]]) == old)] <- new
+            }
+          }
+        }
+    
+        ## Processing
+        tempdat.list[[i]]$FileName <- i
+        colcheck.list[[i]] <- tempdat.list[[i]][1,]
+        colname.list[[i]] <- names(tempdat.list[[i]])
+  }
+  
+  ### Condensing column check data
+  
+      colcheck.dat <- rbindlist(colcheck.list, fill = TRUE)
+      colcheck.dat <- as.data.table(!is.na(colcheck.dat))
+  
+  ### Condensing column names summary
+  
+      all.colnames <- unique(unlist(colname.list))
+      all.colnames
+      
+      colnames.summary <- list()
+      
+      for(a in all.colnames){
+        # a <- all.colnames[1]
+        colnames.summary[[a]] <- length(which(colcheck.dat[[a]]))
+      }
+      
+      colnames.summary <- rbindlist(list(colnames.summary))
+      colnames.summary
+  
+  ###
+  
+      colcheck.dat$FileName <- files
+      colcheck.dat
+  
+  ### Making colname table
+  
+      colname.table <- data.table('Column name' = all.colnames, 'New name' = all.colnames)
+      colname.table
+  
+  ### Condensing test data
+  
+      tempdat <- rbindlist(tempdat.list, fill = TRUE)
+      tempdat
+  
+  ### Output
+  
+      res <- list('Column check' = colcheck.dat,
+                  'Column summary' = colnames.summary,
+                  'All column names' = all.colnames,
+                  'Column name table' = colname.table,
+                  'Test data' = tempdat)
+  
+  ### Return
+      
+      message('Reading files complete!')
+      return(res)
+      
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 read.files <- function(file.loc = getwd(),
                        file.type = ".csv",
                        nrows = NULL,

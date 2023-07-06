@@ -11,10 +11,10 @@
 #                     )
 
 Spectre <- setClass(Class = "Spectre",representation(data='list',
-                                  analysis="list",
-                                  other='list',
-                                  key='vector',
-                                  name='vector'))
+                                      analysis="list",
+                                      other='list',
+                                      key='vector',
+                                      name='vector'))
 
 
 

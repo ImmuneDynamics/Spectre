@@ -31,6 +31,7 @@ do.asinh <- function(dat,
   
   ### Evaluation
   
+      ## data.table
       if(class(dat)[1] == 'data.table'){
         if(is.null(use.cols)){
           value <- as.matrix(dat)
@@ -40,6 +41,7 @@ do.asinh <- function(dat,
         }
       }
   
+      ## Spectre
       if(class(dat)[1] == 'Spectre'){
         if(is.null(assay)){
           stop('assay required')
@@ -60,6 +62,7 @@ do.asinh <- function(dat,
         }
       }
   
+      ## Seurat
       if(class(dat)[1] == 'Seurat'){
         if(is.null(assay)){
           stop('assay required')
@@ -103,6 +106,7 @@ do.asinh <- function(dat,
       
   ### Wrap up
       
+      ## data.table
       if(class(dat)[1] == 'data.table'){
         value <- as.data.table(value)
         names(value) <- paste0(names(value), name)
@@ -110,9 +114,13 @@ do.asinh <- function(dat,
         #dat <- cbind(dat, value)
         dat[,names(value)] <- value
       }
+      
+      ## Spectre
       if(class(dat)[1] == 'Spectre'){
         dat@data[[paste0(assay, name)]] <- cbind(dat@data[[assay]][,..key],as.data.table(value))
       }
+      
+      ## Seurat
       if(class(dat)[1] == 'Seurat'){
         dat@assays[[assay]]@data <- as.data.table(value)
       }
