@@ -4,7 +4,7 @@
 \alias{create.spectre}
 \title{Create Spectre object}
 \usage{
-create.spectre(data = NULL, analysis = NULL, key = NULL)
+create.spectre(data = NULL, analysis = NULL, key = NULL, name = NULL)
 }
 \description{
 Create Spectre object
