@@ -13,7 +13,8 @@
 Spectre <- setClass(Class = "Spectre",representation(data='list',
                                   analysis="list",
                                   other='list',
-                                  key='vector'))
+                                  key='vector',
+                                  name='vector'))
 
 
 
@@ -34,7 +35,7 @@ setMethod("show",
             message(' ')
             message("Spectre OBJECT")
             message(' ')
-            message(' - Name  : ', 'Test object')
+            message(" - Name  : '", object@name, "'")
             # message(' - Date  : ')
             message(' - Size  : ', s, ' Gb')
             message(" - Key   : '", object@key, "'")

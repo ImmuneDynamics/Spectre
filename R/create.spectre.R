@@ -4,7 +4,8 @@
 
 create.spectre <- function(data = NULL,
                            analysis = NULL,
-                           key = NULL){
+                           key = NULL, # or vector
+                           name = NULL){
   ###
   
   # data <- list('cyto' = Spectre::demo.start[,-1])
@@ -12,39 +13,54 @@ create.spectre <- function(data = NULL,
   
   ###
   
-  obj <- new('Spectre')
-  
-  # cellid <- 
-  
-  z <- paste0("%0", nchar(nrow(data[[1]])), "d")
-  x <- sprintf(z,c(1:nrow(data[[1]])))
-  y <- data.table('CellID' = paste0('Cell_', x))
+      require('Spectre2')
+      obj <- new('Spectre')
   
   ###
   
-  if(!is.null(data.frame())){
-    for(i in names(data)){
-      obj@data[[i]] <- cbind(y, data[[i]])
-    }
-  }
-  
-  if(!is.null(analysis)){
-    for(i in names(analysis)){
-      obj@analysis[[i]] <- c(y, analysis[[i]])
-    }
-  }
+      if(is.null(key)){
+        z <- paste0("%0", nchar(nrow(data[[1]])), "d")
+        x <- sprintf(z,c(1:nrow(data[[1]])))
+        y <- data.table('CellID' = paste0('Cell_', x))
+      }
+      
+      if(!is.null(key)){
+        y <- data.table('CellID' = key)
+      }
   
   ###
   
-  # if(!is.null(key)){
-  #   obj@key <- 'CellID'
-  # } else {
-  #   obj@key <- key
-  # }
+      if(!is.null(data)){
+        message('Adding data')
+        for(i in names(data)){
+          obj@data[[i]] <- cbind(y, data[[i]])
+        }
+      }
+      
+      if(!is.null(analysis)){
+        message('Adding analysis results')
+        for(i in names(analysis)){
+          obj@analysis[[i]] <- c(y, analysis[[i]])
+        }
+      }
+  
+  ###
+   
+      if(is.null(key)){
+        obj@key <- 'CellID'
+      } else {
+        obj@key <- 'CellID'
+      }
+      
+      if(is.null(name)){
+        obj@name <- ''
+      } else {
+        obj@name <- name
+      }
   
   ###
   
-  return(obj)
+      return(obj)
   
 }
 

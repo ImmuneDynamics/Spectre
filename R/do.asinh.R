@@ -44,19 +44,20 @@ do.asinh <- function(dat,
         if(is.null(assay)){
           stop('assay required')
         }
-        if(is.null(key)){
+        if(is.null(dat@key)){
           stop('key must be set')
+        } else {
+          key <- dat@key
         }
         
         value <- dat@data[[assay]]
-        value <- value[,which(names(value) != key), with = FALSE]
+        value <- value[,which(names(value) != dat@key), with = FALSE]
         
         if(!is.null(use.cols)){
           value <- as.matrix(value[,..use.cols])
         } else {
           value <- as.matrix(value)
         }
-        key <- dat@key
       }
   
       if(class(dat)[1] == 'Seurat'){
