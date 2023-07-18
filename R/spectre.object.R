@@ -29,16 +29,16 @@ setMethod("show",
             require('data.table')
 
             ###
-            s <- object.size(object)/1000/1000/1000
-            s <- round(s, 2)
+            # s <- object.size(object)/1000/1000/1000
+            # s <- round(s, 2)
 
             message(' ')
-            message("Spectre OBJECT")
+            message("Spectre object")
             message(' ')
-            message(" - Name  : '", object@name, "'")
+            message(" - Name  :", object@name)
             # message(' - Date  : ')
-            message(' - Size  : ', s, ' Gb')
-            message(" - Key   : '", object@key, "'")
+            # message(' - Size  : ', s, ' Gb')
+            # message(" - Key   : ", object@key)
 
             ### @data
 
@@ -46,12 +46,31 @@ setMethod("show",
             message("@data")
 
             for(i in names(object@data)){
-              x <- object@data[[i]]
-              n <- nrow(x)
-              message(' ')
-              message('... $', i, ' (', paste0(class(x)[1]), ', nrow: ', nrow(x), ' ncol: ', ncol(x), ')')
-              message(' ')
-              print(as.data.table(x))
+              
+              # if(ncol(object@data[[i]]) > 11){
+              #   b <- ncol(object@data[[i]])
+              #   a <- b-4
+              #   pre <- object@data[[i]][,1:5]
+              #   post <- object@data[[i]][,a:b]
+              #   x <- cbind(pre, data.table('...' = '...'), post)
+              # } else {
+              #   x <- object@data[[i]]
+              # }
+              # message(' ')
+              # message('... $', i, ' (', paste0(class(object@data[[i]])[1]), ', nrow: ', nrow(object@data[[i]]), ' ncol: ', ncol(object@data[[i]]), ')')
+              # message(' ')
+              # print(as.data.table(x))
+              
+              cols <- c(1:min(8,ncol(object@data[[i]])))
+              
+              print(object@data[[i]][,..cols])
+              print(object@data[[i]][,1:5])
+              print(object@data[[i]][,c('CellID', 'NK11', 'CD3', 'CD45', 'Ly6G')], with = FALSE)
+              print(object@data[[i]][c(1:5, 170000000:170000005),])
+              print(object@data[[i]])
+              
+              print(object@data$cyto[,1])
+              
             }
 
             ### @analysis
@@ -60,10 +79,18 @@ setMethod("show",
             message("@analysis")
 
             for(i in names(object@analysis)){
-              x <- object@analysis[[i]]
-              n <- nrow(x)
+              
+              if(ncol(object@analysis[[i]]) > 11){
+                b <- ncol(object@analysis[[i]])
+                a <- b-4
+                pre <- object@analysis[[i]][,1:5]
+                post <- object@analysis[[i]][,a:b]
+                x <- cbind(pre, data.table('...' = '...'), post)
+              } else {
+                x <- object@analysis[[i]]
+              }
               message(' ')
-              message('... $', i, ' (', paste0(class(x)[1]), ', nrow: ', nrow(x), ' ncol: ', ncol(x), ')')
+              message('... $', i, ' (', paste0(class(object@analysis[[i]])[1]), ', nrow: ', nrow(object@analysis[[i]]), ' ncol: ', ncol(object@analysis[[i]]), ')')
               message(' ')
               print(as.data.table(x))
             }

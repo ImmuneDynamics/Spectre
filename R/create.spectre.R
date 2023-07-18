@@ -34,6 +34,7 @@ create.spectre <- function(data = NULL,
         message('Adding data')
         for(i in names(data)){
           obj@data[[i]] <- cbind(y, data[[i]])
+          setkey(obj@data[[i]], CellID)
         }
       }
       
@@ -41,16 +42,15 @@ create.spectre <- function(data = NULL,
         message('Adding analysis results')
         for(i in names(analysis)){
           obj@analysis[[i]] <- c(y, analysis[[i]])
+          setkey(obj@analysis[[i]], CellID)
         }
       }
   
   ###
-   
-      if(is.null(key)){
-        obj@key <- 'CellID'
-      } else {
-        obj@key <- 'CellID'
-      }
+      
+      obj@key <- 'CellID'
+      
+  ###
       
       if(is.null(name)){
         obj@name <- ''
