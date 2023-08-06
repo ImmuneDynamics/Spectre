@@ -41,7 +41,8 @@ prep.cytonorm <- function(dat,
                        ydim = 5,
                        meta.k = 10, # can be 1, or >3
                        seed = 42,
-                       mem.ctrl = TRUE) {
+                       mem.ctrl = TRUE,
+                       nCells = 1000000) {
   
   ### Check that necessary packages are installed
       if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
@@ -219,7 +220,7 @@ prep.cytonorm <- function(dat,
       
       fsom <- prepareFlowSOM(files,
                              colsToUse = cluster.cols,
-                             nCells = NULL, # Any subsampling is done prior to using this function
+                             nCells = nCells, # Any subsampling is done prior to using this function
                              FlowSOM.params = list(xdim = xdim,
                                                    ydim = ydim,
                                                    nClus = meta.k, 
