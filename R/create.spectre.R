@@ -8,6 +8,10 @@ create.spectre <- function(data = NULL,
                            name = NULL){
   ###
   
+  require(data.table)
+  
+  ###
+  
   # data <- list('cyto' = Spectre::demo.start[,-1])
   # key <- NULL
   
@@ -53,7 +57,7 @@ create.spectre <- function(data = NULL,
   ###
       
       if(is.null(name)){
-        obj@name <- ''
+        # obj@name <- NA
       } else {
         obj@name <- name
       }
