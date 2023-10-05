@@ -55,7 +55,7 @@
 
         data.list <- Spectre::read.files(file.loc = InputDirectory,
                                          file.type = ".csv",
-                                         do.embed.file.names = TRUE, nrows = 3000)
+                                         do.embed.file.names = TRUE)
 
     ### Check the data
 
