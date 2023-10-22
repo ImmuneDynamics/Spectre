@@ -26,6 +26,8 @@
 #' @param title DEFAULT = col.axis. Character. Title for the plot.
 #' @param filename DEFAULT = NULL. Character. The name of the file to save the plot to.
 #' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
+#' @param randomise.order DEFAULT = TRUE. Option to randomise plotting order of individuals to control for overlap.
+#' @param order.seed DEFAULT = 42. Set the seed for randomising plotting order of individuals.
 #' @param plot.width DEFAULT = 9. Width of the ggplot when saved to disk.
 #' @param plot.height DEFAULT = 7. Height of the ggplot when saved to disk.
 #' @param nudge_x DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.
@@ -45,20 +47,27 @@
 #' package.load()
 #'
 #' # Read data
-#' cell.dat <- Spectre::demo.umap
-#' cell.dat <- as.data.table(cell.dat)
+#' cell.dat <- Spectre::demo.clustered
 #'
 #' # Draw plot
 #' Spectre::make.colour.plot(
 #'   dat = cell.dat,
-#'   x.axis = "UMAP_42_X",
-#'   y.axis = "UMAP_42_Y",
-#'   col.axis = "BV605.Ly6C"
+#'   x.axis = "UMAP_X",
+#'   y.axis = "UMAP_Y",
+#'   col.axis = "Ly6C_asinh"
+#' )
+#' 
+#' Spectre::make.colour.plot(
+#'   dat = cell.dat,
+#'   x.axis = "UMAP_X",
+#'   y.axis = "UMAP_Y",
+#'   col.axis = "Batch"
 #' )
 #'
 #' @author
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#' Givanna Putri
+#' Givanna Putri,
+#' Felix Marsh-Wakefield \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
 #' @import data.table
 #'
@@ -85,6 +94,8 @@ make.colour.plot <- function(dat,
                              title = col.axis,
                              filename = NULL,
                              dot.size = 1,
+                             randomise.order = TRUE,
+                             order.seed = 42,
                              plot.width = 9,
                              plot.height = 7,
                              nudge_x = 0.5,
@@ -550,7 +561,7 @@ make.colour.plot <- function(dat,
             panel.border = element_rect(
                 colour = "black",
                 fill = NA,
-                size = 2
+                linewidth = 2
             ),
             plot.title = element_text(
                 color = "Black",
@@ -732,6 +743,20 @@ make.colour.plot <- function(dat,
                        y.axis,
                        ".png")
         }
+      
+      if (randomise.order == TRUE) {
+        # Breakdown plot
+        # https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
+        edit.plot <- ggplot2::ggplot_build(p)
+        
+        # Randomise order
+        set.seed(order.seed)
+        nsub <- sample(nrow(edit.plot[["data"]][[1]]))
+        edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub, ]
+        
+        # Re-create plot
+        p <- ggplot2::ggplot_gtable(edit.plot)
+      }
         
         ggsave(
             filename = filename,
@@ -742,11 +767,28 @@ make.colour.plot <- function(dat,
             limitsize = FALSE
         )
     } else {
-        print(p)
+      
+        if (randomise.order == TRUE) {
+          # Breakdown plot
+          # https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
+          edit.plot <- ggplot2::ggplot_build(p)
+          
+          # Randomise order
+          set.seed(order.seed)
+          nsub <- sample(nrow(edit.plot[["data"]][[1]]))
+          edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub, ]
+          
+          # Re-create plot
+          p <- ggplot2::ggplot_gtable(edit.plot)
+        }
+      
+        # print(p) #doesn't work ggtable objects
+        plot(p)
+        
     }
     
     ### Print plot
     # print(p)
     # maybe return, i'm not sure.
-    return(p)
+    # return(p)
 }
