@@ -102,8 +102,7 @@ make.spatial.plot <- function(dat, # spatial data object
       if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
       if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
       if(!is.element('raster', installed.packages()[,1])) stop('raster is required but not installed')
-      if(!is.element('rgeos', installed.packages()[,1])) stop('rgeos is required but not installed')
-
+      
   ### Require packages
       require(ggplot2)
       require(scales)
@@ -111,8 +110,7 @@ make.spatial.plot <- function(dat, # spatial data object
       require(ggthemes)
       require(RColorBrewer)
       require(raster)
-      require(rgeos)
-
+      
   ### Compatability conversions
     
       roi <- image.roi

@@ -20,14 +20,14 @@
     ### Set InputDirectory (ROI TIFFs)
     
     setwd(PrimaryDirectory)
-    setwd("data/ROIs/")
+    setwd("../data/ROIs/")
     InputDirectory <- getwd()
     InputDirectory
     
     ### Set MaskDirectory (ROI mask TIFFs)
     
     setwd(PrimaryDirectory)
-    setwd("data/masks")
+    setwd("../data/masks")
     MaskDirectory <- getwd()
     MaskDirectory
     
