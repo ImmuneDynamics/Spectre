@@ -240,6 +240,8 @@ create.sumtable <- function(dat,
         for(i in c(1:nrow(perc.pos))){
           # i <- 1
           
+          message(paste0("     ... ", perc.pos[[1]][i]))
+          
           mrk <- perc.pos[i,1][[1]]
           val <- perc.pos[i,2][[1]]
           
@@ -269,11 +271,11 @@ create.sumtable <- function(dat,
         
         alt <- dat[,c(sample.col, pop.col, double.pos), with = FALSE]
         
-        for(i in c(1:nrow(perc.pos))){
+        for(i in c(1:length(double.pos))){
           # i <- 1
           
-          mrk <- perc.pos[i,1][[1]]
-          val <- perc.pos[i,2][[1]]
+          mrk <- double.pos[i]
+          val <- perc.pos[perc.pos[[1]] == mrk,2][[1]]
           
           alt[alt[[mrk]] > val,paste0('EXP-', mrk)] <- TRUE
           alt[alt[[mrk]] <= val,paste0('EXP-', mrk)] <- FALSE
@@ -350,7 +352,7 @@ create.sumtable <- function(dat,
           multi.res[[sample.col]] <- NULL
           multi.res[[pop.col]] <- NULL
           multi.res <- do.add.cols(multi.res, 'NAME', props[,c('NAME', 'nrows')], 'NAME', show.status = FALSE)
-          multi.res[,paste0('PROP ', a)] <- multi.res[,'MULTIKEY', with = FALSE] / multi.res$nrows * 100
+          multi.res[,paste0('PROP MULTIPOS ', a)] <- multi.res[,'MULTIKEY', with = FALSE] / multi.res$nrows * 100
           multi.res$MULTIKEY <- NULL
           multi.res$nrows <- NULL
           
