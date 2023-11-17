@@ -7,14 +7,14 @@
 read.files(file.loc, file.type, do.embed.file.names, header)
 }
 \arguments{
+\item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of
+cells (rows) to be read from each file. Please note, order is random in FCS
+files.}
+
 \item{file.loc}{DEFAULT = getwd(). What is the location of your files?}
 
 \item{file.type}{DEFAULT = ".csv". What type of files do you want to read.
 Can be ".csv" or ".fcs".}
-
-\item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of
-cells (rows) to be read from each file. Please note, order is random in FCS
-files.}
 
 \item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row
 (cell) of each file with the name name?}
