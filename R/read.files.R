@@ -34,15 +34,13 @@
 #'
 #' @export
 
-read.files <- function(dir,
-                       files, 
+read.files <- function(files, 
                        rename = NULL,
                        nrows = NULL,
                        verbose = TRUE){
   
   ### Testing
   
-      # dir <- getwd()
       # files <- files
       # rename <- new.names
       
@@ -160,7 +158,7 @@ read.files <- function(dir,
 
 
 
-read.files <- function(file.loc = getwd(),
+read.files.to.list <- function(file.loc = getwd(),
                        file.type = ".csv",
                        nrows = NULL,
                        do.embed.file.names = TRUE,

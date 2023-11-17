@@ -1,12 +1,14 @@
 # Use the demo data. Subsampled so it is quicker to run.
-dat <- do.subsample(
-    dat = demo.clustered, 
-    targets = 10000, 
-    seed = 42
-)
-markers <- names(dat)[11:19]
+
 
 test_that("Fast UMAP can run", {
+    dat <- do.subsample(
+        dat = demo.data, 
+        targets = 10000, 
+        seed = 42
+    )
+    markers <- names(dat)[11:19]
+    
     dat <- run.umap(
         dat, 
         use.cols = markers, 
@@ -26,6 +28,13 @@ test_that("Fast UMAP can run", {
 })
 
 test_that("Default UMAP can run", {
+    dat <- do.subsample(
+        dat = demo.data, 
+        targets = 10000, 
+        seed = 42
+    )
+    markers <- names(dat)[11:19]
+    
     dat <- run.umap(
         dat, 
         use.cols = markers, 

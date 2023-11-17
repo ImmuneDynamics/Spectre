@@ -1,7 +1,7 @@
 # Create small test data
 dat <- do.subsample(
-    dat = demo.clustered, 
-    targets = 50000, 
+    dat = demo.data, 
+    targets = 1000, 
     seed = 42
 )
 markers <- names(dat)[11:19]
