@@ -48,8 +48,6 @@ Imports:
     qs,
     raster,
     RColorBrewer,
-    rgdal,
-    rgeos,
     rhdf5,
     rstudioapi,
     rsvd,
