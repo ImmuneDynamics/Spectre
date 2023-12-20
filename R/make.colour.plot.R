@@ -790,5 +790,5 @@ make.colour.plot <- function(dat,
     ### Print plot
     # print(p)
     # maybe return, i'm not sure.
-    # return(p)
+    return(p)
 }
