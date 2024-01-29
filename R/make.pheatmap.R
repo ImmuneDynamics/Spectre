@@ -97,17 +97,8 @@ make.pheatmap <- function(dat,
 #plot.height      = 8.26)
 {
   
-  ### Check that necessary packages are installed
-  if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
-  if(!is.element('dendsort', installed.packages()[,1])) stop('dendsort is required but not installed')
-  
   ### Require packages
-  require(pheatmap)
-  require(RColorBrewer)
-  require(scales)
-  require(dendsort)
+  # require: pheatmap, RColorBrewer, scales, dendsort
   
   ### Setup color scheme
   
@@ -284,7 +275,7 @@ make.pheatmap <- function(dat,
     col.clustering    <- FALSE
   }
   
-  if(dendrograms != "none"){
+  else if(dendrograms != "none"){
     
     # set the custom distance and clustering functions, per your example
     hclustfunc <- function(x) hclust(x, method="complete")
@@ -300,7 +291,10 @@ make.pheatmap <- function(dat,
         row.clustering <- hclustfunc(distfunc(heatmap.data))
         col.clustering <- hclustfunc(distfunc(t(heatmap.data)))
         
-        require(dendsort)
+        # TODO: dendsort is used here. So looks like an optional thing.
+        # So put it in as a suggest.
+        # require(dendsort)
+        check_packages_installed(c("dendsort"))
         sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
         
         row.clustering <- sort_hclust(row.clustering)
@@ -320,7 +314,7 @@ make.pheatmap <- function(dat,
       # col2 <- group.palette(n.col.groups)
     }
     
-    if(dendrograms == "column"){
+    else if(dendrograms == "column"){
       row.clustering    <- FALSE
       col.clustering    <- TRUE
       
@@ -328,7 +322,10 @@ make.pheatmap <- function(dat,
         
         col.clustering <- hclustfunc(distfunc(t(heatmap.data)))
         
-        require(dendsort)
+        # TODO: dendsort is used here. So looks like an optional thing.
+        # So put it in as a suggest.
+        # require(dendsort)
+        check_packages_installed(c("dendsort"))
         sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
         
         col.clustering <- sort_hclust(col.clustering)
@@ -347,7 +344,7 @@ make.pheatmap <- function(dat,
       # col2 <- group.palette(n.col.groups)
     }
     
-    if(dendrograms == "row"){
+    else if(dendrograms == "row"){
       row.clustering    <- TRUE
       col.clustering    <- FALSE
       
@@ -355,7 +352,10 @@ make.pheatmap <- function(dat,
         
         row.clustering <- hclustfunc(distfunc(t(heatmap.data)))
         
-        require(dendsort)
+        # TODO: dendsort is used here. So looks like an optional thing.
+        # So put it in as a suggest.
+        # require(dendsort)
+        check_packages_installed(c("dendsort"))
         sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
         
         row.clustering <- sort_hclust(row.clustering)

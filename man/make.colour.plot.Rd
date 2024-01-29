@@ -41,6 +41,10 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
+\item{randomise.order}{DEFAULT = TRUE. Option to randomise plotting order of individuals to control for overlap.}
+
+\item{order.seed}{DEFAULT = 42. Set the seed for randomising plotting order of individuals.}
+
 \item{plot.width}{DEFAULT = 9. Width of the ggplot when saved to disk.}
 
 \item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
@@ -71,15 +75,21 @@ package.check()
 package.load()
 
 # Read data
-cell.dat <- Spectre::demo.umap
-cell.dat <- as.data.table(cell.dat)
+cell.dat <- Spectre::demo.clustered
 
 # Draw plot
 Spectre::make.colour.plot(
   dat = cell.dat,
-  x.axis = "UMAP_42_X",
-  y.axis = "UMAP_42_Y",
-  col.axis = "BV605.Ly6C"
+  x.axis = "UMAP_X",
+  y.axis = "UMAP_Y",
+  col.axis = "Ly6C_asinh"
+)
+
+Spectre::make.colour.plot(
+  dat = cell.dat,
+  x.axis = "UMAP_X",
+  y.axis = "UMAP_Y",
+  col.axis = "Batch"
 )
 
 }
@@ -91,5 +101,6 @@ Spectre::make.colour.plot(
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
-Givanna Putri
+Givanna Putri,
+Felix Marsh-Wakefield \email{felix.marsh-wakefield@sydney.edu.au}
 }

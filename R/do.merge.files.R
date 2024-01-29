@@ -17,14 +17,8 @@
 #' @export do.merge.files
 
 do.merge.files <- function(dat, remove.duplicates = TRUE) {
-
-  ## Check that necessary packages are installed
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-
-  ## Require packages
-
-  require(data.table)
+  
+  # require: data.table
 
   ## Data table (fastest) row binding solution
   cell.dat <- data.table::rbindlist(dat, fill = TRUE)

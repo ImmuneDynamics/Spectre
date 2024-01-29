@@ -24,7 +24,7 @@ do.zscore <- function(dat,
 
   ### Packages
 
-  require("data.table")
+  # require: data.table
 
   ### Testing
 

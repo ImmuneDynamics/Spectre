@@ -22,14 +22,9 @@ make.volcano.plot <- function(dat.p,
                               colAlpha = 1,
                               ...) {
 
-  ### Packages
-  # if (!requireNamespace('BiocManager', quietly = TRUE))
-  #   install.packages('BiocManager')
-  #
-  # BiocManager::install('EnhancedVolcano')
-
-  require(EnhancedVolcano)
-
+  # require: EnhancedVolcano.
+  # EnhancedVolcano is from BiocManager.
+  check_packages_installed(c("EnhancedVolcano"))
   ### Demo
 
   # dat.p <- test.res[3,3:length(names(test.res))]

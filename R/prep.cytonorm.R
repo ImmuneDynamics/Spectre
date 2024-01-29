@@ -41,22 +41,16 @@ prep.cytonorm <- function(dat,
                           seed = 42,
                           mem.ctrl = TRUE,
                           n.cells = 10000000) {
+  
+  # require:
+  # data.table, CytoNorm, flowCore, Biobase
+  # Everything else but CytoNorm will be imports.
+  # TODO: consult Tom and Felix.
 
-  ### Check that necessary packages are installed
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("CytoNorm", installed.packages()[, 1])) stop("CytoNorm is required but not installed")
-  if (!is.element("flowCore", installed.packages()[, 1])) stop("flowCore is required but not installed")
-  if (!is.element("Biobase", installed.packages()[, 1])) stop("Biobase is required but not installed")
-
-  ### Require packages
-  require(data.table)
-  require(CytoNorm)
-  # require(flowCore)
-  require(Biobase)
 
   ### Directory setup
 
+  # TODO fix me! Don't do setwd
   setwd(dir)
   starting.dir <- getwd()
   message("Working directory is '", starting.dir, "'")

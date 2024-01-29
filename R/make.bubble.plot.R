@@ -27,6 +27,8 @@ make.bubble.plot <- function(
         cluster, 
         col.scheme='RdYlBu'
 ) {
+    # require
+    # ggplot2, rcolorbrewer, viridis
     
     # Calculate clusters' markers' mean expression and proportion of cells captured.
     avg_exp <- dt[, lapply(.SD, mean), .SDcols = markers_to_plot, by = cluster]

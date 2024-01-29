@@ -23,10 +23,8 @@ read.spatial.files <- function(dir,
 
   ### Packages
 
-  require("data.table")
-  require("raster")
-  require("raster")
-  require("tiff")
+  # require: data.table, raster, tiff
+  
 
   ### Setup
 

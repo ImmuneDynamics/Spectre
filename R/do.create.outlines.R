@@ -17,13 +17,10 @@ do.create.outlines <- function(dat,
   ### Setup
 
   # message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
-
-  require(raster)
-  require(tiff)
-  require(rgeos)
-  require(tidyr)
-  require(ggplot2)
-  require(dplyr)
+  
+  # Require: raster, tiff, rgeos, tidyr, ggplot2, dplyr. Not sure why we need tidyr and dplyr?
+  # stars, sf, sp, s2 seems to only be used if using the fast version. 
+  # Moving only stars and s2 to suggests as sf and sp are used elsewhere.
 
   # polygons.name <- paste0(mask.name, "_polygons")
   # outlines.name <- paste0(mask.name, "_outlines")
@@ -31,19 +28,21 @@ do.create.outlines <- function(dat,
 
   ### Initial warning
 
-  os.deets <- devtools::session_info()
-  if (grepl("Windows", os.deets$platform$os)) {
+  # No need to use devtools for this.
+  if (.Platform$OS.type == "windows") {
     message("Warning: the generation of mask outlines may differ between Mac and Windows. See 'https://github.com/ImmuneDynamics/Spectre/issues/56' for more information.")
   }
+  # os.deets <- devtools::session_info()
+  # if (grepl("Windows", os.deets$platform$os)) {
+  #   message("Warning: the generation of mask outlines may differ between Mac and Windows. See 'https://github.com/ImmuneDynamics/Spectre/issues/56' for more information.")
+  # }
 
   ### Slow or fast version
 
   if (method == "stars") {
     message(paste0("Creating polygons, outlines, and centroids using 'stars' method."))
-    require(stars)
-    require(sf)
-    require(sp)
-    require(s2)
+    # These packages are in suggests field. Hence need to check.
+    check_packages_installed(c("stars", "s2"))
   }
 
   if (method == "raster") {

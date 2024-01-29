@@ -77,22 +77,8 @@ fast.multi.plot <- function(dat,
                             save.each.plot = FALSE){
   
   ### Check packages
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
-  if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
-  if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
-  if(!is.element('scattermore', installed.packages()[,1])) stop('scattermore is required but not installed')
   
-  ### Load packages
-  require(ggplot2)
-  require(scales)
-  require(colorRamps)
-  require(ggthemes)
-  require(RColorBrewer)
-  require(ggpointdensity)
-  require(scattermore)
+  # require: ggplot2, scales, colorRamps, ggthemes, RColorBrewer, ggpointdensity, scattermore, gridExtra
   
   ### Overall plot settings
   #title <- figure.title
@@ -133,7 +119,7 @@ fast.multi.plot <- function(dat,
         plot.nme <- paste0(i)
       }
       
-      if(length(dat.list) > 1){
+      else if(length(dat.list) > 1){
         plot.nme <- paste0(a, " - ", i)
       }
       
@@ -273,11 +259,9 @@ fast.multi.plot <- function(dat,
   
   if(exists(x = "gp")){
     message(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
-  }
-  
-  ### Message if grid was NOT created
-  
-  if(exists(x = "gp") == FALSE){
+  } else {
+    ### Message if grid was NOT created
     message(paste0("Grid image was not created successfully"))
   }
+  
 }

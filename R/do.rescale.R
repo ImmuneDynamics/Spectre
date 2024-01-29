@@ -31,7 +31,7 @@ do.rescale <- function(dat,
                        append.name = "_rescaled") {
 
   ### Packages
-  require("data.table")
+  # require: data.table
 
   ### Test data
   # dat <- Spectre::demo.asinh

@@ -99,16 +99,10 @@ make.autograph <- function(dat,
   # Variance_test <- "kruskal.test"
   # Pairwise_test <- "wilcox.test"
   
-  ### Check that necessary packages are installed
-  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
-  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-  if(!is.element('ggpubr', installed.packages()[,1])) stop('ggpubr is required but not installed')
   
   ### Require packages
-  require(ggplot2)
-  require(data.table)
-  require(ggpubr)
+  # ggplot2, data.table, ggpubr
+  
   
   ### Library test
   if(!is.null(colours)){

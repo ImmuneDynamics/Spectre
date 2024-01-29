@@ -54,9 +54,9 @@ do.logicle <- function(dat,
                        max.scale.val = 262144,
                        full.transform.width = 4.5,
                        additional.negative.range = 0) {
-  require(flowCore)
-  require(Biobase)
-  require(data.table)
+  
+  # require: flowCore, biobase, data.table
+  # Note: not sure why Biobase is required?
 
   # check selected columns are numeric
   if (any(unlist(lapply(dat[, use.cols, with = FALSE], is.numeric)) == FALSE)) {

@@ -1,4 +1,5 @@
-#' do.filter - filtering data.table using multiple match values
+#' do.filter 
+#' 
 #'
 #' This function allows filtering of a data.table using multiple match values -- all cells that contain any of the match values will be filtered, and provided in a new data.table.
 #'

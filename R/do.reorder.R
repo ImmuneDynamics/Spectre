@@ -23,7 +23,7 @@ do.reorder <- function(dat,
 
   ### Packages
 
-  require(data.table)
+  # require: data.table
 
   ### Test
 

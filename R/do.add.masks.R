@@ -30,11 +30,8 @@ do.add.masks <- function(dat, # list of spatial objects
                          HDF5 = FALSE,
                          array = FALSE) {
 
-  ### Require
-
-  require("raster")
-  require("rhdf5")
-  require("HDF5Array")
+  ### Require. Make life easier to manage dependencies.
+  ### raster, rhdf5, HDF5Array, Matrix
 
   ###
 
@@ -56,7 +53,7 @@ do.add.masks <- function(dat, # list of spatial objects
     all.files <- list.files(mask.dir, pattern = ".tif")
   }
 
-  as.matrix(all.files)
+  # as.matrix(all.files)
 
   ### Setup
 

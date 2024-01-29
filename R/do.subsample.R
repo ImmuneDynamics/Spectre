@@ -40,13 +40,8 @@ do.subsample <- function(dat,
                          min.per = FALSE,
                          seed = 42) {
 
-  ## Check that necessary packages are installed
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  require("data.table")
-
-  ## Require packages
-  require(data.table)
-
+  # require: data.table
+  
   ## Test
 
   # dat <- Spectre::demo.clustered

@@ -18,6 +18,11 @@ make.mds.plot <- function(dat,
                           markers,
                           colour_by,
                           font_size = 4) {
+    
+    # require: data.table, ggplot2, limma
+    # limma is only used here. So put it in as suggest.
+    check_packages_installed(c("limma"))
+    
     agg_dat <- dat[, lapply(.SD, mean), by = sample_col, .SDcols = markers]
     agg_dat_transposed <- t(agg_dat[, markers, with = FALSE])
     colnames(agg_dat_transposed) <- agg_dat[[sample_col]]
@@ -51,8 +56,9 @@ make.mds.plot <- function(dat,
         x = paste0("MDS1 (", round( 100 * mds$var.explained[1]), "%)"), 
         y = paste0("MDS2 (", round( 100 * mds$var.explained[2]), "%)"),
         color = colour_by,
-        title = "MDS plot of mean protein expression of samples")
+        title = "MDS plot of mean protein expression of samples"
+    )
 
-return(plt)
+    return(plt)
 
 }

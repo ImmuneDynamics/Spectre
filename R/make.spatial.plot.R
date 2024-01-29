@@ -91,25 +91,8 @@ make.spatial.plot <- function(dat, # spatial data object
   #
   # add.outlines = TRUE
   # flip.y.axis = TRUE
-
-  ### Check that necessary packages are installed
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("ggplot2", installed.packages()[, 1])) stop("ggplot2 is required but not installed")
-  if (!is.element("scales", installed.packages()[, 1])) stop("scales is required but not installed")
-  if (!is.element("colorRamps", installed.packages()[, 1])) stop("colorRamps is required but not installed")
-  if (!is.element("ggthemes", installed.packages()[, 1])) stop("ggthemes is required but not installed")
-  if (!is.element("RColorBrewer", installed.packages()[, 1])) stop("RColorBrewer is required but not installed")
-  if (!is.element("raster", installed.packages()[, 1])) stop("raster is required but not installed")
-  if (!is.element("rgeos", installed.packages()[, 1])) stop("rgeos is required but not installed")
-
-  ### Require packages
-  require(ggplot2)
-  require(scales)
-  require(colorRamps)
-  require(ggthemes)
-  require(RColorBrewer)
-  require(raster)
-  require(rgeos)
+  
+  # require: ggplot2, scales, colorRamps, ggthemes, RColorBrewer, raster, rgeos
 
   ### Compatability conversions
 

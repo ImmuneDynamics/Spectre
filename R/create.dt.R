@@ -120,10 +120,14 @@ create.dt <- function(dat, from = NULL) {
 #'
 #' @return A list of data.table objects.
 #'
-#' @import Seurat patchwork
+#' @import Seurat
 #' @noRd
 #' 
 convert.seurat.object <- function(dat) {
+    
+    # Need to do this as Seurat is in "Suggest" field in description.
+    check_packages_installed(c("Seurat"))
+
     a <- GetAssayData(object = dat)
     assays <- names(dat@assays)
     dim.reds <- names(dat@reductions)
@@ -269,6 +273,10 @@ convert.seurat.object <- function(dat) {
 #' @noRd
 #' 
 convert.sce <- function(dat) {
+    
+    # Need to do this as SingleCellExperiment and Matrix is in "Suggest" field in description.
+    check_packages_installed(c("SingleCellExperiment", "Matrix"))
+    
     geneNames <- rownames(dat) # genes
     geneNames
 

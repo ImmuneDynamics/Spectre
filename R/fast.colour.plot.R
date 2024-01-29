@@ -97,26 +97,9 @@ fast.colour.plot <- function(dat,
                              blank.axis = FALSE,
                              col.tab = NULL) {
     ### Check for packages
-    if (!is.element("ggplot2", installed.packages()[, 1]))
-        stop("ggplot2 is required but not installed")
-    if (!is.element("scales", installed.packages()[, 1]))
-        stop("scales is required but not installed")
-    if (!is.element("colorRamps", installed.packages()[, 1]))
-        stop("colorRamps is required but not installed")
-    if (!is.element("ggthemes", installed.packages()[, 1]))
-        stop("ggthemes is required but not installed")
-    if (!is.element("RColorBrewer", installed.packages()[, 1]))
-        stop("RColorBrewer is required but not installed")
-    if (!is.element("scattermore", installed.packages()[, 1]))
-      stop("scattermore is required but not installed")
     
-    ### Load packages
-    require(ggplot2)
-    require(scales)
-    require(colorRamps)
-    require(ggthemes)
-    require(RColorBrewer)
-    require(scattermore)
+    # require: ggplot2, scales, colorRamps, ggthemes, RColorBrewer, scattermore
+    
     
     ### Demo data
     

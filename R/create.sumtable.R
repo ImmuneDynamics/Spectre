@@ -45,13 +45,7 @@ create.sumtable <- function(dat,
                             func = 'median',
                             sep = " -- "){
   
-  ### Packages
-  
-      if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
-      if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-      
-      require('Spectre')
-      require('data.table')
+      # require: data.table
   
   ### Setup and tests
       

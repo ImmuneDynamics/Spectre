@@ -28,7 +28,7 @@ do.clip <- function(dat,
 
   ### Packages
 
-  require("data.table")
+  # Require: data.table
 
   ### Demo data
 

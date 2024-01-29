@@ -41,12 +41,11 @@ read.files <- function(file.loc = getwd(),
                        header = TRUE,
                        truncate_max_range = TRUE) {
 
-  ## Check that necessary packages are installed
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
 
-  ## Require packages
-  require(data.table)
+  # require:
+  # data.table
+  # flowCore is required for reading FCS file.
+  
 
   ## Initial warnings
   orig_wd <- getwd()
@@ -102,8 +101,7 @@ read.files <- function(file.loc = getwd(),
   ## For reading FCS files
 
   if (file.type == ".fcs") {
-    if (!is.element("flowCore", installed.packages()[, 1])) stop("flowCore is required but not installed")
-    require(flowCore)
+    # require: flowCore here.
 
     file.names <- list.files(path = wd, pattern = file.type)
 

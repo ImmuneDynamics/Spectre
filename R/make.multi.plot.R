@@ -76,21 +76,9 @@ make.multi.plot <- function(dat,
                             blank.axis = FALSE,
                             save.each.plot = FALSE){
   
-  ### Check packages
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
-  if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
-  if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
   
   ### Load packages
-  require(ggplot2)
-  require(scales)
-  require(colorRamps)
-  require(ggthemes)
-  require(RColorBrewer)
-  require(ggpointdensity)
+  # require: ggplot2, scales, colorRamps, ggthemes, RColorBrewer, ggpointdensity
   
   ### Overall plot settings
   #title <- figure.title
