@@ -32,6 +32,8 @@ write.files <- function(dat, # data to save
   # write.csv = TRUE
   # write.fcs = TRUE
 
+  # require: flowCore
+  
   ### Setup
 
   dat <- as.data.table(dat)
@@ -103,11 +105,6 @@ write.files <- function(dat, # data to save
 
 
     if (write.fcs == TRUE) {
-      if (!is.element("flowCore", installed.packages()[, 1])) {
-        stop("flowCore is required but not installed")
-      }
-
-      require(flowCore)
 
       divide.list.fcs <- unique(dat.for.fcs[[divide.by]])
 

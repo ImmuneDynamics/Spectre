@@ -65,11 +65,7 @@ run.tsne <- function(dat,
                      eta = 200,
                      exaggeration_factor = 12.0) {
 
-  ## Check that necessary packages are installed
-  if (!is.element("Rtsne", installed.packages()[, 1])) stop("Rtsne is required but not installed")
-
-  ## Require packages
-  require(Rtsne)
+  # require Rtsne
 
   ## Set the seed
   set.seed(tsne.seed)

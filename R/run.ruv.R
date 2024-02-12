@@ -39,11 +39,8 @@ run.ruv <- function(dat,
 
   ### Packages
 
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("CytofRUV", installed.packages()[, 1])) stop("CytofRUV is required but not installed")
-
-  require(data.table)
-  require(CytofRUV)
+  # require: data.table, CytofRUV
+  check_packages_installed(c("CytofRUV"))
 
   ### Test data
 

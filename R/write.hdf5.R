@@ -42,12 +42,9 @@ write.hdf5 <- function(dat, # SpectreMAP object
 
   ### Packages
 
-  require("Spectre")
-  require("data.table")
-  require("raster")
-  require("rhdf5")
-  require("HDF5Array")
-
+  # require: data.table, raster, rhdf5, HDF5Array
+  check_packages_installed(c("raster", "rhdf5", "HDF5Array"))
+  
   ### Testing
 
   # dat <- spatial.dat

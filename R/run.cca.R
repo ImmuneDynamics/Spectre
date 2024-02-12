@@ -14,9 +14,7 @@ run.cca <- function(dat,
   
   ### Setup
   
-  require('data.table')
-  require('Seurat')
-  require('Matrix')
+  # require data.table, Seurat, Matrix
   
   ### Demo data
   

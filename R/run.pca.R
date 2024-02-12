@@ -116,24 +116,11 @@ run.pca <- function(dat,
                     var.numb = 20,
                     path = getwd()) {
 
-  ## Check that necessary packages are installed
-  if (!is.element("stats", installed.packages()[, 1])) stop("stats is required but not installed")
-  if (!is.element("factoextra", installed.packages()[, 1])) stop("factoextra is required but not installed")
-  if (!is.element("ggplot2", installed.packages()[, 1])) stop("ggplot2 is required but not installed")
-  if (!is.element("gtools", installed.packages()[, 1])) stop("gtools is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("RColorBrewer", installed.packages()[, 1])) stop("RColorBrewer is required but not installed")
-  if (!is.element("viridis", installed.packages()[, 1])) stop("viridis is required but not installed")
+  
 
-  ## Require packages
-  require(stats)
-  require(factoextra)
-  require(ggplot2)
-  require(gtools)
-  require(data.table)
-  require(RColorBrewer)
-  require(viridis)
-
+  # require: stats, factoextra, ggplot2, gtools, data.table, RColorBrewer, viridis
+  # I think stats is already installed by default? so no need to put it in imports field
+  
   # Make sure dat is a dataframe
   dat <- as.data.frame(dat)
 

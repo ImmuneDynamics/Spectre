@@ -14,9 +14,8 @@ run.rpca <- function(dat,
   
   ### Setup
   
-  require('data.table')
-  require('Seurat')
-  require('Matrix')
+  # require: Seurat, data.table, Matrix
+  check_packages_installed(c("Seurat", "Matrix"))
   
   ### Demo data
   

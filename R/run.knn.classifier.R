@@ -28,12 +28,9 @@ run.knn.classifier <- function(train.dat,
                                label.col,
                                num.neighbours = 1,
                                seed = 42) {
-  if (!is.element("caret", installed.packages()[, 1])) stop("caret is required but not installed")
-  if (!is.element("FNN", installed.packages()[, 1])) stop("FNN is required but not installed")
-
-  require(caret)
-  require(FNN)
-
+  
+  # require: caret, FNN
+  check_packages_installed(c("caret", "FNN"))
   set.seed(seed)
 
   # for testing

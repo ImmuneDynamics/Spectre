@@ -32,16 +32,10 @@ run.phenograph <- function(dat,
 
   ### Packages
 
-  # devtools::install_github("JinmiaoChenLab/Rphenograph")
-
-  if (!is.element("Rphenograph", installed.packages()[, 1])) stop("Rphenograph is required but not installed. Can be installed by running devtools::install_github('JinmiaoChenLab/Rphenograph)")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("Rcpp", installed.packages()[, 1])) stop("Rcpp is required but not installed")
-
-  require(Rphenograph)
-  require(data.table)
-  require(Rcpp)
-
+  # require: Rphenograph, data.table, Rcpp
+  # "JinmiaoChenLab/Rphenograph"
+  check_packages_installed(c("Rphenograph", "Rcpp"))
+  
   ### Testing data
 
   # dat <- Spectre::demo.asinh

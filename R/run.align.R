@@ -77,11 +77,11 @@ run.align <- function(ref.dat,
 
   ### Packages
 
-  require("data.table")
-  require("flowCore")
-
+  # require data.table, flowCore
+  
   ### Setup
 
+  # TODO: what is this? why in the beginning?
   unlink("Temp -- cytofbatchadjust", recursive = TRUE)
 
   start.dat <- target.dat

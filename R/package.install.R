@@ -22,6 +22,8 @@
 #' @export
 
 package.install <- function(type = "general", update = FALSE) {
+  
+  # TODO have to revisit this.
 
   ## Update = FALSE
   if (isFALSE(update)) {

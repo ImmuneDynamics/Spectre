@@ -45,11 +45,9 @@ train.knn.classifier <- function(dat,
                                  num.folds = 10,
                                  num.repeats = 1,
                                  seed = 42) {
-  if (!is.element("caret", installed.packages()[, 1])) stop("caret is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-
-  require(data.table)
-  require(caret)
+  
+  # require: data.table, caret
+  check_packages_installed(c("caret"))
 
   dat.features <- dat[, ..use.cols]
   dat.labels <- as.character(dat[[label.col]])

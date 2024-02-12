@@ -38,20 +38,8 @@ train.cytonorm <- function(model,
                            dir = getwd(),
                            mem.ctrl = TRUE) {
 
-  ### Check that necessary packages are installed
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("CytoNorm", installed.packages()[, 1])) stop("CytoNorm is required but not installed")
-  if (!is.element("flowCore", installed.packages()[, 1])) stop("flowCore is required but not installed")
-  if (!is.element("Biobase", installed.packages()[, 1])) stop("Biobase is required but not installed")
-
-  ### Require packages
-  require(Spectre)
-  require(data.table)
-  require(CytoNorm)
-  # require(flowCore)
-  require(Biobase)
-
+  # require: data.table, CytoNorm, Biobase, flowCore?
+  check_packages_installed(c("CytoNorm"))
   ### Check the alignment model object
   message("Training alignment - setup")
 

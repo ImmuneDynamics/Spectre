@@ -76,7 +76,7 @@ run.umap <- function(dat,
                      
                      # For Fast UMAP
                      fast = FALSE,
-                     n_threads = detectCores() - 1,
+                     n_threads = NULL,
                      n_sgd_threads = 'auto',
                      batch = TRUE) {
 
@@ -85,15 +85,16 @@ run.umap <- function(dat,
   # umap.seed <- 42
   # use.cols <- c(1:4)
 
-  ## Check that necessary packages are installed
-  check_packages_installed(c("data.table"))
-  require(data.table)
+  # require: uwot, parallel, umap
+  
   
   if (!"data.frame" %in% class(dat)) {
     stop("dat must be of type data.frame or data.table")
   }
   
   if(fast == TRUE){
+    check_packages_installed(c("uwot"))
+    # will only get here if uwot is installed.
     if (!is.element("parallel", installed.packages()[, 1])){
       message("For 'fast' UMAP, parallel is required but not installed. Switching to slow UMAP")
       fast <- FALSE
@@ -102,9 +103,6 @@ run.umap <- function(dat,
   
   
   if(fast == FALSE){
-    
-    check_packages_installed(c("umap"))
-    require(umap)
   
     ###
     custom.config <- umap::umap.defaults
@@ -158,6 +156,10 @@ run.umap <- function(dat,
       b_gradient <- NULL
     }
     
+    if (is.null(n_threads)) {
+      n_threads <- detectCores() - 1
+    }
+    
     set.seed(umap.seed)
     
     dat.umap <- uwot::umap(
@@ -189,3 +191,5 @@ run.umap <- function(dat,
   }
 
 }
+
+

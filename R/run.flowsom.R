@@ -45,19 +45,7 @@ run.flowsom <- function(dat,
                         meta.clust.name = "FlowSOM_metacluster",
                         mem.ctrl = TRUE) {
 
-  ### Check that necessary packages are installed
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("flowCore", installed.packages()[, 1])) stop("flowCore is required but not installed")
-  if (!is.element("Biobase", installed.packages()[, 1])) stop("Biobase is required but not installed")
-  if (!is.element("FlowSOM", installed.packages()[, 1])) stop("FlowSOM is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-
-  ### Require packages
-  # require(flowCore)
-  require(Biobase)
-  require(FlowSOM)
-  require(data.table)
-
+  # require: flowCore, Biobase, FlowSOM, data.table
   ### Test
   
   # dat <- Spectre::demo.asinh

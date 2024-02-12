@@ -17,6 +17,9 @@
 #' @export
 
 package.check <- function(type = "general") {
+  # uses devtools
+  # TODO update me. This is not sustainable....
+  
   deets <- devtools::package_info("Spectre", include_base = FALSE, dependencies = FALSE)
   os.deets <- devtools::session_info()
 

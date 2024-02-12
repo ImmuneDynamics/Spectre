@@ -84,16 +84,10 @@ run.harmony <- function(dat,
                         cluster_prior = NULL) {
 
   ### Packages
-
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("harmony", installed.packages()[, 1])) stop('harmony is required but not installed. You can install harmony by running devtools::install_github("immunogenomics/harmony")')
-
-  ### Require packages
-
-  require(data.table)
-  require(harmony)
-
+  
+  # require: data.table, harmony
+  check_packages_installed(c("harmony"))
+  
   ### Data prep
 
   message("run.harmony - preparing data (1/4)")
