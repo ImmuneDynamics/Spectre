@@ -15,8 +15,7 @@
 #'
 #' @usage package.load()
 #'
-#' @export
-
+#' 
 package.load <- function(type = "general") {
   require("devtools")
   require("data.table")

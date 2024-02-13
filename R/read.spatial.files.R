@@ -10,8 +10,6 @@
 #'
 #' @return Returns a list of spatial data objects.
 #'
-#' @examples
-#' @import data.table
 #'
 #' @export
 
@@ -24,7 +22,7 @@ read.spatial.files <- function(dir,
   ### Packages
 
   # require: data.table, raster, tiff
-  
+  check_packages_installed(c("raster", "tiff"))
 
   ### Setup
 

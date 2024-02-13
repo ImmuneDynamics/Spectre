@@ -10,50 +10,41 @@
 #' @return Returns a new data.table with z-score calculations for each selected column
 #'
 #' @examples
-# res <- do.zscore(dat = Spectre::demo.sum,
-#                  use.cols = names(Spectre::demo.sum)[c(4:15)])
+#' res <- do.zscore(dat = Spectre::demo.sum, use.cols = names(Spectre::demo.sum)[c(4:15)])
 #'
-#' @import data.table
 #'
 #' @export do.zscore
 
-do.zscore <- function(dat,
-                      use.cols,
-                      append.name = "_zscore",
-                      replace = FALSE) {
+do.zscore <- function(dat, use.cols, append.name = "_zscore", replace = FALSE) {
 
-  ### Packages
+    ### Packages
 
-  # require: data.table
+    # require: data.table
 
-  ### Testing
+    ### Testing
 
-  # dat <- demo.sum
-  # use.cols <- names(demo.sum)[c(4:15)]
+    # dat <- demo.sum use.cols <- names(demo.sum)[c(4:15)]
 
-  ### Using R's scale()
+    ### Using R's scale()
 
-  sc <- scale(dat[, use.cols, with = FALSE])
-  sc <- as.data.table(sc)
+    sc <- scale(dat[, use.cols, with = FALSE])
+    sc <- data.table::as.data.table(sc)
 
-  ### Replace or not
+    ### Replace or not
 
-  if (isTRUE(replace)) {
-    res <- dat
-    res[, use.cols] <- sc
-  } else {
-    names(sc) <- paste0(names(sc), append.name)
-    res <- cbind(dat, sc)
-  }
+    if (isTRUE(replace)) {
+        res <- dat
+        res[, use.cols] <- sc
+    } else {
+        names(sc) <- paste0(names(sc), append.name)
+        res <- cbind(dat, sc)
+    }
 
-  ### Manual calculation
+    ### Manual calculation
 
-  # zscore <- function(x) {
-  #   z <- (x - mean(x)) / sd(x)
-  #   return(z)
-  # }
+    # zscore <- function(x) { z <- (x - mean(x)) / sd(x) return(z) }
 
-  ### Return
+    ### Return
 
-  return(res)
+    return(res)
 }

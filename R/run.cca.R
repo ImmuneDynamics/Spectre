@@ -1,6 +1,5 @@
 #' run.cca
 #'
-#' @import data.table Matrix Seurat
 #'
 #' @export
 
@@ -15,6 +14,7 @@ run.cca <- function(dat,
   ### Setup
   
   # require data.table, Seurat, Matrix
+  check_packages_installed("Seurat")
   
   ### Demo data
   

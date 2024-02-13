@@ -32,6 +32,7 @@
 #' @param additional.negative.range Default = 0. Additional negative range to be included in
 #'   the transformed value in asymptotic decades.
 #'   Value greater than 0 will bring the prescribed additional range into the transformed values
+#' @param verbose Whether to print out progress. Default = FALSE
 #'
 #' @usage
 #' do.logicle(dat, use.cols, linearisation.width, max.scale.val, full.transform.width, additional.negative.range)
@@ -53,58 +54,64 @@ do.logicle <- function(dat,
                        linearisation.width = 1.2,
                        max.scale.val = 262144,
                        full.transform.width = 4.5,
-                       additional.negative.range = 0) {
+                       additional.negative.range = 0,
+                       verbose = FALSE) {
   
-  # require: flowCore, biobase, data.table
-  # Note: not sure why Biobase is required?
-
-  # check selected columns are numeric
-  if (any(unlist(lapply(dat[, use.cols, with = FALSE], is.numeric)) == FALSE)) {
-    stop("Non-numeric columns are selected for transformation. Please exclude them.")
-  }
-
-  values <- dat[, use.cols, with = FALSE]
-
-  val.mat <- as.matrix(values)
-
-  ff <- new("flowFrame", exprs = val.mat)
-
-  if (auto.infer.function) {
-    # Automatic estimated logicle function
-    message("Automatically estimating the logicle transformation function based on input data")
-    lgcl <- estimateLogicle(ff, channels = use.cols)
-  } else {
-
-    # check parameter conditions, make sure they are greater than 0
-    if (is.null(max.scale.val) || max.scale.val <= 0) {
-      stop("max.scale.val must be greater than 0")
+    # require: flowCore, data.table
+  
+    # check selected columns are numeric
+    if (any(unlist(lapply(dat[, use.cols, with = FALSE], is.numeric)) == FALSE)) {
+      stop("Non-numeric columns are selected for transformation. Please exclude them.")
     }
-    if (is.null(linearisation.width) || linearisation.width <= 0) {
-      stop("linearisation.width must be greater than 0")
+  
+    values <- dat[, use.cols, with = FALSE]
+  
+    val.mat <- as.matrix(values)
+  
+    ff <- flowCore::flowFrame(exprs = val.mat)
+  
+    if (auto.infer.function) {
+      # Automatic estimated logicle function
+      if (verbose) 
+        message("Automatically estimating the logicle transformation function based on input data")
+      
+      lgcl <- flowCore::estimateLogicle(ff, channels = use.cols)
+    } else {
+  
+      # check parameter conditions, make sure they are greater than 0
+      if (is.null(max.scale.val) || max.scale.val <= 0) {
+        stop("max.scale.val must be greater than 0")
+      }
+      if (is.null(linearisation.width) || linearisation.width <= 0) {
+        stop("linearisation.width must be greater than 0")
+      }
+      if (is.null(full.transform.width) || full.transform.width <= 0) {
+        stop("full.transform.width must be greater than 0")
+      }
+  
+      # User defined logicle function
+      if (verbose) 
+        message("Formulating logicle transformation function")
+      
+      trans_lgcl <- flowCore::logicleTransform(
+        w = linearisation.width,
+        t = max.scale.val,
+        m = full.transform.width,
+        a = additional.negative.range
+      )
+      lgcl <- flowCore::transformList(use.cols, trans_lgcl)
     }
-    if (is.null(full.transform.width) || full.transform.width <= 0) {
-      stop("full.transform.width must be greater than 0")
-    }
-
-    # User defined logicle function
-    message("Formulating logicle transformation function")
-    trans_lgcl <- logicleTransform(
-      w = linearisation.width,
-      t = max.scale.val,
-      m = full.transform.width,
-      a = additional.negative.range
-    )
-    lgcl <- transformList(use.cols, trans_lgcl)
-  }
-
-  # Do transformation
-  message("Transforming data")
-  trans.val <- flowCore::transform(ff, lgcl)
-
-  message("Converting data back to data.table")
-  trans.val.dt <- data.table(exprs(trans.val))
-  names(trans.val.dt) <- paste(names(trans.val.dt), "logicle", sep = "_")
-
-  dat_copy <- cbind(dat, trans.val.dt)
-  return(dat_copy)
+  
+    # Do transformation
+    if (verbose) 
+      message("Transforming data")
+    trans.val <- flowCore::transform(ff, lgcl)
+    
+    if (verbose)   
+      message("Converting data back to data.table")
+    trans.val.dt <- data.table(flowCore::exprs(trans.val))
+    names(trans.val.dt) <- paste(names(trans.val.dt), "logicle", sep = "_")
+  
+    dat_copy <- cbind(dat, trans.val.dt)
+    return(dat_copy)
 }

@@ -20,41 +20,31 @@
 #' @return A data.table with new columns added, that contain the re-scaled data.
 #'
 #' @usage do.rescale(dat, use.cols)
-#' @import data.table
 #'
-#' @export do.rescale
+#' @export
 
-do.rescale <- function(dat,
-                       use.cols,
-                       new.min = 0,
-                       new.max = 1,
-                       append.name = "_rescaled") {
+do.rescale <- function(dat, use.cols, new.min = 0, new.max = 1, append.name = "_rescaled") {
 
-  ### Packages
-  # require: data.table
+    ### Packages require: data.table
 
-  ### Test data
-  # dat <- Spectre::demo.asinh
-  # use.cols <- names(dat)[c(11:19)]
-  # new.min = -1
-  # new.max = 1
-  # append.name = '_rescaled'
+    ### Test data dat <- Spectre::demo.asinh use.cols <- names(dat)[c(11:19)] new.min = -1 new.max = 1 append.name =
+    ### '_rescaled'
 
-  ### Create normalisation function
-  # norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x, na.rm=TRUE))}
-  norm.fun <- function(x) {
-    (x - min(x)) / (max(x) - min(x)) * (new.max - new.min) + new.min
-  }
-  # norm.fun <- function(x){scales::rescale(value, to=c(new.min,new.max))}
+    ### Create normalisation function norm.fun <- function(x) {(x - min(x, na.rm=TRUE))/(max(x,na.rm=TRUE) -min(x,
+    ### na.rm=TRUE))}
+    norm.fun <- function(x) {
+        (x - min(x))/(max(x) - min(x)) * (new.max - new.min) + new.min
+    }
+    # norm.fun <- function(x){scales::rescale(value, to=c(new.min,new.max))}
 
-  ### Establish dataset
-  value <- dat[, use.cols, with = FALSE]
+    ### Establish dataset
+    value <- dat[, use.cols, with = FALSE]
 
-  ### Normalise between new values
-  res <- as.data.table(lapply(value, norm.fun)) # by default, removes the names of each row
-  names(res) <- paste0(names(res), append.name)
-  dat <- cbind(dat, res)
+    ### Normalise between new values
+    res <- data.table::as.data.table(lapply(value, norm.fun))  # by default, removes the names of each row
+    names(res) <- paste0(names(res), append.name)
+    dat <- cbind(dat, res)
 
-  ### Return
-  return(dat)
+    ### Return
+    return(dat)
 }

@@ -16,9 +16,7 @@ do.reorder(dat, use.col, new.order)
 \description{
 This function allows for a user-defined re-ordering of data.table rows
 }
-\references{
-\url{https://github.com/ImmuneDynamics/Spectre}.
-}
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Givanna Putri
 }

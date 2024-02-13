@@ -21,7 +21,6 @@
 #' @examples
 #' align.model <- train.cytonorm()
 #'
-#' @import data.table
 #'
 #' @export
 
@@ -38,7 +37,7 @@ train.cytonorm <- function(model,
                            dir = getwd(),
                            mem.ctrl = TRUE) {
 
-  # require: data.table, CytoNorm, Biobase, flowCore?
+  # require: data.table, CytoNorm, Biobase, flowCore
   check_packages_installed(c("CytoNorm"))
   ### Check the alignment model object
   message("Training alignment - setup")

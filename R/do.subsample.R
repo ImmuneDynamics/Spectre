@@ -30,9 +30,8 @@
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
-#' @import data.table
 #'
-#' @export do.subsample
+#' @export
 
 do.subsample <- function(dat,
                          targets,

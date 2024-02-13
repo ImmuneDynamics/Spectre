@@ -30,7 +30,6 @@
 #' @examples
 #' data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
 #'
-#' @import data.table
 #'
 #' @export
 
@@ -135,7 +134,7 @@ read.files <- function(file.loc = getwd(),
         }
       }
 
-      tempdata <- exprs(x)
+      tempdata <- flowCore::exprs(x)
       tempdata <- tempdata[1:nrow(tempdata), 1:ncol(tempdata)]
       tempdata <- as.data.table(tempdata)
       names(tempdata) <- nms

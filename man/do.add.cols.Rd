@@ -28,16 +28,17 @@ do.add.cols
 \examples{
 library(data.table)
 add.dt <- data.table(
-  "Files" = unique(demo.asinh$FileName),
-  "SampleNumber" = c(1:12)
+    "Files" = unique(demo.asinh$FileName),
+    "SampleNumber" = c(1:12)
 )
 
 cell.dat <- do.add.cols(
-  dat = demo.asinh,
-  base.col = "FileName",
-  add.dat = add.dt,
-  add.by = "Files"
+    dat = demo.asinh,
+    base.col = "FileName",
+    add.dat = add.dt,
+    add.by = "Files"
 )
+
 
 }
 \references{

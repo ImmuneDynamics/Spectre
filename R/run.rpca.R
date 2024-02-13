@@ -1,6 +1,5 @@
 #' run.rpca
 #'
-#' @import data.table Matrix Seurat
 #'
 #' @export
 
@@ -14,8 +13,8 @@ run.rpca <- function(dat,
   
   ### Setup
   
-  # require: Seurat, data.table, Matrix
-  check_packages_installed(c("Seurat", "Matrix"))
+  # require: Seurat, data.table
+  check_packages_installed(c("Seurat"))
   
   ### Demo data
   

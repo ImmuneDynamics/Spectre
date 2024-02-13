@@ -19,12 +19,8 @@
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
-#' @import data.table
 #'
 #' @export
-
-# run.spatial.analysis
-
 write.hdf5 <- function(dat, # SpectreMAP object
                        channels = NULL,
                        merge.channels = NULL,

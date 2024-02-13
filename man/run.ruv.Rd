@@ -34,6 +34,7 @@ This function allows you to run the CytofRUV alignment method.
 \examples{
 cell.dat <- run.ruv()
 
+
 }
 \references{
 Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}

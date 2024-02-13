@@ -15,7 +15,7 @@ make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order,
 
 \item{colour.by}{DEFAULT = x.axis. Character, column name. Selects column that will determine differentiator of colour in plots.}
 
-\item{y.axis.label}{NO DEFAULT. Character. Specify y-axis label. Can be "" if one is not desired.}
+\item{y.axis.label}{NO DEFAULT. Character. Specify y-axis label. Can be '' if one is not desired.}
 
 \item{grp.order}{DEFAULT = NULL. String of characters or numbers. Specify order of group for x-axis.}
 
@@ -27,15 +27,15 @@ make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order,
 
 \item{Pairwise_test}{DEFAULT = NULL. Can be 'kruskal.test' (non-parametric) or 'anova' (parametric)}
 
-\item{title}{DEFAULT = paste0(y.axis.label, " - ", y.axis). Character. Specify title of plot on graph. Default combines 'y.axis.label' and 'y.axis'.}
+\item{title}{DEFAULT = paste0(y.axis.label, ' - ', y.axis). Character. Specify title of plot on graph. Default combines 'y.axis.label' and 'y.axis'.}
 
 \item{subtitle}{DEFAULT = NULL. Plot subtitle.}
 
-\item{filename}{DEFAULT = paste0(y.axis.label, " - ", y.axis, ".pdf"). Character. Specify name plot will be exported as. Default combines 'y.axis.label' and 'y.axis'. Make sure to end with ".pdf" so file is correctly saved.}
+\item{filename}{DEFAULT = paste0(y.axis.label, ' - ', y.axis, '.pdf'). Character. Specify name plot will be exported as. Default combines 'y.axis.label' and 'y.axis'. Make sure to end with '.pdf' so file is correctly saved.}
 
 \item{violin}{DEFAULT = TRUE. Add violin plot underneath the data points.}
 
-\item{scale}{DEFAULT = "lin". Character. Select y-axis scale. Can also be "sci".}
+\item{scale}{DEFAULT = 'lin'. Character. Select y-axis scale. Can also be 'sci'.}
 
 \item{dot.size}{DEFAULT = 5. Numeric. Specify size of dots on plot.}
 
@@ -45,7 +45,8 @@ make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order,
 
 \item{max.y}{DEFAULT = 1.4. Multiplier for plot heigh -- allowing room for stats.}
 
-\item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
+\item{path}{DEFAULT = NULL. The location to save plots. By default, nothing will be saved.
+Set this a directory in your computer if you want to save the graph.}
 }
 \description{
 This function allows you to generate quantitative plots of your data.
@@ -54,19 +55,19 @@ If interested in generating other plots (bar graphs) or adding statistics, we re
 Uses the package 'ggplot2' to generate plots, 'data.table' to manipulate data.
 }
 \examples{
-dat <- data.frame(Samples = c("Mock_01", "Mock_02", "Mock_03", "WNV_01", "WNV_02", "WNV_03"),
-                  Group = c(rep("Mock", 3), rep("WNV", 3)),
+dat <- data.frame(Samples = c('Mock_01', 'Mock_02', 'Mock_03', 'WNV_01', 'WNV_02', 'WNV_03'),
+                  Group = c(rep('Mock', 3), rep('WNV', 3)),
                   Tcells = c(20, 40, 30, 60, 70, 80),
                   Bcells = c(90, 95, 70, 20, 15, 30),
                   Batch = c(1,2,1,3,2,1)
                   )
 
 Spectre::make.autograph(dat = dat,
-                        x.axis = "Group",
-                        y.axis = "Tcells",
-                        colour.by = "Batch",
-                        colours = c("Black", "Red", "Blue"),
-                        y.axis.label = "Proportion"
+                        x.axis = 'Group',
+                        y.axis = 'Tcells',
+                        colour.by = 'Batch',
+                        colours = c('Black', 'Red', 'Blue'),
+                        y.axis.label = 'Proportion'
                         )
 
 }

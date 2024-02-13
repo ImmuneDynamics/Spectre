@@ -17,7 +17,6 @@
 #' @param adjacency DEFAULT = TRUE
 #' @param func DEFAULT = 'mean'
 #'
-#' @import data.table
 #'
 #' @export
 
@@ -40,6 +39,8 @@ run.spatial.analysis <- function(dat,
                                  adjacency = TRUE,
                                  func = "mean") {
 
+  # require: data.table
+  
   ### Test data
 
   # dat <- cell.dat

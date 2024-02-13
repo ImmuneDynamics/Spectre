@@ -31,7 +31,6 @@
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
-#' @import data.table
 #'
 #' @export do.aggregate
 
@@ -40,6 +39,8 @@ do.aggregate <- function(dat,
                          by,
                          func = "median",
                          dt = TRUE) {
+  
+  # require: data.table
 
   ### Testing
   # dat <- as.data.table(demo.umap)

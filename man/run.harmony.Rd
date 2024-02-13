@@ -81,6 +81,7 @@ This function allows you to run the 'Harmony' data alignment algorithm on single
 \examples{
 cell.dat <- run.harmony()
 
+
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

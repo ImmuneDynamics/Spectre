@@ -57,7 +57,6 @@
 #' @examples
 #' cell.dat <- run.harmony()
 #'
-#' @import data.table
 #'
 #' @export
 

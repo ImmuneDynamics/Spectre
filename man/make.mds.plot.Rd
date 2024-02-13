@@ -7,13 +7,16 @@
 make.mds.plot(dat, sample_col, markers, colour_by, font_size = 4)
 }
 \arguments{
-\item{dat}{}
+\item{dat}{data.table containing the data}
 
-\item{sample_col}{}
+\item{sample_col}{column denoting the sample each cell comes from}
 
-\item{markers}{}
+\item{markers}{markers used for pseudobulking}
 
-\item{colour_by}{}
+\item{colour_by}{what column to colour the plot by?}
+}
+\value{
+MDS plot as ggplot2 object
 }
 \description{
 Experimental feature. Still very much work in progress.

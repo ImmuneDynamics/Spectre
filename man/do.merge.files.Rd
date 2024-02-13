@@ -21,9 +21,6 @@ do.merge.files - Function to merge a list of data.tables (one data.table per 'sa
 cell.dat <- do.merge.files(dat = data.list, remove.duplicates = TRUE)
 
 }
-\references{
-\url{https://sydneycytometry.org.au/spectre}.
-}
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }

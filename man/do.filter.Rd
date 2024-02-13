@@ -2,7 +2,7 @@
 % Please edit documentation in R/do.filter.R
 \name{do.filter}
 \alias{do.filter}
-\title{do.filter - filtering data.table using multiple match values}
+\title{do.filter}
 \usage{
 do.filter(dat, use.col, values)
 }

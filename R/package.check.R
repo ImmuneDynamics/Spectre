@@ -12,10 +12,7 @@
 #'
 #' @seealso See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
-#' @usage package.check()
 #'
-#' @export
-
 package.check <- function(type = "general") {
   # uses devtools
   # TODO update me. This is not sustainable....

@@ -38,19 +38,23 @@ Detailed installation instructions are available from [https://immunedynamics.gi
 
 ### Option 1: Install Spectre in R
 
-Install and load the 'devtools' library.
+Use `remotes` package to install Spectre.
 
 ```     
-if(!require('devtools')) {install.packages('devtools')}
-library('devtools')
+install.packages("remotes")
+remotes::install_github("ImmuneDynamics/Spectre")
 ```
 
-Subsequently, use the 'install_github' function to install and load the Spectre package. By default this will load the 'master' branch, which is the same as the latest stable release version (listed at https://github.com/immunedynamics/Spectre/releases). 
-To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
+`install_github` function will install and load the Spectre package. 
+By default this will load the 'master' branch, which is the same as the latest stable release version.
+To install a specific release version or branch, set the `ref` parameter
+to the name of the branch or release tags you want to install.
 
-```
-install_github("immunedynamics/spectre")
-```
+The list of release tags are available on https://github.com/immunedynamics/Spectre/releases.
+
+If you want to install the development version (***unstable***, we do all our development works there), 
+you can install the `development` branch by passing the `ref` parameter to `install_github` like so: `remotes::install_github("ImmuneDynamics/Spectre", ref='development')`.
+
 
 You will see the following returned. We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages. You can update your packages after installation.
 ```
@@ -70,18 +74,8 @@ If the package is sucessfully installed, you can load the library using:
 library("Spectre")
 ```
 
-You can then check for whether all of the packages for Spectre have been loaded correctly using the following commands
-```
-## Check if all required packages have been installed
-Spectre::package.check()
- 
-## Load all required packages
-Spectre::package.load()
-```
-
 Alternatively, you can go to releases (https://github.com/immunedynamics/spectre/releases) and download the latest stable release -- which can then be installed in R.
 
-If you want to install the development version (***unstable***, we do all our development works there), you can install the `development` branch by passing the `head` parameter to `install_github` like so: `install_github("immunedynamics/spectre", ref='development')`.
 
 <br/>
 

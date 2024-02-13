@@ -16,7 +16,6 @@
 #'
 #' @usage do.clip(dat, use.cols)
 #'
-#' @import data.table
 #'
 #' @export do.clip
 
@@ -28,7 +27,7 @@ do.clip <- function(dat,
 
   ### Packages
 
-  # Require: data.table
+  # require: data.table
 
   ### Demo data
 

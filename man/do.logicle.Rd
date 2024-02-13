@@ -35,6 +35,8 @@ This must be greater than 0}
 \item{additional.negative.range}{Default = 0. Additional negative range to be included in
 the transformed value in asymptotic decades.
 Value greater than 0 will bring the prescribed additional range into the transformed values}
+
+\item{verbose}{Whether to print out progress. Default = FALSE}
 }
 \description{
 The function transform data using logicle transformation.

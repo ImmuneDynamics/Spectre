@@ -85,7 +85,6 @@
 #' @author
 #' Givanna Putri
 #' 
-#' @import data.table
 #'
 #' @export
 run.fitsne <- function(dat,
@@ -187,7 +186,6 @@ run.fitsne <- function(dat,
 #'   visualization of single-cell RNA-seq data. Nature Methods.
 #'   \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6402590/}.
 #' 
-#' @import rsvd irlba
 #' @noRd
 #' 
 fftRtsne <- function(X,

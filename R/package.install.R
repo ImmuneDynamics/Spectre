@@ -19,8 +19,7 @@
 #' package.install()
 #' package.install(type = "spatial")
 #'
-#' @export
-
+#'
 package.install <- function(type = "general", update = FALSE) {
   
   # TODO have to revisit this.

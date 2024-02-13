@@ -20,7 +20,6 @@
 #' @examples
 #' cell.dat <- run.cytonorm()
 #'
-#' @import data.table
 #'
 #' @export
 
@@ -32,7 +31,7 @@ run.cytonorm <- function(dat,
                          mem.ctrl = TRUE) {
 
   # require: data.table, CytoNorm, flowCore, Biobase
-  check_packages_installed(c("data.table", "CytoNorm", "flowCore", "Biobase"))
+  check_packages_installed(c("CytoNorm"))
   
   ### Checks
 

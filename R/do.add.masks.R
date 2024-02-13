@@ -16,7 +16,6 @@
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
-#' @import data.table
 #'
 #' @export do.add.masks
 
@@ -31,8 +30,9 @@ do.add.masks <- function(dat, # list of spatial objects
                          array = FALSE) {
 
   ### Require. Make life easier to manage dependencies.
-  ### raster, rhdf5, HDF5Array, Matrix
-
+  ### raster, rhdf5, HDF5Array
+  check_packages_installed(c("rhdf5", "HDF5Array"))
+  
   ###
 
   # dat <- spatial.dat

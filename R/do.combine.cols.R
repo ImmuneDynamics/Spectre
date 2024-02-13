@@ -13,12 +13,14 @@
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
-#' @export do.combine.cols
+#' @export
 
 do.combine.cols <- function(dat,
                             col1,
                             col2,
                             na.rm = TRUE) {
+  # require: data.table
+  
 
   ### NA checks
 

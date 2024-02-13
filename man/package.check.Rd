@@ -4,7 +4,7 @@
 \alias{package.check}
 \title{package.check - a function to check the installation of all required packages.}
 \usage{
-package.check()
+package.check(type = "general")
 }
 \arguments{
 \item{type}{DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis. If "ML", then checks for additional packages required for machine-learing functionality.}

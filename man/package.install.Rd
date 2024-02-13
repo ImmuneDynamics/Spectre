@@ -21,6 +21,7 @@ This function allows you to check to see if all the common use packages dependen
 package.install()
 package.install(type = "spatial")
 
+
 }
 \references{
 \url{https://sydneycytometry.org.au/spectre}

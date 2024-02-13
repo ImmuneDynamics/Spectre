@@ -4,7 +4,10 @@
 #' 
 check_packages_installed <- function(packages_name) {
     for (p in packages_name) {
-        if (!is.element(p, installed.packages()[, 1])) 
-            stop(paste(p, "is required but not installed"))
+        if (!requireNamespace(p, quietly = TRUE)) {
+            # call. set to FALSE so we don't show the code that test the package's 
+            # availability
+            stop(paste(p, "is required but not installed"), call.=FALSE)
+        }
     }
 }

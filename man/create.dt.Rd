@@ -37,9 +37,6 @@ library(scRNAseq)
 sce <- ReprocessedAllenData("tophat_counts")
 
 }
-\references{
-\url{https://immunedynamics.io/spectre/}.
-}
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 Givanna Putri

@@ -16,8 +16,6 @@
 #'
 #' @usage do.asinh(dat, use.cols)
 #'
-#' @import data.table
-#'
 #' @export do.asinh
 
 do.asinh <- function(dat,
@@ -26,6 +24,8 @@ do.asinh <- function(dat,
                      append.cf = FALSE,
                      reduce.noise = FALSE,
                      digits = NULL) {
+  
+  # require: data.table
 
   ### Setup data
   value <- dat[, use.cols, with = FALSE]

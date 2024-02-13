@@ -23,7 +23,6 @@
 #' @examples
 #' cell.dat <- run.ruv()
 #'
-#' @import data.table
 #'
 #' @export
 

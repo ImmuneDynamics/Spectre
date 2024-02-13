@@ -18,20 +18,19 @@
 #' @examples
 #' library(data.table)
 #' add.dt <- data.table(
-#'   "Files" = unique(demo.asinh$FileName),
-#'   "SampleNumber" = c(1:12)
+#'     "Files" = unique(demo.asinh$FileName),
+#'     "SampleNumber" = c(1:12)
 #' )
 #'
 #' cell.dat <- do.add.cols(
-#'   dat = demo.asinh,
-#'   base.col = "FileName",
-#'   add.dat = add.dt,
-#'   add.by = "Files"
+#'     dat = demo.asinh,
+#'     base.col = "FileName",
+#'     add.dat = add.dt,
+#'     add.by = "Files"
 #' )
 #'
-#' @import data.table
 #'
-#' @export do.add.cols
+#' @export
 
 do.add.cols <- function(dat,
                         base.col,
@@ -40,134 +39,133 @@ do.add.cols <- function(dat,
                         rmv.ext = FALSE,
                         mem.ctrl = TRUE,
                         show.status = TRUE) {
-  
-  # require: data.table
+    # require: data.table
 
-  ### Test data
+    ### Test data
 
-  ## Normal testing
-  # dat <- as.data.table(Spectre::demo.start)
-  # base.col <- "FileName"
-  #
-  # add.dat <- data.table(Filename = unique(dat$FileName),
-  #                       NewColA = c('A','B','C','D','E','F','G','H','I','J','K', 'L'),
-  #                       NewColB = c(1,2,3,4,5,6,7,8,9,10,11,12))
-  #
-  # add.by <- "Filename"
-  # rmv.ext = FALSE
-  #
-  # mem.ctrl = TRUE
-  #
-  # set.seed(42)
-  # rw <- sample(nrow(dat))
-  # dat <- dat[rw,]
+    ## Normal testing
+    # dat <- as.data.table(Spectre::demo.start)
+    # base.col <- "FileName"
+    #
+    # add.dat <- data.table(Filename = unique(dat$FileName),
+    #                       NewColA = c('A','B','C','D','E','F','G','H','I','J','K', 'L'),
+    #                       NewColB = c(1,2,3,4,5,6,7,8,9,10,11,12))
+    #
+    # add.by <- "Filename"
+    # rmv.ext = FALSE
+    #
+    # mem.ctrl = TRUE
+    #
+    # set.seed(42)
+    # rw <- sample(nrow(dat))
+    # dat <- dat[rw,]
 
-  ## Testing missing values in add.dat
-  # add.dat <- data.table(Filename = unique(dat$FileName)[c(1:11)],
-  #                       NewColA = c('A','B','C','D','E','F','G','H','I','J','K'),
-  #                       NewColB = c(1,2,3,4,5,6,7,8,9,10,11))
+    ## Testing missing values in add.dat
+    # add.dat <- data.table(Filename = unique(dat$FileName)[c(1:11)],
+    #                       NewColA = c('A','B','C','D','E','F','G','H','I','J','K'),
+    #                       NewColB = c(1,2,3,4,5,6,7,8,9,10,11))
 
-  ### Checks
+    ### Checks
 
-  dat <- as.data.table(dat)
-  add.dat <- as.data.table(add.dat)
+    dat <- as.data.table(dat)
+    add.dat <- as.data.table(add.dat)
 
-  if (!(base.col %in% colnames(dat))) {
-    stop(paste0("Your entry '", base.col, "' (base.col) was not found in your dataset (dat). Please make sure you have correctly entered the name of the column."))
-  }
+    if (!(base.col %in% colnames(dat))) {
+        stop(paste0("Your entry '", base.col, "' (base.col) was not found in your dataset (dat). Please make sure you have correctly entered the name of the column."))
+    }
 
-  if (!(add.by %in% colnames(add.dat))) {
-    warning(paste0("Your entry '", add.by, "' (add.by) was not found in your dataset (add.dat). Please make sure you have correctly entered the name of the column."))
-  }
+    if (!(add.by %in% colnames(add.dat))) {
+        warning(paste0("Your entry '", add.by, "' (add.by) was not found in your dataset (add.dat). Please make sure you have correctly entered the name of the column."))
+    }
 
-  dat.names <- names(dat)
-  add.dat.names <- names(add.dat)
+    dat.names <- names(dat)
+    add.dat.names <- names(add.dat)
 
-  pos <- match(add.by, add.dat.names)
-  check.dup <- c(dat.names, add.dat.names[-pos])
+    pos <- match(add.by, add.dat.names)
+    check.dup <- c(dat.names, add.dat.names[-pos])
 
-  if (any(duplicated(check.dup))) {
-    stop("You have duplicated column names in your 'dat' and 'add.dat' entries. The 'base.col', and 'add.by' column names may be identical, but all other columns should unique.")
-  }
+    if (any(duplicated(check.dup))) {
+        stop("You have duplicated column names in your 'dat' and 'add.dat' entries. The 'base.col', and 'add.by' column names may be identical, but all other columns should unique.")
+    }
 
-  ### Prep
+    ### Prep
 
-  if (rmv.ext == TRUE) {
+    if (rmv.ext == TRUE) {
+        if (show.status == TRUE) {
+            message("Removing '.csv' or '.fcs' extension")
+        }
+
+        if (is.numeric(add.dat[[add.by]]) == FALSE) {
+            temp <- add.dat[[add.by]]
+            temp <- gsub("*.csv", "", temp)
+            temp <- gsub("*.fcs", "", temp)
+            add.dat[[add.by]] <- temp
+        }
+    }
+
+    if (mem.ctrl == TRUE) {
+        gc()
+    }
+
+    ### Mapping data
     if (show.status == TRUE) {
-      message("Removing '.csv' or '.fcs' extension")
+        message("Step 1/3. Mapping data")
     }
 
-    if (is.numeric(add.dat[[add.by]]) == FALSE) {
-      temp <- add.dat[[add.by]]
-      temp <- gsub("*.csv", "", temp)
-      temp <- gsub("*.fcs", "", temp)
-      add.dat[[add.by]] <- temp
+    added.names <- names(add.dat[, setdiff(names(add.dat), add.by), with = FALSE])
+
+    add.dat <- cbind(
+        add.dat[, add.by, with = FALSE],
+        add.dat[, setdiff(names(add.dat), add.by), with = FALSE]
+    )
+
+    # p1 <- add.dat[,add.by,with = FALSE]
+    # p2 <- add.dat[,setdiff(names(add.dat),add.by),with = FALSE]
+    #
+    # added.names <- names(p2)
+    # add.dat <- cbind(p1, p2)
+    #
+    # rm(p1)
+    # rm(p2)
+
+    if (mem.ctrl == TRUE) {
+        gc()
     }
-  }
 
-  if (mem.ctrl == TRUE) {
-    gc()
-  }
+    names(add.dat)[c(1)] <- base.col
 
-  ### Mapping data
-  if (show.status == TRUE) {
-    message("Step 1/3. Mapping data")
-  }
+    dat[[base.col]] <- as.factor(dat[[base.col]])
+    add.dat[[base.col]] <- as.factor(add.dat[[base.col]])
 
-  added.names <- names(add.dat[, setdiff(names(add.dat), add.by), with = FALSE])
+    if (class(dat[[base.col]]) != class(add.dat[[base.col]])) {
+        warning(paste0("The column '", base.col, "' in your main dataset", " is ", class(dat[[base.col]]), ", whereas the column '", add.by, "' in the 'to add' data is ", class(add.dat[[base.col]]), ". You may need to adjust their types to ensure they are the same. If you are matching based on character values (filenames, popualtion names etc, then both need to be character."))
+    }
 
-  add.dat <- cbind(
-    add.dat[, add.by, with = FALSE],
-    add.dat[, setdiff(names(add.dat), add.by), with = FALSE]
-  )
+    ### Merging data
+    if (show.status == TRUE) {
+        message("Step 2/3. Merging data")
+    }
 
-  # p1 <- add.dat[,add.by,with = FALSE]
-  # p2 <- add.dat[,setdiff(names(add.dat),add.by),with = FALSE]
-  #
-  # added.names <- names(p2)
-  # add.dat <- cbind(p1, p2)
-  #
-  # rm(p1)
-  # rm(p2)
+    ## dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
+    dat <- data.table::merge.data.table(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
 
-  if (mem.ctrl == TRUE) {
-    gc()
-  }
+    rm(add.dat)
 
-  names(add.dat)[c(1)] <- base.col
+    if (mem.ctrl == TRUE) {
+        gc()
+    }
 
-  dat[[base.col]] <- as.factor(dat[[base.col]])
-  add.dat[[base.col]] <- as.factor(add.dat[[base.col]])
+    dat <- as.data.table(dat)
+    dat <- dat[, c(dat.names, added.names), with = FALSE]
 
-  if (class(dat[[base.col]]) != class(add.dat[[base.col]])) {
-    warning(paste0("The column '", base.col, "' in your main dataset", " is ", class(dat[[base.col]]), ", whereas the column '", add.by, "' in the 'to add' data is ", class(add.dat[[base.col]]), ". You may need to adjust their types to ensure they are the same. If you are matching based on character values (filenames, popualtion names etc, then both need to be character."))
-  }
+    if (mem.ctrl == TRUE) {
+        gc()
+    }
 
-  ### Merging data
-  if (show.status == TRUE) {
-    message("Step 2/3. Merging data")
-  }
+    ### Returning data
+    if (show.status == TRUE) {
+        message("Step 3/3. Returning data")
+    }
 
-  ## dat <- merge(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
-  dat <- data.table::merge.data.table(dat, add.dat, by = base.col, sort = FALSE, all.x = TRUE)
-
-  rm(add.dat)
-
-  if (mem.ctrl == TRUE) {
-    gc()
-  }
-
-  dat <- as.data.table(dat)
-  dat <- dat[, c(dat.names, added.names), with = FALSE]
-
-  if (mem.ctrl == TRUE) {
-    gc()
-  }
-
-  ### Returning data
-  if (show.status == TRUE) {
-    message("Step 3/3. Returning data")
-  }
-
-  return(dat)
+    return(dat)
 }

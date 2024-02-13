@@ -4,7 +4,6 @@
 #' @param target.dat NO DEFAULT. Dataset to pull.
 #'
 #' @usage do.pull.data(spatial.dat, target.dat)
-#' @import data.table
 #'
 #' @export do.pull.data
 

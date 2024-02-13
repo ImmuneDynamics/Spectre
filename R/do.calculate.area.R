@@ -5,9 +5,8 @@
 #'
 #'
 #' @usage do.calculate.area(dat)
-#' @import data.table
 #'
-#' @export do.calculate.area
+#' @export
 
 do.calculate.area <- function(dat,
                               region = NULL) {

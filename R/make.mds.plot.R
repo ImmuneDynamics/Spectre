@@ -2,17 +2,14 @@
 #' 
 #' Experimental feature. Still very much work in progress.
 #'
-#' @param dat 
-#' @param sample_col 
-#' @param markers 
-#' @param colour_by 
+#' @param dat data.table containing the data
+#' @param sample_col column denoting the sample each cell comes from
+#' @param markers markers used for pseudobulking
+#' @param colour_by what column to colour the plot by?
 #'
-#' @return
+#' @return MDS plot as ggplot2 object
 #' @export
 #'
-#' @importFrom limma plotMDS
-#' @import data.table
-#' @import ggplot2 
 make.mds.plot <- function(dat,
                           sample_col,
                           markers,

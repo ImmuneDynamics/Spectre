@@ -95,7 +95,7 @@ run.umap <- function(dat,
   if(fast == TRUE){
     check_packages_installed(c("uwot"))
     # will only get here if uwot is installed.
-    if (!is.element("parallel", installed.packages()[, 1])){
+    if (!requireNamespace("parallel", quietly = TRUE)){
       message("For 'fast' UMAP, parallel is required but not installed. Switching to slow UMAP")
       fast <- FALSE
     }
@@ -157,7 +157,7 @@ run.umap <- function(dat,
     }
     
     if (is.null(n_threads)) {
-      n_threads <- detectCores() - 1
+      n_threads <- parallel::detectCores() - 1
     }
     
     set.seed(umap.seed)

@@ -7,7 +7,6 @@
 #'
 #' @usage do.extract(dat, mask)
 #'
-#' @import data.table
 #'
 #' @export do.extract
 
@@ -21,6 +20,7 @@ do.extract <- function(dat, # spatial.data object
   # message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
   # require: rgeos, sp, sf, rgdal, exactexactr, data.table
+  check_packages_installed(c("rgeos", "sp", "sf", "rgdal", "exactexactr"))
   
   ### Demo data
 

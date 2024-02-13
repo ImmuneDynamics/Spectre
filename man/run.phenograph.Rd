@@ -24,6 +24,7 @@ use.cols <- names(cell.dat)[c(11:19)]
 
 cell.dat <- run.phenograph(dat = cell.dat, use.cols = use.cols)
 
+
 }
 \references{
 Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}

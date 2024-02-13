@@ -7,16 +7,12 @@
 #' @param dt Data.table object containing the data to plot
 #' @param markers_to_plot Vector of markers to plot
 #' @param cluster Name of the column in dt which specify the clusters
-#' @col.scheme Colour scheme to use. Must be something from 
+#' @param col.scheme Colour scheme to use. Must be something from 
 #' the RColorBrewer or the viridis package.
 #' Default to 'RdYlBu' in the RColorBrewer package
 #' 
 #' @return ggplot object containing the plot
 #' 
-#' @import data.table
-#' @import ggplot2
-#' @import viridis
-#' @importFrom RColorBrewer brewer.pal.info
 #' 
 #' @author Givanna Putri
 #' @export
@@ -28,7 +24,7 @@ make.bubble.plot <- function(
         col.scheme='RdYlBu'
 ) {
     # require
-    # ggplot2, rcolorbrewer, viridis
+    # ggplot2, rcolorbrewer, viridis, data.table
     
     # Calculate clusters' markers' mean expression and proportion of cells captured.
     avg_exp <- dt[, lapply(.SD, mean), .SDcols = markers_to_plot, by = cluster]
@@ -50,11 +46,11 @@ make.bubble.plot <- function(
     # With RColorBrewer, it is easy as we can just check whether
     # the colour exists using brewer.pal.info
     
-    if (!is.na(brewer.pal.info[col.scheme, "maxcolors"])) {
+    if (!is.na(RColorBrewer::brewer.pal.info[col.scheme, "maxcolors"])) {
         plt <- plt + scale_color_distiller(palette = col.scheme)
     } else {
         warning(paste("Finding col.scheme", col.scheme, "in viridis package."))
-        plt <- plt + scale_color_viridis(option = col.scheme)
+        plt <- plt + viridis::scale_color_viridis(option = col.scheme)
     }
     return(plt)
 }

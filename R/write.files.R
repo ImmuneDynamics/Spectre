@@ -18,6 +18,8 @@ write.files <- function(dat, # data to save
                         write.csv = TRUE,
                         write.fcs = FALSE) {
 
+  # require: flowCore
+  
   ####### TESTING
 
   # setwd("/Users/thomasa/Desktop/")
@@ -32,7 +34,7 @@ write.files <- function(dat, # data to save
   # write.csv = TRUE
   # write.fcs = TRUE
 
-  # require: flowCore
+  
   
   ### Setup
 
@@ -143,13 +145,13 @@ write.files <- function(dat, # data to save
 
         ## Save flowframe as .fcs file -- save data (with new tSNE parameters) as FCS
         if (isTRUE(exists("file.prefix"))) {
-          write.FCS(
+          flowCore::write.FCS(
             data_subset.ff,
             paste0(file.prefix, "_", divide.by, "_", nme, ".fcs")
           )
         }
         if (isFALSE(exists("file.prefix"))) {
-          write.FCS(data_subset.ff, paste0(divide.by, "_", nme, ".fcs"))
+          flowCore::write.FCS(data_subset.ff, paste0(divide.by, "_", nme, ".fcs"))
         }
       }
     }

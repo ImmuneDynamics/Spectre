@@ -25,7 +25,6 @@
 #' @examples
 #' align.model <- prep.cytonorm()
 #'
-#' @import data.table
 #'
 #' @export
 
@@ -44,8 +43,7 @@ prep.cytonorm <- function(dat,
   
   # require:
   # data.table, CytoNorm, flowCore, Biobase
-  # Everything else but CytoNorm will be imports.
-  # TODO: consult Tom and Felix.
+  check_packages_installed(c("CytoNorm"))
 
 
   ### Directory setup

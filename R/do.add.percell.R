@@ -6,7 +6,6 @@
 #'
 #' @usage do.add.percell(spatial.dat, percell.dat, roi.col)
 #'
-#' @import data.table
 #'
 #' @export do.add.percell
 
@@ -14,6 +13,8 @@ do.add.percell <- function(spatial.dat,
                            percell.dat,
                            roi.col,
                            name = "per.cell") {
+  
+  # require: data.table
 
   ### Setup
   message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")

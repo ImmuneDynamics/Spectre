@@ -36,6 +36,7 @@ where each file is saved as a data.table.
 \examples{
 data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
 
+
 }
 \references{
 Ashhurst, T. M., et al. (2019).

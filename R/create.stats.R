@@ -15,7 +15,6 @@
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
-#' @import data.table
 #'
 #' @export
 

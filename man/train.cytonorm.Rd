@@ -30,6 +30,7 @@ This function allows you to learn the conversions to use for batch alignment.
 \examples{
 align.model <- train.cytonorm()
 
+
 }
 \references{
 Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}

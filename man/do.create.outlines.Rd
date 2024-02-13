@@ -7,11 +7,11 @@
 do.create.outlines(dat, mask.name)
 }
 \arguments{
+\item{dat}{NO DEFAULT. Spatial data list}
+
 \item{mask.name}{NO DEFAULT. Name of the mask to create outlines for}
 
 \item{method}{DEFAULT = 'stars'. Can be 'stars' or 'raster'}
-
-\item{spatial.dat}{NO DEFAULT. Spatial data list}
 }
 \description{
 do.create.outlines

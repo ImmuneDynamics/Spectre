@@ -33,11 +33,8 @@
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Givanna Putri
 #'
-#' @references \url{https://immunedynamics.io/spectre/}.
 #'
-#' @import data.table
-#'
-#' @export create.dt
+#' @export 
 
 create.dt <- function(dat, from = NULL) {
     # Umcomment for development.
@@ -62,7 +59,7 @@ create.dt <- function(dat, from = NULL) {
     ### Determine class of object
 
     supported_type <-
-        c("Seurat", "SingleCellExperiment", "flowFrame")
+        c("Seurat", "SeuratObject", "SingleCellExperiment", "flowFrame")
     error_msg <- paste(
         "Could not determine the object type.",
         "Currently only Seurat objects are supported.",
@@ -120,105 +117,78 @@ create.dt <- function(dat, from = NULL) {
 #'
 #' @return A list of data.table objects.
 #'
-#' @import Seurat
 #' @noRd
 #' 
 convert.seurat.object <- function(dat) {
     
-    # Need to do this as Seurat is in "Suggest" field in description.
+    # require: Seurat
     check_packages_installed(c("Seurat"))
 
-    a <- GetAssayData(object = dat)
+    # a <- Seurat::GetAssayData(object = dat)
     assays <- names(dat@assays)
     dim.reds <- names(dat@reductions)
 
-    var.features <- VariableFeatures(dat)
-
+    # get HVGs.
+    var.features <- Seurat::VariableFeatures(dat)
     if (length(var.features) > 0) {
-        var.features.top10 <- head(VariableFeatures(dat), 10)
+        var.features.top10 <- head(Seurat::VariableFeatures(dat), 10)
     }
 
-    ### Genes and cells
-
-    geneNames <- a@Dimnames[[1]]
-    cellNames <- a@Dimnames[[2]]
+    # get gene names and cell names
+    # geneNames <- a@Dimnames[[1]]
+    # cellNames <- a@Dimnames[[2]]
 
     ### Start data.table
 
-    res <- as.data.table(cellNames)
-    names(res) <- "cellNames"
+    res <- data.table::data.table(cellNames = colnames(dat))
 
     ### Add metadata
-
     if (!is.null(dat@meta.data)) {
         col.meta <- dat@meta.data
-        col.meta <- as.data.table(col.meta)
+        col.meta <- data.table::as.data.table(col.meta)
         meta.cols <- names(col.meta)
 
         res <- cbind(res, col.meta)
     }
 
-    ### Add data from slots
+    ### Add counts from different assays and layers
 
-    for (i in assays) {
-        # i <- assays[[1]]
-
-        types <- vector()
-
-        if (ncol(dat@assays[[i]]@counts) > 0) {
-            types <- c(types, "counts")
-
-            x1 <-
-                GetAssayData(
-                    object = dat,
-                    assay = i,
-                    slot = "counts"
-                )
-            x1 <- as.data.table(x1)
-            x1 <- data.table::transpose(x1)
-            names(x1) <- geneNames
-            names(x1) <-
-                paste0(names(x1), "_", i, "_", "counts")
-            res <- cbind(res, x1)
-            rm(x1)
+    # each assay will have its own feature names (genes or ADTs)
+    # store it so we can return it in a list later
+    all_assays_feature_names <- list()
+    
+    # we store the layers name for each assay as well
+    all_assays_layers <- list()
+    
+    for (assay in assays) {
+        
+        # slot is seurat is deprecated now.
+        # it is called layers.
+        # This is Seurat's Layers...
+        layers <- SeuratObject::Layers(dat[[assay]])
+        all_assays_layers[[assay]] <- layers
+        
+        all_assays_feature_names[[assay]] <- list()
+        
+        for (layer in layers) {
+            
+            cnt_mat <- SeuratObject::LayerData(dat, assay=assay, layer=layer)
+            
+            # if there is scale.data layer, the feature names are unique to the layer
+            # because not all genes will be in the layer
+            feature_names <- rownames(cnt_mat)
+            all_assays_feature_names[[assay]][[layer]] <- feature_names
+            
+            cnt_mat <- data.table::as.data.table(cnt_mat)
+            cnt_mat <- data.table::transpose(cnt_mat)
+            names(cnt_mat) <- paste(feature_names, assay, layer, sep = "_")
+            
+            res <- cbind(res, cnt_mat)
+            
+            rm(cnt_mat)
+            rm(feature_names)
+            
         }
-
-        if (ncol(dat@assays[[i]]@data) > 0) {
-            types <- c(types, "data")
-
-            x2 <-
-                GetAssayData(
-                    object = dat,
-                    assay = i,
-                    slot = "data"
-                )
-            x2 <- as.data.table(x2)
-            x2 <- data.table::transpose(x2)
-            names(x2) <- geneNames
-            names(x2) <- paste0(names(x2), "_", i, "_", "data")
-            res <- cbind(res, x2)
-            rm(x2)
-        }
-
-        if (ncol(dat@assays[[i]]@scale.data) > 0) {
-            types <- c(types, "scale.data")
-
-            x3 <-
-                GetAssayData(
-                    object = dat,
-                    assay = i,
-                    slot = "scale.data"
-                )
-            x3 <- as.data.table(x3)
-            x3 <- data.table::transpose(x3)
-            names(x3) <- geneNames
-            names(x3) <-
-                paste0(names(x3), "_", i, "_", "scale.data")
-            res <- cbind(res, x3)
-            rm(x3)
-        }
-
-        rm(i)
     }
 
     ### Add dim reductions
@@ -227,7 +197,7 @@ convert.seurat.object <- function(dat) {
         # i <- dim.reds[[2]]
 
         tmp <- dat@reductions[[i]]@cell.embeddings
-        tmp <- as.data.table(tmp)
+        tmp <- data.table::as.data.table(tmp)
 
         names(tmp) <- paste0(i, "_", names(tmp))
         res <- cbind(res, tmp)
@@ -238,8 +208,8 @@ convert.seurat.object <- function(dat) {
     final.res <- list()
 
     final.res$data.table <- res
-    final.res$geneNames <- geneNames
-    final.res$cellNames <- cellNames
+    final.res$featureNames <- all_assays_feature_names
+    final.res$cellNames <- colnames(dat)
 
     final.res$meta.data <- meta.cols
 
@@ -247,16 +217,12 @@ convert.seurat.object <- function(dat) {
         final.res$var.features <- var.features
         final.res$var.features.top10 <- var.features.top10
     }
+    
+    # No need to check for NULL, it will still work anyway
+    final.res$assays <- paste0("_", assays)
+    final.res$layers <- all_assays_layers
+    final.res$dim.reds <- paste0(dim.reds, "_")
 
-    if (!is.null(assays)) {
-        final.res$assays <- paste0("_", assays)
-    }
-    if (!is.null(types)) {
-        final.res$slots <- paste0("_", types)
-    }
-    if (!is.null(dim.reds)) {
-        final.res$dim.reds <- paste0(dim.reds, "_")
-    }
     return(final.res)
 }
 
@@ -269,13 +235,12 @@ convert.seurat.object <- function(dat) {
 #'
 #' @return A list of data.table objects.
 #'
-#' @import SingleCellExperiment Matrix
 #' @noRd
 #' 
 convert.sce <- function(dat) {
     
-    # Need to do this as SingleCellExperiment and Matrix is in "Suggest" field in description.
-    check_packages_installed(c("SingleCellExperiment", "Matrix"))
+    # require: SingleCellExperiment
+    check_packages_installed(c("SingleCellExperiment"))
     
     geneNames <- rownames(dat) # genes
     geneNames
@@ -292,7 +257,7 @@ convert.sce <- function(dat) {
 
     ###
 
-    res <- as.data.table(cellNames)
+    res <- data.table::as.data.table(cellNames)
     names(res) <- "cellNames"
 
     ### Add metadata
@@ -301,7 +266,7 @@ convert.sce <- function(dat) {
 
     if (!is.null(dat@colData)) {
         col.meta <- dat@colData
-        col.meta <- as.data.table(col.meta)
+        col.meta <- data.table::as.data.table(col.meta)
         meta.cols <- names(col.meta)
 
         res <- cbind(res, col.meta)
@@ -319,7 +284,7 @@ convert.sce <- function(dat) {
         tmp <- Matrix::as.matrix(tmp)
         # dim(tmp)
         # colnames(tmp) # columns = cells
-        tmp <- as.data.table(tmp)
+        tmp <- data.table::as.data.table(tmp)
         tmp <- data.table::transpose(tmp)
         names(tmp) <- geneNames
         names(tmp) <- paste0(names(tmp), "_", i)
@@ -340,7 +305,7 @@ convert.sce <- function(dat) {
         tmp <- reducedDims(dat)[[i]]
         # dim(tmp)
         # colnames(tmp) # columns = DRs
-        tmp <- as.data.table(tmp) # Dont transpose
+        tmp <- data.table::as.data.table(tmp) # Dont transpose
 
         new.names <- paste0(i, "_", c(1:length(names(tmp))))
         names(tmp) <- new.names
@@ -376,15 +341,17 @@ convert.sce <- function(dat) {
 #'
 #' @return A list of data.table objects.
 #' 
-#' @import flowCore
 #' @noRd
 #' 
 convert.flowframe <- function(dat) {
+    
+    # require: flowCore
+    
     ### Extract 'exprs'
 
     res <- exprs(dat)
     res <- res[1:nrow(res), 1:ncol(res)]
-    res <- as.data.table(res)
+    res <- data.table::as.data.table(res)
 
     for (i in names(res)) {
         # i <- names(res)[1]

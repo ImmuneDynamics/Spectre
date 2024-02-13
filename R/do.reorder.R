@@ -10,47 +10,45 @@
 #'
 #' @author
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Givanna Putri
 #'
-#' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
-#' @import data.table
-#'
-#' @export do.reorder
+#' @export
 
-do.reorder <- function(dat,
-                       use.col,
-                       new.order) {
+do.reorder <- function(dat, use.col, new.order) {
+    ### Packages
 
-  ### Packages
+    # require: data.table
 
-  # require: data.table
+    ### Test
 
-  ### Test
+    # dat <- Spectre::demo.clustered use.col <- 'FileName' as.matrix(unique(dat[[use.col]])) new.order <-
+    # unique(dat[[use.col]])[c(3,4,1,2,5:12)]
 
-  # dat <- Spectre::demo.clustered
-  # use.col <- 'FileName'
-  # as.matrix(unique(dat[[use.col]]))
-  # new.order <- unique(dat[[use.col]])[c(3,4,1,2,5:12)]
+    # New implementation that might be quicker?  check the values in new.order is in the column to reorder dat
 
-  ### Checks
+    if (!setequal(new.order, unique(dat[[use.col]])))
+        stop("The values provided in 'new.order' do not reflect all unique entries in 'use.col' column")
 
-  if (!all(sort(new.order) == sort(unique(dat[[use.col]])))) {
-    stop("The values provided in 'new.order' do not reflect all unique entries in dat[[use.col]]")
-  }
 
-  ### Add new column
+    dat[[use.col]] <- factor(dat[[use.col]], levels = new.order)
+    data.table::setorderv(dat, use.col)
+    
+    return(dat)
 
-  new.order.nums <- c(1:length(new.order))
-  new.order <- data.table(new.order, new.order.nums)
 
-  dat <- do.add.cols(dat, use.col, new.order, "new.order", show.status = FALSE)
-  setorderv(dat, "new.order.nums")
 
-  ### Cleanup
+    ### Checks
 
-  dat[["new.order.nums"]] <- NULL
-
-  ### Return
-
-  return(dat)
+    # if (!all(sort(new.order) == sort(unique(dat[[use.col]])))) { 
+    #   stop("The values provided in 'new.order' do not reflect all unique entries in dat[[use.col]]") 
+    # } 
+    # ### Add new column new.order.
+    # nums <- c(1:length(new.order)) 
+    # new.order <- data.table(new.order, new.order.nums) 
+    # dat <- do.add.cols(dat, use.col, new.order, 'new.order', show.status = FALSE)
+    # setorderv(dat, 'new.order.nums') ### Cleanup dat[['new.order.nums']] <- NULL 
+    # ### Return 
+    # return(dat)
 }
+

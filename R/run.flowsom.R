@@ -29,7 +29,6 @@
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
-#' @import data.table
 #'
 #' @export
 

@@ -21,7 +21,6 @@
 #'
 #' cell.dat <- run.phenograph(dat = cell.dat, use.cols = use.cols)
 #'
-#' @import data.table
 #'
 #' @export
 

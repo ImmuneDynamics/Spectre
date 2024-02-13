@@ -22,9 +22,7 @@ lst
 res <- do.list.switch(lst)
 res
 
-}
-\references{
-\url{https://sydneycytometry.org.au/spectre}.
+
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

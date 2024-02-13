@@ -1,14 +1,12 @@
 #' do.create.outlines
 #'
-#' @param spatial.dat NO DEFAULT. Spatial data list
+#' @param dat NO DEFAULT. Spatial data list
 #' @param mask.name NO DEFAULT. Name of the mask to create outlines for
 #' @param method DEFAULT = 'stars'. Can be 'stars' or 'raster'
 #'
 #' @usage do.create.outlines(dat, mask.name)
-#' @import data.table
 #'
-#' @export do.create.outlines
-
+#' @export 
 do.create.outlines <- function(dat,
                                mask.name,
                                method = "stars" # 'stars' 'raster'
@@ -18,9 +16,11 @@ do.create.outlines <- function(dat,
 
   # message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
   
-  # Require: raster, tiff, rgeos, tidyr, ggplot2, dplyr. Not sure why we need tidyr and dplyr?
+  # Require: raster, tiff, rgeos, tidyr, ggplot2, dplyr. 
+  # TODO: not sure why we need tidyr and dplyr? There was one group by line in 
+  # for loop that uses dplyr notation. Converted to data.table notation, but may break.
+  check_packages_installed(c("raster", "tiff", "rgeos"))
   # stars, sf, sp, s2 seems to only be used if using the fast version. 
-  # Moving only stars and s2 to suggests as sf and sp are used elsewhere.
 
   # polygons.name <- paste0(mask.name, "_polygons")
   # outlines.name <- paste0(mask.name, "_outlines")
@@ -41,16 +41,17 @@ do.create.outlines <- function(dat,
 
   if (method == "stars") {
     message(paste0("Creating polygons, outlines, and centroids using 'stars' method."))
-    # These packages are in suggests field. Hence need to check.
-    check_packages_installed(c("stars", "s2"))
+    
+    check_packages_installed(c("stars", "s2", "sp", "sf"))
   }
 
-  if (method == "raster") {
+  else if (method == "raster") {
     message(paste0("Creating polygons, outlines, and centroids using standard method -- this step may take some time, please be patient"))
   }
 
-  if (method == "gdal") {
+  else if (method == "gdal") {
     message("GDAL version not currently supportedb -- reverting to stars method")
+    method = "stars"
     # if(length(Sys.which("gdal_polygonize.py")) > 1){
     #   message(paste0("Creating polygons, outlines, and centroids using GDAL -- this step may take some time, please be patient"))
     # }
@@ -75,11 +76,7 @@ do.create.outlines <- function(dat,
 
     ## stars method
     if (method == "stars") {
-      require(stars)
-      require(sf)
-      require(sp)
-      require(s2)
-
+      
       names(mask) <- "TEMP_MASK"
 
       stars.mask <- stars::st_as_stars(mask)
@@ -98,10 +95,14 @@ do.create.outlines <- function(dat,
 
       res <- st_make_valid(res)
 
-      res <- res %>%
-        group_by(TEMP_MASK) %>%
-        summarise(geometry = sf::st_union(geometry)) %>%
-        ungroup()
+            
+      res <- res[, .(geometry = sf::st_union(geometry)), by = c(TEMP_MASK)]
+      # Replaced with the data.table notation above. 
+      # Might break, but need test data.
+      # res <- res %>%
+      #   group_by(TEMP_MASK) %>%
+      #   summarise(geometry = sf::st_union(geometry)) %>%
+      #   ungroup()
 
       polygon <- sf::as_Spatial(res)
 

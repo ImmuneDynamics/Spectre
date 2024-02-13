@@ -58,7 +58,6 @@
 #' \url{https://sydneycytometry.org.au/spectre}.
 #' Helpful examples at \url{https://davetang.org/muse/2018/05/15/making-a-heatmap-in-r-with-the-pheatmap-package/}
 #'
-#' @import data.table
 #'
 #' @export
 

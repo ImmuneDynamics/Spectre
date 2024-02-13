@@ -22,7 +22,6 @@
 #' @examples
 #' cell.dat <- run.align()
 #'
-#' @import data.table
 #'
 #' @export
 

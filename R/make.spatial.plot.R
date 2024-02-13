@@ -29,7 +29,6 @@
 #' @param plot.height DEFAULT = 7
 #' @param blank.axis DEFAULT = FALSE
 #'
-#' @import data.table
 #'
 #' @export
 
@@ -93,7 +92,8 @@ make.spatial.plot <- function(dat, # spatial data object
   # flip.y.axis = TRUE
   
   # require: ggplot2, scales, colorRamps, ggthemes, RColorBrewer, raster, rgeos
-
+  check_packages_installed(c("raster", "rgeos"))
+  
   ### Compatability conversions
 
   roi <- image.roi
