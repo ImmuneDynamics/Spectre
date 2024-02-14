@@ -66,6 +66,7 @@ Suggests:
     SeuratObject,
     sf,
     SingleCellExperiment,
+    SummarizedExperiment,
     sp,
     stars,
     testthat (>= 3.0.0),
