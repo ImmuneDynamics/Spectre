@@ -25,6 +25,9 @@
 #' @param height DEFAULT = 5. Numeric. Specify height of plot.
 #' @param max.y DEFAULT = 1.4. Multiplier for plot heigh -- allowing room for stats.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
+#' @param save_to_disk DEFAULT TRUE. Whether to save the plot or not. 
+#' If yes, it will be saved in the directory specified in the `path` parameter.
+#' 
 #'
 #' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
 #'
@@ -75,7 +78,8 @@ make.autograph <- function(dat,
                            height = 5,
                            max.y = 1.4,
                            
-                           path = getwd()
+                           path = getwd(),
+                           save_to_disk = TRUE
                            # my_comparisons = NULL,
                            # y.first.level = 1.2,
                            # y.second.level = 1.5,
@@ -123,11 +127,11 @@ make.autograph <- function(dat,
   
   message("AutoGraph - setup started")
   
-  # spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
+  # spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)
   # spectral.list <- rev(spectral.list)
   # colour.scheme <- colorRampPalette(c(spectral.list))
   
-  spectral.list <- colorRampPalette(brewer.pal(11,"Spectral"))(50)
+  spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11,"Spectral"))(50)
   spectral.list <- rev(spectral.list)
   colour.scheme <- colorRampPalette(c(spectral.list))
   
@@ -300,8 +304,10 @@ make.autograph <- function(dat,
   p
   
   ## Save
-  ggplot2::ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # width 3.6 default, height 5 default
-  message(paste0("AutoGraph for `", y.axis.label, " - ", y.axis, "` saved to disk"))
+  if (save_to_disk) {
+    ggplot2::ggsave(plot = p, filename = paste0(filename), width = width, height = height, path = path) # width 3.6 default, height 5 default
+    message(paste0("AutoGraph for `", y.axis.label, " - ", y.axis, "` saved to disk"))
+  }
   
   return(p)
 }
