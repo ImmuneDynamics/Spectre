@@ -44,7 +44,8 @@
 #'                         y.axis = "Tcells",
 #'                         colour.by = "Batch",
 #'                         colours = c("Black", "Red", "Blue"),
-#'                         y.axis.label = "Proportion"
+#'                         y.axis.label = "Proportion", 
+#'                         save_to_disk = FALSE
 #'                         )
 #'
 #' @author

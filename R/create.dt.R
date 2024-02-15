@@ -18,20 +18,25 @@
 #'
 #'
 #' @examples
+#' # Seurat object
 #' devtools::install_github("satijalab/seurat-data")
 #' library(SeuratData)
+#' library(Seurat)
 #' InstallData("pbmc3k")
 #' pbmc <- LoadData("pbmc3k", type = "pbmc3k.final")
 #' cell.dat <- create.dt(pbmc)
 #'
+#' # SingleCellExperiment object
+#' BiocManager::install("scRNAseq")
 #' library(scRNAseq)
 #' sce <- ReprocessedAllenData("tophat_counts")
-#  counts(sce) <- assay(sce, "tophat_counts")
-#  cell.dat <- create.dt(sce)
+#' counts(sce) <- assay(sce, "tophat_counts")
+#' cell.dat <- create.dt(sce)
 #'
 #' @author
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#' Givanna Putri
+#' Givanna Putri,
+#' Felix Marsh-Wakefield \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
 #'
 #' @export 
