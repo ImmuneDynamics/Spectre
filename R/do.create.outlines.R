@@ -1,6 +1,6 @@
 #' do.create.outlines
 #'
-#' @param spatial.dat NO DEFAULT. Spatial data list
+#' @param dat NO DEFAULT. Spatial data list
 #' @param mask.name NO DEFAULT. Name of the mask to create outlines for
 #' @param method DEFAULT = 'stars'. Can be 'stars' or 'raster'
 #'
@@ -60,6 +60,8 @@ do.create.outlines <- function(dat,
   ### Run
 
   for (i in names(dat)) {
+    print(i)
+    
     # i <- names(spatial.dat)[[1]]
     start.time <- Sys.time()
 
@@ -95,16 +97,20 @@ do.create.outlines <- function(dat,
       # na.rm = TRUE)
       # group = TRUE) # TRUE crashes, FALSE does not
 
-      res$TEMP_MASK
+      # res$TEMP_MASK
 
       res <- st_make_valid(res)
 
-      res <- res %>%
-        group_by(TEMP_MASK) %>%
-        summarise(geometry = sf::st_union(geometry)) %>%
-        ungroup()
-
-      polygon <- sf::as_Spatial(res)
+      res_dt <- data.table(res)
+      res_dt <- res_dt[, .(geometry = sf::st_union(geometry)), by = c("TEMP_MASK")]
+      res_dt <- sf::st_as_sf(res_dt)
+      # Replaced with the data.table notation above. 
+      # res <- res %>%
+      #   group_by(TEMP_MASK) %>%
+      #   summarise(geometry = sf::st_union(geometry)) %>%
+      #   ungroup()
+      # polygon <- sf::as_Spatial(res)
+      polygon <- sf::as_Spatial(res_dt)
 
       names(polygon) <- mask.name
       crs(polygon) <- NA
