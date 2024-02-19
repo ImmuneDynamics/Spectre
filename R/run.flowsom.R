@@ -59,6 +59,7 @@ run.flowsom <- function(dat,
   require(data.table)
 
   ### Test
+  
   # dat <- Spectre::demo.asinh
   # use.cols <- names(demo.asinh)[c(11:19)]
   # xdim = 14
@@ -69,6 +70,12 @@ run.flowsom <- function(dat,
   # clust.name = "FlowSOM_cluster"
   # meta.clust.name = "FlowSOM_metacluster"
   # mem.ctrl = TRUE
+
+  ### Initial tests
+  
+  if(meta.k != 0 & meta.k != 'auto' & meta.k <= 2){
+      stop("If performing metaclustering, meta.k must be set to 'auto' or a value greater than 2")
+  }
 
   ### Prepare starting and using data
   message("Preparing data")

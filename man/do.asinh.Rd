@@ -13,7 +13,7 @@ do.asinh(dat, use.cols)
 
 \item{cofactor}{DEFAULT = 5. Co-factor to use for arcsinh transformation.}
 
-\item{digits}{DEFAULT = 9. Number of decimal places as a limit. Values beyond will be rounded. Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, then 5 digits will be used). Important to control for small floating point error differences in different OS.}
+\item{digits}{DEFAULT = NULL. Number of decimal places as a limit, not used if NULL. Values beyond will be rounded. Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, then 5 digits will be used). Important to control for small floating point error differences in different OS.}
 
 \item{append.cf}{DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.}
 

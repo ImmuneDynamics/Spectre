@@ -15,7 +15,7 @@
 #' @param meta.k DEFAULT = 10. Number of metaclusters. If set to 1, will map all cells to a single metacluster
 #' @param seed DEFAULT = 42. Seed for reproducibility.
 #' @param mem.ctrl DEFAULT = TRUE. Allows the function to clear held memory on occasion.
-#'
+#' @param n.cells DEFAULT = 10000000. Maxium cells allowed to be read for the prep.cytonorm functionality. Cells read from each file will be the lesser of n.cells / number of files or the total number of cells in the file.
 #' @return Returns an object which represents the alignment model. In this preparation stage, it contains the FlowSOM object containing the reference data. The 'train.align' function can then be used to calculate the conversions between batches for each metacluser.
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
@@ -39,7 +39,8 @@ prep.cytonorm <- function(dat,
                           ydim = 5,
                           meta.k = 10, # can be 1, or >3
                           seed = 42,
-                          mem.ctrl = TRUE) {
+                          mem.ctrl = TRUE,
+                          n.cells = 10000000) {
 
   ### Check that necessary packages are installed
   if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
@@ -218,7 +219,7 @@ prep.cytonorm <- function(dat,
 
   fsom <- prepareFlowSOM(files,
     colsToUse = cluster.cols,
-    nCells = NULL, # Any subsampling is done prior to using this function
+    nCells = n.cells, # Any subsampling is done prior to using this function
     FlowSOM.params = list(
       xdim = xdim,
       ydim = ydim,
