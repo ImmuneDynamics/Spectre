@@ -35,7 +35,7 @@
 #'                        sample.col = "Population",
 #'                        plot.cols = names(Spectre::demo.exp)[c(2:10)])
 #'
-#' ## Z-scrore of fold-change type heatmap
+#' ## Z-score of fold-change type heatmap
 #' z.dat <- do.zscore(dat = Spectre::demo.sum,
 #'                    use.cols = names(Spectre::demo.sum)[c(4:15)],
 #'                    replace = TRUE)
