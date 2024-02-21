@@ -202,7 +202,7 @@ make.colour.plot <- function(dat,
     
     # Spectral
     if (colours == "spectral") {
-        spectral.list <- colorRampPalette(brewer.pal(11, "Spectral"))(50)
+        spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(50)
         spectral.list <- rev(spectral.list)
         colour.scheme <- colorRampPalette(c(spectral.list))
     }
@@ -404,14 +404,14 @@ make.colour.plot <- function(dat,
                 p <- p + scale_fill_gradientn(
                     colours = c(colour.scheme(50)),
                     limits = c(ColrMin, ColrMax),
-                    oob = squish
+                    oob = scales::squish
                 )
             } else {
                 p <- p + geom_point(size = dot.size)
                 p <- p + scale_colour_gradientn(
                     colours = colour.scheme(50),
                     limits = c(ColrMin, ColrMax),
-                    oob = squish,
+                    oob = scales::squish,
                     na.value = "grey50"
                 )
             }

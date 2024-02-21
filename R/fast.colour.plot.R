@@ -191,7 +191,7 @@ fast.colour.plot <- function(dat,
     
     # Spectral
     if (colours == "spectral") {
-        spectral.list <- colorRampPalette(brewer.pal(11, "Spectral"))(50)
+        spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(50)
         spectral.list <- rev(spectral.list)
         colour.scheme <- colorRampPalette(c(spectral.list))
     }
@@ -393,14 +393,14 @@ fast.colour.plot <- function(dat,
                 p <- p + scale_fill_gradientn(
                     colours = c(colour.scheme(50)),
                     limits = c(ColrMin, ColrMax),
-                    oob = squish
+                    oob = scales::squish
                 )
             } else {
-                p <- p + geom_scattermore(size = dot.size)
+                p <- p + scattermore::geom_scattermore(size = dot.size)
                 p <- p + scale_colour_gradientn(
                     colours = colour.scheme(50),
                     limits = c(ColrMin, ColrMax),
-                    oob = squish,
+                    oob = scales::squish,
                     na.value = "grey50"
                 )
             }
@@ -412,7 +412,7 @@ fast.colour.plot <- function(dat,
                                 y = .data[[y.axis]],
                                 colour = as.factor(.data[[col.axis]])
                             )) +
-                    geom_scattermore(size = dot.size) +
+                    scattermore::geom_scattermore(size = dot.size) +
                     lims(colour = colRange)
                 
                 # colours <- c('Microglia' = "#333BFF", 'NK cells' = "#CC6600", 'Neutrophils' ="#9633FF", 'CD4 T cells' = "#E2FF33", 'Infil Macrophages' = "#E3DB71", 'CD8 T cells' = "#E2FF33")
@@ -433,7 +433,7 @@ fast.colour.plot <- function(dat,
                                 y = .data[[y.axis]],
                                 colour = as.factor(.data[[col.axis]])
                             )) +
-                    geom_scattermore(size = dot.size) +
+                    scattermore::geom_scattermore(size = dot.size) +
                     lims(colour = colRange)
             }
         }
@@ -635,7 +635,7 @@ fast.colour.plot <- function(dat,
             }
             
             ## Add labels
-            p <- p + geom_scattermore(
+            p <- p + scattermore::geom_scattermore(
                 data = centroidsDf,
                 aes(x = centroidX,
                     y = centroidY),

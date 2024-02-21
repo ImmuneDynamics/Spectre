@@ -145,25 +145,25 @@ fast.multi.plot <- function(dat,
         align.col.by <- plot.dat
       }
       
-      plots[[plot.nme]] <- fast.colour.plot(dat = plot.dat, #instead, use d[d[$Sample][plot.by] == to.plot[i], ] ## Spectre::
-                                            x.axis = x.axis,
-                                            y.axis = y.axis,
-                                            col.axis = i,
-                                            col.type = col.type,
-                                            hex = hex,
-                                            hex.bins = hex.bins,
-                                            title = plot.nme,
-                                            align.xy.by = align.xy.by, ###
-                                            align.col.by = align.col.by, ###
-                                            colours = colours,
-                                            col.min.threshold = col.min.threshold,
-                                            col.max.threshold = col.max.threshold,
-                                            dot.size = dot.size,
-                                            path = path,
-                                            plot.width = plot.width,
-                                            plot.height = plot.height,
-                                            blank.axis = blank.axis,
-                                            save.to.disk = save.each.plot)
+      plots[[plot.nme]] <- Spectre::fast.colour.plot(dat = plot.dat, #instead, use d[d[$Sample][plot.by] == to.plot[i], ] ## Spectre::
+                                                     x.axis = x.axis,
+                                                     y.axis = y.axis,
+                                                     col.axis = i,
+                                                     col.type = col.type,
+                                                     hex = hex,
+                                                     hex.bins = hex.bins,
+                                                     title = plot.nme,
+                                                     align.xy.by = align.xy.by, ###
+                                                     align.col.by = align.col.by, ###
+                                                     colours = colours,
+                                                     col.min.threshold = col.min.threshold,
+                                                     col.max.threshold = col.max.threshold,
+                                                     dot.size = dot.size,
+                                                     path = path,
+                                                     plot.width = plot.width,
+                                                     plot.height = plot.height,
+                                                     blank.axis = blank.axis,
+                                                     save.to.disk = save.each.plot)
     }
     
     ## Add density plot (if desired)
@@ -177,18 +177,18 @@ fast.multi.plot <- function(dat,
           align.xy.by <- plot.dat
         }
         
-        plots[[length(plots) + 1]] <- fast.colour.plot(dat = plot.dat,
-                                                       x.axis = x.axis,
-                                                       y.axis = y.axis,
-                                                       colours = colours,
-                                                       dot.size = dot.size,
-                                                       title = "Density",
-                                                       align.xy.by = align.xy.by,
-                                                       save.to.disk = save.each.plot,
-                                                       path = path,
-                                                       plot.width = plot.width,
-                                                       plot.height = plot.height,
-                                                       blank.axis = blank.axis)
+        plots[[length(plots) + 1]] <- Spectre::fast.colour.plot(dat = plot.dat,
+                                                                x.axis = x.axis,
+                                                                y.axis = y.axis,
+                                                                colours = colours,
+                                                                dot.size = dot.size,
+                                                                title = "Density",
+                                                                align.xy.by = align.xy.by,
+                                                                save.to.disk = save.each.plot,
+                                                                path = path,
+                                                                plot.width = plot.width,
+                                                                plot.height = plot.height,
+                                                                blank.axis = blank.axis)
         names(plots)[length(plots)] <- paste0("Density")
       }
     }
@@ -202,18 +202,18 @@ fast.multi.plot <- function(dat,
           align.xy.by <- plot.dat
         }
         
-        plots[[length(plots) + 1]] <- fast.colour.plot(dat = plot.dat,
-                                                       x.axis = x.axis,
-                                                       y.axis = y.axis,
-                                                       colours = colours,
-                                                       dot.size = dot.size,
-                                                       title = paste0(a, "_Density"),
-                                                       align.xy.by = align.xy.by,
-                                                       save.to.disk = save.each.plot,
-                                                       path = path,
-                                                       plot.width = plot.width,
-                                                       plot.height = plot.height,
-                                                       blank.axis = blank.axis)
+        plots[[length(plots) + 1]] <- Spectre::fast.colour.plot(dat = plot.dat,
+                                                                x.axis = x.axis,
+                                                                y.axis = y.axis,
+                                                                colours = colours,
+                                                                dot.size = dot.size,
+                                                                title = paste0(a, "_Density"),
+                                                                align.xy.by = align.xy.by,
+                                                                save.to.disk = save.each.plot,
+                                                                path = path,
+                                                                plot.width = plot.width,
+                                                                plot.height = plot.height,
+                                                                blank.axis = blank.axis)
         names(plots)[length(plots)] <- paste0(a, "_Density")
       }
     }
