@@ -13,19 +13,13 @@
 # res <- do.zscore(dat = Spectre::demo.sum,
 #                  use.cols = names(Spectre::demo.sum)[c(4:15)])
 #'
-#' @import data.table
-#'
 #' @export do.zscore
 
 do.zscore <- function(dat,
                       use.cols,
                       append.name = "_zscore",
                       replace = FALSE) {
-
-  ### Packages
-
-  require("data.table")
-
+  
   ### Testing
 
   # dat <- demo.sum
