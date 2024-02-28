@@ -46,7 +46,7 @@
 #'
 #' # Run PCA on demonstration dataset, adding PC to dataset
 #' dat <- Spectre::demo.clustered
-#' dat <- test.pca(
+#' dat <- run.pca(
 #'   dat = dat,
 #'   use.cols = c(11:19),
 #'   add.pca.col = TRUE,
@@ -115,24 +115,6 @@ run.pca <- function(dat,
                     repel = FALSE,
                     var.numb = 20,
                     path = getwd()) {
-
-  ## Check that necessary packages are installed
-  if (!is.element("stats", installed.packages()[, 1])) stop("stats is required but not installed")
-  if (!is.element("factoextra", installed.packages()[, 1])) stop("factoextra is required but not installed")
-  if (!is.element("ggplot2", installed.packages()[, 1])) stop("ggplot2 is required but not installed")
-  if (!is.element("gtools", installed.packages()[, 1])) stop("gtools is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("RColorBrewer", installed.packages()[, 1])) stop("RColorBrewer is required but not installed")
-  if (!is.element("viridis", installed.packages()[, 1])) stop("viridis is required but not installed")
-
-  ## Require packages
-  require(stats)
-  require(factoextra)
-  require(ggplot2)
-  require(gtools)
-  require(data.table)
-  require(RColorBrewer)
-  require(viridis)
 
   # Make sure dat is a dataframe
   dat <- as.data.frame(dat)
@@ -221,7 +203,7 @@ run.pca <- function(dat,
       )
 
       # Extract corrected contributions
-      pca_eig_contrib <- facto_summarize(pca_out,
+      pca_eig_contrib <- factoextra::facto_summarize(pca_out,
         element = "var",
         result = "contrib",
         axes = 1:elbow.point

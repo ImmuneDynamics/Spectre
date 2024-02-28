@@ -35,7 +35,7 @@
 #'                        sample.col = "Population",
 #'                        plot.cols = names(Spectre::demo.exp)[c(2:10)])
 #'
-#' ## Z-scrore of fold-change type heatmap
+#' ## Z-score of fold-change type heatmap
 #' z.dat <- do.zscore(dat = Spectre::demo.sum,
 #'                    use.cols = names(Spectre::demo.sum)[c(4:15)],
 #'                    replace = TRUE)
@@ -96,18 +96,6 @@ make.pheatmap <- function(dat,
 #plot.width       = 11.69,    # Default = 11.69 inches, target for A4 landscape. # Default = 8.26 inches, target for A4 landscape.
 #plot.height      = 8.26)
 {
-  
-  ### Check that necessary packages are installed
-  if(!is.element('pheatmap', installed.packages()[,1])) stop('pheatmap is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
-  if(!is.element('dendsort', installed.packages()[,1])) stop('dendsort is required but not installed')
-  
-  ### Require packages
-  require(pheatmap)
-  require(RColorBrewer)
-  require(scales)
-  require(dendsort)
   
   ### Setup color scheme
   
@@ -300,8 +288,7 @@ make.pheatmap <- function(dat,
         row.clustering <- hclustfunc(distfunc(heatmap.data))
         col.clustering <- hclustfunc(distfunc(t(heatmap.data)))
         
-        require(dendsort)
-        sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
+        sort_hclust <- function(...) as.hclust(dendsort::dendsort(as.dendrogram(...)))
         
         row.clustering <- sort_hclust(row.clustering)
         col.clustering <- sort_hclust(col.clustering)
@@ -328,8 +315,7 @@ make.pheatmap <- function(dat,
         
         col.clustering <- hclustfunc(distfunc(t(heatmap.data)))
         
-        require(dendsort)
-        sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
+        sort_hclust <- function(...) as.hclust(dendsort::dendsort(as.dendrogram(...)))
         
         col.clustering <- sort_hclust(col.clustering)
       }
@@ -355,8 +341,7 @@ make.pheatmap <- function(dat,
         
         row.clustering <- hclustfunc(distfunc(t(heatmap.data)))
         
-        require(dendsort)
-        sort_hclust <- function(...) as.hclust(dendsort(as.dendrogram(...)))
+        sort_hclust <- function(...) as.hclust(dendsort::dendsort(as.dendrogram(...)))
         
         row.clustering <- sort_hclust(row.clustering)
       }

@@ -96,27 +96,6 @@ fast.colour.plot <- function(dat,
                              path = getwd(),
                              blank.axis = FALSE,
                              col.tab = NULL) {
-    ### Check for packages
-    if (!is.element("ggplot2", installed.packages()[, 1]))
-        stop("ggplot2 is required but not installed")
-    if (!is.element("scales", installed.packages()[, 1]))
-        stop("scales is required but not installed")
-    if (!is.element("colorRamps", installed.packages()[, 1]))
-        stop("colorRamps is required but not installed")
-    if (!is.element("ggthemes", installed.packages()[, 1]))
-        stop("ggthemes is required but not installed")
-    if (!is.element("RColorBrewer", installed.packages()[, 1]))
-        stop("RColorBrewer is required but not installed")
-    if (!is.element("scattermore", installed.packages()[, 1]))
-      stop("scattermore is required but not installed")
-    
-    ### Load packages
-    require(ggplot2)
-    require(scales)
-    require(colorRamps)
-    require(ggthemes)
-    require(RColorBrewer)
-    require(scattermore)
     
     ### Demo data
     
@@ -212,7 +191,7 @@ fast.colour.plot <- function(dat,
     
     # Spectral
     if (colours == "spectral") {
-        spectral.list <- colorRampPalette(brewer.pal(11, "Spectral"))(50)
+        spectral.list <- colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(50)
         spectral.list <- rev(spectral.list)
         colour.scheme <- colorRampPalette(c(spectral.list))
     }
@@ -414,14 +393,14 @@ fast.colour.plot <- function(dat,
                 p <- p + scale_fill_gradientn(
                     colours = c(colour.scheme(50)),
                     limits = c(ColrMin, ColrMax),
-                    oob = squish
+                    oob = scales::squish
                 )
             } else {
-                p <- p + geom_scattermore(size = dot.size)
+                p <- p + scattermore::geom_scattermore(size = dot.size)
                 p <- p + scale_colour_gradientn(
                     colours = colour.scheme(50),
                     limits = c(ColrMin, ColrMax),
-                    oob = squish,
+                    oob = scales::squish,
                     na.value = "grey50"
                 )
             }
@@ -433,7 +412,7 @@ fast.colour.plot <- function(dat,
                                 y = .data[[y.axis]],
                                 colour = as.factor(.data[[col.axis]])
                             )) +
-                    geom_scattermore(size = dot.size) +
+                    scattermore::geom_scattermore(size = dot.size) +
                     lims(colour = colRange)
                 
                 # colours <- c('Microglia' = "#333BFF", 'NK cells' = "#CC6600", 'Neutrophils' ="#9633FF", 'CD4 T cells' = "#E2FF33", 'Infil Macrophages' = "#E3DB71", 'CD8 T cells' = "#E2FF33")
@@ -454,7 +433,7 @@ fast.colour.plot <- function(dat,
                                 y = .data[[y.axis]],
                                 colour = as.factor(.data[[col.axis]])
                             )) +
-                    geom_scattermore(size = dot.size) +
+                    scattermore::geom_scattermore(size = dot.size) +
                     lims(colour = colRange)
             }
         }
@@ -536,7 +515,7 @@ fast.colour.plot <- function(dat,
             panel.background = element_rect(
                 fill = "white",
                 colour = "black",
-                size = 0.5
+                linewidth = 0.5
             ),
             # change 'colour' to black for informative axis
             axis.title.x = element_text(color = "Black",
@@ -553,7 +532,7 @@ fast.colour.plot <- function(dat,
             panel.border = element_rect(
                 colour = "black",
                 fill = NA,
-                size = 2
+                linewidth = 2
             ),
             plot.title = element_text(
                 color = "Black",
@@ -569,7 +548,7 @@ fast.colour.plot <- function(dat,
             panel.background = element_rect(
                 fill = "white",
                 colour = "black",
-                size = 0.5
+                linewidth = 0.5
             ),
             axis.title.x = element_text(color = "Black",
                                         # face="bold",
@@ -585,7 +564,7 @@ fast.colour.plot <- function(dat,
             panel.border = element_rect(
                 colour = "black",
                 fill = NA,
-                size = 2
+                linewidth = 2
             ),
             plot.title = element_text(
                 color = "Black",
@@ -656,7 +635,7 @@ fast.colour.plot <- function(dat,
             }
             
             ## Add labels
-            p <- p + geom_scattermore(
+            p <- p + scattermore::geom_scattermore(
                 data = centroidsDf,
                 aes(x = centroidX,
                     y = centroidY),

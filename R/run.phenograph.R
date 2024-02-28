@@ -1,6 +1,6 @@
 #' run.phenograph - Run phenograph clustering
 #'
-#' This function allows you to perform phenograph clustering on a data.table
+#' This function allows you to perform phenograph clustering on a data.table. Uses 'Rphenograph' from https://github.com/JinmiaoChenLab/Rphenograph
 #'
 #' @usage run.phenograph()
 #'
@@ -8,8 +8,10 @@
 
 #' @return Returns a data.table with clustering results added
 #'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#'
+#' @author
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
+#' 
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
 #' @examples
@@ -30,18 +32,6 @@ run.phenograph <- function(dat,
                            k = 45,
                            clust.name = "Phenograph_cluster") {
 
-  ### Packages
-
-  # devtools::install_github("JinmiaoChenLab/Rphenograph")
-
-  if (!is.element("Rphenograph", installed.packages()[, 1])) stop("Rphenograph is required but not installed. Can be installed by running devtools::install_github('JinmiaoChenLab/Rphenograph)")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("Rcpp", installed.packages()[, 1])) stop("Rcpp is required but not installed")
-
-  require(Rphenograph)
-  require(data.table)
-  require(Rcpp)
-
   ### Testing data
 
   # dat <- Spectre::demo.asinh
@@ -58,8 +48,8 @@ run.phenograph <- function(dat,
 
   ### Clustering
 
-  res <- Rphenograph(dat, k = k)
-  res <- factor(membership(res[[2]]))
+  res <- Rphenograph::Rphenograph(dat, k = k)
+  res <- factor(igraph::membership(res[[2]]))
 
   ### Attach result
 

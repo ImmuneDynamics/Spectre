@@ -11,7 +11,20 @@
 #' @param pairwise.test DEFAULT = 'wilcox.test'. Currently the only option
 #' @param corrections DEFAULT = 'fdr' (false discovery rate). Currently the only option
 #'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' @examples
+#' dat <- Spectre::demo.sum
+#' 
+#' stat.dat <- create.stats(dat = dat, 
+#'                          use.cols = names(dat)[c(4:15)],
+#'                          sample.col = "Sample",
+#'                          group.col = "Group",
+#'                          comparisons = list(c('Mock', 'WNV'))
+#'                          )
+#' head(stat.dat)
+#'
+#' @author
+#' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
