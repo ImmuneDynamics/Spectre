@@ -1,6 +1,7 @@
 #' train.knn.classifier - Train KNN classifier
 #'
-#' @usage train.knn.classifier(dat, use.cols, label.col,min.num.neighbours, max.num.neighbours, evaluation.metric, num.folds, num.repeats)
+#' @usage train.knn.classifier(dat, use.cols, label.col,min.num.neighbours, 
+#' max.num.neighbours, evaluation.metric, num.folds, num.repeats)
 #'
 #' @param dat NO DEFAULT. data.frame. A dataframe containing cells (rows) vs features/markers (columns) to be used to train k-nearest neighbour (KNN) classifier 
 #' @param use.cols NO DEFAULT. Vector of column names to use for training k-nearest neighbour (KNN) classifier.

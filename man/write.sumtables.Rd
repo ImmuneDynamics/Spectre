@@ -4,7 +4,10 @@
 \alias{write.sumtables}
 \title{write.sumtables - Export generated data as a .csv file}
 \usage{
-make.sumtables(dat, sample.col, pop.col, measure.col, annot.col, group.col, do.proportions, cell.counts, do.mfi.per.sample, do.mfi.per.marker, perc.pos.markers, perc.pos.cutoff, mfi.type, path)
+make.sumtables(dat, sample.col, pop.col, measure.col, 
+annot.col, group.col, do.proportions, cell.counts, 
+do.mfi.per.sample, do.mfi.per.marker, perc.pos.markers, 
+perc.pos.cutoff, mfi.type, path)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A data.table containing cells (rows) vs features/markers (columns). One column must represent sample names, and another must represent populations/clusters.}

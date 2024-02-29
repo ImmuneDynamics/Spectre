@@ -29,7 +29,10 @@
 #' @param eta DEFAULT = 200. Learning rate.
 #' @param exaggeration_factor DEFAULT = 12.0. Factor used during early exaggeration.
 #'
-#' @usage run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
+#' @usage run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, 
+#' dims, initial_dims, perplexity, theta, check_duplicates, pca, 
+#' max_iter, verbose, is_distance, Y_init, stop_lying_iter, 
+#' mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
 #'
 #' @examples
 #' # Run tSNE on a subset of the  demonstration dataset
@@ -98,5 +101,6 @@ run.tsne <- function(dat,
 
   tsne.res <- cbind(dat, tsne_out_Y)
 
-  assign("tsne.res", tsne.res, envir = globalenv())
+  # assign("tsne.res", tsne.res, envir = globalenv())
+  return(tsne.res)
 }

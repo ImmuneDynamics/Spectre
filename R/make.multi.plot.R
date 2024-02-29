@@ -28,7 +28,10 @@
 #' @param blank.axis DEFAULT = FALSE. Logical. Do you want a minimalist graph?
 #' @param save.each.plot DEFAULT = FALSE. Logical. Do you want to save each plot?
 #'
-#' @usage make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, col.min.threshold, col.max.threshold, path, plot.width, plot.height, blank.axis, save.each.plot)
+#' @usage make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, 
+#' col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, 
+#' col.min.threshold, col.max.threshold, path, plot.width, plot.height, 
+#' blank.axis, save.each.plot)
 #'
 #' @examples
 #' # Create grid of plots on demonstration data

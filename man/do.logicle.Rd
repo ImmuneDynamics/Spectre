@@ -4,7 +4,8 @@
 \alias{do.logicle}
 \title{Using logicle to transform data}
 \usage{
-do.logicle(dat, use.cols, linearisation.width, max.scale.val, full.transform.width, additional.negative.range)
+do.logicle(dat, use.cols, linearisation.width, max.scale.val, 
+full.transform.width, additional.negative.range)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table. Input data}

@@ -46,7 +46,7 @@ do.add.masks <- function(dat, # list of spatial objects
 
       message('Reading in mask files')
   
-      if(class(dat) != 'list'){
+      if(!is.list(dat)){
         stop("Your input data 'dat' needs to be a list of spectre spatial objects")
       }
 

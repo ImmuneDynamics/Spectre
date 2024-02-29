@@ -2,7 +2,8 @@
 #'
 #' This function allows you to align multiple batches of a dataset, using either a "Quantile" approach, or using "CytoNorm"
 #'
-#' @usage do.align(ref.dat, target.dat, batch.col, align.cols, method, goal, nQ, Qmin, Qmax, write.ref.fcs, write.target.fcs)
+#' @usage do.align(ref.dat, target.dat, batch.col, align.cols, method, goal, 
+#' nQ, Qmin, Qmax, write.ref.fcs, write.target.fcs)
 #'
 #' @param ref.dat NO DEFAULT. If using method = "CytoNorm", this must be a FlowSOM object created by Spectre::do.prep.fsom. If using "Quantiles", then this must be
 #' @param target.dat NO DEFAULT. A data.table of data you wish to align

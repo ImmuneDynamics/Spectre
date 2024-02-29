@@ -4,7 +4,14 @@
 \alias{run.umap}
 \title{Run the UMAP algorithm (using umap::umap())}
 \usage{
-run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, n_components = 2, metric = "euclidean", n_epochs = 200, input = "data", init = "spectral", min_dist = 0.1, set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, b_gradient = NA, spread = 1, transform_state = 42, knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
+run.umap(dat, use.cols, umap.x.name = "UMAP_X", 
+umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, 
+n_components = 2, metric = "euclidean", n_epochs = 200, 
+input = "data", init = "spectral", min_dist = 0.1, 
+set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, 
+alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, 
+b_gradient = NA, spread = 1, transform_state = 42, 
+knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input data.table or data.frame.}

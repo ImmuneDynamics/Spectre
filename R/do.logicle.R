@@ -34,7 +34,8 @@
 #'   Value greater than 0 will bring the prescribed additional range into the transformed values
 #'   
 #' @usage 
-#' do.logicle(dat, use.cols, linearisation.width, max.scale.val, full.transform.width, additional.negative.range)
+#' do.logicle(dat, use.cols, linearisation.width, max.scale.val, 
+#' full.transform.width, additional.negative.range)
 #'   
 #' @examples 
 #' library(Spectre)

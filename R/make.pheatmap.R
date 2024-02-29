@@ -25,7 +25,9 @@
 #' @param fold.colours DEFAULT = "Spectre". Character, a custom blue:black:red fold-change colour scheme. Can also be "RdYlBu", "YlGnBu", "viridis", "magma", "inferno", "spectral", "Blues", "Reds", "Greys", or "rev(RdBu)".
 #' @param path DEFAULT = NULL. The location to save plots. By default, will save to current working directory. Can be overidden by entering a sub-directory name (e.g. if you have a subdirectory under your working directory called 'plots', you can enter this here).
 #'
-#' @usage make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
+#' @usage make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, 
+#' plot.title, transpose, is.fold, fold.range, normalise, dendrograms, 
+#' row.sep, col.sep, cell.size, standard.colours, path)
 #'
 #' @examples
 #' ## MFI cluster vs marker heatmap

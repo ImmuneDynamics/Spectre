@@ -17,7 +17,8 @@
 #' @param meta.clust.name DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
 #' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
-#' @usage run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
+#' @usage run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, 
+#' meta.seed, clust.name, meta.clust.name)
 #'
 #' @examples
 #' # Run FlowSOM on demonstration dataset

@@ -19,7 +19,8 @@
 #' @examples
 #' ## Calculate and export results from demonstration data
 #' dat <- Spectre::demo.clustered
-#' counts <- data.frame('Sample' = unique(dat[['Sample']]), 'Counts' = c(rep(100000, 6), rep(1000000, 6)))
+#' counts <- data.frame('Sample' = unique(dat[['Sample']]), 
+#' 'Counts' = c(rep(100000, 6), rep(1000000, 6)))
 #' 
 #' sum.dat <- create.sumtable(dat = dat,
 #'                             sample.col = "Sample",

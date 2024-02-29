@@ -4,7 +4,9 @@
 \alias{make.pheatmap}
 \title{make.pheatmap - Create a 'pretty' heatmap (pheatmap)}
 \usage{
-make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, plot.title, transpose, is.fold, fold.range, normalise, dendrograms, row.sep, col.sep, cell.size, standard.colours, path)
+make.pheatmap(dat, sample.col, plot.cols, annot.cols, file.name, 
+plot.title, transpose, is.fold, fold.range, normalise, dendrograms, 
+row.sep, col.sep, cell.size, standard.colours, path)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame. Clusters/populations vs markers (MFI) or Clusters/populations vs samples or (MFI or cell numbers).}

@@ -4,7 +4,8 @@
 \alias{run.flowsom}
 \title{Run the FlowSOM algorithm}
 \usage{
-run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
+run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, 
+meta.seed, clust.name, meta.clust.name)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame. Input sample.}

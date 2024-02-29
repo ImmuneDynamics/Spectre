@@ -4,7 +4,7 @@
 \alias{package.load}
 \title{package.load - a function to load (library) all required packages.}
 \usage{
-See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+package.load(type = "general")
 }
 \arguments{
 \item{type}{DEFAULT = "general". If "general", then loads packages required for general Spectre usage. If "spatial", then loads  additional packages required for spatial analysis. If "ML", then loads additional packages required for machine-learing functionality.}
@@ -14,6 +14,7 @@ loads all the common use package libraries.
 }
 \description{
 This function allows you to load all of the common use packages dependencies for Spectre.
+See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
 \examples{
 package.load()

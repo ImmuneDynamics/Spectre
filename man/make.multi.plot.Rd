@@ -4,7 +4,10 @@
 \alias{make.multi.plot}
 \title{Make multiple plots for multiple columns and/or multiple sample/group/clusters}
 \usage{
-make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, col.min.threshold, col.max.threshold, path, plot.width, plot.height, blank.axis, save.each.plot)
+make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, 
+col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, 
+col.min.threshold, col.max.threshold, path, plot.width, plot.height, 
+blank.axis, save.each.plot)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A data frame containing all the data you wish to plot}

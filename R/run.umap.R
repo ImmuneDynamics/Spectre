@@ -33,7 +33,14 @@
 #' @param verbose DEFAULT = TRUE. Logical. Determines whether to show progress messages.
 #' @param umap_learn_args DEFAULT = NA. Vector. Vector of arguments to python package umap-learn.
 #'
-#' @usage run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, n_components = 2, metric = "euclidean", n_epochs = 200, input = "data", init = "spectral", min_dist = 0.1, set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, b_gradient = NA, spread = 1, transform_state = 42, knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
+#' @usage run.umap(dat, use.cols, umap.x.name = "UMAP_X", 
+#' umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, 
+#' n_components = 2, metric = "euclidean", n_epochs = 200, 
+#' input = "data", init = "spectral", min_dist = 0.1, 
+#' set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, 
+#' alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, 
+#' b_gradient = NA, spread = 1, transform_state = 42, 
+#' knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
 #'
 #' @examples
 #' # Run UMAP on a subset of the  demonstration dataset

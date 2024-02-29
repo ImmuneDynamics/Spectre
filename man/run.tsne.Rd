@@ -4,7 +4,10 @@
 \alias{run.tsne}
 \title{Run the tSNE algorithm (using Rtsne::Rtsne())}
 \usage{
-run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
+run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, 
+dims, initial_dims, perplexity, theta, check_duplicates, pca, 
+max_iter, verbose, is_distance, Y_init, stop_lying_iter, 
+mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
