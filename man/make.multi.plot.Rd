@@ -56,10 +56,10 @@ Makes use of Spectre functions make.colour.plot and make.density.plot.
 }
 \examples{
 # Create grid of plots on demonstration data
-Spectre::make.multi.plot(dat = as.data.table(Spectre::demo.umap),
-                          x.axis = "UMAP_42_X",
-                          y.axis = "UMAP_42_Y",
-                          plot.by = c("BV605.Ly6C", "BUV737.B220", "AF700.CD45"))
+Spectre::make.multi.plot(dat = Spectre::demo.clustered,
+                          x.axis = "UMAP_X",
+                          y.axis = "UMAP_Y",
+                          plot.by = c("Ly6C_asinh", "B220_asinh", "CD45_asinh"))
 
 }
 \author{

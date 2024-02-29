@@ -1,28 +1,41 @@
-#' read.files - Function to read data from CSV or FCS files into a list.
+#' read.files
+#' 
+#' Function to read cytometry data stored in either CSV or FCS files into 
+#' either a list or a Spectre object.
+#' 
+#' See details for more information.
 #'
-#' This function allows you to read in sample files (.csv or .fcs) into a list,
-#' where each file is saved as a data.table.
+#' @details
+#' If you choose the output as a list, the function will read each file
+#' into a data.table and store it in an element of the list.
+#' Essentially 1 element = 1 file.
+#' 
+#' If you choose the output as Spectre object, the `cytometry_data` slot
+#' will be filled with a data.table containing the concatenation of all the files.
+#' A new column will be created to denote the file the cell comes from.
 #'
-#' @usage read.files(file.loc, file.type, do.embed.file.names, header)
+#' @usage read.files(file.loc)
 #'
-#' @param file.loc DEFAULT = getwd(). What is the location of your files?
+#' @param file.loc What is the location of your files?
 #' @param file.type DEFAULT = ".csv". What type of files do you want to read.
-#'   Can be ".csv" or ".fcs".
+#' Can be ".csv" or ".fcs".
 #' @param nrows DEFAULT = NULL. Can specify a numerical target for the number of
-#'   cells (rows) to be read from each file. Please note, order is random in FCS
-#'   files.
-#' @param do.embed.file.names DEFAULT = TRUE. Do you want to embed each row
-#'   (cell) of each file with the name name?
-#' @param header DEFAULT = TRUE. Does the first line of data contain column
-#'   names?
+#' cells (rows) to be read from each file. 
+#' Please note, order is random in FCS files.
+#' @param do.embed.file.names DEFAULT = TRUE. 
+#' Do you want to embed each row (cell) of each file with the name name?
+#' Only used if output is a list. 
+#' @param header DEFAULT = TRUE. Does the first line of data contain column names?
+#' Only used if file.type is .csv.
 #' @param truncate_max_range DEFAULT = TRUE. Whether to truncate the extreme
-#'   positive value to the instrument measurement range. Only used when reading
-#'   from FCS files.
+#' positive value to the instrument measurement range. 
+#' Only used when reading from FCS files.
 #'
-#' @return Returns a list of data.tables -- one per CSV file.
+#' @return Either a list of data.tables (one element per file) or a SpectreObject
 #'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au} Felix
-#' Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
+#' @author Thomas M Ashhurst \email{thomas.ashhurst@@sydney.edu.au},
+#' Felix Marsh-Wakefield \email{felix.marsh-wakefield@@sydney.edu.au},
+#' Givanna Putri
 #'
 #' @references Ashhurst, T. M., et al. (2019).
 #'   \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
@@ -30,274 +43,126 @@
 #' @examples
 #' data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
 #'
-#' @import data.table
 #'
 #' @export
-
-read.files <- function(files, 
-                       rename = NULL,
-                       nrows = NULL,
-                       verbose = TRUE){
-  
-  ### Testing
-  
-      # files <- files
-      # rename <- new.names
-      
-      # files <- 'export_Macrophage_066 V1 Immunophynotype_006_Cleanup 2.csv'
-  
-  ### Files
-  
-      file.table <- data.table('FileName' = files)
-      setorderv(file.table, "FileName")
-      file.table
-      
-  ### Input
-  
-      tempdat.list <- list()
-      colcheck.list <- list()
-      colname.list <- list()
-      
-      for(i in files){
-        # i <- files[1]
-        
-        num <- which(files == i)
-        
-        ## Reading in data (no renaming)
-        if(is.null(rename)){
-          if(isTRUE(verbose)){
-            message(paste0(' -- reading ', num, ' of ', length(files), ': ', i))
-          }
-          tempdat.list[[i]] <- fread(i, nrows = nrows)
-        }
-        
-        ## Reading in data (possible renaming)
-        if(!is.null(rename)){
-          if(isTRUE(verbose)){
-            message(paste0(' -- reading and renaming ', num, ' of ', length(files), ': ', i))
-          }
-          tempdat.list[[i]] <- fread(i, nrows = nrows)
-          
-          for(o in c(1:nrow(new.names))){
-            # i <- 1
-            old <- new.names[o,1][[1]]
-            new <- new.names[o,2][[1]]
-            
-            if(length(which(names(tempdat.list[[i]]) == old)) == 1){
-              names(tempdat.list[[i]])[which(names(tempdat.list[[i]]) == old)] <- new
-            }
-          }
-        }
-    
-        ## Processing
-        tempdat.list[[i]]$FileName <- i
-        colcheck.list[[i]] <- tempdat.list[[i]][1,]
-        colname.list[[i]] <- names(tempdat.list[[i]])
-  }
-  
-  ### Condensing column check data
-  
-      colcheck.dat <- rbindlist(colcheck.list, fill = TRUE)
-      colcheck.dat <- as.data.table(!is.na(colcheck.dat))
-  
-  ### Condensing column names summary
-  
-      all.colnames <- unique(unlist(colname.list))
-      all.colnames
-      
-      colnames.summary <- list()
-      
-      for(a in all.colnames){
-        # a <- all.colnames[1]
-        colnames.summary[[a]] <- length(which(colcheck.dat[[a]]))
-      }
-      
-      colnames.summary <- rbindlist(list(colnames.summary))
-      colnames.summary
-  
-  ###
-  
-      colcheck.dat$FileName <- files
-      colcheck.dat
-  
-  ### Making colname table
-  
-      colname.table <- data.table('Column name' = all.colnames, 'New name' = all.colnames)
-      colname.table
-  
-  ### Condensing test data
-  
-      tempdat <- rbindlist(tempdat.list, fill = TRUE)
-      tempdat
-  
-  ### Output
-  
-      res <- list('Column check' = colcheck.dat,
-                  'Column summary' = colnames.summary,
-                  'All column names' = all.colnames,
-                  'Column name table' = colname.table,
-                  'Test data' = tempdat)
-  
-  ### Return
-      
-      message('Reading files complete!')
-      return(res)
-      
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-read.files.to.list <- function(file.loc = getwd(),
-                       file.type = ".csv",
+read.files <- function(file.loc,
+                       file.type = c(".csv", ".fcs"),
                        nrows = NULL,
                        do.embed.file.names = TRUE,
+                       truncate_max_range = TRUE,
                        header = TRUE,
-                       truncate_max_range = TRUE) {
-
-  ## Check that necessary packages are installed
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-
-  ## Require packages
-  require(data.table)
-
-  ## Initial warnings
-  orig_wd <- getwd()
-
-  if (!dir.exists(paste(orig_wd, file.loc, sep = "/")) &
-    !dir.exists(file.loc)) {
-    warning("We were not able to find the directory specified by file.loc. Are you sure that location exists?")
-  }
-
-  setwd(file.loc)
-  wd <- getwd()
-
-  if (length(list.files(path = wd, pattern = file.type)) == 0) {
-    warning("We did not find any files in that directory, are you sure this is the right place?")
-  }
-
-  ## Read data from Files into list of data frames
-
-  data.list <- list() # Creates and empty list to start
-
-  ncol.check <- list() # creates an empty list
-  colName.check <- list()
-  nrow.check <- list()
-
-  ## For reading CSV files
-
-  if (file.type == ".csv") {
-    file.names <- list.files(path = wd, pattern = file.type)
-
-    for (file in file.names) { # Loop to read files into the list
-
-      if (is.null(nrows)) { ## If nrows not specified
-        tempdata <- data.table::fread(file, check.names = FALSE, header = header)
-      }
-
-      if (!is.null(nrows)) { ## If nrows specified
-        message(paste0("Reading ", nrows, " rows (cells) per file"))
-        tempdata <- data.table::fread(file,
-          check.names = FALSE,
-          header = header,
-          nrows = nrows
-        )
-      }
-
-      file <- gsub(".csv", "", file)
-      data.list[[file]] <- tempdata
+                       as_spectre_object = FALSE) {
+    if (!dir.exists(file.loc)) {
+        error(paste(file.loc, "directory does not exist!"))
     }
-
-    rm(tempdata)
-    msg <- "CSV files have been imported into a list"
-  }
-
-  ## For reading FCS files
-
-  if (file.type == ".fcs") {
-    if (!is.element("flowCore", installed.packages()[, 1])) stop("flowCore is required but not installed")
-    require(flowCore)
-
-    file.names <- list.files(path = wd, pattern = file.type)
-
-    for (file in file.names) { # Loop to read files into the list
-
-      if (is.null(nrows)) { ## If nrows not specified
-        x <- flowCore::read.FCS(file,
-          transformation = FALSE,
-          truncate_max_range = truncate_max_range
-        )
-      }
-
-      if (!is.null(nrows)) { ## If nrows specified
-        message(paste0("Reading ", nrows, " rows (cells) per file"))
-        x <- flowCore::read.FCS(file,
-          transformation = FALSE,
-          which.lines = nrows,
-          truncate_max_range = truncate_max_range
-        )
-      }
-
-      nms <- vector()
-      for (o in c(1:nrow(x@parameters@data))) {
-        pr <- x@parameters@data$name[[o]]
-        st <- x@parameters@data$desc[[o]]
-
-        if (!is.na(st)) {
-          nms <- c(nms, paste0(pr, "_", st))
-        } else {
-          nms <- c(nms, pr)
-        }
-      }
-
-      tempdata <- exprs(x)
-      tempdata <- tempdata[1:nrow(tempdata), 1:ncol(tempdata)]
-      tempdata <- as.data.table(tempdata)
-      names(tempdata) <- nms
-
-      file <- gsub(".fcs", "", file)
-      data.list[[file]] <- tempdata
-      # data.list[[file]] <- as.data.frame(data.list[[file]])
+    
+    file.type <- match.arg(file.type)
+    file.names <- list.files(
+        path = file.loc, 
+        pattern = paste0("\\", file.type, "$")
+    )
+    
+    if (length(file.names) == 0) {
+        error("We did not find any files in that directory, are you sure this is the right place?")
     }
-
-    rm(tempdata)
-    msg <- "FCS files have been imported into a list"
-  }
-
-  ## For embedding file names
-
-  if (do.embed.file.names == TRUE) {
-
-    ## Create a list of 'SampleName' and SampleNo' entries -- 1:n of samples, these will be matched in order
-    all.file.names <- c(names(data.list))
-    all.file.names # Character (words)
-
-    all.file.nums <- c(1:(length(data.list))) ### <-- changed to 4+ to match with sample
-    all.file.nums # Intiger/numeric (numbers)
-
-    ## Add 'SampleNo' and SampleName' to each
-    for (a in all.file.names) {
-      data.list[[a]]$FileName <- a
-    } # Inserting names doesn't stop the rest working, just messes with some auto visual stuff
-    for (i in all.file.nums) {
-      data.list[[i]]$FileNo <- i
+    
+    
+    ## For reading CSV files
+    
+    if (file.type == ".csv") {
+        
+        data.list <- lapply(seq(1, length(file.names)), function(file_no) {
+            file <- file.path(file.loc, file.names[[file_no]])
+            
+            if (is.null(nrows)) {
+                tempdata <- data.table::fread(file, check.names = FALSE, header = header)
+            } else {
+                message(paste("Reading only the first", nrows, "rows (cells) per file"))
+                tempdata <- data.table::fread(file,
+                                              check.names = FALSE,
+                                              header = header,
+                                              nrows = nrows
+                )
+            }
+            
+            if (do.embed.file.names) {
+                tempdata$FileName <- gsub("\\.csv$", "", file.names[[file_no]])
+                tempdata$FileNo <- file_no
+            }
+            
+            
+            return(tempdata)
+        })
+        
+        names(data.list) <- gsub("\\.csv$", "", file.names)
+        
+        msg <- "CSV files have been imported into a list"
     }
-  }
-
-  ## Return result and result message
-  setwd(orig_wd)
-
-  return(data.list)
-  message(msg)
+    
+    
+    ## For reading FCS files
+    
+    else if (file.type == ".fcs") {
+        
+        data.list <- lapply(seq(1, length(file.names)), function(file_no) {
+            file <- file.path(file.loc, file.names[[file_no]])
+            
+            if (is.null(nrows)) { ## If nrows not specified
+                x <- flowCore::read.FCS(file,
+                                        transformation = FALSE,
+                                        truncate_max_range = truncate_max_range
+                )
+            }
+            
+            else { ## If nrows specified
+                message(paste0("Reading ", nrows, " rows (cells) per file"))
+                x <- flowCore::read.FCS(file,
+                                        transformation = FALSE,
+                                        which.lines = nrows,
+                                        truncate_max_range = truncate_max_range
+                )
+            }
+            
+            nms <- vector()
+            for (o in c(1:nrow(x@parameters@data))) {
+                pr <- x@parameters@data$name[[o]]
+                st <- x@parameters@data$desc[[o]]
+                
+                if (!is.na(st)) {
+                    nms <- c(nms, paste0(pr, "_", st))
+                } else {
+                    nms <- c(nms, pr)
+                }
+            }
+            
+            tempdata <- exprs(x)
+            tempdata <- tempdata[1:nrow(tempdata), 1:ncol(tempdata)]
+            tempdata <- data.table::as.data.table(tempdata)
+            names(tempdata) <- nms
+            
+            if (do.embed.file.names) {
+                tempdata$FileName <- gsub("\\.fcs$", "", file.names[[file_no]])
+                tempdata$FileNo <- file_no
+            }
+            
+            return(tempdata)
+        })
+        
+        names(data.list) <- gsub("\\.fcs$", "", file.names)
+        
+        msg <- "FCS files have been imported into a list"
+    }
+    
+    message(msg)
+    
+    if (as_spectre_object) {
+        message("Converting list to a Spectre object")
+        data.list <- do.merge.files(data.list)
+        obj <- new("SpectreObject", 
+                   cytometry_data=data.list, 
+                   citeseq_data=data.table())
+        return(obj)
+    } else {
+        return(data.list)
+    }
 }

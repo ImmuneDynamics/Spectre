@@ -13,7 +13,7 @@ run.phenograph()
 Returns a data.table with clustering results added
 }
 \description{
-This function allows you to perform phenograph clustering on a data.table
+This function allows you to perform phenograph clustering on a data.table. Uses 'Rphenograph' from https://github.com/JinmiaoChenLab/Rphenograph
 }
 \examples{
 
@@ -30,4 +30,5 @@ Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/3107710
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

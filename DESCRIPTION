@@ -1,5 +1,5 @@
 Type: Package
-Package: Spectre2
+Package: Spectre
 Title: High-dimensional cytometry and imaging analysis.
 Version: 2.0.0-0
 Date: 2023-06-16

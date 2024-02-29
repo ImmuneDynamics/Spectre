@@ -79,7 +79,7 @@ setwd("/Users/felixmarsh-wakefield/Desktop")
 
 # Run PCA on demonstration dataset, adding PC to dataset
 dat <- Spectre::demo.clustered
-dat <- test.pca(
+dat <- run.pca(
   dat = dat,
   use.cols = c(11:19),
   add.pca.col = TRUE,

@@ -2,39 +2,52 @@
 % Please edit documentation in R/read.files.R
 \name{read.files}
 \alias{read.files}
-\title{read.files - Function to read data from CSV or FCS files into a list.}
+\title{read.files}
 \usage{
-read.files(file.loc, file.type, do.embed.file.names, header)
+read.files(file.loc)
 }
 \arguments{
-\item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of
-cells (rows) to be read from each file. Please note, order is random in FCS
-files.}
-
-\item{file.loc}{DEFAULT = getwd(). What is the location of your files?}
+\item{file.loc}{What is the location of your files?}
 
 \item{file.type}{DEFAULT = ".csv". What type of files do you want to read.
 Can be ".csv" or ".fcs".}
 
-\item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row
-(cell) of each file with the name name?}
+\item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of
+cells (rows) to be read from each file.
+Please note, order is random in FCS files.}
 
-\item{header}{DEFAULT = TRUE. Does the first line of data contain column
-names?}
+\item{do.embed.file.names}{DEFAULT = TRUE.
+Do you want to embed each row (cell) of each file with the name name?
+Only used if output is a list.}
 
 \item{truncate_max_range}{DEFAULT = TRUE. Whether to truncate the extreme
-positive value to the instrument measurement range. Only used when reading
-from FCS files.}
+positive value to the instrument measurement range.
+Only used when reading from FCS files.}
+
+\item{header}{DEFAULT = TRUE. Does the first line of data contain column names?
+Only used if file.type is .csv.}
 }
 \value{
-Returns a list of data.tables -- one per CSV file.
+Either a list of data.tables (one element per file) or a SpectreObject
 }
 \description{
-This function allows you to read in sample files (.csv or .fcs) into a list,
-where each file is saved as a data.table.
+Function to read cytometry data stored in either CSV or FCS files into
+either a list or a Spectre object.
+}
+\details{
+See details for more information.
+
+If you choose the output as a list, the function will read each file
+into a data.table and store it in an element of the list.
+Essentially 1 element = 1 file.
+
+If you choose the output as Spectre object, the \code{cytometry_data} slot
+will be filled with a data.table containing the concatenation of all the files.
+A new column will be created to denote the file the cell comes from.
 }
 \examples{
 data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
+
 
 }
 \references{
@@ -42,6 +55,7 @@ Ashhurst, T. M., et al. (2019).
 \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 }
 \author{
-Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au} Felix
-Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
+Thomas M Ashhurst \email{thomas.ashhurst@sydney.edu.au},
+Felix Marsh-Wakefield \email{felix.marsh-wakefield@sydney.edu.au},
+Givanna Putri
 }

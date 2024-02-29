@@ -27,20 +27,24 @@ the kind of dimensionality reduction (by PCA or UMAP for instance) that have bee
 to the data and henceforth the columns in the data.table associated with them.
 }
 \examples{
+# Seurat object
 devtools::install_github("satijalab/seurat-data")
 library(SeuratData)
+library(Seurat)
 InstallData("pbmc3k")
 pbmc <- LoadData("pbmc3k", type = "pbmc3k.final")
 cell.dat <- create.dt(pbmc)
 
+# SingleCellExperiment object
+BiocManager::install("scRNAseq")
 library(scRNAseq)
 sce <- ReprocessedAllenData("tophat_counts")
+counts(sce) <- assay(sce, "tophat_counts")
+cell.dat <- create.dt(sce)
 
-}
-\references{
-\url{https://immunedynamics.io/spectre/}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
-Givanna Putri
+Givanna Putri,
+Felix Marsh-Wakefield \email{felix.marsh-wakefield@sydney.edu.au}
 }

@@ -46,6 +46,9 @@ make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order,
 \item{max.y}{DEFAULT = 1.4. Multiplier for plot heigh -- allowing room for stats.}
 
 \item{path}{DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.}
+
+\item{save_to_disk}{DEFAULT TRUE. Whether to save the plot or not.
+If yes, it will be saved in the directory specified in the \code{path} parameter.}
 }
 \description{
 This function allows you to generate quantitative plots of your data.
@@ -66,7 +69,8 @@ Spectre::make.autograph(dat = dat,
                         y.axis = "Tcells",
                         colour.by = "Batch",
                         colours = c("Black", "Red", "Blue"),
-                        y.axis.label = "Proportion"
+                        y.axis.label = "Proportion", 
+                        save_to_disk = FALSE
                         )
 
 }

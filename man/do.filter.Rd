@@ -11,7 +11,7 @@ do.filter(dat, use.col, values)
 
 \item{use.col}{DEFAULT = NULL. The column to use for re-ordering}
 
-\item{values}{DEFAULT = NULL. A vector of values to use for filtering -- all cells that contain any of the match values will be filtered, and provided in a new data.table. Up to 20 match values can be provided}
+\item{values}{DEFAULT = NULL. A vector of values to use for filtering -- all cells that contain any of the match values will be filtered, and provided in a new data.table. Up to 35 match values can be provided}
 }
 \description{
 This function allows filtering of a data.table using multiple match values -- all cells that contain any of the match values will be filtered, and provided in a new data.table.

@@ -35,9 +35,22 @@ create.stats(
 \description{
 This function performs statistical analysis and generates an output data.table
 }
+\examples{
+dat <- Spectre::demo.sum
+
+stat.dat <- create.stats(dat = dat, 
+                         use.cols = names(dat)[c(4:15)],
+                         sample.col = "Sample",
+                         group.col = "Group",
+                         comparisons = list(c('Mock', 'WNV'))
+                         )
+head(stat.dat)
+
+}
 \references{
 \url{https://github.com/ImmuneDynamics/Spectre}.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }
