@@ -143,7 +143,7 @@ create.sumtable <- function(dat,
       props[[sample.col]] <- NULL
       props[[pop.col]] <- NULL
       
-      template <- do.add.cols(template, 'NAME', props, 'NAME', show.status = FALSE)
+      template <- do.add.cols(template, 'NAME', props, 'NAME')
     
           # template
           # 
@@ -181,7 +181,7 @@ create.sumtable <- function(dat,
           names(res.1)[3] <- 'ParentCounts'
           names(res.2)[3] <- 'PopCounts'
           
-          res.3 <- do.add.cols(res.2, 'Var2', res.1[,2:3], 'Var2', show.status = FALSE)
+          res.3 <- do.add.cols(res.2, 'Var2', res.1[,2:3], 'Var2')
           res.3$NAME <- paste0(res.3[['Var1']], ' -- ', res.3[['Var2']]) 
           res.3[[paste0('Perc of parent')]] <- res.3$PopCounts / res.3$ParentCounts * 100
           res.3$Var1 <- NULL
@@ -197,7 +197,7 @@ create.sumtable <- function(dat,
           rm(rws)
         }
         
-        template <- do.add.cols(template, 'NAME', rbindlist(res.list), 'NAME', show.status = FALSE)
+        template <- do.add.cols(template, 'NAME', rbindlist(res.list), 'NAME')
         
         rm(res.list)
         gc()
@@ -224,7 +224,7 @@ create.sumtable <- function(dat,
         exps[[sample.col]] <- NULL
         exps[[pop.col]] <- NULL
         
-        template <- do.add.cols(template, 'NAME', exps, 'NAME', show.status = FALSE)
+        template <- do.add.cols(template, 'NAME', exps, 'NAME')
         rm(exps)
         gc()
       }
@@ -253,11 +253,11 @@ create.sumtable <- function(dat,
         alt.res$NAME <- paste0(alt.res[[pop.col]], ' -- ', alt.res[[sample.col]])
         alt.res[[sample.col]] <- NULL
         alt.res[[pop.col]] <- NULL
-        alt.res <- do.add.cols(alt.res, 'NAME', props[,c('NAME', 'nrows')], 'NAME', show.status = FALSE)
+        alt.res <- do.add.cols(alt.res, 'NAME', props[,c('NAME', 'nrows')], 'NAME')
         alt.res[,paste0('PROP POS ', perc.pos[[1]])] <- alt.res[,paste0('POS ', perc.pos[[1]]), with = FALSE] / alt.res$nrows * 100
         alt.res <- alt.res[,c('NAME', names(alt.res)[grepl('PROP POS ', names(alt.res))]), with = FALSE]
         
-        template <- do.add.cols(template, 'NAME', alt.res, 'NAME', show.status = FALSE)
+        template <- do.add.cols(template, 'NAME', alt.res, 'NAME')
         rm(alt.res)
         rm(alt)
         gc()
@@ -351,14 +351,14 @@ create.sumtable <- function(dat,
           multi.res$NAME <- paste0(multi.res[[pop.col]], ' -- ', multi.res[[sample.col]])
           multi.res[[sample.col]] <- NULL
           multi.res[[pop.col]] <- NULL
-          multi.res <- do.add.cols(multi.res, 'NAME', props[,c('NAME', 'nrows')], 'NAME', show.status = FALSE)
+          multi.res <- do.add.cols(multi.res, 'NAME', props[,c('NAME', 'nrows')], 'NAME')
           multi.res[,paste0('PROP MULTIPOS ', a)] <- multi.res[,'MULTIKEY', with = FALSE] / multi.res$nrows * 100
           multi.res$MULTIKEY <- NULL
           multi.res$nrows <- NULL
           
           names(multi.res) <- gsub('EXP-', '', names(multi.res))
           
-          template <- do.add.cols(template, 'NAME', multi.res, 'NAME', show.status = FALSE)
+          template <- do.add.cols(template, 'NAME', multi.res, 'NAME')
           
           rm(tp)
           rm(multi.res)
@@ -390,7 +390,7 @@ create.sumtable <- function(dat,
           ann <- rbind(ann, tp)
         }
         
-        final <- do.add.cols(final, sample.col, ann, sample.col, show.status = FALSE)
+        final <- do.add.cols(final, sample.col, ann, sample.col)
         final <- final[,c(sample.col, annot.cols, sort(res.cols)), with = FALSE] 
       }
   

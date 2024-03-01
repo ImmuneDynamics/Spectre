@@ -1,7 +1,7 @@
 test_that("default SpectreObject creation works", {
     dt = data.table(x=seq(1,10), y=seq(1,10))
     
-    test_obj = new("SpectreObject", cytometry_data=dt, citeseq_data=dt)
+    test_obj = SpectreObject(cytometry_data=dt, citeseq_data=dt)
     
     expect_equal(ncol(test_obj@cytometry_data), 2)
     expect_equal(nrow(test_obj@cytometry_data), 10)
@@ -10,20 +10,15 @@ test_that("default SpectreObject creation works", {
     
 })
 
-test_that("default NULL slots for SpectreObject creation works", {
-    expect_no_error(
-        new("SpectreObject")
+test_that("no cytometry_data slot for SpectreObject creation errors", {
+    expect_error(
+        SpectreObject()
     )
 })
 
-test_that("missing either of the 2 slots for SpectreObject creation errors", {
+test_that("no citeseq_data slot for SpectreObject creation works", {
     dt = data.table(x=seq(1,10), y=seq(1,10))
-    
-    expect_error(
-        new("SpectreObject", cytometry_data=dt)
-    )
-    
-    expect_error(
-        new("SpectreObject", citeseq_data=dt)
+    expect_no_error(
+        SpectreObject(cytometry_data=dt)
     )
 })

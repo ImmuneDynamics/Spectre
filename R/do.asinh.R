@@ -1,130 +1,141 @@
-#' Run ArcSinh transformation
-#'
-#' Transform data in selected columns using ArcSinh transformation with a specified co-factor.
-#'
-#' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
-#' @references \url{https://sydneycytometry.org.au/spectre}
-#'
-#' @param dat NO DEFAULT. data.table input sample.
-#' @param use.cols NO DEFAULT. Vector of character column names -- these columns will be transformed and added to the data.table as new columns.
-#' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
-#' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.
-#' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation which should reduce noise from negative values. Use with caution.
-#' @param digits DEFAULT = NULL. Number of decimal places as a limit, not used if NULL. Values beyond will be rounded. Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, then 5 digits will be used). Important to control for small floating point error differences in different OS.
-#'
-#' @return A data.table with new columns added, that contain the asinh transformed data.
-#'
-#' @usage do.asinh(dat, use.cols)
-#'
-#' @import data.table
-#'
-#' @export do.asinh
+#' @export
+#' @rdname SpectreObject-class
+setMethod("do.asinh", "SpectreObject", function(
+        dat,
+        use.cols,
+        slot_name = NULL,
+        cofactor = 5,
+        append.cf = FALSE,
+        reduce.noise = FALSE,
+        digits = NULL,
+        verbose = TRUE) {
+    
+    if (is.null(slot_name))
+        stop("slot is NULL. Don't know which slot to apply arcsinh transformation to.")
+    
+    dat_to_apply_asinh <- slot(dat, slot_name)
+    
+    if (verbose)
+        message(paste(
+            "Performing arcsinh transformation for slot", slot, "containing",
+            nrow(dat_to_apply_asinh), "cells and",
+            ncol(dat_to_apply_asinh), "features"))
+    asinh_dat <- do_actual_transformation(
+        dat = dat_to_apply_asinh,
+        use.cols = use.cols,
+        cofactor = cofactor,
+        append.cf = append.cf,
+        reduce.noise = reduce.noise,
+        digits = digits
+    )
+    dat_to_apply_asinh <- cbind(dat_to_apply_asinh, asinh_dat)
+    
+    slot(dat, slot_name) <- dat_to_apply_asinh
+    
+    return(dat)
+    
+})
 
-do.asinh <- function(dat,
-                     use.cols = NULL,
-                     cofactor = 5,
-                     assay = NULL,
-                     clip.min = NULL,
-                     clip.max = NULL,
-                     name = '_asinh',
-                     digits = 9) {
-  
-  ### Evaluation
-  
-      ## data.table
-      if(class(dat)[1] == 'data.table'){
-        if(is.null(use.cols)){
-          value <- as.matrix(dat)
-        } else {
-          value <- dat[,use.cols, with = FALSE]
-          value <- as.matrix(value)
+#' @export
+setMethod("do.asinh", "data.table", function(
+        dat,
+        use.cols,
+        slot_name = NULL,
+        cofactor = 5,
+        append.cf = FALSE,
+        reduce.noise = FALSE,
+        digits = NULL,
+        verbose = TRUE) {
+    
+    if (verbose)
+        message(paste("Performing arcsinh transformation for data.table containing",
+                      nrow(dat), "cells and",
+                      ncol(dat), "features"))
+    asinh_dat <- do_actual_transformation(
+        dat = dat,
+        use.cols = use.cols,
+        cofactor = cofactor,
+        append.cf = append.cf,
+        reduce.noise = reduce.noise,
+        digits = digits
+    )
+    dat <- cbind(dat, asinh_dat)
+    
+    return(dat)
+    
+})
+
+
+
+
+# Internal function that actually do the asinh transformation
+do_actual_transformation <- function(dat,
+                                     use.cols,
+                                     cofactor = 5,
+                                     append.cf = FALSE,
+                                     reduce.noise = FALSE,
+                                     digits = NULL) {
+    
+    # Check if the columns exist in the data.table
+    columns_exist <- all(use.cols %in% colnames(dat))
+    if (!all(columns_exist)) {
+        error(paste(
+            "Some values in use.cols do not exist as columns in dat!",
+            paste0("Columns: ", paste(use.cols, collapse = ", ")),
+            paste0("Exist? ", paste(columns_exist, collapse = ", ")),
+            "do.asinh STOP!",
+            sep = "\n"
+        ))
+    }
+    
+    
+    ### Numeric columns checks
+    
+    are_columns_numeric <- sapply(use.cols, function(col) is.numeric(dat[[col]]))
+    
+    if (!all(are_columns_numeric)) {
+        error(paste(
+            "It appears that some columns in the dataset are not numeric!",
+            paste0("Columns: ", paste(use.cols, collapse = ", ")),
+            paste0("Is numeric? ", paste(are_columns_numeric, collapse = ", ")),
+            "do.asinh STOP!",
+            sep = "\n"
+        ))
+    }
+    
+    ### Optional noise reduction
+    
+    # https://github.com/JinmiaoChenLab/cytofkit/issues/71
+    if (reduce.noise == TRUE) {
+        warning("This noise reduction function is experimental, and should be used with caution!!")
+        value <- value - 1
+        loID <- which(value < 0)
+        if (length(loID) > 0) {
+            value[loID] <- rnorm(length(loID), mean = 0, sd = 0.01)
         }
-      }
-  
-      ## Spectre
-      if(class(dat)[1] == 'Spectre'){
-        if(is.null(assay)){
-          stop('assay required')
-        }
-        if(is.null(dat@key)){
-          stop('key must be set')
-        } else {
-          key <- dat@key
-        }
-        
-        value <- dat@data[[assay]]
-        value <- value[,which(names(value) != dat@key), with = FALSE]
-        
-        if(!is.null(use.cols)){
-          value <- as.matrix(value[,..use.cols])
-        } else {
-          value <- as.matrix(value)
-        }
-      }
-  
-      ## Seurat
-      if(class(dat)[1] == 'Seurat'){
-        if(is.null(assay)){
-          stop('assay required')
-        }
-        if(!is.null(use.cols)){
-          value <- value[,use.cols]
-          value <- t(value)
-        } else {
-          value <- as.matrix(dat@assays[[assay]]@counts)
-        }
-      }
-  
-      if (isFALSE(all(sapply(value, is.numeric)))) {
-        message("It appears that one column in your dataset is non numeric")
-        print(sapply(value, is.numeric))
-        stop("do.asinh stopped")
-      }
-  
-  ### Arcsinh calculation
-  
-      value <- value / cofactor
-      value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
-      
-  ### Rounding
-      
-      if(!is.null(digits)){
+    }
+    
+    ### Arcsinh calculation
+    
+    value <- dat[, lapply(.SD, function(x) asinh(x / cofactor)), .SDcols = use.cols]
+    
+    if(!is.null(digits)){
         value <- round(value, digits = digits)
-      }
-      
-  ### Clipping
-      
-      if(!is.null(clip.min)){
-        
-      }
-      
-      if(!is.null(clip.max)){
-        
-      }
-      
-  ### Wrap up
-      
-      ## data.table
-      if(class(dat)[1] == 'data.table'){
-        value <- as.data.table(value)
-        names(value) <- paste0(names(value), name)
-        # Add test to see if those cols are there, if so, replace
-        #dat <- cbind(dat, value)
-        dat[,names(value)] <- value
-      }
-      
-      ## Spectre
-      if(class(dat)[1] == 'Spectre'){
-        dat@data[[paste0(assay, name)]] <- cbind(dat@data[[assay]][,..key],as.data.table(value))
-      }
-      
-      ## Seurat
-      if(class(dat)[1] == 'Seurat'){
-        dat@assays[[assay]]@data <- as.data.table(value)
-      }
-      
-  ### Return
-
-      return(dat)
-
+    }
+    
+    ### Options to append the CF used
+    if (append.cf)
+        names(value) <- paste0(names(value), "_asinh_cf", cofactor)
+    else
+        names(value) <- paste0(names(value), "_asinh")
+    
+    return(value)
+    
 }
+
+
+
+
+
+
+

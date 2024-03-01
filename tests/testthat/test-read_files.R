@@ -1,6 +1,7 @@
 test_that("CSV files are read into a list", {
     dat <- read.files(
-        file.loc = test_path("testdata", "csv_fcs_files")
+        file.loc = test_path("testdata", "csv_fcs_files"),
+        verbose = FALSE
     )
     expect_equal(typeof(dat), "list")
     expect_equal(length(dat), 2)
@@ -37,7 +38,8 @@ test_that("CSV files are read into a list", {
 
 test_that("CSV files are read into a list", {
     dat <- read.files(
-        file.loc = test_path("testdata", "csv_fcs_files")
+        file.loc = test_path("testdata", "csv_fcs_files"),
+        verbose = FALSE
     )
     expect_equal(typeof(dat), "list")
     expect_equal(length(dat), 2)
@@ -75,7 +77,8 @@ test_that("CSV files are read into a list", {
 test_that("CSV files are read into a SpectreObject", {
     dat <- read.files(
         file.loc = test_path("testdata", "csv_fcs_files"),
-        as_spectre_object = TRUE
+        as_spectre_object = TRUE,
+        verbose = FALSE
     )
     
     expect_equal(nrow(dat@cytometry_data), 1000)
@@ -112,7 +115,8 @@ test_that("FCS files are read into SpectreObject", {
     dat <- read.files(
         file.loc = test_path("testdata", "csv_fcs_files"),
         file.type = ".fcs",
-        as_spectre_object = TRUE
+        as_spectre_object = TRUE,
+        verbose = FALSE
     )
     
 
@@ -142,7 +146,8 @@ test_that("FCS files are read into SpectreObject", {
 test_that("FCS files are read into list", {
     dat <- read.files(
         file.loc = test_path("testdata", "csv_fcs_files"),
-        file.type = ".fcs"
+        file.type = ".fcs",
+        verbose = FALSE
     )
     expect_equal(typeof(dat), "list")
     expect_equal(length(dat), 1)
@@ -173,23 +178,27 @@ test_that("FCS files are read into list", {
 test_that("read files without embed filenames", {
     dat_csv <- read.files(
         file.loc = test_path("testdata", "csv_fcs_files"),
-        do.embed.file.names = FALSE
+        do.embed.file.names = FALSE,
+        verbose = FALSE
     )
     dat_fcs <- read.files(
         file.loc = test_path("testdata", "csv_fcs_files"),
         do.embed.file.names = FALSE,
-        file.type = '.fcs'
+        file.type = '.fcs',
+        verbose = FALSE
     )
     dat_obj_csv <- read.files(
         file.loc = test_path("testdata", "csv_fcs_files"),
         do.embed.file.names = FALSE,
-        as_spectre_object = TRUE
+        as_spectre_object = TRUE,
+        verbose = FALSE
     )
     dat_obj_fcs <- read.files(
         file.loc = test_path("testdata", "csv_fcs_files"),
         do.embed.file.names = FALSE,
         as_spectre_object = TRUE,
-        file.type = ".fcs"
+        file.type = ".fcs",
+        verbose = FALSE
     )
     
     file_names <- c("test_Mock_01_subsampled_1", "test_Mock_01_subsampled_2")
@@ -258,9 +267,14 @@ test_that("missing files result in error", {
     expect_error(
         read.files(
             file.loc = test_path("testdata"),
-            file.type = ".fcs"
+            file.type = ".fcs",
+            verbose = FALSE
         )
     )
+})
+
+test_that("unsupported file type result in error", {
+    expect_error(read.files(".txt"))
 })
 
 

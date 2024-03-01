@@ -124,7 +124,7 @@ run.spatial.analysis <- function(dat,
       names(counts)[1] <- "POPULATIONS"
       names(counts)[2] <- a
 
-      reg.res <- do.add.cols(reg.res, "POPULATIONS", counts, "POPULATIONS", show.status = FALSE)
+      reg.res <- do.add.cols(reg.res, "POPULATIONS", counts, "POPULATIONS")
       do.rmv.na(reg.res)
     }
 

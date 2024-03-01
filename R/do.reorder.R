@@ -43,7 +43,7 @@ do.reorder <- function(dat,
   new.order.nums <- c(1:length(new.order))
   new.order <- data.table(new.order, new.order.nums)
 
-  dat <- do.add.cols(dat, use.col, new.order, "new.order", show.status = FALSE)
+  dat <- do.add.cols(dat, use.col, new.order, "new.order")
   setorderv(dat, "new.order.nums")
 
   ### Cleanup

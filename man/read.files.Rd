@@ -26,6 +26,12 @@ Only used when reading from FCS files.}
 
 \item{header}{DEFAULT = TRUE. Does the first line of data contain column names?
 Only used if file.type is .csv.}
+
+\item{as_spectre_object}{DEFAULT = FALSE.
+Whether to return the files as a Spectre object.}
+
+\item{verbose}{DEFAULT = FALSE.
+If TRUE, the function will print progress updates as it executes.}
 }
 \value{
 Either a list of data.tables (one element per file) or a SpectreObject

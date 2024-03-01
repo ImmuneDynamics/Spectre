@@ -30,6 +30,10 @@
 #' @param truncate_max_range DEFAULT = TRUE. Whether to truncate the extreme
 #' positive value to the instrument measurement range. 
 #' Only used when reading from FCS files.
+#' @param as_spectre_object DEFAULT = FALSE. 
+#' Whether to return the files as a Spectre object.
+#' @param verbose DEFAULT = FALSE.
+#' If TRUE, the function will print progress updates as it executes.
 #'
 #' @return Either a list of data.tables (one element per file) or a SpectreObject
 #'
@@ -51,7 +55,8 @@ read.files <- function(file.loc,
                        do.embed.file.names = TRUE,
                        truncate_max_range = TRUE,
                        header = TRUE,
-                       as_spectre_object = FALSE) {
+                       as_spectre_object = FALSE,
+                       verbose = FALSE) {
     if (!dir.exists(file.loc)) {
         error(paste(file.loc, "directory does not exist!"))
     }
@@ -75,9 +80,20 @@ read.files <- function(file.loc,
             file <- file.path(file.loc, file.names[[file_no]])
             
             if (is.null(nrows)) {
+                
+                if (verbose) {
+                    message(paste("Reading file", file))
+                }
+                
                 tempdata <- data.table::fread(file, check.names = FALSE, header = header)
             } else {
-                message(paste("Reading only the first", nrows, "rows (cells) per file"))
+                
+                if (verbose) {
+                    message(paste("Reading only the first", nrows, 
+                                  "rows (cells) for file",
+                                  file))
+                }
+                
                 tempdata <- data.table::fread(file,
                                               check.names = FALSE,
                                               header = header,
@@ -107,15 +123,25 @@ read.files <- function(file.loc,
         data.list <- lapply(seq(1, length(file.names)), function(file_no) {
             file <- file.path(file.loc, file.names[[file_no]])
             
-            if (is.null(nrows)) { ## If nrows not specified
+            if (is.null(nrows)) { 
+                ## If nrows not specified
+                if (verbose) {
+                    message(paste("Reading file", file))
+                }
+                
                 x <- flowCore::read.FCS(file,
                                         transformation = FALSE,
                                         truncate_max_range = truncate_max_range
                 )
             }
             
-            else { ## If nrows specified
-                message(paste0("Reading ", nrows, " rows (cells) per file"))
+            else { 
+                ## If nrows specified
+                if (verbose) {
+                    message(paste("Reading only the first", nrows, 
+                                  "rows (cells) for file",
+                                  file))
+                }
                 x <- flowCore::read.FCS(file,
                                         transformation = FALSE,
                                         which.lines = nrows,
@@ -123,6 +149,8 @@ read.files <- function(file.loc,
                 )
             }
             
+            if (verbose) 
+                message("Extracting data from FlowCore object")
             nms <- vector()
             for (o in c(1:nrow(x@parameters@data))) {
                 pr <- x@parameters@data$name[[o]]
@@ -135,6 +163,8 @@ read.files <- function(file.loc,
                 }
             }
             
+            if (verbose) 
+                message("Creating data.table object")
             tempdata <- exprs(x)
             tempdata <- tempdata[1:nrow(tempdata), 1:ncol(tempdata)]
             tempdata <- data.table::as.data.table(tempdata)
@@ -153,14 +183,16 @@ read.files <- function(file.loc,
         msg <- "FCS files have been imported into a list"
     }
     
-    message(msg)
+    if (verbose)
+        message(msg)
     
     if (as_spectre_object) {
-        message("Converting list to a Spectre object")
+        
+        if (verbose)
+            message("Converting list to a Spectre object")
+        
         data.list <- do.merge.files(data.list)
-        obj <- new("SpectreObject", 
-                   cytometry_data=data.list, 
-                   citeseq_data=data.table())
+        obj <- SpectreObject(cytometry_data=data.list, citeseq_data=data.table())
         return(obj)
     } else {
         return(data.list)

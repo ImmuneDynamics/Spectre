@@ -128,8 +128,8 @@ run.align <- function(ref.dat,
 
   ###
 
-  ref.dat <- do.add.cols(ref.dat, batch.col, batch.tb, batch.col, show.status = FALSE)
-  target.dat <- do.add.cols(target.dat, batch.col, batch.tb, batch.col, show.status = FALSE)
+  ref.dat <- do.add.cols(ref.dat, batch.col, batch.tb, batch.col)
+  target.dat <- do.add.cols(target.dat, batch.col, batch.tb, batch.col)
 
   batch.col <- "ADJUST_BATCH_NUMBERS"
 
