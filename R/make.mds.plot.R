@@ -22,17 +22,23 @@ make.mds.plot <- function(dat,
     agg_dat_transposed <- t(agg_dat[, markers, with = FALSE])
     colnames(agg_dat_transposed) <- agg_dat[[sample_col]]
     
-    mds <- plotMDS(agg_dat_transposed, plot = FALSE)
+    mds <- limma::plotMDS(agg_dat_transposed, plot = FALSE)
     
     # To get unique combination of sample and colour by
     sample_colour_by_combo <- unique(dat[, c(sample_col, colour_by), with = FALSE])
     
+    # Create data frame
+    mds.df <- data.frame(
+      dim1 = mds$x,
+      dim2 = mds$y,
+      placeholder.name = agg_dat[[sample_col]]
+    )
+    
+    # Replace column name (important for merging with original data)
+    colnames(mds.df) <- sub("placeholder.name", sample_col, colnames(mds.df))
+    
     mds_df <- merge.data.table(
-        x = data.frame(
-            dim1 = mds$x,
-            dim2 = mds$y,
-            sample_id = agg_dat[[sample_col]]
-        ),
+        x = mds.df,
         y = sample_colour_by_combo,
         by = sample_col
     )
@@ -43,7 +49,7 @@ make.mds.plot <- function(dat,
     
     plt <- ggplot(mds_df, aes(x = dim1, y = dim2, color = !! sym(colour_by))) +
         geom_point() +
-        geom_label_repel(aes(label = !! sym(sample_col)), 
+        ggrepel::geom_label_repel(aes(label = !! sym(sample_col)), 
                          show.legend = FALSE, max.overlaps = 50, size = font_size, 
                          box.padding = unit(0.1, "lines")) +
     theme_bw() +
