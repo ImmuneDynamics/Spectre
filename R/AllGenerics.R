@@ -10,7 +10,8 @@
 #' @param use.cols NO DEFAULT. 
 #' A vector of character column names to apply arc-sinh transformation to.
 #' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
-#' Supply a named vector if you want to apply different co-factor to different markers.
+#' Supply a data.table with column marker and cofactor if you want to apply different co-factor to different markers.
+#' See examples.
 #' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of 
 #' the name of the transformed columns.
 #' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation 
@@ -24,6 +25,7 @@
 #' If TRUE, the function will print progress updates as it executes.
 #' 
 #' @examples
+#' library(data.table)
 #' # Assuming dat is a data.table
 #' dat <- data.table(NK11=rnorm(10, 2), CD3=rnorm(10,1))
 #' # Default co-factor 5 will be used for both NK11 and CD3
@@ -35,7 +37,9 @@
 #' dat_asinh
 #' 
 #' # Apply different co-factor to the markers
-#' dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=c("NK11"=5, "CD3"=10))
+#' cofactor_dt <- data.table(marker=c("NK11", "CD3"), cofactor=c(5,10))
+#' cofactor_dt
+#' dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=cofactor_dt)
 #' dat_asinh
 #' 
 #' 
