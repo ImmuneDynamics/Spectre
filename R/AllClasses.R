@@ -1,58 +1,43 @@
-#' SpectreObject Class
-#'
-#' @slot cytometry_data A data.table slot storing cytometry data. 
-#' Rows are cells, columns are markers/features.
-#' @slot citeseq_data A data.table slot storing CITEseq data.
-#' Rows are cells, columns are antibodies.
+#' Spectre Class
 #' 
-#' 
-#' @examples
-#' # Create an instance of SpectreObject with empty slots
+#' Spectre class is an extension the R native list class designed to store and 
+#' manage cytometry data and the results of analysis associated with the data.
+#' It is specifically developed to store them as a list of data.tables.
+#' The types of data and analysis results that can be stored in this list includes
+#' (but not limited to) raw data, asinh-transformed data, and results from downstream
+#' analyses such as clustering or UMAP.
+#' See details for more information.
 #' 
 #' @details
-#' You should use this object if you want to jointly analyse cytometry and 
-#' CITEseq data.
-#' 
-#' If you only want to analyse cytometry data, read the file in as data.table
-#' and run Spectre functions as per normal.
-#' There is no need to use this object.
-#' 
-#' Both `cytometry_data` and `citeseq_data` slots must be filled.
-#' By default, if you don't pass any data.table into both slots, they will
-#' both be empty. 
-#' If you specify something for `cytometry_data` you MUST specify a data.table
-#' for `citeseq_data`.
-#' 
-#' @export
-#' 
-#' @name SpectreObject-class
-#' @docType class
-#' @rdname SpectreObject-class
+#' Each element within the list must be a data.table.
+#' All of these elements *must* include a column which uniquely identify each cell.
+#' The name of this column must be the same for all data.tables in the list and
+#' must be speified in the cell_id_col slot. 
+#' Elements in the list should be named descriptively (e.g., "cyto" for raw data, "cyto_asinh" for asinh-transformed data)
+#' but custom naming is supported to accommodate different preferences (e.g., "cyto_raw" for raw data).
 #'
-setClass("SpectreObject",
-         representation(
-             cytometry_data = "data.table", 
-             citeseq_data = "data.table"
-             ),
-         prototype(citeseq_data = data.table())
-         
-)
-
-
+#' @slot cell_id_col Character. Specifies the name of the column that uniquely identifies each cell within the data tables. 
+#' This column must be present in all the data.tables in the list.
+#' @slot name Character vector. Describes the dataset stored in the object.
+#' This slot can be used to store the metadata for the data stored within the object.
+#' @slot spatial Reserved for future use to store spatial data.
+#' @slot other List. For storing any additional data that does not fit within the list 
+#' or other defined slots.
+#' 
+#' 
 #' @export
-#' @rdname SpectreObject-class
-SpectreObject <- function(cytometry_data, citeseq_data = data.table()) {
-    if (!is.data.table(cytometry_data)) {
-        stop("cytometry_data slot must be a data.table object")
-    }
-    if (!is.data.table(citeseq_data)) {
-        stop("citeseq_data slot must be a data.table object")
-    }
-    return(new("SpectreObject", 
-               cytometry_data = cytometry_data, 
-               citeseq_data = citeseq_data))
-}
-
+#' 
+#' @name Spectre-class
+#' @docType class
+#' @rdname Spectre-class
+#'
+setClass("Spectre", 
+         representation('list',
+                        cell_id_col='character',
+                        name='vector',
+                        spatial="list",
+                        other="list")
+)
 
 #' Print SpectreObject
 #'
@@ -60,109 +45,56 @@ SpectreObject <- function(cytometry_data, citeseq_data = data.table()) {
 #'
 #' @export
 #'
-setMethod("show", "SpectreObject", function(object) {
-    cat("class: SpectreObject\n")
+setMethod("show", "Spectre", function(object) {
+    if(length(object@name < 1)){
+        message(paste0("Spectre object: '", object@name, "'"))
+    } else {
+        message("Spectre object")
+    }
     
-    cat("cytometry_data slot:", class(object@cytometry_data), "with",
-        ncol(object@cytometry_data), "features", 
-        nrow(object@cytometry_data), "cells")
+    message("  ---")
     
-    cat("\n")
     
-    cat("citeseq_data slot:", class(object@citeseq_data), "with",
-        ncol(object@citeseq_data), "features", 
-        nrow(object@citeseq_data), "cells")
+    ### Datasets details
     
-    # if (is.null(object@cytometry_data)) {
-    #     cat("cytometry_data slot: NULL with 0 features, 0 cells")
-    # } else {
-    #     cat("cytometry_data slot:", class(object@cytometry_data), "with",
-    #         ncol(object@cytometry_data), "features", 
-    #         nrow(object@cytometry_data), "cells")
-    # }
-    # 
-    # cat("\n")
-    # 
-    # if (is.null(object@citeseq_data)) {
-    #     cat("citeseq_data slot:", class(object@citeseq_data)," with 0 features, 0 cells")
-    # } else {
-    #     cat("citeseq_data slot:", class(object@citeseq_data), "with",
-    #         ncol(object@citeseq_data), "features", 
-    #         nrow(object@citeseq_data), "cells")
-    # }
+    for(i in names(object)){
+        message(paste0('  $', i, ' (', nrow(object[[i]]), ' rows, ', ncol(object[[i]]), ' cols)'))
+    }
+    
+    message("  ---")
+    message(paste("  @cell_id_col:", object@cell_id_col))
+    
+    ### Spatial slot
+    
+    if(length(object@spatial)){
+        message('  ---')
+        
+        l <- length(names(object@spatial))
+        
+        if(l <= 3){
+            for(i in names(object@spatial)){
+                message(paste0('  @spatial$', i))
+            }
+        } else {
+            for(i in c(1:3)){
+                a <- names(object@spatial)[i]
+                message(paste0('  @spatial$', a))
+            }
+            message(paste0('   +', l-3))
+        }
+    }
+    
+    ### Other slot
+    
+    if(length(object@other)){
+        message('  ---')
+        
+        for(i in names(object@other)){
+            message(paste0('  @other$', i))
+        }
+    }
+    
 })
 
-# Need to ask Tom what this is doing..
-# Spectre <- setClass(Class = "Spectre",
-#                     slots = c(
-#                       data = "list",
-#                       analysis = "list",
-#                       other = "list",
-#                       key ='vector'
-#                     )
-# 
-# Spectre <- setClass(Class = "Spectre",representation('list',
-#                                                      name='vector',
-#                                                      spatial="list",
-#                                                      other="list"
-# ))
-# setMethod("show",
-#           "Spectre",
-#           function(object){
-#             
-#             ### Initial
-#             
-#             require('data.table')
-#             
-#             if(length(dat@name < 1)){
-#               message(paste0("Spectre object: '", dat@name, "'"))
-#             } else {
-#               message("Spectre object")
-#             }
-#             
-#             ### Datasets
-#             
-#             for(i in names(dat)){
-#               r <- nrow(dat[[i]])
-#               if(is.null(r)){
-#                 r <- 0
-#               }
-#               c <- ncol(dat[[i]])
-#               if(is.null(c)){
-#                 c <- 0
-#               }
-#               message(paste0('  $', i, ' (', r, ' rows, ', c, ' cols)'))
-#             }
-#             
-#             ### Spatial
-#             
-#             if(length(dat@spatial)){
-#               message('  --')
-#               
-#               l <- length(names(dat@spatial))
-# 
-#               if(l <= 3){
-#                 for(i in names(dat@spatial)){
-#                   message(paste0('  @spatial$', i))
-#                 }
-#               } else {
-#                 for(i in c(1:3)){
-#                   a <- names(dat@spatial)[i]
-#                   message(paste0('  @spatial$', a))
-#                 }
-#                 message(paste0('   +', l-3))
-#               }
-#             }
-#             
-#             ### Other
-#             
-#             if(length(dat@other)){
-#               message('  --')
-#               
-#               for(i in names(dat@other)){
-#                 message(paste0('  @other$', i))
-#               }
-#             }
-#             
-#           })
+
 

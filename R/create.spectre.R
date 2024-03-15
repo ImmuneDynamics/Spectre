@@ -1,68 +1,39 @@
 #' Create Spectre object
+#' 
+#' @param cell_id_col Character. The column in the list of data.tables denoting
+#' the unique identifier of the cells.
 #'
-# create.spectre.object <- function(data = NULL,
-#                            analysis = NULL,
-#                            key = NULL, # or vector
-#                            name = NULL){
-#   ###
-# 
-#   require(data.table)
-# 
-#   ###
-# 
-#   # data <- list('cyto' = Spectre::demo.start[,-1])
-#   # key <- NULL
-# 
-#   ###
-# 
-#       require('Spectre2')
-#       obj <- new('Spectre')
-# 
-#   ###
-# 
-#       if(is.null(key)){
-#         z <- paste0("%0", nchar(nrow(data[[1]])), "d")
-#         x <- sprintf(z,c(1:nrow(data[[1]])))
-#         y <- data.table('CellID' = paste0('Cell_', x))
-#       }
-# 
-#       if(!is.null(key)){
-#         y <- data.table('CellID' = key)
-#       }
-# 
-#   ###
-# 
-#       if(!is.null(data)){
-#         message('Adding data')
-#         for(i in names(data)){
-#           obj@data[[i]] <- cbind(y, data[[i]])
-#           setkey(obj@data[[i]], CellID)
-#         }
-#       }
-# 
-#       if(!is.null(analysis)){
-#         message('Adding analysis results')
-#         for(i in names(analysis)){
-#           obj@analysis[[i]] <- c(y, analysis[[i]])
-#           setkey(obj@analysis[[i]], CellID)
-#         }
-#       }
-# 
-#   ###
-# 
-#       obj@key <- 'CellID'
-# 
-#   ###
-# 
-#       if(is.null(name)){
-#         # obj@name <- NA
-#       } else {
-#         obj@name <- name
-#       }
-# 
-#   ###
-# 
-#       return(obj)
-# 
-# }
+#' @export
+create.spectre.object <- function(cell_id_col) {
+    return(new("Spectre", cell_id_col=cell_id_col))
+}
 
+#' Add new data to Spectre object
+#' 
+#' Add a new data to the list in Spectre object.
+#'
+#' @param spectre_obj A Spectre object.
+#' @param dat A data.table to add to the object.
+#' @param dat_name The name of the data.
+#'
+#' @return An updated Spectre object.
+#' @export
+#'
+#' @examples
+#' dat <- create.spectre.object("cell_id")
+#' x <- Spectre::demo.asinh
+#' x$cell_id <- paste0("cell_", seq(1, nrow(x)))
+#' dat <- add.new.data(dat, x, "cyto_asinh")
+#' dat
+add.new.data <- function(spectre_obj, dat, dat_name) {
+    
+    if (!is(spectre_obj, "Spectre"))
+        stop("spectre_obj must be of class Spectre")
+    
+    if (!spectre_obj@cell_id_col %in% names(dat)) {
+        stop(paste("dat must contain", spectre_obj@cell_id_col, "column which uniquely identify the cells!"))
+    }
+    
+    spectre_obj[[dat_name]] <- dat
+    return(spectre_obj)
+}

@@ -1,4 +1,4 @@
-test_that("do_actual_transformation works correctly", {
+test_that("do_actual_transformation single cofactor works correctly", {
     dat <- data.table(
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2)
@@ -13,6 +13,32 @@ test_that("do_actual_transformation works correctly", {
     
     expect_equal(actual_dat$marker1_asinh, expected_dat$marker1)
     expect_equal(actual_dat$marker2_asinh, expected_dat$marker2)
+    
+    
+})
+
+
+test_that("do_actual_transformation multiple cofactors works correctly", {
+    dat <- data.table(
+        marker1 = rnorm(10, 1),
+        marker2 = rnorm(10, 2)
+    )
+    cofactor <- data.table(
+        marker=c("marker1","marker2"),
+        cofactor=c(5,10)
+    )
+    
+    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
+                                           cofactor = cofactor,
+                                           append.cf = FALSE)
+    
+    expected_dat <- data.table(
+        marker1_asinh = asinh(dat$marker1 / 5),
+        marker2_asinh = asinh(dat$marker2 / 10)
+    )
+    
+    expect_equal(actual_dat$marker1_asinh, expected_dat$marker1_asinh)
+    expect_equal(actual_dat$marker2_asinh, expected_dat$marker2_asinh)
     
     
 })
@@ -46,6 +72,15 @@ test_that("do_actual_transformation with append_cf works correctly", {
     
     expect_equal(names(actual_dat), c("marker1_asinh_cf7", "marker2_asinh_cf7"))
     
+    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
+                                           cofactor = data.table(
+                                               marker=c("marker1","marker2"),
+                                               cofactor=c(5,10)
+                                           ), 
+                                           append.cf = TRUE)
+    
+    expect_equal(names(actual_dat), c("marker1_asinh_cf5", "marker2_asinh_cf10"))
+    
 })
 
 test_that("do_actual_transformation with round works correctly", {
@@ -70,6 +105,36 @@ test_that("do_actual_transformation with round works correctly", {
     
 })
 
+test_that("do_actual_transformation multiple cofactor mismatch use.cols fails", {
+    dat <- data.table(
+        marker1 = rnorm(10, 1),
+        marker2 = rnorm(10, 2),
+        marker3 = rnorm(10, 3)
+    )
+    
+    expect_error(
+        do_actual_transformation(dat, 
+                                 use.cols = c("marker1", "marker2"), 
+                                 cofactor = data.table(
+                                     marker=c("marker1","marker3"),
+                                     cofactor=c(5,10)
+                                 ), 
+                                 append.cf = TRUE)
+    )
+    
+    expect_error(
+        do_actual_transformation(dat, 
+                                 use.cols = c("marker3"), 
+                                 cofactor = data.table(
+                                     marker=c("marker1","marker2"),
+                                     cofactor=c(5,10)
+                                 ), 
+                                 append.cf = TRUE)
+    )
+    
+    
+})
+
 test_that("do.asinh for data.table works", {
     dat <- data.table(
         marker1 = rnorm(10, 1),
@@ -85,58 +150,74 @@ test_that("do.asinh for data.table works", {
     expect_equal(nrow(dat), 10)
 })
 
-test_that("do.asinh for SpectreObject works", {
+test_that("do.asinh for Spectre object works", {
     dat <- data.table(
+        cell_id = paste0("cell_", seq(1, 10)),
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2)
     )
-    obj <- SpectreObject(cytometry_data=dat)
+    obj <- create.spectre.object(cell_id_col = "cell_id")
+    obj <- add.new.data(obj, dat, "test")
     
-    actual_obj <- do.asinh(obj, slot_name = "cytometry_data",
-                    use.cols = c("marker1", "marker2"), 
-                    cofactor = 7, verbose = FALSE,
-                    append.cf = FALSE)
+    actual_obj <- do.asinh(
+        dat = obj, 
+        input_data_name = "test",
+        output_data_name = "test_asinh",
+        use.cols = c("marker1", "marker2"), 
+        cofactor = 7, 
+        verbose = FALSE,
+        append.cf = FALSE
+    )
     
-    expect_equal(names(actual_obj@cytometry_data), c("marker1", "marker2", "marker1_asinh", "marker2_asinh"))
-    expect_equal(nrow(actual_obj@cytometry_data), 10)
+    # check the actual raw data is not touched!
+    expect_equal(names(actual_obj$test), c("cell_id","marker1", "marker2"))
+    expect_identical(actual_obj$test, dat)
+    expect_equal(names(actual_obj$test_asinh), c("cell_id", "marker1_asinh", "marker2_asinh"))
+    expect_equal(nrow(actual_obj$test_asinh), 10)
 })
 
 test_that("do.asinh missing use.cols fails", {
     dat <- data.table(
+        cell_id = paste0("cell_", seq(1, 10)),
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2)
     )
-    
+
     expect_error(do.asinh(dat, verbose = FALSE))
-    
-    obj <- SpectreObject(cytometry_data=dat)
+
+    obj <- create.spectre.object(cell_id_col = "cell_id")
+    obj <- add.new.data(obj, dat, "test")
     expect_error(do.asinh(obj, verbose = FALSE))
 })
 
 
-test_that("asinh no numeric use.cols fails", {
+test_that("asinh non-numeric use.cols fails", {
     dat <- data.table(
+        cell_id = paste0("cell_", seq(1, 10)),
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2),
         marker3 = rep("A", 10)
     )
-    
+
     expect_error(do.asinh(dat, use.cols = c("marker1", "marker3") ,verbose = FALSE))
-    
-    obj <- SpectreObject(cytometry_data=dat)
+
+    obj <- create.spectre.object(cell_id_col = "cell_id")
+    obj <- add.new.data(obj, dat, "test")
     expect_error(do.asinh(obj, use.cols = c("marker1", "marker3") ,verbose = FALSE))
 })
 
 
 test_that("asinh missing some use.cols columns fails", {
     dat <- data.table(
+        cell_id = paste0("cell_", seq(1, 10)),
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2)
     )
-    
+
     expect_error(do.asinh(dat, use.cols = c("marker1", "marker4") ,verbose = FALSE))
-    
-    obj <- SpectreObject(cytometry_data=dat)
+
+    obj <- create.spectre.object(cell_id_col = "cell_id")
+    obj <- add.new.data(obj, dat, "test")
     expect_error(do.asinh(obj, use.cols = c("marker1", "marker4") ,verbose = FALSE))
 })
 

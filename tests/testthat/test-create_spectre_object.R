@@ -1,24 +1,35 @@
-test_that("default SpectreObject creation works", {
-    dt = data.table(x=seq(1,10), y=seq(1,10))
+test_that("default create Spectre object works", {
+
+    test_obj = create.spectre.object("cell_id")
     
-    test_obj = SpectreObject(cytometry_data=dt, citeseq_data=dt)
-    
-    expect_equal(ncol(test_obj@cytometry_data), 2)
-    expect_equal(nrow(test_obj@cytometry_data), 10)
-    expect_equal(ncol(test_obj@citeseq_data), 2)
-    expect_equal(nrow(test_obj@citeseq_data), 10)
-    
+    expect_equal(test_obj@cell_id_col, "cell_id")
 })
 
-test_that("no cytometry_data slot for SpectreObject creation errors", {
+test_that("no cell_id_col slot for creating Spectre object creation errors", {
     expect_error(
-        SpectreObject()
+        create.spectre.object()
     )
 })
 
-test_that("no citeseq_data slot for SpectreObject creation works", {
-    dt = data.table(x=seq(1,10), y=seq(1,10))
-    expect_no_error(
-        SpectreObject(cytometry_data=dt)
+test_that("add new data works", {
+    
+    test_obj = create.spectre.object("cell_id")
+    
+    x = data.table(cell_id=seq(1,10), cd3=seq(1,10))
+    test_obj = add.new.data(test_obj, x, "cyto_test")
+    
+    expect_equal(ncol(test_obj$cyto_test), 2)
+    expect_equal(nrow(test_obj$cyto_test), 10)
+    
+})
+
+test_that("add new data works missing cell_id_col errors", {
+    
+    test_obj = create.spectre.object("cell_id")
+    
+    x = data.table(cd3=seq(1,10))
+    expect_error(
+        add.new.data(test_obj, x, "cyto_test")
     )
 })
+

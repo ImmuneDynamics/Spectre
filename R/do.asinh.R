@@ -1,25 +1,32 @@
-#' @export
-#' @rdname SpectreObject-class
-setMethod("do.asinh", "SpectreObject", function(
+#' @param input_data_name Character. The name of the data in Spectre object to 
+#' apply arc-sinh transformation to.
+#' Only used if dat is a Spectre object.
+#' @param output_data_name Character. What name should the arc-sinh transformed 
+#' data be stored under in the Spectre object.
+#' Only used if dat is a Spectre object.
+#'
+#' @exportMethod do.asinh
+#' @rdname do.asinh
+setMethod("do.asinh", "Spectre", function(
         dat,
         use.cols,
-        slot_name = NULL,
+        input_data_name,
+        output_data_name,
         cofactor = 5,
         append.cf = FALSE,
         reduce.noise = FALSE,
         digits = NULL,
         verbose = TRUE) {
     
-    if (is.null(slot_name))
-        stop("slot is NULL. Don't know which slot to apply arcsinh transformation to.")
+    dat_to_apply_asinh <- dat[[input_data_name]]
     
-    dat_to_apply_asinh <- slot(dat, slot_name)
-    
-    if (verbose)
+    if (verbose) {
         message(paste(
-            "Performing arcsinh transformation for slot", slot, "containing",
+            "Performing arcsinh transformation to", input_data_name, "containing",
             nrow(dat_to_apply_asinh), "cells and",
             ncol(dat_to_apply_asinh), "features"))
+    }
+        
     asinh_dat <- do_actual_transformation(
         dat = dat_to_apply_asinh,
         use.cols = use.cols,
@@ -28,29 +35,35 @@ setMethod("do.asinh", "SpectreObject", function(
         reduce.noise = reduce.noise,
         digits = digits
     )
-    dat_to_apply_asinh <- cbind(dat_to_apply_asinh, asinh_dat)
     
-    slot(dat, slot_name) <- dat_to_apply_asinh
+    # just so the cell id column is first!
+    cell_id_col <- dat@cell_id_col
+    asinh_dat <- data.table(cell_id = dat_to_apply_asinh[[cell_id_col]], asinh_dat)
+    setnames(asinh_dat, "cell_id", cell_id_col)
+    
+    dat <- add.new.data(dat, asinh_dat, output_data_name)
     
     return(dat)
     
 })
 
-#' @export
+#' @rdname do.asinh
+#' @exportMethod do.asinh
 setMethod("do.asinh", "data.table", function(
         dat,
         use.cols,
-        slot_name = NULL,
         cofactor = 5,
         append.cf = FALSE,
         reduce.noise = FALSE,
         digits = NULL,
         verbose = TRUE) {
     
-    if (verbose)
+    if (verbose) {
         message(paste("Performing arcsinh transformation for data.table containing",
                       nrow(dat), "cells and",
                       ncol(dat), "features"))
+    }
+        
     asinh_dat <- do_actual_transformation(
         dat = dat,
         use.cols = use.cols,
@@ -103,10 +116,13 @@ do_actual_transformation <- function(dat,
         ))
     }
     
+    ### Setup data
+    value <- dat[, use.cols, with = FALSE]
+    
     ### Optional noise reduction
     
     # https://github.com/JinmiaoChenLab/cytofkit/issues/71
-    if (reduce.noise == TRUE) {
+    if (reduce.noise) {
         warning("This noise reduction function is experimental, and should be used with caution!!")
         value <- value - 1
         loID <- which(value < 0)
@@ -117,17 +133,62 @@ do_actual_transformation <- function(dat,
     
     ### Arcsinh calculation
     
-    value <- dat[, lapply(.SD, function(x) asinh(x / cofactor)), .SDcols = use.cols]
+    if (!is.data.table(cofactor)) {
+        value <- value[, lapply(.SD, function(x) asinh(x / cofactor)), .SDcols = use.cols]
+        ### Options to append the CF used
+        if (append.cf)
+            names(value) <- paste0(names(value), "_asinh_cf", cofactor)
+        else
+            names(value) <- paste0(names(value), "_asinh")
+    } else {
+        # Apply different co-factor to different markers
+        
+        # R you jerk. Why can't you differentiate a vector from numeric!?
+        cofactor_array <- cofactor$cofactor
+        names(cofactor_array) <- cofactor$marker
+        
+        # check the use.cols and cofactor has exactly the same element.
+        in_cofactor_not_in_usecols <- setdiff(names(cofactor_array), use.cols)
+        
+        if (length(in_cofactor_not_in_usecols) > 0) {
+            error(paste(
+                "These columns have co-factors specified but are not present in use.cols:",
+                paste0(in_cofactor_not_in_usecols, collapse = ", "),
+                "do.asinh STOP! Please make sure the markers use.cols and the marker column in cofactor data.table are consistent!"
+            ))
+        }
+        
+        in_usecols_not_in_cofactor <- setdiff(use.cols, names(cofactor_array))
+        
+        if (length(in_usecols_not_in_cofactor) > 0) {
+            error(paste(
+                "These columns are present in use.cols but missing co-factor:",
+                paste0(in_usecols_not_in_cofactor, collapse = ", "),
+                "do.asinh STOP! Please make sure the markers use.cols and the marker column in cofactor data.table are consistent!"
+            ))
+        }
+        
+        
+        
+        # Do the actual asinh transformation..
+        value <- lapply(names(cofactor_array), function(marker) {
+            asinh(value[[marker]] / cofactor_array[marker])
+        })
+        
+        ### Options to append the CF used
+        if (append.cf)
+            names(value) <- paste0(names(cofactor_array), "_asinh_cf", cofactor_array)
+        else
+            names(value) <- paste0(names(cofactor_array), "_asinh")
+        
+        value <- do.call(cbind, value)
+        value <- data.table(value)
+    }
+    
     
     if(!is.null(digits)){
         value <- round(value, digits = digits)
     }
-    
-    ### Options to append the CF used
-    if (append.cf)
-        names(value) <- paste0(names(value), "_asinh_cf", cofactor)
-    else
-        names(value) <- paste0(names(value), "_asinh")
     
     return(value)
     
