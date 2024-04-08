@@ -1,7 +1,81 @@
-#' @param input_data_name Character. The name of the data in Spectre object to 
+#' Do ArcSinh transformation
+#'
+#' Transform data in selected columns using ArcSinh transformation with a specified co-factor.
+#'
+#' @seealso \url{https://immunedynamics.io/spectre/} for usage instructions and vignettes.
+#' @references \url{https://immunedynamics.io/spectre/}
+#'
+#' @param dat NO DEFAULT. 
+#' Either a data.table or a Spectre object to apply arc-sinh transformation to.
+#' @param use.cols NO DEFAULT. 
+#' A vector of character column names to apply arc-sinh transformation to.
+#' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
+#' Can be vector of co-factors that align with columns in 'use.cols'.
+#' See details for more information.
+#' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of 
+#' the name of the transformed columns.
+#' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation 
+#' which should reduce noise from negative values. Use with caution.
+#' @param digits DEFAULT = NULL. Number of decimal places as a limit, not used if NULL. 
+#' Values beyond will be rounded. 
+#' Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, 
+#' then 5 digits will be used). Important to control for small floating point 
+#' error differences in different OS.
+#' @param verbose DEFAULT = TRUE.
+#' If TRUE, the function will print progress updates as it executes.
+#' 
+#' @details
+#' ## Specifying different cofactor for different marker
+#' 
+#' If use.cols is `c("CD3", "CD4")`, and cofactor is `c(5,6)`, co-factor
+#' 5 will be applied to CD3 and 6 will be applied to CD4.
+#' 
+#' In the case where there is more than one cofactor specified, but there are more or less
+#' cofactors than the number of markers in use.cols, the function will give you an error. 
+#' Hence, if you intend to specify different co-factor for different marker,
+#' make sure each marker is assigned a co-factor (repeat values if necessary),
+#' 
+#' An exception to this is when you have multiple markers in use.cols but you only specify
+#' one cofactor as either a numerical value or a vector of size one, 
+#' e.g., `cofactor = 5` or `cofactor = c(5)`.
+#' In this case, the function will apply a cofactor of 5 to all the markers in use.cols.
+#' Unfortunately there is no way in R to differentiate a numerical variable and a vector.
+#' 
+#' 
+#' @examples
+#' library(data.table)
+#' # Assuming dat is a data.table
+#' dat <- data.table(NK11=rnorm(10, 2), CD3=rnorm(10,1))
+#' # Default co-factor 5 will be used for both NK11 and CD3
+#' dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"))
+#' dat_asinh
+#' 
+#' # Apply asinh with default co-factor to only NK11
+#' dat_asinh <- do.asinh(dat, use.cols=c("NK11"))
+#' dat_asinh
+#' 
+#' # Apply different co-factor to the markers
+#' dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=c(5,10))
+#' dat_asinh
+#' 
+#' 
+#' @export
+setGeneric("do.asinh", function(dat,
+                                use.cols,
+                                cofactor = 5,
+                                append.cf = FALSE,
+                                reduce.noise = FALSE,
+                                digits = NULL,
+                                verbose = TRUE,
+                                ...) {
+    standardGeneric("do.asinh")
+    
+})
+
+#' @param data_source Character. The name of the data in Spectre object to 
 #' apply arc-sinh transformation to.
 #' Only used if dat is a Spectre object.
-#' @param output_data_name Character. What name should the arc-sinh transformed 
+#' @param output_name Character. What name should the arc-sinh transformed 
 #' data be stored under in the Spectre object.
 #' Only used if dat is a Spectre object.
 #'
@@ -10,21 +84,28 @@
 setMethod("do.asinh", "Spectre", function(
         dat,
         use.cols,
-        input_data_name,
-        output_data_name,
+        data_source,
+        output_name,
         cofactor = 5,
         append.cf = FALSE,
         reduce.noise = FALSE,
         digits = NULL,
         verbose = TRUE) {
     
-    dat_to_apply_asinh <- dat[[input_data_name]]
+    dat_to_apply_asinh <- dat[[data_source]]
     
     if (verbose) {
         message(paste(
-            "Performing arcsinh transformation to", input_data_name, "containing",
+            "Performing arcsinh transformation to", data_source, "containing",
             nrow(dat_to_apply_asinh), "cells and",
             ncol(dat_to_apply_asinh), "features"))
+        
+        message(paste(
+            "Applying co-factor of",
+            paste(cofactor, collapse = ", "),
+            "to the following markers (in order):",
+            paste(use.cols, collapse = ", ")
+        ))
     }
         
     asinh_dat <- do_actual_transformation(
@@ -33,7 +114,8 @@ setMethod("do.asinh", "Spectre", function(
         cofactor = cofactor,
         append.cf = append.cf,
         reduce.noise = reduce.noise,
-        digits = digits
+        digits = digits,
+        verbose = verbose
     )
     
     # just so the cell id column is first!
@@ -41,7 +123,7 @@ setMethod("do.asinh", "Spectre", function(
     asinh_dat <- data.table(cell_id = dat_to_apply_asinh[[cell_id_col]], asinh_dat)
     setnames(asinh_dat, "cell_id", cell_id_col)
     
-    dat <- add.new.data(dat, asinh_dat, output_data_name)
+    dat <- add.new.data(dat, asinh_dat, output_name)
     
     return(dat)
     
@@ -62,6 +144,13 @@ setMethod("do.asinh", "data.table", function(
         message(paste("Performing arcsinh transformation for data.table containing",
                       nrow(dat), "cells and",
                       ncol(dat), "features"))
+        
+        message(paste(
+            "Applying co-factor of",
+            paste(cofactor, collapse = ", "),
+            "to the following markers (in order):",
+            paste(use.cols, collapse = ", ")
+        ))
     }
         
     asinh_dat <- do_actual_transformation(
@@ -70,7 +159,8 @@ setMethod("do.asinh", "data.table", function(
         cofactor = cofactor,
         append.cf = append.cf,
         reduce.noise = reduce.noise,
-        digits = digits
+        digits = digits,
+        verbose = verbose
     )
     dat <- cbind(dat, asinh_dat)
     
@@ -79,15 +169,18 @@ setMethod("do.asinh", "data.table", function(
 })
 
 
-
-
 # Internal function that actually do the asinh transformation
 do_actual_transformation <- function(dat,
                                      use.cols,
                                      cofactor = 5,
                                      append.cf = FALSE,
                                      reduce.noise = FALSE,
-                                     digits = NULL) {
+                                     digits = NULL,
+                                     verbose = TRUE) {
+    
+    if (verbose) {
+        message("Doing some checks on columns in use.cols.")
+    }
     
     # Check if the columns exist in the data.table
     columns_exist <- all(use.cols %in% colnames(dat))
@@ -116,6 +209,19 @@ do_actual_transformation <- function(dat,
         ))
     }
     
+    if (verbose) {
+        message("Doing some checks on cofactors.")
+    }
+    
+    # Check that co-factors have been specified correctly.
+    if (length(cofactor) > 1 & length(cofactor) != length(use.cols)) {
+        error(paste(
+            "You have specified more than one co-factor, but",
+            "the number of markers to apply arc-sinh to (", length(use.cols), "markers )",
+            "does not match the number of specified co-factors (", length(cofactor), "cofactors )."
+        ))
+    }
+    
     ### Setup data
     value <- dat[, use.cols, with = FALSE]
     
@@ -133,7 +239,7 @@ do_actual_transformation <- function(dat,
     
     ### Arcsinh calculation
     
-    if (!is.data.table(cofactor)) {
+    if (length(cofactor) == 1) {
         value <- value[, lapply(.SD, function(x) asinh(x / cofactor)), .SDcols = use.cols]
         ### Options to append the CF used
         if (append.cf)
@@ -141,45 +247,20 @@ do_actual_transformation <- function(dat,
         else
             names(value) <- paste0(names(value), "_asinh")
     } else {
+        
         # Apply different co-factor to different markers
         
-        # R you jerk. Why can't you differentiate a vector from numeric!?
-        cofactor_array <- cofactor$cofactor
-        names(cofactor_array) <- cofactor$marker
-        
-        # check the use.cols and cofactor has exactly the same element.
-        in_cofactor_not_in_usecols <- setdiff(names(cofactor_array), use.cols)
-        
-        if (length(in_cofactor_not_in_usecols) > 0) {
-            error(paste(
-                "These columns have co-factors specified but are not present in use.cols:",
-                paste0(in_cofactor_not_in_usecols, collapse = ", "),
-                "do.asinh STOP! Please make sure the markers use.cols and the marker column in cofactor data.table are consistent!"
-            ))
-        }
-        
-        in_usecols_not_in_cofactor <- setdiff(use.cols, names(cofactor_array))
-        
-        if (length(in_usecols_not_in_cofactor) > 0) {
-            error(paste(
-                "These columns are present in use.cols but missing co-factor:",
-                paste0(in_usecols_not_in_cofactor, collapse = ", "),
-                "do.asinh STOP! Please make sure the markers use.cols and the marker column in cofactor data.table are consistent!"
-            ))
-        }
-        
-        
-        
         # Do the actual asinh transformation..
-        value <- lapply(names(cofactor_array), function(marker) {
-            asinh(value[[marker]] / cofactor_array[marker])
-        })
+        # Divide each column by the relevant optimised cofactor
+        #https://stackoverflow.com/questions/48151278/dividing-columns-of-a-matrix-by-elements-of-a-vector
+        value <- sweep(value, 2, cofactor, FUN = '/')
+        value <- asinh(value)
         
         ### Options to append the CF used
         if (append.cf)
-            names(value) <- paste0(names(cofactor_array), "_asinh_cf", cofactor_array)
+            names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
         else
-            names(value) <- paste0(names(cofactor_array), "_asinh")
+            names(value) <- paste0(use.cols, "_asinh")
         
         value <- do.call(cbind, value)
         value <- data.table(value)

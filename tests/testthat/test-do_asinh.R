@@ -5,9 +5,12 @@ test_that("do_actual_transformation single cofactor works correctly", {
     )
     cofactor <- 7
     
-    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
-                    cofactor = cofactor,
-                    append.cf = FALSE)
+    actual_dat <- do_actual_transformation(
+        dat, use.cols = c("marker1", "marker2"), 
+        cofactor = cofactor,
+        append.cf = FALSE,
+        verbose = FALSE
+    )
     
     expected_dat <- asinh(dat / cofactor)
     
@@ -23,14 +26,14 @@ test_that("do_actual_transformation multiple cofactors works correctly", {
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2)
     )
-    cofactor <- data.table(
-        marker=c("marker1","marker2"),
-        cofactor=c(5,10)
-    )
+    cofactor <- c(5,10)
     
-    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
-                                           cofactor = cofactor,
-                                           append.cf = FALSE)
+    actual_dat <- do_actual_transformation(
+        dat, use.cols = c("marker1", "marker2"), 
+        cofactor = cofactor,
+        append.cf = FALSE,
+        verbose = FALSE
+    )
     
     expected_dat <- data.table(
         marker1_asinh = asinh(dat$marker1 / 5),
@@ -52,9 +55,12 @@ test_that("do_actual_transformation use.cols works correctly", {
         marker3 = rnorm(10, 5)
     )
     
-    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
-                    cofactor = 10,
-                    append.cf = FALSE)
+    actual_dat <- do_actual_transformation(
+        dat, use.cols = c("marker1", "marker2"), 
+        cofactor = 10,
+        append.cf = FALSE,
+        verbose = FALSE
+    )
     
     expect_equal(names(actual_dat), c("marker1_asinh", "marker2_asinh"))
     
@@ -66,18 +72,21 @@ test_that("do_actual_transformation with append_cf works correctly", {
         marker2 = rnorm(10, 2)
     )
     
-    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
-                    cofactor = 7, 
-                    append.cf = TRUE)
+    actual_dat <- do_actual_transformation(
+        dat, use.cols = c("marker1", "marker2"), 
+        cofactor = 7, 
+        append.cf = TRUE,
+        verbose = FALSE
+    )
     
     expect_equal(names(actual_dat), c("marker1_asinh_cf7", "marker2_asinh_cf7"))
     
-    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
-                                           cofactor = data.table(
-                                               marker=c("marker1","marker2"),
-                                               cofactor=c(5,10)
-                                           ), 
-                                           append.cf = TRUE)
+    actual_dat <- do_actual_transformation(
+        dat, use.cols = c("marker1", "marker2"), 
+        cofactor = c(5,10), 
+        append.cf = TRUE,
+        verbose = FALSE
+    )
     
     expect_equal(names(actual_dat), c("marker1_asinh_cf5", "marker2_asinh_cf10"))
     
@@ -91,9 +100,12 @@ test_that("do_actual_transformation with round works correctly", {
     
     cofactor <- 7
     
-    actual_dat <- do_actual_transformation(dat, use.cols = c("marker1", "marker2"), 
-                    cofactor = cofactor,
-                    append.cf = FALSE, digits = 3)
+    actual_dat <- do_actual_transformation(
+        dat, use.cols = c("marker1", "marker2"), 
+        cofactor = cofactor,
+        append.cf = FALSE, digits = 3,
+        verbose = FALSE
+    )
     
     expect_equal(names(actual_dat), c("marker1_asinh", "marker2_asinh"))
     
@@ -105,7 +117,7 @@ test_that("do_actual_transformation with round works correctly", {
     
 })
 
-test_that("do_actual_transformation multiple cofactor mismatch use.cols fails", {
+test_that("do_actual_transformation more use.cols than cofactor errors", {
     dat <- data.table(
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2),
@@ -113,23 +125,13 @@ test_that("do_actual_transformation multiple cofactor mismatch use.cols fails", 
     )
     
     expect_error(
-        do_actual_transformation(dat, 
-                                 use.cols = c("marker1", "marker2"), 
-                                 cofactor = data.table(
-                                     marker=c("marker1","marker3"),
-                                     cofactor=c(5,10)
-                                 ), 
-                                 append.cf = TRUE)
-    )
-    
-    expect_error(
-        do_actual_transformation(dat, 
-                                 use.cols = c("marker3"), 
-                                 cofactor = data.table(
-                                     marker=c("marker1","marker2"),
-                                     cofactor=c(5,10)
-                                 ), 
-                                 append.cf = TRUE)
+        do_actual_transformation(
+            dat = dat, 
+            use.cols = c("marker3"), 
+            cofactor = c(5,10), 
+            append.cf = TRUE,
+            verbose = FALSE
+        )
     )
     
     
@@ -161,8 +163,8 @@ test_that("do.asinh for Spectre object works", {
     
     actual_obj <- do.asinh(
         dat = obj, 
-        input_data_name = "test",
-        output_data_name = "test_asinh",
+        data_source = "test",
+        output_name = "test_asinh",
         use.cols = c("marker1", "marker2"), 
         cofactor = 7, 
         verbose = FALSE,
