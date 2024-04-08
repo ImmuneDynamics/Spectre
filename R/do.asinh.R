@@ -10,8 +10,16 @@
 #' @param use.cols NO DEFAULT. 
 #' A vector of character column names to apply arc-sinh transformation to.
 #' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
-#' Can be vector of co-factors that align with columns in 'use.cols'.
+#' Can be vector of co-factors that align with columns in 'use.cols'
 #' See details for more information.
+#' It can also be set to NULL to get the function to automatically infer the co-factors.
+#' @param cofactor_inference_method DEFAULT flowVS.
+#' Whether to automatically calculates co-factor for each marker.
+#' Only used if cofactor is NULL, and will force 'append.cf' to TRUE.
+#' Accepted options: 'flowVS' or 'top10'.
+#' flowVS uses the flowVS::estParamFlowVS (be patient as it takes time). 
+#' 'top10' uses the 90th percentile of values that are negative (based on absolute value) 
+#' as the co-factor, and if values are all positive it will use the 10th percentile as co-factor. 
 #' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of 
 #' the name of the transformed columns.
 #' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation 
@@ -23,6 +31,7 @@
 #' error differences in different OS.
 #' @param verbose DEFAULT = TRUE.
 #' If TRUE, the function will print progress updates as it executes.
+#' @param ... 
 #' 
 #' @details
 #' ## Specifying different cofactor for different marker
@@ -63,6 +72,7 @@
 setGeneric("do.asinh", function(dat,
                                 use.cols,
                                 cofactor = 5,
+                                cofactor_inference_method = c("flowVS", "top10"),
                                 append.cf = FALSE,
                                 reduce.noise = FALSE,
                                 digits = NULL,
@@ -87,6 +97,7 @@ setMethod("do.asinh", "Spectre", function(
         data_source,
         output_name,
         cofactor = 5,
+        cofactor_inference_method = c("flowVS", "top10"),
         append.cf = FALSE,
         reduce.noise = FALSE,
         digits = NULL,
@@ -99,19 +110,13 @@ setMethod("do.asinh", "Spectre", function(
             "Performing arcsinh transformation to", data_source, "containing",
             nrow(dat_to_apply_asinh), "cells and",
             ncol(dat_to_apply_asinh), "features"))
-        
-        message(paste(
-            "Applying co-factor of",
-            paste(cofactor, collapse = ", "),
-            "to the following markers (in order):",
-            paste(use.cols, collapse = ", ")
-        ))
     }
         
-    asinh_dat <- do_actual_transformation(
+    asinh_res <- do_actual_transformation(
         dat = dat_to_apply_asinh,
         use.cols = use.cols,
         cofactor = cofactor,
+        cofactor_inference_method = cofactor_inference_method,
         append.cf = append.cf,
         reduce.noise = reduce.noise,
         digits = digits,
@@ -120,10 +125,17 @@ setMethod("do.asinh", "Spectre", function(
     
     # just so the cell id column is first!
     cell_id_col <- dat@cell_id_col
-    asinh_dat <- data.table(cell_id = dat_to_apply_asinh[[cell_id_col]], asinh_dat)
+    asinh_dat <- data.table(cell_id = dat_to_apply_asinh[[cell_id_col]], asinh_res$transformed_val)
     setnames(asinh_dat, "cell_id", cell_id_col)
     
     dat <- add.new.data(dat, asinh_dat, output_name)
+    
+    # regardless of append.cf or not, fill the other slot with the co-factor used
+    cofactor_dt <- data.table(
+        marker = names(asinh_res$cofactors),
+        cofactor = asinh_res$cofactors
+    )
+    dat <- add.new.metadata(dat, cofactor_dt, paste0(output_name, "_cofactors"))
     
     return(dat)
     
@@ -135,6 +147,7 @@ setMethod("do.asinh", "data.table", function(
         dat,
         use.cols,
         cofactor = 5,
+        cofactor_inference_method = c("flowVS", "top10"),
         append.cf = FALSE,
         reduce.noise = FALSE,
         digits = NULL,
@@ -144,35 +157,74 @@ setMethod("do.asinh", "data.table", function(
         message(paste("Performing arcsinh transformation for data.table containing",
                       nrow(dat), "cells and",
                       ncol(dat), "features"))
-        
-        message(paste(
-            "Applying co-factor of",
-            paste(cofactor, collapse = ", "),
-            "to the following markers (in order):",
-            paste(use.cols, collapse = ", ")
-        ))
     }
         
-    asinh_dat <- do_actual_transformation(
+    asinh_res <- do_actual_transformation(
         dat = dat,
         use.cols = use.cols,
         cofactor = cofactor,
+        cofactor_inference_method = cofactor_inference_method,
         append.cf = append.cf,
         reduce.noise = reduce.noise,
         digits = digits,
         verbose = verbose
     )
-    dat <- cbind(dat, asinh_dat)
+    
+    dat <- cbind(dat, asinh_res$transformed_val)
+    
+    if (verbose) {
+        message("Asinh success. The following co-factors are applied")
+        
+        for (i in seq(length(asinh_res$cofactors))) {
+            message(paste0(
+                names(asinh_res$cofactors)[i], ": ",
+                asinh_res$cofactors[i]
+            ))
+        }
+    }
     
     return(dat)
     
 })
 
 
-# Internal function that actually do the asinh transformation
+#' Do actual asinh transformation
+#' 
+#' Internal function that actually do the asinh transformation
+#' 
+#' @param dat NO DEFAULT. 
+#' Either a data.table or a Spectre object to apply arc-sinh transformation to.
+#' @param use.cols NO DEFAULT. 
+#' A vector of character column names to apply arc-sinh transformation to.
+#' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
+#' Can be vector of co-factors that align with columns in 'use.cols'
+#' See details for more information.
+#' It can also be set to NULL to get the function to automatically infer the co-factors.
+#' @param cofactor_inference_method DEFAULT flowVS.
+#' Whether to automatically calculates co-factor for each marker.
+#' Only used if cofactor is NULL, and will force 'append.cf' to TRUE.
+#' Accepted options: 'flowVS' or 'top10'.
+#' flowVS uses the flowVS::estParamFlowVS (be patient as it takes time). 
+#' 'top10' uses the 90th percentile of values that are negative (based on absolute value) 
+#' as the co-factor, and if values are all positive it will use the 10th percentile as co-factor. 
+#' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of 
+#' the name of the transformed columns.
+#' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation 
+#' which should reduce noise from negative values. Use with caution.
+#' @param digits DEFAULT = NULL. Number of decimal places as a limit, not used if NULL. 
+#' Values beyond will be rounded. 
+#' Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, 
+#' then 5 digits will be used). Important to control for small floating point 
+#' error differences in different OS.
+#' @param verbose DEFAULT = TRUE.
+#' If TRUE, the function will print progress updates as it executes.
+#'
+#' @return a data.table containing asinh transformed markers
+#' 
 do_actual_transformation <- function(dat,
                                      use.cols,
                                      cofactor = 5,
+                                     cofactor_inference_method = c("flowVS", "top10"),
                                      append.cf = FALSE,
                                      reduce.noise = FALSE,
                                      digits = NULL,
@@ -209,19 +261,6 @@ do_actual_transformation <- function(dat,
         ))
     }
     
-    if (verbose) {
-        message("Doing some checks on cofactors.")
-    }
-    
-    # Check that co-factors have been specified correctly.
-    if (length(cofactor) > 1 & length(cofactor) != length(use.cols)) {
-        error(paste(
-            "You have specified more than one co-factor, but",
-            "the number of markers to apply arc-sinh to (", length(use.cols), "markers )",
-            "does not match the number of specified co-factors (", length(cofactor), "cofactors )."
-        ))
-    }
-    
     ### Setup data
     value <- dat[, use.cols, with = FALSE]
     
@@ -237,41 +276,132 @@ do_actual_transformation <- function(dat,
         }
     }
     
-    ### Arcsinh calculation
-    
-    if (length(cofactor) == 1) {
-        value <- value[, lapply(.SD, function(x) asinh(x / cofactor)), .SDcols = use.cols]
-        ### Options to append the CF used
-        if (append.cf)
-            names(value) <- paste0(names(value), "_asinh_cf", cofactor)
-        else
-            names(value) <- paste0(names(value), "_asinh")
+    # Infer co-factor or checking the specified co-factor is acceptable.
+    if (is.null(cofactor)) {
+        cofactor_inference_method = match.arg(cofactor_inference_method)
+        if (verbose) {
+            message(paste(
+                "Inferring co-factors using",
+                cofactor_inference_method,
+                "algorithm to the following markers:",
+                paste(use.cols, collapse = ", ")
+            ))
+            
+            message("Please check your plots to make sure the inferred co-factors are appropriate!")
+        }
+        cofactor = infer_cofactor(
+            value = value, 
+            cofactor_inference_method = cofactor_inference_method,
+            use.cols = use.cols
+        )
+        # TODO: is this a good thing?
+        # automatically append the co-factor.
+        # append.cf = TRUE
+        
     } else {
+        # This is where the co-factor is manually specified
+        if (verbose) {
+            message("Doing some checks on cofactors.")
+        }
         
-        # Apply different co-factor to different markers
+        # Check that co-factors have been specified correctly.
+        if (length(cofactor) > 1 & length(cofactor) != length(use.cols)) {
+            error(paste(
+                "You have specified more than one co-factor, but",
+                "the number of markers to apply arc-sinh to (", length(use.cols), "markers )",
+                "does not match the number of specified co-factors (", length(cofactor), "cofactors )."
+            ))
+        }
         
-        # Do the actual asinh transformation..
-        # Divide each column by the relevant optimised cofactor
-        #https://stackoverflow.com/questions/48151278/dividing-columns-of-a-matrix-by-elements-of-a-vector
-        value <- sweep(value, 2, cofactor, FUN = '/')
-        value <- asinh(value)
+        # will only get here if the checks are all green!
+        if (verbose) {
+            message(paste(
+                "Applying co-factor of",
+                paste(cofactor, collapse = ", "),
+                "to the following markers (in order):",
+                paste(use.cols, collapse = ", ")
+            ))
+        }
         
-        ### Options to append the CF used
-        if (append.cf)
-            names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
-        else
-            names(value) <- paste0(use.cols, "_asinh")
-        
-        value <- do.call(cbind, value)
-        value <- data.table(value)
+        # One co-factor rules it all.
+        if (length(cofactor) == 1) {
+            # value <- value[, lapply(.SD, function(x) asinh(x / cofactor)), .SDcols = use.cols]
+            cofactor = rep(cofactor[1], length(use.cols))
+            
+        } 
     }
     
+    # Do the actual asinh transformation..
+    # Divide each column by the relevant optimised cofactor
+    #https://stackoverflow.com/questions/48151278/dividing-columns-of-a-matrix-by-elements-of-a-vector
+    value <- sweep(value, 2, cofactor, FUN = '/')
+    value <- asinh(value)
+    
+    ### Options to append the CF used
+    if (append.cf) {
+        names(value) <- paste0(use.cols, "_asinh_cf", cofactor)
+    } else {
+        names(value) <- paste0(use.cols, "_asinh")
+    }
     
     if(!is.null(digits)){
         value <- round(value, digits = digits)
     }
     
-    return(value)
+    names(cofactor) = use.cols
+    res_to_return = list(
+        transformed_val = value,
+        cofactors = cofactor
+    )
+    return(res_to_return)
+    
+}
+
+#' Internal function which infer the co-factor using flowVS or top10 method.
+#'
+#' @param value a data.table containing only the markers to be transformed.
+#' @param cofactor_inference_method which inferrence method to use? flowVS or top10.
+#' @param use.cols A vector of character column names to apply arc-sinh transformation to.
+#'
+#' @author Felix Marsh-Wakefield
+#' 
+infer_cofactor <- function(value, cofactor_inference_method, use.cols) {
+    if (cofactor_inference_method == 'flowVS') {
+        check_packages_installed(c("flowVS", "Biobase"))
+        
+        ## Create flowFrame metadata (column names with descriptions) plus flowFrame
+        metadata <- data.frame(name = dimnames(value)[[2]], desc = paste("column", dimnames(value)[[2]], "from dataset"))
+        dat.ff <- new("flowFrame",
+                      exprs = as.matrix(value), # in order to create a flow frame, data needs to be read as matrix
+                      parameters = Biobase::AnnotatedDataFrame(metadata)
+        )
+        
+        # Needs to be a 'flowSet' object...
+        dat.ff <- flowCore::flowSet(dat.ff)
+        
+        ## Calculate cofactors
+        cofactors <- flowVS::estParamFlowVS(dat.ff, channels = use.cols)
+    } else if (cofactor_inference_method == 'top10') {
+        ## Calculate cofactors
+        cofactors <- lapply(value, function(x) {
+            if(min(x)<0) {
+                abs.dat <- abs(x[x<0])
+                
+                quantile(abs.dat,
+                         probs = 0.9,
+                         na.rm = TRUE)
+                
+            } else {
+                # median(x)
+                quantile(x,
+                         probs = 0.1,
+                         na.rm = TRUE)
+            }
+        })
+        
+        cofactors <- unlist(cofactors)
+    }
+    return(cofactors)
     
 }
 

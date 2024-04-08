@@ -2,6 +2,7 @@
 
 export()
 export(add.new.data)
+export(add.new.metadata)
 export(create.dt)
 export(create.spectre.object)
 export(create.stats)

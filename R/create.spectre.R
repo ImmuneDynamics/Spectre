@@ -37,3 +37,29 @@ add.new.data <- function(spectre_obj, dat, dat_name) {
     spectre_obj[[dat_name]] <- dat
     return(spectre_obj)
 }
+
+#' Add new metadata to Spectre object
+#' 
+#' Add new metadata to the "other" slot in Spectre object
+#'
+#' @param spectre_obj A Spectre object.
+#' @param metadata A data.table containing the metadata to add to the object.
+#' @param metadata_name The name of the metadata.
+#'
+#' @return An updated Spectre object.
+#' @export
+#'
+#' @examples
+#' dat <- create.spectre.object("cell_id")
+#' metadata_dt <- data.table(marker=paste0("marker_", seq(1,10)), cofactors = seq(1,10))
+#' dat <- add.new.metadata(dat, metadata_dt, "asinh_cofactors")
+#' dat
+add.new.metadata <- function(spectre_obj, metadata, metadata_name) {
+    if (!is(spectre_obj, "Spectre"))
+        stop("spectre_obj must be of class Spectre")
+    
+    spectre_obj@other[[metadata_name]] <- metadata
+    return(spectre_obj)
+}
+
+

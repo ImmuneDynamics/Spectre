@@ -10,6 +10,7 @@ do.asinh(
   dat,
   use.cols,
   cofactor = 5,
+  cofactor_inference_method = c("flowVS", "top10"),
   append.cf = FALSE,
   reduce.noise = FALSE,
   digits = NULL,
@@ -23,6 +24,7 @@ do.asinh(
   data_source,
   output_name,
   cofactor = 5,
+  cofactor_inference_method = c("flowVS", "top10"),
   append.cf = FALSE,
   reduce.noise = FALSE,
   digits = NULL,
@@ -33,6 +35,7 @@ do.asinh(
   dat,
   use.cols,
   cofactor = 5,
+  cofactor_inference_method = c("flowVS", "top10"),
   append.cf = FALSE,
   reduce.noise = FALSE,
   digits = NULL,
@@ -47,8 +50,17 @@ Either a data.table or a Spectre object to apply arc-sinh transformation to.}
 A vector of character column names to apply arc-sinh transformation to.}
 
 \item{cofactor}{DEFAULT = 5. Co-factor to use for arcsinh transformation.
-Can be vector of co-factors that align with columns in 'use.cols'.
-See details for more information.}
+Can be vector of co-factors that align with columns in 'use.cols'
+See details for more information.
+It can also be set to NULL to get the function to automatically infer the co-factors.}
+
+\item{cofactor_inference_method}{DEFAULT flowVS.
+Whether to automatically calculates co-factor for each marker.
+Only used if cofactor is NULL, and will force 'append.cf' to TRUE.
+Accepted options: 'flowVS' or 'top10'.
+flowVS uses the flowVS::estParamFlowVS (be patient as it takes time).
+'top10' uses the 90th percentile of values that are negative (based on absolute value)
+as the co-factor, and if values are all positive it will use the 10th percentile as co-factor.}
 
 \item{append.cf}{DEFAULT = FALSE. Appends the co-factor used to the end of
 the name of the transformed columns.}
@@ -64,6 +76,8 @@ error differences in different OS.}
 
 \item{verbose}{DEFAULT = TRUE.
 If TRUE, the function will print progress updates as it executes.}
+
+\item{...}{}
 
 \item{data_source}{Character. The name of the data in Spectre object to
 apply arc-sinh transformation to.
@@ -113,8 +127,8 @@ dat_asinh
 
 }
 \references{
-\url{https://sydneycytometry.org.au/spectre}
+\url{https://immunedynamics.io/spectre/}
 }
 \seealso{
-\url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+\url{https://immunedynamics.io/spectre/} for usage instructions and vignettes.
 }
