@@ -1,8 +1,8 @@
-test_that("rpca works", {
+test_that("cca works", {
     dat_raw = Spectre::demo.batches
     
-    # subsample for speedy execution
-    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(1000, 2), 
+    # subsample because cca is so slow..
+    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(100, 2), 
                                     divide.by = "Batch")
     
     dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
@@ -15,7 +15,7 @@ test_that("rpca works", {
                 "CD3e_chn", "CD16.32_chn", "MHCII_chn")
     
     suppressWarnings(
-        dat <- run.rpca(
+        dat <- run.cca(
             dat = dat,
             data_source = "cyto_batch",
             output_name = "cyto_batch_corrected",
@@ -34,13 +34,12 @@ test_that("rpca works", {
     expect_equal(nrow(dat$cyto_batch), nrow(dat$cyto_batch_corrected))
 })
 
-test_that("rpca with reference works", {
+test_that("cca with reference works", {
     dat_raw = Spectre::demo.batches
     
-    # subsample for speedy execution
-    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(1000, 2), 
+    # subsample because cca is so slow..
+    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(100, 2), 
                                     divide.by = "Batch")
-    
     
     dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
     dat = create.spectre.object(cell_id_col = "cell_id")
@@ -52,7 +51,7 @@ test_that("rpca with reference works", {
                 "CD3e_chn", "CD16.32_chn", "MHCII_chn")
     
     suppressWarnings(
-        dat <- run.rpca(
+        dat <- run.cca(
             dat = dat,
             data_source = "cyto_batch",
             output_name = "cyto_batch_corrected",
@@ -72,13 +71,12 @@ test_that("rpca with reference works", {
 })
 
 
-test_that("rpca for non-spectre object fails", {
+test_that("cca for non-spectre object fails", {
     dat_raw = Spectre::demo.batches
     
-    # subsample for speedy execution
-    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(1000, 2), 
+    # subsample because cca is so slow..
+    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(100, 2), 
                                     divide.by = "Batch")
-    
     
     markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
                 "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
@@ -87,7 +85,7 @@ test_that("rpca for non-spectre object fails", {
     
     expect_error(
         suppressWarnings(
-            run.rpca(
+            run.cca(
                 dat = dat_raw,
                 data_source = "cyto_batch",
                 output_name = "cyto_batch_corrected",

@@ -65,24 +65,24 @@ setMethod("show", "Spectre", function(object) {
     message(paste("  @cell_id_col:", object@cell_id_col))
     
     ### Spatial slot
-    
-    if(length(object@spatial)){
-        message('  ---')
-        
-        l <- length(names(object@spatial))
-        
-        if(l <= 3){
-            for(i in names(object@spatial)){
-                message(paste0('  @spatial$', i))
-            }
-        } else {
-            for(i in c(1:3)){
-                a <- names(object@spatial)[i]
-                message(paste0('  @spatial$', a))
-            }
-            message(paste0('   +', l-3))
-        }
-    }
+    # TODO uncomment me when we have sorted spatial data.
+    # if(length(object@spatial)){
+    #     message('  ---')
+    #     
+    #     l <- length(names(object@spatial))
+    #     
+    #     if(l <= 3){
+    #         for(i in names(object@spatial)){
+    #             message(paste0('  @spatial$', i))
+    #         }
+    #     } else {
+    #         for(i in c(1:3)){
+    #             a <- names(object@spatial)[i]
+    #             message(paste0('  @spatial$', a))
+    #         }
+    #         message(paste0('   +', l-3))
+    #     }
+    # }
     
     ### Other slot
     

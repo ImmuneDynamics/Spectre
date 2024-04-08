@@ -7,7 +7,7 @@
 \usage{
 run.rpca(
   dat,
-  dat_name,
+  data_source,
   output_name,
   use_cols,
   batch_col,
@@ -19,7 +19,7 @@ run.rpca(
 
 \S4method{run.rpca}{Spectre}(
   dat,
-  dat_name,
+  data_source,
   output_name,
   use_cols,
   batch_col,
@@ -33,7 +33,7 @@ run.rpca(
 \item{dat}{NO DEFAULT.
 A Spectre object containing the data to apply batch correction to.}
 
-\item{dat_name}{NO DEFAULT. Character. The name of the data in Spectre object to
+\item{data_source}{NO DEFAULT. Character. The name of the data in Spectre object to
 apply batch correction to.}
 
 \item{output_name}{NO DEFAULT. Character. The name of the data in Spectre object to
@@ -77,7 +77,7 @@ markers = c("CD45_chn", "CD48_chn", "CD117_chn",
 
 dat = run.rpca(
  dat = dat,
- dat_name = "cyto_batch",
+ data_source = "cyto_batch",
  output_name = "cyto_batch_corrected",
  use_cols = markers,
  batch_col = "Batch",
