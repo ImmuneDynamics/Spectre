@@ -87,6 +87,7 @@ setMethod("run.rpca", "Spectre", function(
     # seed = 42
     # verbose = TRUE
     
+    check_packages_installed("Seurat")
     
     if (verbose) {
         message('Running rPCA.')
@@ -94,40 +95,43 @@ setMethod("run.rpca", "Spectre", function(
     }
     
     # just incase thre are some non-standard naming and seurat obj complained
-    new_col_name = paste0("Col", seq(length(use_cols)))
-    names(new_col_name) = use_cols
+    new_col_name <- paste0("Col", seq(length(use_cols)))
+    names(new_col_name) <- use_cols
     
-    batches = unique(dat[[data_source]][[batch_col]])
+    batches <- unique(dat[[data_source]][[batch_col]])
     
-    cell_id_col = dat@cell_id_col
+    cell_id_col <- dat@cell_id_col
     
-    seurat_objs = lapply(batches, function(batch) {
+    seurat_objs <- lapply(batches, function(batch) {
         
-        # batch = batches[1]
+        # batch <- batches[1]
         
-        cnt_mtx = dat[[data_source]]
-        cnt_mtx = cnt_mtx[cnt_mtx[[batch_col]] == batch, c(use_cols, cell_id_col), with = FALSE]
+        cnt_mtx <- dat[[data_source]]
+        cnt_mtx <- cnt_mtx[cnt_mtx[[batch_col]] == batch, c(use_cols, cell_id_col), with = FALSE]
         setnames(cnt_mtx, names(new_col_name), new_col_name)
         
-        sparse_cnt_mtx = t(as.matrix(cnt_mtx[, new_col_name, with = FALSE]))
-        colnames(sparse_cnt_mtx) = cnt_mtx[[cell_id_col]]
-        sparse_cnt_mtx = Matrix::Matrix(sparse_cnt_mtx)
+        sparse_cnt_mtx <- t(as.matrix(cnt_mtx[, new_col_name, with = FALSE]))
+        colnames(sparse_cnt_mtx) <- cnt_mtx[[cell_id_col]]
+        sparse_cnt_mtx <- Matrix::Matrix(sparse_cnt_mtx)
         
         if (verbose) {
             message(paste('(2/6) creating Seurat object for batch', batch))
         }
         
-        seurat_obj = Seurat::CreateSeuratObject(counts = sparse_cnt_mtx, assay = 'cyto')
+        seurat_obj <- Seurat::CreateSeuratObject(counts = sparse_cnt_mtx, assay = 'cyto')
         # kind of useless as it will always return all the features? but needed for later
-        seurat_obj = Seurat::FindVariableFeatures(seurat_obj, selection.method = "vst", nfeatures = length(use_cols), verbose=verbose)
+        seurat_obj <- Seurat::FindVariableFeatures(
+            seurat_obj, selection.method = "vst", nfeatures = length(use_cols), 
+            verbose=verbose
+        )
         
         # have to do this as otherwise scale data will complain later
-        seurat_obj[['cyto']]$data = seurat_obj[['cyto']]$counts
+        seurat_obj[['cyto']]$data <- seurat_obj[['cyto']]$counts
         
         return(seurat_obj)
         
     })
-    names(seurat_objs) = batches
+    names(seurat_objs) <- batches
     
     ### Select integration features, scale data, and run PCA
     
@@ -136,16 +140,19 @@ setMethod("run.rpca", "Spectre", function(
     }
     
     # this will rank the features
-    integ_features = Seurat::SelectIntegrationFeatures(object.list = seurat_objs, verbose=verbose)
+    integ_features <- Seurat::SelectIntegrationFeatures(
+        object.list = seurat_objs, 
+        verbose=verbose
+    )
     
-    seurat_objs = lapply(seurat_objs, function(seurat_obj) {
-        seurat_obj = Seurat::ScaleData(seurat_obj, features = integ_features, 
+    seurat_objs <- lapply(seurat_objs, function(seurat_obj) {
+        seurat_obj <- Seurat::ScaleData(seurat_obj, features = integ_features, 
                                verbose = verbose, assay = 'cyto')
         # no need to set PCs as it will just default either 50 or less if we have less markers than 50
         # TODO not sure about the approx parameter to run standard svd instead. Note, the number of PCs will be the number of markers
         # if setting approx=FALSE. If approx is true, npcs will be number of markers - 1. Not sure why.
         # TODO manually setting the npcs rather than getting the function to infer it. Is this the best way?
-        seurat_obj = Seurat::RunPCA(seurat_obj, features = integ_features, verbose = verbose, 
+        seurat_obj <- Seurat::RunPCA(seurat_obj, features = integ_features, verbose = verbose, 
                             assay = 'cyto', seed.use = seed, npcs = length(use_cols))
         
         return(seurat_obj)
@@ -157,7 +164,7 @@ setMethod("run.rpca", "Spectre", function(
     
     if(is.null(reference_batch)){
         # TODO have to make sure the dims is 1 less than number of features we have. Otherwise it gives stupid error.
-        immune_anchors = Seurat::FindIntegrationAnchors(
+        immune_anchors <- Seurat::FindIntegrationAnchors(
             object.list = seurat_objs, 
             anchor.features = integ_features, 
             dims = seq(length(integ_features)-1), 
@@ -168,7 +175,7 @@ setMethod("run.rpca", "Spectre", function(
         
     } else {
         # TODO have to make sure the dims is 1 less than number of features we have. Otherwise it gives stupid error.
-        immune_anchors = Seurat::FindIntegrationAnchors(
+        immune_anchors <- Seurat::FindIntegrationAnchors(
             object.list = seurat_objs, 
             anchor.features = integ_features, 
             dims = seq(length(integ_features)-1), 
@@ -199,32 +206,32 @@ setMethod("run.rpca", "Spectre", function(
         message('(6/6) Constructing final data')
     }
     
-    batch_corrected_dat = data.table::transpose(as.data.table(batch_corrected_seurat_obj[['integrated']]$data))
-    names(batch_corrected_dat) = rownames(batch_corrected_seurat_obj[['integrated']]$data)
+    batch_corrected_dat <- data.table::transpose(as.data.table(batch_corrected_seurat_obj[['integrated']]$data))
+    names(batch_corrected_dat) <- rownames(batch_corrected_seurat_obj[['integrated']]$data)
     
-    batch_corrected_dat[[cell_id_col]] = Seurat::Cells(batch_corrected_seurat_obj)
+    batch_corrected_dat[[cell_id_col]] <- Seurat::Cells(batch_corrected_seurat_obj)
     
     # rename the markers
     setnames(batch_corrected_dat, new_col_name, names(new_col_name))
     
     # order the cell id 
-    cell_id_batch_info = dat[[data_source]][, c(cell_id_col, batch_col), with = FALSE]
+    cell_id_batch_info <- dat[[data_source]][, c(cell_id_col, batch_col), with = FALSE]
     # because sort is set to false, the order of cell_id_batch_info is preserved.
     # Purrrfect!
-    batch_corrected_dat = merge.data.table(
+    batch_corrected_dat <- merge.data.table(
         cell_id_batch_info,
         batch_corrected_dat,
         by = cell_id_col,
         sort = FALSE
     )
     
-    dat = add.new.data(dat, batch_corrected_dat, output_name)
+    dat <- add.new.data(dat, batch_corrected_dat, output_name)
     
     # check umap. very simple check just to see rpca is correcting the batches.
-    # umap_dat = run.umap(dat$cyto_batch_corrected, use.cols = use_cols)
+    # umap_dat <- run.umap(dat$cyto_batch_corrected, use.cols = use_cols)
     # make.colour.plot(umap_dat, "UMAP_X", "UMAP_Y", "Batch", randomise.order = FALSE)
     # 
-    # umap_pre_cor = run.umap(dat$cyto_batch, use.cols = use_cols)
+    # umap_pre_cor <- run.umap(dat$cyto_batch, use.cols = use_cols)
     # make.colour.plot(umap_pre_cor, "UMAP_X", "UMAP_Y", "Batch", randomise.order = FALSE)
     
     return(dat)

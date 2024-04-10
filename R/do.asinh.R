@@ -278,7 +278,7 @@ do_actual_transformation <- function(dat,
     
     # Infer co-factor or checking the specified co-factor is acceptable.
     if (is.null(cofactor)) {
-        cofactor_inference_method = match.arg(cofactor_inference_method)
+        cofactor_inference_method <- match.arg(cofactor_inference_method)
         if (verbose) {
             message(paste(
                 "Inferring co-factors using",
@@ -289,14 +289,14 @@ do_actual_transformation <- function(dat,
             
             message("Please check your plots to make sure the inferred co-factors are appropriate!")
         }
-        cofactor = infer_cofactor(
+        cofactor <- infer_cofactor(
             value = value, 
             cofactor_inference_method = cofactor_inference_method,
             use.cols = use.cols
         )
         # TODO: is this a good thing?
         # automatically append the co-factor.
-        # append.cf = TRUE
+        # append.cf <- TRUE
         
     } else {
         # This is where the co-factor is manually specified
@@ -326,7 +326,7 @@ do_actual_transformation <- function(dat,
         # One co-factor rules it all.
         if (length(cofactor) == 1) {
             # value <- value[, lapply(.SD, function(x) asinh(x / cofactor)), .SDcols = use.cols]
-            cofactor = rep(cofactor[1], length(use.cols))
+            cofactor <- rep(cofactor[1], length(use.cols))
             
         } 
     }
@@ -348,8 +348,8 @@ do_actual_transformation <- function(dat,
         value <- round(value, digits = digits)
     }
     
-    names(cofactor) = use.cols
-    res_to_return = list(
+    names(cofactor) <- use.cols
+    res_to_return <- list(
         transformed_val = value,
         cofactors = cofactor
     )
