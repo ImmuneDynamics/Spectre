@@ -1,4 +1,4 @@
-#' Run rPCA
+#' Run rPCA for batch correction
 #' 
 #' Use Seurat rPCA to do batch correction.
 #' For more details on rPCA, see https://satijalab.org/seurat/articles/integration_rpca.html.
@@ -35,7 +35,7 @@
 #' "CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn", 
 #'          "CD3e_chn", "CD16.32_chn", "MHCII_chn")
 #' 
-#' dat = run.rpca(
+#' dat = run.rpca.batch.correction(
 #'  dat = dat,
 #'  data_source = "cyto_batch",
 #'  output_name = "cyto_batch_corrected",
@@ -44,7 +44,7 @@
 #'  verbose = FALSE,
 #'  reference_batch = NULL
 #' )
-setGeneric("run.rpca", function(dat,
+setGeneric("run.rpca.batch.correction", function(dat,
                                 data_source,
                                 output_name,
                                 use_cols,
@@ -53,13 +53,13 @@ setGeneric("run.rpca", function(dat,
                                 k_anchor = 5,
                                 seed = 42,
                                 verbose = TRUE) {
-    standardGeneric("run.rpca")
+    standardGeneric("run.rpca.batch.correction")
     
 })
 
-#' @exportMethod run.rpca
-#' @rdname run.rpca
-setMethod("run.rpca", "Spectre", function(
+#' @exportMethod run.rpca.batch.correction
+#' @rdname run.rpca.batch.correction
+setMethod("run.rpca.batch.correction", "Spectre", function(
         dat,
         data_source,
         output_name,

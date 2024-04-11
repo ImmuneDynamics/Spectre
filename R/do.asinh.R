@@ -135,7 +135,12 @@ setMethod("do.asinh", "Spectre", function(
         marker = names(asinh_res$cofactors),
         cofactor = asinh_res$cofactors
     )
-    dat <- add.new.metadata(dat, cofactor_dt, paste0(output_name, "_cofactors"))
+    dat <- add.new.metadata(
+        spectre_obj = dat, 
+        metadata = cofactor_dt, 
+        metadata_name = "cofactors",
+        dataset_name = output_name
+    )
     
     return(dat)
     

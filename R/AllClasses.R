@@ -18,8 +18,10 @@
 #'
 #' @slot cell_id_col Character. Specifies the name of the column that uniquely identifies each cell within the data tables. 
 #' This column must be present in all the data.tables in the list.
-#' @slot name Character vector. Describes the dataset stored in the object.
-#' This slot can be used to store the metadata for the data stored within the object.
+#' @slot name Character vector. Describes the experiment/study associated with the object.
+#' @slot metadata List. Stores the metadata associated with each dataset 
+#' stored in the object.
+#' One element per dataset.
 #' @slot spatial Reserved for future use to store spatial data.
 #' @slot other List. For storing any additional data that does not fit within the list 
 #' or other defined slots.
@@ -35,6 +37,7 @@ setClass("Spectre",
          representation('list',
                         cell_id_col='character',
                         name='vector',
+                        metadata='list',
                         spatial="list",
                         other="list")
 )
@@ -46,13 +49,19 @@ setClass("Spectre",
 #' @export
 #'
 setMethod("show", "Spectre", function(object) {
-    if(length(object@name < 1)){
-        message(paste0("Spectre object: '", object@name, "'"))
+    if(length(object@name > 0)){
+        message(paste(
+            "Spectre object:",
+            "===============",
+            paste(object@name, collapse = "\n"),
+            sep = "\n"
+        ))
+        
     } else {
         message("Spectre object")
     }
     
-    message("  ---")
+    message("===============")
     
     
     ### Datasets details
@@ -62,7 +71,22 @@ setMethod("show", "Spectre", function(object) {
     }
     
     message("  ---")
-    message(paste("  @cell_id_col:", object@cell_id_col))
+    
+    
+    # Metadata details
+    message("  @metadata:")
+    for (dataset in names(object@metadata)) {
+        message(paste0(
+            '    $',
+            dataset,
+            ': ',
+            ifelse(
+                length(object@metadata[[dataset]]) == 0,
+                'no metadata recorded',
+                paste(names(object@metadata[[dataset]]), sep = ", ")
+            )
+        ))
+    }
     
     ### Spatial slot
     # TODO uncomment me when we have sorted spatial data.
@@ -84,13 +108,18 @@ setMethod("show", "Spectre", function(object) {
     #     }
     # }
     
+    message("  ---")
+    
+    message(paste("  @cell_id_col:", object@cell_id_col))
+    
     ### Other slot
     
     if(length(object@other)){
         message('  ---')
+        message('  @other:')
         
         for(i in names(object@other)){
-            message(paste0('  @other$', i))
+            message(paste0('    $', i))
         }
     }
     

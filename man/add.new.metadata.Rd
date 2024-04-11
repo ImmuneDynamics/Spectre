@@ -4,20 +4,34 @@
 \alias{add.new.metadata}
 \title{Add new metadata to Spectre object}
 \usage{
-add.new.metadata(spectre_obj, metadata, metadata_name)
+add.new.metadata(spectre_obj, metadata, metadata_name, dataset_name)
 }
 \arguments{
 \item{spectre_obj}{A Spectre object.}
 
-\item{metadata}{A data.table containing the metadata to add to the object.}
+\item{metadata}{An object containing the metadata to add.}
 
-\item{metadata_name}{The name of the metadata.}
+\item{metadata_name}{A name associated with the metadata.
+For example, if the metadata describe cofactors used to do asinh transformation,
+an appropriate value for this parameter will be something like "asinh_confactor".}
+
+\item{dataset_name}{The name of the dataset to associate the metadata with.}
 }
 \value{
 An updated Spectre object.
 }
 \description{
-Add new metadata to the "other" slot in Spectre object
+Add new information for a given dataset to the "metadata" slot in Spectre object.
+Please see details for more information about how edge cases are handled.
+}
+\details{
+If a metadata_name for the dataset_name already exists in the metadata
+slot, it will be overwritten.
+
+If dataset_name does not exist, i.e. you have either not added the dataset
+associated with dataset_name or you have manually added the dataset but forgot
+to update the metadata slot (i.e. not using add.new.data function),
+it will produce an error.
 }
 \examples{
 dat <- create.spectre.object("cell_id")

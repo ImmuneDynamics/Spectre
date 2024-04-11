@@ -4,7 +4,7 @@
 \alias{add.new.data}
 \title{Add new data to Spectre object}
 \usage{
-add.new.data(spectre_obj, dat, dat_name)
+add.new.data(spectre_obj, dat, dat_name, metadata = NULL)
 }
 \arguments{
 \item{spectre_obj}{A Spectre object.}
@@ -12,6 +12,12 @@ add.new.data(spectre_obj, dat, dat_name)
 \item{dat}{A data.table to add to the object.}
 
 \item{dat_name}{The name of the data.}
+
+\item{metadata}{A named List. DEFAULT = NULL.
+Additional information (metadata) about the data, including its description.
+Each element in the list must be associated with a name.
+If this is NULL, a new element will be created in \code{spectre_obj}'s metadata
+slot, with \code{dat_name} as the name.}
 }
 \value{
 An updated Spectre object.
@@ -23,6 +29,6 @@ Add a new data to the list in Spectre object.
 dat <- create.spectre.object("cell_id")
 x <- Spectre::demo.asinh
 x$cell_id <- paste0("cell_", seq(1, nrow(x)))
-dat <- add.new.data(dat, x, "cyto_asinh")
+dat <- add.new.data(dat, x, "cyto_asinh", metadata = list("description"= "test"))
 dat
 }

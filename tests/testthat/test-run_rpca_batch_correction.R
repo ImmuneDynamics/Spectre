@@ -15,7 +15,7 @@ test_that("rpca works", {
                 "CD3e_chn", "CD16.32_chn", "MHCII_chn")
     
     suppressWarnings(
-        dat <- run.rpca(
+        dat <- run.rpca.batch.correction(
             dat = dat,
             data_source = "cyto_batch",
             output_name = "cyto_batch_corrected",
@@ -52,7 +52,7 @@ test_that("rpca with reference works", {
                 "CD3e_chn", "CD16.32_chn", "MHCII_chn")
     
     suppressWarnings(
-        dat <- run.rpca(
+        dat <- run.rpca.batch.correction(
             dat = dat,
             data_source = "cyto_batch",
             output_name = "cyto_batch_corrected",
@@ -87,7 +87,7 @@ test_that("rpca for non-spectre object fails", {
     
     expect_error(
         suppressWarnings(
-            run.rpca(
+            run.rpca.batch.correction(
                 dat = dat_raw,
                 data_source = "cyto_batch",
                 output_name = "cyto_batch_corrected",

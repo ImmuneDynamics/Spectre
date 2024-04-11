@@ -27,8 +27,11 @@ but custom naming is supported to accommodate different preferences (e.g., "cyto
 \item{\code{cell_id_col}}{Character. Specifies the name of the column that uniquely identifies each cell within the data tables.
 This column must be present in all the data.tables in the list.}
 
-\item{\code{name}}{Character vector. Describes the dataset stored in the object.
-This slot can be used to store the metadata for the data stored within the object.}
+\item{\code{name}}{Character vector. Describes the experiment/study associated with the object.}
+
+\item{\code{metadata}}{List. Stores the metadata associated with each dataset
+stored in the object.
+One element per dataset.}
 
 \item{\code{spatial}}{Reserved for future use to store spatial data.}
 
