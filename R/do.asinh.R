@@ -128,6 +128,12 @@ setMethod("do.asinh", "Spectre", function(
     asinh_dat <- data.table(cell_id = dat_to_apply_asinh[[cell_id_col]], asinh_res$transformed_val)
     setnames(asinh_dat, "cell_id", cell_id_col)
     
+    # we want to remove the _asinh bit if cofactor is not meant to be appended.
+    # this only make sense for spectre object. Not for data.table.
+    if (! append.cf) {
+        setnames(asinh_dat, paste0(use.cols, "_asinh"), use.cols)
+    }
+    
     dat <- add.new.data(dat, asinh_dat, output_name)
     
     # regardless of append.cf or not, fill the other slot with the co-factor used
@@ -242,7 +248,7 @@ do_actual_transformation <- function(dat,
     # Check if the columns exist in the data.table
     columns_exist <- all(use.cols %in% colnames(dat))
     if (!all(columns_exist)) {
-        error(paste(
+        stop(paste(
             "Some values in use.cols do not exist as columns in dat!",
             paste0("Columns: ", paste(use.cols, collapse = ", ")),
             paste0("Exist? ", paste(columns_exist, collapse = ", ")),
@@ -257,7 +263,7 @@ do_actual_transformation <- function(dat,
     are_columns_numeric <- sapply(use.cols, function(col) is.numeric(dat[[col]]))
     
     if (!all(are_columns_numeric)) {
-        error(paste(
+        stop(paste(
             "It appears that some columns in the dataset are not numeric!",
             paste0("Columns: ", paste(use.cols, collapse = ", ")),
             paste0("Is numeric? ", paste(are_columns_numeric, collapse = ", ")),
@@ -311,7 +317,7 @@ do_actual_transformation <- function(dat,
         
         # Check that co-factors have been specified correctly.
         if (length(cofactor) > 1 & length(cofactor) != length(use.cols)) {
-            error(paste(
+            stop(paste(
                 "You have specified more than one co-factor, but",
                 "the number of markers to apply arc-sinh to (", length(use.cols), "markers )",
                 "does not match the number of specified co-factors (", length(cofactor), "cofactors )."

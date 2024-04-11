@@ -238,7 +238,7 @@ test_that("do.asinh using flowVS works", {
     
     # check the actual raw data is not touched!
     expect_equal(names(obj_actual$test), c("cell_id","marker1", "marker2", "marker3"))
-    expect_equal(names(obj_actual$test_auto_asinh), c("cell_id", "marker1_asinh", "marker2_asinh", "marker3_asinh"))
+    expect_equal(names(obj_actual$test_auto_asinh), c("cell_id", "marker1", "marker2", "marker3"))
     expect_equal(nrow(obj_actual$test_auto_asinh), 10)
     expect_equal(nrow(obj_actual@metadata$test_auto_asinh$cofactors), 3)
     
@@ -283,7 +283,7 @@ test_that("do.asinh using top10 works", {
     
     # check the actual raw data is not touched!
     expect_equal(names(obj_actual$test), c("cell_id","marker1", "marker2", "marker3"))
-    expect_equal(names(obj_actual$test_auto_asinh), c("cell_id", "marker1_asinh", "marker2_asinh", "marker3_asinh"))
+    expect_equal(names(obj_actual$test_auto_asinh), c("cell_id", "marker1", "marker2", "marker3"))
     expect_equal(nrow(obj_actual$test_auto_asinh), 10)
     expect_equal(nrow(obj_actual@metadata$test_auto_asinh$cofactors), 3)
     
@@ -322,7 +322,7 @@ test_that("do.asinh single cofactor works", {
     # check the actual raw data is not touched!
     expect_equal(names(actual_obj$test), c("cell_id","marker1", "marker2"))
     expect_identical(actual_obj$test, dat)
-    expect_equal(names(actual_obj$test_asinh), c("cell_id", "marker1_asinh", "marker2_asinh"))
+    expect_equal(names(actual_obj$test_asinh), c("cell_id", "marker1", "marker2"))
     expect_equal(nrow(actual_obj$test_asinh), 10)
 })
 
