@@ -44,22 +44,10 @@
 #'  verbose = FALSE,
 #'  reference_batch = NULL
 #' )
-setGeneric("run.rpca.batch.correction", function(dat,
-                                data_source,
-                                output_name,
-                                use_cols,
-                                batch_col,
-                                reference_batch = NULL,
-                                k_anchor = 5,
-                                seed = 42,
-                                verbose = TRUE) {
-    standardGeneric("run.rpca.batch.correction")
-    
-})
-
-#' @exportMethod run.rpca.batch.correction
-#' @rdname run.rpca.batch.correction
-setMethod("run.rpca.batch.correction", "Spectre", function(
+#' 
+#' @export
+#' 
+run.rpca.batch.correction <- function(
         dat,
         data_source,
         output_name,
@@ -87,12 +75,18 @@ setMethod("run.rpca.batch.correction", "Spectre", function(
     # seed = 42
     # verbose = TRUE
     
+    if (!is(dat, "Spectre")) {
+        stop("dat must be of class Spectre")
+    }
+    
     check_packages_installed("Seurat")
     
     if (verbose) {
         message('Running rPCA.')
         message('(1/6) setting up data.')
     }
+    
+    # TODO need to first check the markers exists in use_cols
     
     # just incase thre are some non-standard naming and seurat obj complained
     new_col_name <- paste0("Col", seq(length(use_cols)))
@@ -237,7 +231,7 @@ setMethod("run.rpca.batch.correction", "Spectre", function(
     return(dat)
     
     
-})
+}
 
 
 

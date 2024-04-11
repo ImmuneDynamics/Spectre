@@ -47,6 +47,15 @@ add.new.data <- function(spectre_obj, dat, dat_name, metadata = NULL) {
         stop(paste("dat must contain", spectre_obj@cell_id_col, "column which uniquely identify the cells!"))
     }
     
+    # check if the data already exist?
+    if (dat_name %in% names(spectre_obj)) {
+        warning(paste(
+            "A dataset with name", dat_name,
+            "is already present.\n",
+            "Overwriting it with the new data."
+        ))
+    }
+    
     spectre_obj[[dat_name]] <- dat
     
     if (is.null(metadata)) {

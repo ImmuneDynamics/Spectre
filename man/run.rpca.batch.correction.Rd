@@ -2,22 +2,9 @@
 % Please edit documentation in R/run.rpca.batch.correction.R
 \name{run.rpca.batch.correction}
 \alias{run.rpca.batch.correction}
-\alias{run.rpca.batch.correction,Spectre-method}
 \title{Run rPCA for batch correction}
 \usage{
 run.rpca.batch.correction(
-  dat,
-  data_source,
-  output_name,
-  use_cols,
-  batch_col,
-  reference_batch = NULL,
-  k_anchor = 5,
-  seed = 42,
-  verbose = TRUE
-)
-
-\S4method{run.rpca.batch.correction}{Spectre}(
   dat,
   data_source,
   output_name,
@@ -84,4 +71,5 @@ dat = run.rpca.batch.correction(
  verbose = FALSE,
  reference_batch = NULL
 )
+
 }
