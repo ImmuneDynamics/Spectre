@@ -146,18 +146,17 @@ setMethod("do.asinh", "Spectre", function(
         setnames(asinh_dat, paste0(use.cols, "_asinh"), use.cols)
     }
     
-    dat <- add.new.data(dat, asinh_dat, output_name)
-    
-    # regardless of append.cf or not, fill the other slot with the co-factor used
+    # regardless of append.cf or not, add the co-factor used as metadata
     cofactor_dt <- data.table(
         marker = names(asinh_res$cofactors),
         cofactor = asinh_res$cofactors
     )
-    dat <- add.new.metadata(
+    
+    dat <- add.new.data(
         spectre_obj = dat, 
-        metadata = cofactor_dt, 
-        metadata_name = "cofactors",
-        dataset_name = output_name
+        dat = asinh_dat, 
+        dat_name = output_name,
+        metadata = list("cofactors" = cofactor_dt)
     )
     
     return(dat)

@@ -15,9 +15,7 @@ add.new.data(spectre_obj, dat, dat_name, metadata = NULL)
 
 \item{metadata}{A named List. DEFAULT = NULL.
 Additional information (metadata) about the data, including its description.
-Each element in the list must be associated with a name.
-If this is NULL, a new element will be created in \code{spectre_obj}'s metadata
-slot, with \code{dat_name} as the name.}
+Each element in the list must be associated with a name.}
 }
 \value{
 An updated Spectre object.

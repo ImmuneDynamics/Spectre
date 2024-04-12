@@ -9,11 +9,10 @@ add.new.metadata(spectre_obj, metadata, metadata_name, dataset_name)
 \arguments{
 \item{spectre_obj}{A Spectre object.}
 
-\item{metadata}{An object containing the metadata to add.}
-
-\item{metadata_name}{A name associated with the metadata.
-For example, if the metadata describe cofactors used to do asinh transformation,
-an appropriate value for this parameter will be something like "asinh_confactor".}
+\item{metadata}{A list of metadata to add to the Spectre object.
+Each element must be associated with a name.
+For example, if one of the elements stores the cofactors used to do asinh transformation,
+this list must be something like \code{list("cofactors" = 5)}.}
 
 \item{dataset_name}{The name of the dataset to associate the metadata with.}
 }
@@ -25,8 +24,7 @@ Add new information for a given dataset to the "metadata" slot in Spectre object
 Please see details for more information about how edge cases are handled.
 }
 \details{
-If a metadata_name for the dataset_name already exists in the metadata
-slot, it will be overwritten.
+If a metadata_name for the dataset_name already exists, it will be overwritten.
 
 If dataset_name does not exist, i.e. you have either not added the dataset
 associated with dataset_name or you have manually added the dataset but forgot

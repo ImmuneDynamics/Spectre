@@ -240,7 +240,9 @@ test_that("do.asinh using flowVS works", {
     expect_equal(names(obj_actual$test), c("cell_id","marker1", "marker2", "marker3"))
     expect_equal(names(obj_actual$test_auto_asinh), c("cell_id", "marker1", "marker2", "marker3"))
     expect_equal(nrow(obj_actual$test_auto_asinh), 10)
-    expect_equal(nrow(obj_actual@metadata$test_auto_asinh$cofactors), 3)
+    expect_equal(nrow(
+        attributes(obj_actual$test_auto_asinh)$cofactors
+    ), 3)
     
     
 })
@@ -285,7 +287,9 @@ test_that("do.asinh using top10 works", {
     expect_equal(names(obj_actual$test), c("cell_id","marker1", "marker2", "marker3"))
     expect_equal(names(obj_actual$test_auto_asinh), c("cell_id", "marker1", "marker2", "marker3"))
     expect_equal(nrow(obj_actual$test_auto_asinh), 10)
-    expect_equal(nrow(obj_actual@metadata$test_auto_asinh$cofactors), 3)
+    expect_equal(nrow(
+        attributes(obj_actual$test_auto_asinh)$cofactors
+    ), 3)
     
     
     

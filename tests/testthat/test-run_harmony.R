@@ -31,7 +31,7 @@ test_that("harmony batch correction works", {
     expect_equal(nrow(dat$cyto_batch), nrow(dat$cyto_batch_corrected))
     
     # check the metadata
-    expect_true("harmony_parameter" %in% names(dat@metadata$cyto_batch_corrected))
+    expect_true("harmony_parameter" %in% names(attributes(dat$cyto_batch_corrected)))
 })
 
 test_that("harmony batch correction with return object works", {
@@ -68,7 +68,7 @@ test_that("harmony batch correction with return object works", {
     expect_equal(nrow(dat$cyto_batch), nrow(dat$cyto_batch_corrected))
     
     # check the metadata
-    expect_true("harmony_parameter" %in% names(dat@metadata$cyto_batch_corrected))
-    expect_true("harmony_object" %in% names(dat@metadata$cyto_batch_corrected))
+    expect_true("harmony_parameter" %in% names(attributes(dat$cyto_batch_corrected)))
+    expect_true("harmony_object" %in% names(attributes(dat$cyto_batch_corrected)))
 })
 

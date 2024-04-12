@@ -29,10 +29,6 @@ This column must be present in all the data.tables in the list.}
 
 \item{\code{name}}{Character vector. Describes the experiment/study associated with the object.}
 
-\item{\code{metadata}}{List. Stores the metadata associated with each dataset
-stored in the object.
-One element per dataset.}
-
 \item{\code{spatial}}{Reserved for future use to store spatial data.}
 
 \item{\code{other}}{List. For storing any additional data that does not fit within the list

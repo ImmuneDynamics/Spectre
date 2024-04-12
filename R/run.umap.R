@@ -205,6 +205,7 @@ setMethod("run.umap", "Spectre", function(
         batch = batch
     )
     
+    # TODO turn this into a function so we can use this in every other function.
     if (is.null(output_name)) {
         warning(paste("Appending umap coordinate to", data_source))
         

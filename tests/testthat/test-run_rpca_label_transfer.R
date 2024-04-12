@@ -36,7 +36,7 @@ test_that("rpca label_transfer infer common markers works", {
     # just check there is a new element
     expect_true("predicted_cell_type" %in% names(dat$labels))
     expect_true("cell_id" %in% names(dat$labels))
-    expect_true("rpca_prediction_score" %in% names(dat@metadata$labels))
+    expect_true("rpca_prediction_score" %in% names(attributes(dat$labels)))
     expect_equal(nrow(dat$labels), nrow(dat$cyto))
 })
 
@@ -80,7 +80,7 @@ test_that("rpca label_transfer valid use_cols works", {
     # just check there is a new element
     expect_true("predicted_cell_type" %in% names(dat$labels))
     expect_true("cell_id" %in% names(dat$labels))
-    expect_true("rpca_prediction_score" %in% names(dat@metadata$labels))
+    expect_true("rpca_prediction_score" %in% names(attributes(dat$labels)))
     expect_equal(nrow(dat$labels), nrow(dat$cyto))
 })
 
@@ -124,7 +124,7 @@ test_that("rpca label_transfer with semi valid use_cols works", {
     # just check there is a new element
     expect_true("predicted_cell_type" %in% names(dat$labels))
     expect_true("cell_id" %in% names(dat$labels))
-    expect_true("rpca_prediction_score" %in% names(dat@metadata$labels))
+    expect_true("rpca_prediction_score" %in% names(attributes(dat$labels)))
     expect_equal(nrow(dat$labels), nrow(dat$cyto))
 })
 

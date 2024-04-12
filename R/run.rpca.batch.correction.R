@@ -112,8 +112,11 @@ run.rpca.batch.correction <- function(
             message(paste('(2/6) creating Seurat object for batch', batch))
         }
         
+        # TODO: we should fill the scale.data slot with the sparse_cnt_mtx.
+        # Assume we have prepared the data.
         seurat_obj <- Seurat::CreateSeuratObject(counts = sparse_cnt_mtx, assay = 'cyto')
         # kind of useless as it will always return all the features? but needed for later
+        # can be bypassed using dat@assays$RNA@var.features
         seurat_obj <- Seurat::FindVariableFeatures(
             seurat_obj, selection.method = "vst", nfeatures = length(use_cols), 
             verbose=verbose

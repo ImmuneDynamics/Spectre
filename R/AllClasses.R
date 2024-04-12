@@ -19,9 +19,6 @@
 #' @slot cell_id_col Character. Specifies the name of the column that uniquely identifies each cell within the data tables. 
 #' This column must be present in all the data.tables in the list.
 #' @slot name Character vector. Describes the experiment/study associated with the object.
-#' @slot metadata List. Stores the metadata associated with each dataset 
-#' stored in the object.
-#' One element per dataset.
 #' @slot spatial Reserved for future use to store spatial data.
 #' @slot other List. For storing any additional data that does not fit within the list 
 #' or other defined slots.
@@ -37,7 +34,6 @@ setClass("Spectre",
          representation('list',
                         cell_id_col='character',
                         name='vector',
-                        metadata='list',
                         spatial="list",
                         other="list")
 )
@@ -74,17 +70,14 @@ setMethod("show", "Spectre", function(object) {
     
     
     # Metadata details
-    message("  @metadata:")
-    for (dataset in names(object@metadata)) {
+    message("  attributes:")
+    for (dataset in names(object)) {
+        # dataset = names(object)[1]
         message(paste0(
             '    $',
             dataset,
             ': ',
-            ifelse(
-                length(object@metadata[[dataset]]) == 0,
-                'no metadata recorded',
-                paste(names(object@metadata[[dataset]]), sep = ", ")
-            )
+            paste(names(attributes(object[[dataset]])), collapse = ", ")
         ))
     }
     

@@ -31,6 +31,6 @@ test_that("cycombine batch correction works", {
     expect_equal(nrow(dat$cyto_batch), nrow(dat$cyto_batch_corrected))
     
     # check the metadata
-    expect_true("parameter" %in% names(dat@metadata$cyto_batch_corrected))
-    expect_true("cycombine_extra_info" %in% names(dat@metadata$cyto_batch_corrected))
+    expect_true("parameter" %in% names(attributes(dat$cyto_batch_corrected)))
+    expect_true("cycombine_extra_info" %in% names(attributes(dat$cyto_batch_corrected)))
 })
