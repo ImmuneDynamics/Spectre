@@ -2,9 +2,108 @@
 % Please edit documentation in R/run.umap.R
 \name{run.umap}
 \alias{run.umap}
-\title{Run the UMAP algorithm (using umap::umap())}
+\alias{run.umap,Spectre-method}
+\alias{run.umap,data.table-method}
+\title{Run UMAP}
 \usage{
-run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, n_components = 2, metric = "euclidean", n_epochs = 200, input = "data", init = "spectral", min_dist = 0.1, set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, b_gradient = NA, spread = 1, transform_state = 42, knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
+run.umap(
+  dat,
+  use.cols,
+  umap.x.name = "UMAP_X",
+  umap.y.name = "UMAP_Y",
+  umap.seed = 42,
+  neighbours = 15,
+  n_components = 2,
+  metric = "euclidean",
+  n_epochs = 200,
+  input = "data",
+  init = "spectral",
+  min_dist = 0.1,
+  set_op_mix_ratio = 1,
+  local_connectivity = 1,
+  bandwidth = 1,
+  alpha = 1,
+  gamma = 1,
+  negative_sample_rate = 5,
+  a_gradient = NA,
+  b_gradient = NA,
+  spread = 1,
+  transform_state = 42,
+  knn.repeats = 1,
+  verbose = TRUE,
+  umap_learn_args = NA,
+  fast = FALSE,
+  n_threads = "auto",
+  n_sgd_threads = "auto",
+  batch = TRUE,
+  ...
+)
+
+\S4method{run.umap}{Spectre}(
+  dat,
+  use.cols,
+  data_source,
+  output_name,
+  umap.x.name = "UMAP_X",
+  umap.y.name = "UMAP_Y",
+  umap.seed = 42,
+  neighbours = 15,
+  n_components = 2,
+  metric = "euclidean",
+  n_epochs = 200,
+  input = "data",
+  init = "spectral",
+  min_dist = 0.1,
+  set_op_mix_ratio = 1,
+  local_connectivity = 1,
+  bandwidth = 1,
+  alpha = 1,
+  gamma = 1,
+  negative_sample_rate = 5,
+  a_gradient = NA,
+  b_gradient = NA,
+  spread = 1,
+  transform_state = 42,
+  knn.repeats = 1,
+  verbose = TRUE,
+  umap_learn_args = NA,
+  fast = FALSE,
+  n_threads = "auto",
+  n_sgd_threads = "auto",
+  batch = TRUE
+)
+
+\S4method{run.umap}{data.table}(
+  dat,
+  use.cols,
+  umap.x.name = "UMAP_X",
+  umap.y.name = "UMAP_Y",
+  umap.seed = 42,
+  neighbours = 15,
+  n_components = 2,
+  metric = "euclidean",
+  n_epochs = 200,
+  input = "data",
+  init = "spectral",
+  min_dist = 0.1,
+  set_op_mix_ratio = 1,
+  local_connectivity = 1,
+  bandwidth = 1,
+  alpha = 1,
+  gamma = 1,
+  negative_sample_rate = 5,
+  a_gradient = NA,
+  b_gradient = NA,
+  spread = 1,
+  transform_state = 42,
+  knn.repeats = 1,
+  verbose = TRUE,
+  umap_learn_args = NA,
+  fast = FALSE,
+  n_threads = "auto",
+  n_sgd_threads = "auto",
+  batch = TRUE
+)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input data.table or data.frame.}
@@ -56,6 +155,14 @@ run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.see
 \item{verbose}{DEFAULT = TRUE. Logical. Determines whether to show progress messages.}
 
 \item{umap_learn_args}{DEFAULT = NA. Vector. Vector of arguments to python package umap-learn.}
+
+\item{data_source}{Character. The name of the data in Spectre object to
+run umap on.
+Only used if dat is a Spectre object.}
+
+\item{output_name}{Character. What name should the output
+data be stored under in the Spectre object.
+Only used if dat is a Spectre object.}
 }
 \description{
 Method to run a UMAP dimensionality reduction algorithm.
@@ -73,6 +180,8 @@ cell.dat <- Spectre::run.umap(
   dat = cell.dat,
   use.cols = names(demo.asinh)[c(2:10)]
 )
+
+
 }
 \author{
 Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

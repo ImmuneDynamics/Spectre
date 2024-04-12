@@ -16,7 +16,12 @@
 #' @param use_cols DEFAULT = NULL. 
 #' A vector of marker/adt names to use to perform label transfer.
 #' If left as the default value NULL, the function will automatically infer
-#' markers/adts that are common between the CITEseq and cytometry data.
+#' markers/adts that are common between the CITEseq and cytometry data using
+#' base R `intersect` function.
+#' We highly recommend you manually specify this because the same proteins can be
+#' spelled in my different ways (e.g., PD1 or PD-1). 
+#' Additionally, same protein can have different names (e.g., CCR7 is equivalent
+#' to CD197).
 #' See details for more information.
 #' @param k_anchor DEFAULT 20. Passed to Seurat's FindIntegrationAnchors function.
 #' Essentially, it determines the number of neighbors (k) to use when 
@@ -164,10 +169,9 @@ run.rpca.label.transfer <- function(
         }
     }
     
+    # For renaming the markers because Seurat is a pain in the arse if there
+    # are non alphanumeric character in the marker names
     
-    
-    # TODO adapt me
-    # just incase thre are some non-standard naming and seurat obj complained
     placeholder_common_markers <- paste0("Col", seq(length(common_markers)))
     names(placeholder_common_markers) <- common_markers
     
@@ -182,6 +186,12 @@ run.rpca.label.transfer <- function(
     colnames(citeseq_dat) <- dat[[citeseq_data_source]][[cell_id_col]]
     
     citeseq_dat <- Seurat::CreateSeuratObject(counts = citeseq_dat, data = citeseq_dat, assay = "ADT")
+    
+    # TODO I'm not sure if we should do this, but I can't think of any harm in doing it.
+    # but again it is then putting the data in the scale.data slot which is not needed
+    # for finding integration anchors.
+    # citeseq_dat <- Seurat::ScaleData(citeseq_dat, features = placeholder_common_markers)
+    
     citeseq_dat <- Seurat::AddMetaData(
         object = citeseq_dat,
         metadata = rep("citeseq", ncol(citeseq_dat)),

@@ -36,7 +36,12 @@ denotes the cell type/label each cell in the CITEseq data.}
 \item{use_cols}{DEFAULT = NULL.
 A vector of marker/adt names to use to perform label transfer.
 If left as the default value NULL, the function will automatically infer
-markers/adts that are common between the CITEseq and cytometry data.
+markers/adts that are common between the CITEseq and cytometry data using
+base R \code{intersect} function.
+We highly recommend you manually specify this because the same proteins can be
+spelled in my different ways (e.g., PD1 or PD-1).
+Additionally, same protein can have different names (e.g., CCR7 is equivalent
+to CD197).
 See details for more information.}
 
 \item{k_anchor}{DEFAULT 20. Passed to Seurat's FindIntegrationAnchors function.

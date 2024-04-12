@@ -2,86 +2,159 @@
 % Please edit documentation in R/run.harmony.R
 \name{run.harmony}
 \alias{run.harmony}
-\title{run.harmony - dun Harmony alignment on a data.table}
+\title{Run Harmony batch alignment algorithm}
 \usage{
-run.harmony()
+run.harmony(
+  dat,
+  data_source,
+  output_name,
+  use_cols,
+  batch_col,
+  do_pca = TRUE,
+  npcs = 20,
+  theta = NULL,
+  lambda = NULL,
+  sigma = 0.1,
+  nclust = NULL,
+  tau = 0,
+  block_size = 0.05,
+  max_iter_harmony = 10,
+  max_iter_cluster = 200,
+  epsilon_cluster = 1e-05,
+  epsilon_harmony = 1e-04,
+  plot_convergence = FALSE,
+  return_object = FALSE,
+  verbose = FALSE,
+  reference_values = NULL,
+  cluster_prior = NULL,
+  seed = 42
+)
 }
 \arguments{
-\item{dat}{NO DEFAULT. A data.table with all of the data you wish to align}
+\item{dat}{NO DEFAULT.
+A Spectre object containing the data to apply batch correction to.}
 
-\item{align.cols}{NO default. The columns you wish to align. For cytometry data, this can be the markers themselves or principle components. For single-cell seq data, principle components are recommended.}
+\item{data_source}{NO DEFAULT. Character. The name of the data in Spectre object to
+apply batch correction to.}
 
-\item{batch.col}{NO default. The column that denotes the batch or dataset that each cell belongs to}
+\item{output_name}{NO DEFAULT. Character. The name of the data in Spectre object to
+store the batch corrected data to.}
 
-\item{append.name}{DEFAULT = '_aligned'. Text that will be appended to the new columns containing aligned data}
+\item{use_cols}{NO DEFAULT.
+A vector of character column names to apply batch correction to.}
 
-\item{do_pca}{DEFAULT = TRUE. Whether to perform PCA on input matrix.}
+\item{batch_col}{NO default. The column that denotes the batch or dataset that each cell belongs to}
 
-\item{npcs}{If doing PCA on input matrix, number of PCs to compute.}
+\item{do_pca}{DEFAULT TRUE. Whether to perform PCA on the data.}
 
-\item{theta}{Diversity clustering penalty parameter. Specify for each
+\item{npcs}{DEFAULT 20. If doing PCA on the data, the number of PCs to compute.}
+
+\item{theta}{DEFAULT NULL. Diversity clustering penalty parameter. Specify for each
 variable in vars_use Default theta=2. theta=0 does not encourage any
 diversity. Larger values of theta result in more diverse clusters.}
 
-\item{lambda}{Ridge regression penalty parameter. Specify for each variable
-in vars_use.
+\item{lambda}{DEFAULT NULL. Ridge regression penalty parameter.
+Specify for each batch.
 Default lambda=1. Lambda must be strictly positive. Smaller values result
 in more aggressive correction.}
 
-\item{sigma}{Width of soft kmeans clusters. Default sigma=0.1. Sigma scales
+\item{sigma}{DEFAULT 0.1.
+Width of soft kmeans clusters. Default sigma=0.1. Sigma scales
 the distance from a cell to cluster centroids. Larger values of sigma
 result in cells assigned to more clusters. Smaller values of sigma make
 soft kmeans cluster approach hard clustering.}
 
-\item{nclust}{Number of clusters in model. nclust=1 equivalent to simple
-linear regression.}
+\item{nclust}{DEFAULT NULL. Number of clusters in model.
+nclust=1 equivalent to simple linear regression.}
 
-\item{tau}{Protection against overclustering small datasets with large ones.
+\item{tau}{DEFAULT 0. Protection against overclustering small datasets with large ones.
 tau is the expected number of cells per cluster.}
 
-\item{block.size}{What proportion of cells to update during clustering.
+\item{block_size}{DEFAULT 0.05. What proportion of cells to update during clustering.
 Between 0 to 1, default 0.05. Larger values may be faster but less accurate}
 
-\item{max.iter.harmony}{Maximum number of rounds to run Harmony. One round
-of Harmony involves one clustering and one correction step.}
+\item{max_iter_harmony}{DEFAULT 10.
+Maximum number of rounds to run Harmony.
+One round of Harmony involves one clustering and one correction step.}
 
-\item{max.iter.cluster}{Maximum number of rounds to run clustering at each
-round of Harmony.}
+\item{max_iter_cluster}{DEFAULT 200.
+Maximum number of rounds to run clustering at each round of Harmony.}
 
-\item{epsilon.cluster}{Convergence tolerance for clustering round of
-Harmony. Set to -Inf to never stop early.}
+\item{epsilon_cluster}{DEFAULT 1e-05.
+Convergence tolerance for clustering round of Harmony.
+Set to -Inf to never stop early.}
 
-\item{epsilon.harmony}{Convergence tolerance for Harmony. Set to -Inf to
-never stop early.}
+\item{epsilon_harmony}{DEFAULT 1e-04.
+Convergence tolerance for Harmony.
+Set to -Inf to never stop early.}
 
-\item{plot_convergence}{Whether to print the convergence plot of the
-clustering objective function. TRUE to plot, FALSE to suppress. This can be
-useful for debugging.}
+\item{plot_convergence}{DEFAULT FALSE.
+Whether to print the convergence plot of the clustering objective function.
+TRUE to plot, FALSE to suppress.
+This can be useful for debugging.}
 
-\item{return_object}{(Advanced Usage) Whether to return the Harmony object
-or only the corrected PCA embeddings.}
+\item{return_object}{DEFAULT FALSE.
+(Advanced Usage) Whether to return the Harmony object or only the corrected PCA embeddings.
+If TRUE, this will be stored in the metadata slot.}
 
-\item{verbose}{DEFAULT = FALSE. Whether to print progress messages. TRUE to print,
-FALSE to suppress.}
+\item{verbose}{DEFAULT FALSE.
+Whether to print progress messages. TRUE to print, FALSE to suppress.}
 
-\item{reference_values}{(Advanced Usage) Defines reference dataset(s).
-Cells that have batch variables values matching reference_values will not
-be moved.}
+\item{reference_values}{DEFAULT NULL.
+(Advanced Usage) Defines reference dataset(s).
+Cells that have batch variables values matching reference_values will not be moved.}
 
-\item{cluster_prior}{(Advanced Usage) Provides user defined clusters for
+\item{cluster_prior}{DEFAULT NULL.
+(Advanced Usage) Provides user defined clusters for
 cluster initialization. If the number of provided clusters C is less than K,
 Harmony will initialize K-C clusters with kmeans. C cannot exceed K.}
+
+\item{seed}{DEFAULT 42. Seed used when harmony runs PCA.}
 }
 \value{
-Returns a data.table with aligned data added in new columns.
+Spectre object with output_name element and metadata slot updated
+with output generated by the algorithm
 }
 \description{
-This function allows you to run the 'Harmony' data alignment algorithm on single cell or cytometry data stored in a data.table
+Use Harmony to do batch correction.
+For more details on Harmony see:
+https://portals.broadinstitute.org/harmony/articles/quickstart.html.
 }
 \examples{
-cell.dat <- run.harmony()
+dat_raw = Spectre::demo.batches
+
+# subsample for speedy execution
+dat_raw = Spectre::do.subsample(dat_raw, targets = rep(1000, 2), 
+divide.by = "Batch")
+
+dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
+dat = create.spectre.object(cell_id_col = "cell_id")
+dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+
+markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
+"CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
+"CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn", 
+"CD3e_chn", "CD16.32_chn", "MHCII_chn")
+
+dat <- run.harmony(
+    dat = dat,
+    data_source = "cyto_batch",
+    output_name = "cyto_batch_corrected",
+    use_cols = markers,
+    batch_col = "Batch",
+    verbose = FALSE
+)
 
 }
-\author{
-Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+\references{
+Korsunsky, I., Millard, N., Fan, J. et al.
+Fast, sensitive and accurate integration of single-cell data with Harmony.
+Nat Methods 16, 1289–1296 (2019).
+https://doi.org/10.1038/s41592-019-0619-0
+
+Ashhurst, T.M., Marsh‐Wakefield, F., Putri, G.H. et al.
+Integration, exploration, and analysis of high‐dimensional single‐cell
+cytometry data using Spectre.
+Cytometry Part A, 101(3), pp.237-253 (2022).
+https://doi.org/10.1002/cyto.a.24350
 }

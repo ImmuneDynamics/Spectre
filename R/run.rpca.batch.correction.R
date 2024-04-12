@@ -82,7 +82,7 @@ run.rpca.batch.correction <- function(
     check_packages_installed("Seurat")
     
     if (verbose) {
-        message('Running rPCA.')
+        message('Running rPCA batch correction.')
         message('(1/6) setting up data.')
     }
     

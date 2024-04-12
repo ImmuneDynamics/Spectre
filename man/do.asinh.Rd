@@ -77,7 +77,7 @@ error differences in different OS.}
 \item{verbose}{DEFAULT = TRUE.
 If TRUE, the function will print progress updates as it executes.}
 
-\item{...}{}
+\item{...}{Other arguments applicable if dat is a Spectre object.}
 
 \item{data_source}{Character. The name of the data in Spectre object to
 apply arc-sinh transformation to.
@@ -111,7 +111,7 @@ Unfortunately there is no way in R to differentiate a numerical variable and a v
 \examples{
 library(data.table)
 # Assuming dat is a data.table
-dat <- data.table(NK11=rnorm(10, 2), CD3=rnorm(10,1))
+dat <- data.table(NK11=rnorm(10, 2), CD3=rnorm(10,1), cell_id=paste0("cell_", seq(10)))
 # Default co-factor 5 will be used for both NK11 and CD3
 dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"))
 dat_asinh
@@ -124,6 +124,18 @@ dat_asinh
 dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=c(5,10))
 dat_asinh
 
+# If dat is a Spectre object
+obj <- create.spectre.object(cell_id_col = "cell_id")
+obj <- add.new.data(obj, dat, "test")
+
+obj = do.asinh(
+ dat = obj,
+ data_source = "test",
+ output_name = "test_asinh",
+ use.cols = c("NK11", "CD3"), 
+ cofactor = 5,
+ append.cf = FALSE
+)
 
 }
 \references{

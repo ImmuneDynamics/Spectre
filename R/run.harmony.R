@@ -1,158 +1,276 @@
-#' run.harmony - dun Harmony alignment on a data.table
-#'
-#' This function allows you to run the 'Harmony' data alignment algorithm on single cell or cytometry data stored in a data.table
-#'
-#' @usage run.harmony()
-#'
-#' @param dat NO DEFAULT. A data.table with all of the data you wish to align
-#' @param align.cols NO default. The columns you wish to align. For cytometry data, this can be the markers themselves or principle components. For single-cell seq data, principle components are recommended.
-#' @param batch.col NO default. The column that denotes the batch or dataset that each cell belongs to
-#' @param append.name DEFAULT = '_aligned'. Text that will be appended to the new columns containing aligned data
-#' @param do_pca DEFAULT = TRUE. Whether to perform PCA on input matrix.
-#' @param npcs If doing PCA on input matrix, number of PCs to compute.
-#' @param theta Diversity clustering penalty parameter. Specify for each
-#'  variable in vars_use Default theta=2. theta=0 does not encourage any
-#'  diversity. Larger values of theta result in more diverse clusters.
-#' @param lambda Ridge regression penalty parameter. Specify for each variable
-#'  in vars_use.
+#' Run Harmony batch alignment algorithm 
+#' 
+#' Use Harmony to do batch correction.
+#' For more details on Harmony see: 
+#' https://portals.broadinstitute.org/harmony/articles/quickstart.html.
+#' 
+#' @references Korsunsky, I., Millard, N., Fan, J. et al. 
+#' Fast, sensitive and accurate integration of single-cell data with Harmony. 
+#' Nat Methods 16, 1289–1296 (2019). 
+#' https://doi.org/10.1038/s41592-019-0619-0
+#' 
+#' @references Ashhurst, T.M., Marsh‐Wakefield, F., Putri, G.H. et al.
+#' Integration, exploration, and analysis of high‐dimensional single‐cell 
+#' cytometry data using Spectre. 
+#' Cytometry Part A, 101(3), pp.237-253 (2022).
+#' https://doi.org/10.1002/cyto.a.24350
+#' 
+#' @param dat NO DEFAULT. 
+#' A Spectre object containing the data to apply batch correction to.
+#' @param data_source NO DEFAULT. Character. The name of the data in Spectre object to 
+#' apply batch correction to.
+#' @param output_name NO DEFAULT. Character. The name of the data in Spectre object to 
+#' store the batch corrected data to.
+#' @param use_cols NO DEFAULT. 
+#' A vector of character column names to apply batch correction to.
+#' @param batch_col NO default. The column that denotes the batch or dataset that each cell belongs to
+#' @param seed DEFAULT 42. Seed used when harmony runs PCA. 
+#' @param do_pca DEFAULT TRUE. Whether to perform PCA on the data.
+#' @param npcs DEFAULT 20. If doing PCA on the data, the number of PCs to compute.
+#' @param theta DEFAULT NULL. Diversity clustering penalty parameter. Specify for each
+#' variable in vars_use Default theta=2. theta=0 does not encourage any
+#' diversity. Larger values of theta result in more diverse clusters.
+#' @param lambda DEFAULT NULL. Ridge regression penalty parameter. 
+#' Specify for each batch.
 #' Default lambda=1. Lambda must be strictly positive. Smaller values result
 #' in more aggressive correction.
-#' @param sigma Width of soft kmeans clusters. Default sigma=0.1. Sigma scales
-#'  the distance from a cell to cluster centroids. Larger values of sigma
-#'  result in cells assigned to more clusters. Smaller values of sigma make
-#'  soft kmeans cluster approach hard clustering.
-#' @param nclust Number of clusters in model. nclust=1 equivalent to simple
-#' linear regression.
-#' @param tau Protection against overclustering small datasets with large ones.
-#'  tau is the expected number of cells per cluster.
-#' @param block.size What proportion of cells to update during clustering.
-#'  Between 0 to 1, default 0.05. Larger values may be faster but less accurate
-#' @param max.iter.cluster Maximum number of rounds to run clustering at each
-#' round of Harmony.
-#' @param epsilon.cluster Convergence tolerance for clustering round of
-#' Harmony. Set to -Inf to never stop early.
-#' @param max.iter.harmony Maximum number of rounds to run Harmony. One round
-#'  of Harmony involves one clustering and one correction step.
-#' @param epsilon.harmony Convergence tolerance for Harmony. Set to -Inf to
-#'  never stop early.
-#' @param plot_convergence Whether to print the convergence plot of the
-#' clustering objective function. TRUE to plot, FALSE to suppress. This can be
-#'  useful for debugging.
-#' @param return_object (Advanced Usage) Whether to return the Harmony object
-#' or only the corrected PCA embeddings.
-#' @param verbose DEFAULT = FALSE. Whether to print progress messages. TRUE to print,
-#' FALSE to suppress.
-#' @param reference_values (Advanced Usage) Defines reference dataset(s).
-#' Cells that have batch variables values matching reference_values will not
-#' be moved.
-#' @param cluster_prior (Advanced Usage) Provides user defined clusters for
+#' @param sigma DEFAULT 0.1.
+#' Width of soft kmeans clusters. Default sigma=0.1. Sigma scales
+#' the distance from a cell to cluster centroids. Larger values of sigma
+#' result in cells assigned to more clusters. Smaller values of sigma make
+#' soft kmeans cluster approach hard clustering.
+#' @param nclust DEFAULT NULL. Number of clusters in model. 
+#' nclust=1 equivalent to simple linear regression.
+#' @param tau DEFAULT 0. Protection against overclustering small datasets with large ones.
+#' tau is the expected number of cells per cluster.
+#' @param block_size DEFAULT 0.05. What proportion of cells to update during clustering.
+#' Between 0 to 1, default 0.05. Larger values may be faster but less accurate
+#' @param max_iter_cluster DEFAULT 200. 
+#' Maximum number of rounds to run clustering at each round of Harmony.
+#' @param epsilon_cluster DEFAULT 1e-05.
+#' Convergence tolerance for clustering round of Harmony. 
+#' Set to -Inf to never stop early.
+#' @param max_iter_harmony DEFAULT 10.
+#' Maximum number of rounds to run Harmony. 
+#' One round of Harmony involves one clustering and one correction step.
+#' @param epsilon_harmony DEFAULT 1e-04. 
+#' Convergence tolerance for Harmony. 
+#' Set to -Inf to never stop early.
+#' @param plot_convergence DEFAULT FALSE.
+#' Whether to print the convergence plot of the clustering objective function. 
+#' TRUE to plot, FALSE to suppress. 
+#' This can be useful for debugging.
+#' @param return_object DEFAULT FALSE.
+#' (Advanced Usage) Whether to return the Harmony object or only the corrected PCA embeddings.
+#' If TRUE, this will be stored in the metadata slot.
+#' @param verbose DEFAULT FALSE. 
+#' Whether to print progress messages. TRUE to print, FALSE to suppress.
+#' @param reference_values DEFAULT NULL.
+#' (Advanced Usage) Defines reference dataset(s).
+#' Cells that have batch variables values matching reference_values will not be moved.
+#' @param cluster_prior DEFAULT NULL.
+#' (Advanced Usage) Provides user defined clusters for
 #' cluster initialization. If the number of provided clusters C is less than K,
 #' Harmony will initialize K-C clusters with kmeans. C cannot exceed K.
 #'
-#'
-#' @return Returns a data.table with aligned data added in new columns.
-#'
-#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#'
+#' @return Spectre object with output_name element and metadata slot updated
+#' with output generated by the algorithm
+#' 
 #' @examples
-#' cell.dat <- run.harmony()
-#'
-#' @import data.table
-#'
+#' dat_raw = Spectre::demo.batches
+#' 
+#' # subsample for speedy execution
+#' dat_raw = Spectre::do.subsample(dat_raw, targets = rep(1000, 2), 
+#' divide.by = "Batch")
+#' 
+#' dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
+#' dat = create.spectre.object(cell_id_col = "cell_id")
+#' dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+#' 
+#' markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
+#' "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
+#' "CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn", 
+#' "CD3e_chn", "CD16.32_chn", "MHCII_chn")
+#' 
+#' dat <- run.harmony(
+#'     dat = dat,
+#'     data_source = "cyto_batch",
+#'     output_name = "cyto_batch_corrected",
+#'     use_cols = markers,
+#'     batch_col = "Batch",
+#'     verbose = FALSE
+#' )
+#' 
 #' @export
-
-run.harmony <- function(dat,
-                        align.cols,
-                        batch.col,
-                        append.name = "_aligned",
-                        do_pca = TRUE,
-                        npcs = 20,
-                        theta = NULL,
-                        lambda = NULL,
-                        sigma = 0.1,
-                        nclust = NULL,
-                        tau = 0,
-                        block.size = 0.05,
-                        max.iter.harmony = 10,
-                        max.iter.cluster = 200,
-                        epsilon.cluster = 1e-5,
-                        epsilon.harmony = 1e-4,
-                        plot_convergence = FALSE,
-                        return_object = FALSE,
-                        verbose = FALSE,
-                        reference_values = NULL,
-                        cluster_prior = NULL) {
-
-  ### Packages
-
-  if (!is.element("Spectre", installed.packages()[, 1])) stop("Spectre is required but not installed")
-  if (!is.element("data.table", installed.packages()[, 1])) stop("data.table is required but not installed")
-  if (!is.element("harmony", installed.packages()[, 1])) stop('harmony is required but not installed. You can install harmony by running devtools::install_github("immunogenomics/harmony")')
-
-  ### Require packages
-
-  require(data.table)
-  require(harmony)
-
-  ### Data prep
-
-  message("run.harmony - preparing data (1/4)")
-
-  if(length(align.cols) <= npcs){
-    npcs <- length(align.cols) -1
-  }
-  
-  start.dat <- dat
-
-  dat <- dat[, align.cols, with = FALSE]
-  nms <- names(dat)
-  dat <- as.matrix(dat)
-
-  meta <- data.table()
-  meta$CellID <- c(1:nrow(dat))
-  meta$CellID <- as.character(meta$CellID)
-  meta <- cbind(meta, start.dat[, batch.col, with = FALSE])
-  meta <- as_tibble(meta)
-
-  ### Run harmony
-
-  message("run.harmony - running harmony (2/4)")
-
-  set.seed(42)
-
-  hrm.res <- harmony::HarmonyMatrix(
-    data_mat = dat,
-    meta_data = meta,
-    vars_use = batch.col,
-    do_pca = do_pca,
-    npcs = npcs,
-    theta = theta,
-    lambda = lambda,
-    sigma = sigma,
-    nclust = nclust,
-    tau = tau,
-    block.size = block.size,
-    max.iter.harmony = max.iter.harmony,
-    max.iter.cluster = max.iter.cluster,
-    epsilon.cluster = epsilon.cluster,
-    epsilon.harmony = epsilon.harmony,
-    plot_convergence = plot_convergence,
-    return_object = return_object,
-    verbose = verbose,
-    reference_values = reference_values,
-    cluster_prior = cluster_prior
-  )
-
-  ### Final preparation and return
-
-  message("run.harmony - harmony complete, finalising data (3/4)")
-
-  hrm.res <- as.data.table(hrm.res)
-  names(hrm.res) <- paste0(names(hrm.res), append.name)
-  hrm.res
-
-  final.res <- cbind(start.dat, hrm.res)
-  message("run.harmony - returning data (4/4)")
-
-  return(final.res)
+#' 
+run.harmony <- function(
+        dat,
+        data_source,
+        output_name,
+        use_cols,
+        batch_col,
+        do_pca = TRUE,
+        npcs = 20,
+        theta = NULL,
+        lambda = NULL,
+        sigma = 0.1,
+        nclust = NULL,
+        tau = 0,
+        block_size = 0.05,
+        max_iter_harmony = 10,
+        max_iter_cluster = 200,
+        epsilon_cluster = 1e-5,
+        epsilon_harmony = 1e-4,
+        plot_convergence = FALSE,
+        return_object = FALSE,
+        verbose = FALSE,
+        reference_values = NULL,
+        cluster_prior = NULL,
+        seed = 42
+) {
+    # for testing only
+    # dat_raw = Spectre::demo.batches
+    # dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
+    # dat = create.spectre.object(cell_id_col = "cell_id")
+    # dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+    # 
+    # data_source = "cyto_batch"
+    # output_name = "cyto_batch_corrected"
+    # use_cols = names(dat$cyto_batch)[1:15]
+    # batch_col = "Batch"
+    # do_pca = TRUE
+    # npcs = 20
+    # theta = NULL
+    # lambda = NULL
+    # sigma = 0.1
+    # nclust = NULL
+    # tau = 0
+    # block_size = 0.05
+    # max_iter_harmony = 10
+    # max_iter_cluster = 200
+    # epsilon_cluster = 1e-5
+    # epsilon_harmony = 1e-4
+    # plot_convergence = FALSE
+    # return_object = FALSE
+    # verbose = TRUE
+    # reference_values = NULL
+    # cluster_prior = NULL
+    # seed = 42
+    
+    check_packages_installed(c("harmony"))
+    
+    if (verbose) {
+        message("Running Harmony")
+        message("(1/3) Preparing data.")
+    }
+    
+    if(length(use_cols) <= npcs){
+        warning("There are more use_cols than npcs. Setting npcs to number of element in use_cols - 1")
+        npcs <- length(use_cols) -1
+    
+    }
+    
+    cell_id_col <- dat@cell_id_col
+    
+    cnt_mtx <- dat[[data_source]]
+    cnt_mtx <- cnt_mtx[, use_cols, with = FALSE]
+    cnt_mtx <- Matrix::Matrix(as.matrix(cnt_mtx), sparse = TRUE)
+    rownames(cnt_mtx) <- dat[[data_source]][[cell_id_col]]
+    
+    # create metadata containing cell id and batch column
+    metadata <- dat[[data_source]][, c(cell_id_col, batch_col), with=FALSE]
+    
+    if (verbose) {
+        message("(2/3) Running Harmony.")
+    }
+    
+    set.seed(seed)
+    
+    hrm_res <- harmony::HarmonyMatrix(
+        data_mat = cnt_mtx,
+        meta_data = metadata,
+        vars_use = batch_col,
+        do_pca = do_pca,
+        npcs = npcs,
+        theta = theta,
+        lambda = lambda,
+        sigma = sigma,
+        nclust = nclust,
+        tau = tau,
+        block.size = block_size,
+        max.iter.harmony = max_iter_harmony,
+        max.iter.cluster = max_iter_cluster,
+        epsilon.cluster = epsilon_cluster,
+        epsilon.harmony = epsilon_harmony,
+        plot_convergence = plot_convergence,
+        return_object = return_object,
+        verbose = verbose,
+        reference_values = reference_values,
+        cluster_prior = cluster_prior
+    )
+    
+    if (verbose) {
+        message("(3/3) Appending result to Spectre object")
+    }
+    
+    if (return_object) {
+        hrm_res_to_return <- data.table(t(hrm_res$Z_corr))
+        hrm_res_metadata <- list("harmony_object" = hrm_res)
+    } else {
+        hrm_res_to_return <- data.table(hrm_res)
+        hrm_res_metadata <- list()
+    }
+    
+    hrm_res_to_return <- data.table(hrm_res_to_return)
+    names(hrm_res_to_return) <- paste("Component", seq(ncol(hrm_res_to_return)), sep = "_")
+    
+    hrm_res_to_return <- cbind(
+        dat[[data_source]][, c(cell_id_col, batch_col), with=FALSE],
+        hrm_res_to_return
+    )
+    setnames(hrm_res_to_return, "cell_id", cell_id_col)
+    
+    # So we can store the parameter as metadata.
+    hrm_param <- data.table(
+        vars_use = batch_col,
+        do_pca = do_pca,
+        npcs = npcs,
+        theta = theta,
+        lambda = lambda,
+        sigma = sigma,
+        nclust = nclust,
+        tau = tau,
+        block.size = block_size,
+        max.iter.harmony = max_iter_harmony,
+        max.iter.cluster = max_iter_cluster,
+        epsilon.cluster = epsilon_cluster,
+        epsilon.harmony = epsilon_harmony,
+        plot_convergence = plot_convergence,
+        return_object = return_object,
+        verbose = verbose,
+        reference_values = reference_values,
+        cluster_prior = cluster_prior,
+        seed = seed
+    )
+    hrm_param_names <- names(hrm_param)
+    hrm_param <- transpose(hrm_param)
+    setnames(hrm_param, "V1", "value")
+    hrm_param[, parameter := hrm_param_names]
+    setcolorder(hrm_param, c("parameter", "value"))
+    
+    # add the parameter into metadata
+    hrm_res_metadata$harmony_parameter <- hrm_param
+    
+    dat <- add.new.data(
+        spectre_obj = dat,
+        dat = hrm_res_to_return,
+        dat_name = output_name,
+        metadata = hrm_res_metadata
+    )
+    
+    return(dat)
 }
+
+
+
+

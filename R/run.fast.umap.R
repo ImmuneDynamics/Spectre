@@ -44,30 +44,32 @@ run.fast.umap <- function(dat,
                           n_sgd_threads = "auto",
                           batch = TRUE,
                           ...) {
+    stop("Deprecated. Please use run.umap with fast = TRUE")
+    
     # Check input
-    if (!"data.frame" %in% class(dat)) {
-        stop("dat must be of type data.frame or data.table")
-    }
-
-    # Check package dependencies
-    check_packages_installed("parallel")
-    check_packages_installed("uwot")
-
-    # for testing only
-    # dat.copy.sub <- dat.copy[, ..use.cols][sample(.N, 1000)]
-
-    set.seed(umap.seed)
-    dat.umap <- uwot::umap(
-        X = dat[, use.cols, with = FALSE],
-        n_threads = n_threads,
-        n_sgd_threads = n_sgd_threads,
-        batch = batch,
-        ...
-    )
-
-    # Preparing data to return
-    colnames(dat.umap) <- c(umap.x.name, umap.y.name)
-    dat <- cbind(dat, dat.umap)
-
-    return(dat)
+    # if (!"data.frame" %in% class(dat)) {
+    #     stop("dat must be of type data.frame or data.table")
+    # }
+    # 
+    # # Check package dependencies
+    # check_packages_installed("parallel")
+    # check_packages_installed("uwot")
+    # 
+    # # for testing only
+    # # dat.copy.sub <- dat.copy[, ..use.cols][sample(.N, 1000)]
+    # 
+    # set.seed(umap.seed)
+    # dat.umap <- uwot::umap(
+    #     X = dat[, use.cols, with = FALSE],
+    #     n_threads = n_threads,
+    #     n_sgd_threads = n_sgd_threads,
+    #     batch = batch,
+    #     ...
+    # )
+    # 
+    # # Preparing data to return
+    # colnames(dat.umap) <- c(umap.x.name, umap.y.name)
+    # dat <- cbind(dat, dat.umap)
+    # 
+    # return(dat)
 }
