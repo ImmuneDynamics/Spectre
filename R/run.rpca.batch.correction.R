@@ -83,7 +83,7 @@ run.rpca.batch.correction <- function(
     
     if (verbose) {
         message('Running rPCA batch correction.')
-        message('(1/6) setting up data.')
+        message('(1/4) setting up data.')
     }
     
     # TODO need to first check the markers exists in use_cols
@@ -106,7 +106,7 @@ run.rpca.batch.correction <- function(
         
         sparse_cnt_mtx <- t(as.matrix(cnt_mtx[, new_col_name, with = FALSE]))
         colnames(sparse_cnt_mtx) <- cnt_mtx[[cell_id_col]]
-        sparse_cnt_mtx <- Matrix::Matrix(sparse_cnt_mtx)
+        sparse_cnt_mtx <- Matrix::Matrix(sparse_cnt_mtx, sparse = TRUE)
         
         if (verbose) {
             message(paste('(2/6) creating Seurat object for batch', batch))
@@ -114,16 +114,32 @@ run.rpca.batch.correction <- function(
         
         # TODO: we should fill the scale.data slot with the sparse_cnt_mtx.
         # Assume we have prepared the data.
-        seurat_obj <- Seurat::CreateSeuratObject(counts = sparse_cnt_mtx, assay = 'cyto')
-        # kind of useless as it will always return all the features? but needed for later
-        # can be bypassed using dat@assays$RNA@var.features
-        seurat_obj <- Seurat::FindVariableFeatures(
-            seurat_obj, selection.method = "vst", nfeatures = length(use_cols), 
-            verbose=verbose
+        seurat_obj <- Seurat::CreateSeuratObject(
+            counts = sparse_cnt_mtx, 
+            data = sparse_cnt_mtx,
+            assay = 'cyto'
         )
         
-        # have to do this as otherwise scale data will complain later
-        seurat_obj[['cyto']]$data <- seurat_obj[['cyto']]$counts
+        # TODO: can't just set the scale.data slot. RunPCA will complain,
+        # and we will need RunPCA before we can do rPCA.. Weird.
+        seurat_obj <- Seurat::ScaleData(
+            object = seurat_obj, 
+            features = new_col_name, 
+            verbose = verbose, assay = 'cyto'
+        )
+        # no need to set PCs as it will just default either 50 or less if we have less markers than 50
+        # TODO not sure about the approx parameter to run standard svd instead. 
+        # Note, the number of PCs will be the number of markers if setting approx=FALSE.
+        # If approx is true, npcs will be number of markers - 1. Not sure why.
+        # TODO manually setting the npcs rather than getting the function to infer it. Is this the best way?
+        seurat_obj <- Seurat::RunPCA(
+            object = seurat_obj, 
+            features = new_col_name, 
+            verbose = verbose, 
+            assay = 'cyto', 
+            seed.use = seed, 
+            npcs = length(use_cols)
+        )
         
         return(seurat_obj)
         
@@ -133,49 +149,27 @@ run.rpca.batch.correction <- function(
     ### Select integration features, scale data, and run PCA
     
     if (verbose) {
-        message('(3/6) Performing scaling and PCA.')
-    }
-    
-    # this will rank the features
-    integ_features <- Seurat::SelectIntegrationFeatures(
-        object.list = seurat_objs, 
-        verbose=verbose
-    )
-    
-    seurat_objs <- lapply(seurat_objs, function(seurat_obj) {
-        seurat_obj <- Seurat::ScaleData(seurat_obj, features = integ_features, 
-                               verbose = verbose, assay = 'cyto')
-        # no need to set PCs as it will just default either 50 or less if we have less markers than 50
-        # TODO not sure about the approx parameter to run standard svd instead. Note, the number of PCs will be the number of markers
-        # if setting approx=FALSE. If approx is true, npcs will be number of markers - 1. Not sure why.
-        # TODO manually setting the npcs rather than getting the function to infer it. Is this the best way?
-        seurat_obj <- Seurat::RunPCA(seurat_obj, features = integ_features, verbose = verbose, 
-                            assay = 'cyto', seed.use = seed, npcs = length(use_cols))
-        
-        return(seurat_obj)
-    })
-    
-    if (verbose) {
-        message('(4/6) Finding integration anchors.')
+        message('(2/4) Finding integration anchors.')
     }
     
     if(is.null(reference_batch)){
         # TODO have to make sure the dims is 1 less than number of features we have. Otherwise it gives stupid error.
         immune_anchors <- Seurat::FindIntegrationAnchors(
             object.list = seurat_objs, 
-            anchor.features = integ_features, 
-            dims = seq(length(integ_features)-1), 
+            anchor.features = new_col_name, 
+            dims = seq(length(new_col_name)-1), 
             k.anchor = k_anchor,
             reduction = 'rpca',
-            verbose = verbose)
+            verbose = verbose
+        )
         
         
     } else {
         # TODO have to make sure the dims is 1 less than number of features we have. Otherwise it gives stupid error.
         immune_anchors <- Seurat::FindIntegrationAnchors(
             object.list = seurat_objs, 
-            anchor.features = integ_features, 
-            dims = seq(length(integ_features)-1), 
+            anchor.features = new_col_name, 
+            dims = seq(length(new_col_name)-1), 
             k.anchor = k_anchor,
             reduction = 'rpca',
             reference = which(names(seurat_objs) == reference_batch),
@@ -185,13 +179,13 @@ run.rpca.batch.correction <- function(
     ### Integrate the data
     
     if (verbose) {
-        message('(5/6) Integrating data')
+        message('(3/4) Integrating data')
     }
     
     # no way to use standard svd. just have to put up with it for now.
     batch_corrected_seurat_obj <- Seurat::IntegrateData(
         anchorset = immune_anchors, 
-        dims = seq(length(integ_features)-1),
+        dims = seq(length(new_col_name)-1),
         verbose = verbose
     )
     # just to be sure!
@@ -200,7 +194,7 @@ run.rpca.batch.correction <- function(
     ### Re-construct Spectre object
     
     if (verbose) {
-        message('(6/6) Constructing final data')
+        message('(4/4) Constructing final data')
     }
     
     batch_corrected_dat <- data.table::transpose(as.data.table(batch_corrected_seurat_obj[['integrated']]$data))
