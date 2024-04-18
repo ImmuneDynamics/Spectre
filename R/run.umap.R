@@ -223,19 +223,26 @@ setMethod("run.umap", "Spectre", function(
         }
         df[[umap.y.name]] <- umap_res[[umap.y.name]]
         
+        dat <- add.new.data(
+            spectre_obj = dat,
+            dat = df,
+            dat_name = data_source
+        )
+        
     } else {
         # just so the cell id column is first!
         cell_id_col <- dat@cell_id_col
         df <- data.table(cell_id = df[[cell_id_col]], umap_res)
         setnames(df, "cell_id", cell_id_col)
         
+        dat <- add.new.data(
+            spectre_obj = dat,
+            dat = df,
+            dat_name = output_name
+        )
     }
     
-    dat <- add.new.data(
-        spectre_obj = dat,
-        dat = df,
-        dat_name = data_source
-    )
+    
     
     return(dat)
     
