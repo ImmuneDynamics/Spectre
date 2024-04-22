@@ -17,8 +17,6 @@
 #' @return An updated spectre object
 #' @export
 #'
-#' 
-#' 
 do.clr <- function(dat, data_source, output_name, 
                    use_cols, how = c("across_cells", "across_features"),
                    verbose = FALSE) {
