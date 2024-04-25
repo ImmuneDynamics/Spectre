@@ -6,6 +6,7 @@ test_that("cycombine batch correction works", {
                                     divide.by = "Batch")
     
     dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
+    setnames(dat_raw, "Batch", "batch_id")
     dat = create.spectre.object(cell_id_col = "cell_id")
     dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
     
@@ -20,17 +21,21 @@ test_that("cycombine batch correction works", {
             data_source = "cyto_batch",
             output_name = "cyto_batch_corrected",
             use_cols = markers,
-            batch_col = "Batch",
+            batch_col = "batch_id",
             verbose = FALSE
         )
     )
     
     # just check there is a new element
     expect_true("cell_id" %in% names(dat$cyto_batch_corrected))
-    expect_true("Batch" %in% names(dat$cyto_batch_corrected))
+    expect_true("batch_id" %in% names(dat$cyto_batch_corrected))
     expect_equal(nrow(dat$cyto_batch), nrow(dat$cyto_batch_corrected))
     
     # check the metadata
     expect_true("parameter" %in% names(attributes(dat$cyto_batch_corrected)))
     expect_true("cycombine_extra_info" %in% names(attributes(dat$cyto_batch_corrected)))
+    
+    # check the original data's column name has not been changed.
+    expect_true("batch_id" %in% names(dat$cyto_batch))
+    expect_false("batch" %in% names(dat$cyto_batch))
 })

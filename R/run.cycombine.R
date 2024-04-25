@@ -129,7 +129,9 @@ run.cycombine <- function(
     
     cell_id_col <- dat@cell_id_col
     
-    df <- dat[[data_source]]
+    # have to copy because otherwise it will change the column name of the
+    # spectre object to "batch".
+    df <- copy(dat[[data_source]])
     
     # cyCombine "batch" column
     setnames(df, batch_col, "batch")
