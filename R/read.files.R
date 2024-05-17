@@ -19,6 +19,7 @@
 #' @param file.loc What is the location of your files?
 #' @param file.type DEFAULT = ".csv". What type of files do you want to read.
 #' Can be ".csv" or ".fcs".
+#' @param files DEFAULT = NULL. Vector of file names if intention is to only import a subset of files in the directory.
 #' @param nrows DEFAULT = NULL. Can specify a numerical target for the number of
 #' cells (rows) to be read from each file. 
 #' Please note, order is random in FCS files.
@@ -32,7 +33,9 @@
 #' Only used when reading from FCS files.
 #' @param as_spectre_object DEFAULT = FALSE. 
 #' Whether to return the files as a Spectre object.
-#' @param verbose DEFAULT = FALSE.
+#' @param add.cellid DEFAULT = TRUE 
+#' Whether to add a column with a newly generated 'CellID' for each row.
+#' @param verbose DEFAULT = TRUE
 #' If TRUE, the function will print progress updates as it executes.
 #'
 #' @return Either a list of data.tables (one element per file) or a SpectreObject
@@ -51,26 +54,37 @@
 #' @export
 read.files <- function(file.loc,
                        file.type = c(".csv", ".fcs"),
+                       files = NULL,
                        nrows = NULL,
                        do.embed.file.names = TRUE,
                        truncate_max_range = TRUE,
                        header = TRUE,
                        as_spectre_object = FALSE,
-                       verbose = FALSE) {
+                       add.cellid = TRUE,
+                       verbose = TRUE) {
     if (!dir.exists(file.loc)) {
         error(paste(file.loc, "directory does not exist!"))
     }
     
     file.type <- match.arg(file.type)
-    file.names <- list.files(
+    
+    if(is.null(files)){
+      file.names <- list.files(
         path = file.loc, 
         pattern = paste0("\\", file.type, "$")
-    )
-    
+      )
+    } else {
+      file.names <- files
+    }
+
     if (length(file.names) == 0) {
         error("We did not find any files in that directory, are you sure this is the right place?")
     }
     
+    
+    ## Initial message
+    
+    message("Reading files")
     
     ## For reading CSV files
     
@@ -82,16 +96,15 @@ read.files <- function(file.loc,
             if (is.null(nrows)) {
                 
                 if (verbose) {
-                    message(paste("Reading file", file))
+                    message(paste("-- reading", file.names[[file_no]]))
                 }
                 
                 tempdata <- data.table::fread(file, check.names = FALSE, header = header)
             } else {
                 
                 if (verbose) {
-                    message(paste("Reading only the first", nrows, 
-                                  "rows (cells) for file",
-                                  file))
+                    message(paste("-- reading the first", nrows, "rows (cells) of",
+                                  file.names[[file_no]]))
                 }
                 
                 tempdata <- data.table::fread(file,
@@ -106,6 +119,9 @@ read.files <- function(file.loc,
                 tempdata$FileNo <- file_no
             }
             
+            if(add.cellid){
+              tempdata$CellID <- paste0(tempdata$FileName, "_", c(1:nrow(tempdata)))
+            }
             
             return(tempdata)
         })
@@ -175,6 +191,10 @@ read.files <- function(file.loc,
                 tempdata$FileNo <- file_no
             }
             
+            if(add.cellid){
+              tempdata$CellID <- paste0(tempdata$FileName, "_", c(1:nrow(tempdata)))
+            }
+
             return(tempdata)
         })
         
