@@ -205,12 +205,9 @@
         cell.dat <- do.add.cols(cell.dat, "FlowSOM_metacluster", annots, "Values")
         cell.dat
         
-        
-
         cell.sub <- do.add.cols(cell.sub, "FlowSOM_metacluster", annots, "Values")
         cell.sub
         
-
         make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", col.type = 'factor', add.label = TRUE)
         make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", group.col, col.type = 'factor')
 
@@ -347,7 +344,7 @@
         setwd("Output - info")
 
         sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
-        session_info()
+        sessionInfo()
         sink()
 
         write(cellular.cols, "cellular.cols.txt")

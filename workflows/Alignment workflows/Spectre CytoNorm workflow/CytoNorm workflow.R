@@ -16,6 +16,12 @@
         Spectre::package.check()    # Check that all required packages are installed
         Spectre::package.load()     # Load required packages
 
+    ### Install CytoNorm package
+        
+        if(!require('remotes')) {install.packages('remotes')}
+        library('remotes')
+        remotes::install_github(repo = "saeyslab/CytoNorm")
+        
     ### Set PrimaryDirectory
         
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
@@ -158,11 +164,7 @@
 ##########################################################################################################
 #### 5. Batch alignment
 ##########################################################################################################
-
-    setwd(OutputDirectory)
-    dir.create("Output 2 - alignment")
-    setwd("Output 2 - alignment")
-        
+     
     ### Extract reference samples
         
         sample.info
@@ -178,9 +180,8 @@
     ### Initial clustering
         
         setwd(OutputDirectory)
+        dir.create("Output 2 - alignment")
         setwd("Output 2 - alignment")
-        dir.create("1 - ref pre-alignment")
-        setwd("1 - ref pre-alignment")
         
         cytnrm <- prep.cytonorm(dat = ref.dat, 
                                 cellular.cols = cellular.cols, 
@@ -193,6 +194,13 @@
         cytnrm.sub <- do.subsample(cytnrm$dt, 10000)
         cytnrm.sub <- run.umap(cytnrm.sub, use.cols = cluster.cols)
         
+    ### Initial clustering plots
+        
+        setwd(OutputDirectory)
+        setwd("Output 2 - alignment")
+        dir.create("1 - ref pre-alignment")
+        setwd("1 - ref pre-alignment")
+        
         make.colour.plot(cytnrm.sub, 'UMAP_X', 'UMAP_Y', 'File', 'factor')
         make.multi.plot(cytnrm.sub, 'UMAP_X', 'UMAP_Y', cellular.cols)
         make.colour.plot(cytnrm.sub, 'UMAP_X', 'UMAP_Y', 'prep.fsom.metacluster', 'factor', add.label = TRUE)
@@ -203,6 +211,7 @@
     ### Alignment
         
         setwd(OutputDirectory)
+        dir.create("Output 2 - alignment")
         setwd("Output 2 - alignment")
 
         cytnrm <- train.cytonorm(model = cytnrm, align.cols = cellular.cols)
@@ -294,12 +303,12 @@
 
     ### Annotate
 
-        annots <- list("Mature neutrophils" = c(24,29),
-                       "Immature neutrophils" = c(21,22),
-                       "Monocytes" = c(28,26,25),
-                       "T cells" = c(9,8,7,6,1),
-                       "Mature B cells" = c(3,2,4,11,13),
-                       "Immature B cells" = c(5)
+        annots <- list("Mature neutrophils" = c(24,25,23,27,30),
+                       "Immature neutrophils" = c(22),
+                       "Monocytes" = c(29,26),
+                       "T cells" = c(2,1,8,7),
+                       "Mature B cells" = c(3,4,9,5,10,13),
+                       "Immature B cells" = c(6)
         )
 
         annots <- do.list.switch(annots)
@@ -393,7 +402,7 @@
         
         annot.cols <- c(group.col, batch.col)
         
-        plot.cols <- names(sum.dat)[c(4:21)]
+        plot.cols <- names(sum.dat)[c(4:24)]
         plot.cols
         
     ### Reorder summary data and SAVE
@@ -464,7 +473,7 @@
         setwd("Output - info")
 
         sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
-        session_info()
+        sessionInfo()
         sink()
 
         write(aligned.cellular.cols, "cellular.cols.txt")
