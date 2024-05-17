@@ -23,6 +23,3 @@ Returns a list of spatial data objects.
 \description{
 Read TIFF files into R and and create spatial data object
 }
-\examples{
-
-}
