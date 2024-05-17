@@ -35,6 +35,7 @@ Imports:
     patchwork,
     pheatmap,
     RColorBrewer,
+    rstudioapi,
     rsvd,
     Rtsne,
     scales,

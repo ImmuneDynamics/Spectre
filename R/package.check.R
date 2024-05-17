@@ -19,8 +19,9 @@
 
 package.check <- function(type = "general"){
   
-    deets <- devtools::package_info('Spectre', include_base = FALSE, dependencies = FALSE)
-    os.deets <- devtools::session_info()
+    deets <- utils::packageVersion('spectre')
+    os.deets <- utils::sessionInfo()
+    r.deets <- R.Version()
     
     message(paste0('Package: ', deets$package))
     
@@ -39,8 +40,9 @@ package.check <- function(type = "general"){
     message(paste0(' -- Install date:      ', deets$date))
     message(paste0(' -- Install source:    ', deets$source))
     message(paste0(' -- Install path:      ', deets$path))
-    message(paste0(' -- R version:         ', os.deets$platform$version))
-    message(paste0(' -- OS:                ', os.deets$platform$os))
+    message(paste0(' -- R version:         ', r.deets$version.string))
+    message(paste0(' -- OS:                ', os.deets$running))
+    message(paste0(' -- OS detail:         ', os.deets$platform))
     message(paste0('               '))
     
     if(deets$ondiskversion != deets$loadedversion){
@@ -54,121 +56,131 @@ package.check <- function(type = "general"){
     
     res.list <- list()
   
-    if(!is.element('data.table', installed.packages()[,1])){
-      message(' -- data.table is required but not installed')
-      res.list[['data.table']] <- 'data.table'
-    } 
-      
-    if(!is.element('plyr', installed.packages()[,1])) {
-      message(' -- plyr is required but not installed')
-      res.list[['plyr']] <- 'plyr'
-    } 
-    
-    if(!is.element('dplyr', installed.packages()[,1])) {
-      message(' -- dplyr is required but not installed')
-      res.list[['data.table']] <- 'data.table'
-    } 
-    
-    if(!is.element('tidyr', installed.packages()[,1])) {
-      message(' -- tidyr is required but not installed')
-      res.list[['tidyr']] <- 'tidyr'
-    } 
-    
-    if(!is.element('rstudioapi', installed.packages()[,1])) {
-      message(' -- rstudioapi is required but not installed')
-      res.list[['rstudioapi']] <- 'rstudioapi'
-    } 
-    
-    if(!is.element('Rtsne', installed.packages()[,1])) {
-      message(' -- Rtsne is required but not installed')
-      res.list[['Rtsne']] <- 'Rtsne'
-    } 
-    
-    if(!is.element('umap', installed.packages()[,1])) {
-      message(' -- umap is required but not installed')
-      res.list[['umap']] <- 'umap'
-    } 
-    
-    if(!is.element('reticulate', installed.packages()[,1])) {
-      message(' -- reticulate is required but not installed')
-      res.list[['reticulate']] <- 'reticulate'
-    } 
-    
-    if(!is.element('ggplot2', installed.packages()[,1])) {
-      message(' -- ggplot2 is required but not installed')
-      res.list[['ggplot2']] <- 'ggplot2'
-    } 
-    
-    if(!is.element('ggthemes', installed.packages()[,1])) {
-      message(' -- ggthemes is required but not installed')
-      res.list[['ggthemes']] <- 'ggthemes'
-    } 
-    
-    if(!is.element('scales', installed.packages()[,1])) {
-      message(' -- scales is required but not installed')
-      res.list[['scales']] <- 'scales'
-    } 
-    
-    if(!is.element('colorRamps', installed.packages()[,1])) {
+    if(!is.element('colorRamps', installed.packages()[,1])){
       message(' -- colorRamps is required but not installed')
       res.list[['colorRamps']] <- 'colorRamps'
     } 
     
-    if(!is.element('RColorBrewer', installed.packages()[,1])) {
-      message(' -- RColorBrewer is required but not installed')
-      res.list[['RColorBrewer']] <- 'RColorBrewer'
+    if(!is.element('data.table', installed.packages()[,1])){
+      message(' -- data.table is required but not installed')
+      res.list[['data.table']] <- 'data.table'
     } 
     
-    if(!is.element('gridExtra', installed.packages()[,1])) {
-      message(' -- gridExtra is required but not installed')
-      res.list[['gridExtra']] <- 'gridExtra'
+    if(!is.element('', installed.packages()[,1])){
+      message(' --  is required but not installed')
+      res.list[['']] <- ''
     } 
     
-    if(!is.element('ggpointdensity', installed.packages()[,1])) {
+    if(!is.element('dendsort', installed.packages()[,1])){
+      message(' -- dendsort is required but not installed')
+      res.list[['dendsort']] <- 'dendsort'
+    } 
+    
+    if(!is.element('factoextra', installed.packages()[,1])){
+      message(' -- factoextra is required but not installed')
+      res.list[['factoextra']] <- 'factoextra'
+    } 
+    
+    if(!is.element('flowCore', installed.packages()[,1])){
+      message(' -- flowCore is required but not installed')
+      res.list[['flowCore']] <- 'flowCore'
+    } 
+    
+    if(!is.element('FlowSOM', installed.packages()[,1])){
+      message(' -- FlowSOM is required but not installed')
+      res.list[['FlowSOM']] <- 'FlowSOM'
+    } 
+    
+    if(!is.element('ggplot2', installed.packages()[,1])){
+      message(' -- ggplot2 is required but not installed')
+      res.list[['ggplot2']] <- 'ggplot2'
+    } 
+    
+    if(!is.element('ggpointdensity', installed.packages()[,1])){
       message(' -- ggpointdensity is required but not installed')
       res.list[['ggpointdensity']] <- 'ggpointdensity'
     } 
     
-    if(!is.element('pheatmap', installed.packages()[,1])) {
-      message(' -- pheatmap is required but not installed')
-      res.list[['pheatmap']] <- 'pheatmap'
-    } 
-    
-    if(!is.element('ggpubr', installed.packages()[,1])) {
+    if(!is.element('ggpubr', installed.packages()[,1])){
       message(' -- ggpubr is required but not installed')
       res.list[['ggpubr']] <- 'ggpubr'
     } 
     
-    if(!is.element('caret', installed.packages()[,1])) {
-      message(' -- caret is required for machine learning analysis but is not installed')
-      res.list[['caret']] <- 'caret'
+    if(!is.element('ggthemes', installed.packages()[,1])){
+      message(' -- ggthemes is required but not installed')
+      res.list[['ggthemes']] <- 'ggthemes'
     } 
     
-    if(!is.element('class', installed.packages()[,1])) {
-      message(' -- class is required for machine learning analysis but is not installed')
-      res.list[['class']] <- 'class'
+    if(!is.element('gridExtra', installed.packages()[,1])){
+      message(' -- gridExtra is required but not installed')
+      res.list[['gridExtra']] <- 'gridExtra'
     } 
     
-    if(!is.element('flowCore', installed.packages()[,1])) {
-      message(' -- flowCore is required but not installed. Please install from BioConductor.')
-      res.list[['flowCore']] <- 'flowCore'
+    if(!is.element('gtools', installed.packages()[,1])){
+      message(' -- gtools is required but not installed')
+      res.list[['gtools']] <- 'gtools'
     } 
     
-    if(!is.element('Biobase', installed.packages()[,1])) {
-      message(' -- Biobase is required but not installed. Please install from BioConductor.')
-      res.list[['Biobase']] <- 'Biobase'
+    if(!is.element('irlba', installed.packages()[,1])){
+      message(' --  irlba is required but not installed')
+      res.list[['irlba']] <- 'irlba'
     } 
     
-    if(!is.element('flowViz', installed.packages()[,1])) {
-      message(' -- flowViz is required but not installed. Please install from BioConductor.')
-      res.list[['flowViz']] <- 'flowViz'
+    if(!is.element('parallel', installed.packages()[,1])){
+      message(' -- parallel is required but not installed')
+      res.list[['parallel']] <- 'parallel'
     } 
     
-    if(!is.element('FlowSOM', installed.packages()[,1])) {
-      message(' -- FlowSOM is required but not installed. Please install from BioConductor.')
-      res.list[['FlowSOM']] <- 'FlowSOM'
+    if(!is.element('pheatmap', installed.packages()[,1])){
+      message(' -- pheatmap is required but not installed')
+      res.list[['pheatmap']] <- 'pheatmap'
     } 
     
+    if(!is.element('RColorBrewer', installed.packages()[,1])){
+      message(' -- RColorBrewer is required but not installed')
+      res.list[['RColorBrewer']] <- 'RColorBrewer'
+    } 
+    
+    if(!is.element('rstudioapi', installed.packages()[,1])){
+      message(' -- rstudioapi is required but not installed')
+      res.list[['rstudioapi']] <- 'rstudioapi'
+    } 
+    
+    if(!is.element('rsvd', installed.packages()[,1])){
+      message(' -- rsvd is required but not installed')
+      res.list[['rsvd']] <- 'rsvd'
+    } 
+    
+    if(!is.element('Rtsne', installed.packages()[,1])){
+      message(' -- Rtsne is required but not installed')
+      res.list[['']] <- 'Rtsne'
+    } 
+    
+    if(!is.element('scales', installed.packages()[,1])){
+      message(' -- scales is required but not installed')
+      res.list[['scales']] <- 'scales'
+    } 
+    
+    if(!is.element('scattermore', installed.packages()[,1])){
+      message(' -- scattermore is required but not installed')
+      res.list[['scattermore']] <- 'scattermore'
+    } 
+    
+    if(!is.element('umap', installed.packages()[,1])){
+      message(' -- umap is required but not installed')
+      res.list[['umap']] <- 'umap'
+    } 
+    
+    if(!is.element('uwot', installed.packages()[,1])){
+      message(' -- uwot is required but not installed')
+      res.list[['uwot']] <- 'uwot'
+    } 
+    
+    if(!is.element('viridis', installed.packages()[,1])){
+      message(' -- viridis is required but not installed')
+      res.list[['viridis']] <- 'viridis'
+    } 
+
 
   if(type == "spatial"){
     if(!is.element('raster', installed.packages()[,1])) {
@@ -179,11 +191,6 @@ package.check <- function(type = "general"){
     if(!is.element('tiff', installed.packages()[,1])) {
       message(' -- tiff is required for SPATIAL analysis but is not installed')
       res.list[['tiff']] <- 'tiff'
-    } 
-    
-    if(!is.element('rgeos', installed.packages()[,1])) {
-      message(' -- rgeos is required for SPATIAL analysis but is not installed')
-      res.list[['rgeos']] <- 'rgeos'
     } 
     
     if(!is.element('exactextractr', installed.packages()[,1])) {
@@ -242,3 +249,4 @@ package.check <- function(type = "general"){
     }
 
 }
+
