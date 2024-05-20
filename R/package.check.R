@@ -25,7 +25,7 @@ package.check <- function(type = "general"){
     
     message(paste0('Package: ', deets$Package))
     message(paste0(' -- Version:           ', deets$Version))
-    message(paste0(' -- Install date:      ', deets$Date))
+    message(paste0(' -- Install date:      ', deets$Packaged))
     message(paste0(' -- Install source:    ', deets$RemoteType))
     message(paste0(' -- R version:         ', r.deets$version.string))
     message(paste0(' -- OS:                ', os.deets$running))
