@@ -370,13 +370,12 @@
 
     ### Annotate
 
-        annots <- list("T cells" = c(9,10),
-                       "Ly6Chi monocyte" = c(7),
-                       "Immature neutrophils" = c(6),
-                       "Mature neutriphils" = c(3),
-                       "Ly6C+ B cells" = c(4),
-                       "B cells" = c(1),
-                       "Other" = c(2,8,5)
+        annots <- list("T cells" = c(4,1),
+                       "Ly6Chi monocyte" = c(12,13,14),
+                       "Immature neutrophils" = c(10),
+                       "Mature neutriphils" = c(11,15),
+                       "B cells" = c(2,3),
+                       "Other" = c(5,6,7,9,8)
                        )
 
         annots <- do.list.switch(annots)
@@ -426,7 +425,7 @@
         setwd("Output - info")
 
         sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
-        session_info()
+        sessionInfo()
         sink()
 
         write(raw.cols, "raw.cols.txt")
