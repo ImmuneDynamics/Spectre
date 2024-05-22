@@ -1,6 +1,6 @@
 #' run.rpca
 #'
-#' @import data.table Matrix Seurat
+#' @import data.table
 #'
 #' @export
 
