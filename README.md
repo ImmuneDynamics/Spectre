@@ -43,14 +43,14 @@ _**In v1.1 we have removed the package dependencies `rgeos` and `rgdal` as these
 Install and load the 'devtools' library.
 
 ```     
-if(!require('devtools')) {install.packages('devtools')}
-library('devtools')
+if(!require('remotes')) {install.packages('remotes')}
+library('remotes')
 ```
 
 Subsequently, use the 'install_github' function to install and load the Spectre package. By default this will load the 'master' branch, which is the same as the latest stable release version (listed at https://github.com/immunedynamics/Spectre/releases). To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
 
 ```
-install_github("immunedynamics/spectre")
+remotes::install_github(repo = "immunedynamics/spectre")
 ```
 
 You will see the following returned. We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages. You can update your packages after installation.
