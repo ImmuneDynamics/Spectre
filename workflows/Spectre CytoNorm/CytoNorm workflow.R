@@ -33,6 +33,7 @@
     ### Set 'input' directory
         
         setwd(PrimaryDirectory)
+        dir.create('../data', showWarnings = FALSE)
         setwd("../data/")
         InputDirectory <- getwd()
         setwd(PrimaryDirectory)
@@ -40,17 +41,38 @@
     ### Set 'metadata' directory
         
         setwd(PrimaryDirectory)
+        dir.create('../metadata', showWarnings = FALSE)
         setwd("../metadata/")
         MetaDirectory <- getwd()
         setwd(PrimaryDirectory)
 
     ### Create output directory
         
+        setwd(PrimaryDirectory)
         dir.create("Output_Spectre", showWarnings = FALSE)
         setwd("Output_Spectre")
         OutputDirectory <- getwd()
         setwd(PrimaryDirectory)
-
+        
+##########################################################################################################
+#### Demo dataset
+##########################################################################################################
+        
+    ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
+        
+        # setwd(PrimaryDirectory)
+        # setwd("../")
+        # getwd()
+        # download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/simBatches.zip?raw=TRUE", destfile = 'simBatches.zip', mode = 'wb')
+        # unzip(zipfile = 'simBatches.zip')
+        # for(i in list.files('simBatches/data', full.names = TRUE)){
+        #   file.rename(from = i,  to = gsub('simBatches/', '', i))
+        # }
+        # for(i in list.files('simBatches/metadata', full.names = TRUE)){
+        #   file.rename(from = i,  to = gsub('simBatches/', '', i))
+        # }
+        # unlink(c('simBatches/', 'simBatches.zip', '__MACOSX'), recursive = TRUE)
+        
 ##########################################################################################################
 #### 2. Import and prep data
 ##########################################################################################################

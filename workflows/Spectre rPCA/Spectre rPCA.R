@@ -1,5 +1,5 @@
 ##########################################################################################################
-#### Spectre - Simple Discovery Workflow
+#### Spectre - rPCA Batch Integration Workflow
 ##########################################################################################################
 
     # Spectre R package: https://immunedynamics.io/spectre
@@ -10,23 +10,23 @@
 ##########################################################################################################
 
     ### Create a master folder with a meaningful name. Then inside that folder, insert the following:
-
+    
         # One folder called 'data' -- this will contain your data CSV or FCS files
         # One folder called 'metadata' -- this will contain a CSV containg your sample metadata
-        # One folder called 'Spectre simple discovery' or similar -- place this analysis script there
-
+        # One folder called 'Spectre rPCA' or similar -- place this analysis script there
+    
     ### Example:
-
+    
         # CNS analysis
         #   /data
         #       -- Contains data files, one CSV or FCS per sample
         #   /metadata
         #       -- Contains a CSV containing sample metadata (group, batch, etc)
-        #   /Spectre simple discovery
-        #       -- Spectre simple.discovery.R
+        #   /Spectre rPCA
+        #       -- Spectre rPCA.R
 
 ##########################################################################################################
-#### 1. Load packages, and set directories
+#### 1. Load packages, and set working directory
 ##########################################################################################################
 
     ### Load libraries
@@ -35,6 +35,11 @@
         Spectre::package.check()    # Check that all required packages are installed
         Spectre::package.load()     # Load required packages
 
+    ### Install Seurat package
+        
+        if(!require('Seurat')) {install.packages('Seurat')}
+        library('Seurat')
+        
     ### Set PrimaryDirectory
         
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located
@@ -42,8 +47,8 @@
         getwd()
         PrimaryDirectory <- getwd()
         PrimaryDirectory
-
-    ### Set or create 'input' directory
+        
+    ### Set 'input' directory
         
         setwd(PrimaryDirectory)
         dir.create('../data', showWarnings = FALSE)
@@ -51,7 +56,7 @@
         InputDirectory <- getwd()
         setwd(PrimaryDirectory)
 
-    ### Set or create 'metadata' directory
+    ### Set 'metadata' directory
         
         setwd(PrimaryDirectory)
         dir.create('../metadata', showWarnings = FALSE)
@@ -61,12 +66,11 @@
 
     ### Create output directory
         
-        setwd(PrimaryDirectory)
         dir.create("Output_Spectre", showWarnings = FALSE)
         setwd("Output_Spectre")
         OutputDirectory <- getwd()
         setwd(PrimaryDirectory)
-        
+
 ##########################################################################################################
 #### Demo dataset
 ##########################################################################################################
@@ -76,15 +80,15 @@
         # setwd(PrimaryDirectory)
         # setwd("../")
         # getwd()
-        # download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/msCNS.zip?raw=TRUE", destfile = 'msCNS.zip', mode = 'wb')
-        # unzip(zipfile = 'msCNS.zip')
-        # for(i in list.files('msCNS/data', full.names = TRUE)){
-        #   file.rename(from = i,  to = gsub('msCNS/', '', i))
+        # download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/simBatches.zip?raw=TRUE", destfile = 'simBatches.zip', mode = 'wb')
+        # unzip(zipfile = 'simBatches.zip')
+        # for(i in list.files('simBatches/data', full.names = TRUE)){
+        #   file.rename(from = i,  to = gsub('simBatches/', '', i))
         # }
-        # for(i in list.files('msCNS/metadata', full.names = TRUE)){
-        #   file.rename(from = i,  to = gsub('msCNS/', '', i))
+        # for(i in list.files('simBatches/metadata', full.names = TRUE)){
+        #   file.rename(from = i,  to = gsub('simBatches/', '', i))
         # }
-        # unlink(c('msCNS/', 'msCNS.zip', '__MACOSX'), recursive = TRUE)
+        # unlink(c('simBatches/', 'simBatches.zip', '__MACOSX'), recursive = TRUE)
         
 ##########################################################################################################
 #### 2. Import and prep data
@@ -133,11 +137,11 @@
 
         as.matrix(names(cell.dat))
 
-        to.asinh <- names(cell.dat)[c(1:9)]
+        to.asinh <- names(cell.dat)[c(1:8)]
         to.asinh
 
         cofactor <- 500
-        plot.against <- "Ly6C_asinh"
+        plot.against <- "BV605 Ly6C_asinh"
 
         cell.dat <- do.asinh(cell.dat, to.asinh, cofactor = cofactor)
         transformed.cols <- paste0(to.asinh, "_asinh")
@@ -157,23 +161,37 @@
         sample.info
         
         meta.dat
-        counts <- meta.dat[,c(2,5)]
-        counts
-
-        cell.dat <- do.add.cols(cell.dat, "FileName", sample.info, "Filename", rmv.ext = TRUE)
+        
+        cell.dat <- do.add.cols(cell.dat, "FileName", sample.info, "FileName", rmv.ext = TRUE)
         cell.dat
 
-    ### Columns
+    ### Cellular columns
 
         as.matrix(names(cell.dat))
 
-        cellular.cols <- names(cell.dat)[c(12:20)]
+        cellular.cols <- names(cell.dat)[c(11:18)]
         as.matrix(cellular.cols)
 
-        cluster.cols <- names(cell.dat)[c(12:20)]
+    ### Clustering columns        
+        
+        as.matrix(names(cell.dat))
+        
+        cluster.cols <- names(cell.dat)[c(11:18)]
         as.matrix(cluster.cols)
 
-        exp.name <- "CNS experiment"
+    ### Clusters to align
+        
+        as.matrix(names(cell.dat))
+        
+        raw.cols <- names(cell.dat)[c(11:18)]
+        as.matrix(raw.cols)
+
+    ### Factors
+        
+        exp.name <- "BM experiment"
+    
+        as.matrix(names(cell.dat))
+        
         sample.col <- "Sample"
         group.col <- "Group"
         batch.col <- "Batch"
@@ -184,35 +202,158 @@
 
         unique(cell.dat[[group.col]])
         
-        sub.targets <- c(2000, 20000) # target subsample numbers from each group
-        sub.targets
+        sub.targets.group <- c(20000, 20000) # target subsample numbers from each group
+        sub.targets.group
+        
+    ### Subsample targets per batch
+        
+        data.frame(table(cell.dat[[batch.col]])) # Check number of cells per sample.
+        
+        unique(cell.dat[[batch.col]])
+        
+        sub.targets.batch <- c(20000, 20000) # target subsample numbers from each group
+        sub.targets.batch
 
+    ### Choose a batch as reference
+        
+        as.matrix(unique(cell.dat[[batch.col]]))
+        
+        ref <- 'A'
+        ref
+        
 ##########################################################################################################
-#### 5. Clustering and dimensionality reduction
+#### 5. Testing batch integration
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 2 - clustering")
-    setwd("Output 2 - clustering")
+    dir.create("Output 2 - Test batch integration")
+    setwd("Output 2 - Test batch integration")
 
+    ### Pre-alignment assessment
+    
+        setwd(OutputDirectory)
+        setwd("Output 2 - Test batch integration")
+        dir.create("2.1 - Pre-alignment")
+        setwd("2.1 - Pre-alignment")
+        
+        as.matrix(unique(cell.dat[[batch.col]]))
+        
+        test <- do.subsample(cell.dat, sub.targets.batch, divide.by = batch.col)
+        test
+        
+        test <- run.fitsne(test, raw.cols, perplexity = 200)
+        test
+        
+        make.colour.plot(test, 'FItSNE_X', 'FItSNE_Y', batch.col)
+        make.multi.plot(test, 'FItSNE_X', 'FItSNE_Y', cellular.cols)
+        make.multi.plot(test, 'FItSNE_X', 'FItSNE_Y', batch.col, batch.col)
+    
+    ### Alignment test
+        
+        setwd(OutputDirectory)
+        setwd("Output 2 - Test batch integration")
+        dir.create("2.2 - Test alignment")
+        setwd("2.2 - Test alignment")
+        
+        test <- run.rpca(dat = test, use.cols = raw.cols, batch.col = batch.col, reference = ref)
+        test
+
+        aligned.cols <- paste0(raw.cols, '_rPCA_aligned')
+        aligned.cols
+        
+        test[,..aligned.cols]
+        
+        test <- run.fitsne(test, aligned.cols, perplexity = 200, fitsne.x.name = 'FItSNE_X_Integrated', fitsne.y.name = 'FItSNE_Y_Integrated')
+        test
+        
+        make.colour.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col)
+        
+        make.multi.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', raw.cols, figure.title = 'Raw cols')
+        make.multi.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', aligned.cols, figure.title = 'Aligned cols')
+        make.multi.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col, batch.col)
+        
+    ### Comparison plots
+
+        for(i in raw.cols){
+          make.colour.plot(test, paste0(i, '_rPCA_aligned'), i, batch.col)
+        }
+        
+    ### Clean up
+        
+        rm(aligned.cols)
+        
+##########################################################################################################
+#### 6. Full batch integration
+##########################################################################################################
+
+    setwd(OutputDirectory)
+    dir.create("Output 3 - Full batch integration")
+    setwd("Output 3 - Full batch integration")
+    
+    ### Batch integration
+        
+        cell.dat <- run.rpca(dat = cell.dat, use.cols = raw.cols, batch.col = batch.col, reference = ref)
+        cell.dat
+            
+        aligned.cols <- paste0(raw.cols, '_rPCA_aligned')
+        aligned.cols
+
+        cell.dat[,..aligned.cols]
+        
+        batch.sub <- do.subsample(cell.dat, sub.targets.batch, divide.by = batch.col)
+        batch.sub
+        
+        batch.sub <- run.fitsne(batch.sub, aligned.cols, perplexity = 200, fitsne.x.name = 'FItSNE_X_Integrated', fitsne.y.name = 'FItSNE_Y_Integrated')
+        batch.sub
+        
+    ### Plots
+        
+        make.colour.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col)
+        
+        make.multi.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', raw.cols, figure.title = 'Raw cols')
+        make.multi.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', aligned.cols, figure.title = 'Aligned cols')
+        make.multi.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col, batch.col)
+    
+    ### Comparison plots
+        
+        for(i in raw.cols){
+          make.colour.plot(batch.sub, paste0(i, '_rPCA_aligned'), i, batch.col)
+        }
+        
+##########################################################################################################
+#### 7. Clustering and dimensionality reduction
+##########################################################################################################
+
+    setwd(OutputDirectory)
+    dir.create("Output 4 - clustering")
+    setwd("Output 4 - clustering")
+
+    ### Update clustering columns
+    
+        cellular.cols <- paste0(cellular.cols, '_rPCA_aligned')
+        cellular.cols
+    
+        cluster.cols <- paste0(cluster.cols, '_rPCA_aligned')
+        cluster.cols
+    
     ### Clustering
 
-        cell.dat <- run.flowsom(cell.dat, cluster.cols, meta.k = 8)
+        cell.dat <- run.flowsom(cell.dat, cluster.cols, meta.k = 15)
         cell.dat
         
     ### Dimensionality reduction
 
-        cell.sub <- do.subsample(cell.dat, sub.targets, group.col)
+        cell.sub <- do.subsample(cell.dat, sub.targets.group, group.col)
         cell.sub
         
-        cell.sub <- run.umap(cell.sub, cluster.cols)
+        cell.sub <- run.fitsne(cell.sub, cluster.cols, perplexity = 200)
         cell.sub
 
     ### DR plots
 
-        make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "FlowSOM_metacluster", col.type = 'factor', add.label = TRUE)
-        make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", cellular.cols)
-        make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "FlowSOM_metacluster", group.col, col.type = 'factor')
+        make.colour.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "FlowSOM_metacluster", col.type = 'factor', add.label = TRUE)
+        make.multi.plot(cell.sub, "FItSNE_X", "FItSNE_Y", cellular.cols)
+        make.multi.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "FlowSOM_metacluster", group.col, col.type = 'factor')
 
     ### Expression heatmap
 
@@ -220,22 +361,23 @@
         make.pheatmap(exp, "FlowSOM_metacluster", cellular.cols)
 
 ##########################################################################################################
-#### 6. Annotate clusters
+#### 8. Annotate clusters
 ##########################################################################################################
 
     setwd(OutputDirectory)
-    dir.create("Output 3 - annotation")
-    setwd("Output 3 - annotation")
+    dir.create("Output 5 - annotation")
+    setwd("Output 5 - annotation")
 
     ### Annotate
 
-        annots <- list("CD4 T cells" = c(3),
-                       "CD8 T cells" = c(2),
-                       "NK cells" = c(1),
-                       "Neutrophils" = c(8),
-                       "Infil Macrophages" = c(4),
-                       "Microglia" = c(5,6,7)
-        )
+        annots <- list("T cells" = c(9,10),
+                       "Ly6Chi monocyte" = c(7),
+                       "Immature neutrophils" = c(6),
+                       "Mature neutriphils" = c(3),
+                       "Ly6C+ B cells" = c(4),
+                       "B cells" = c(1),
+                       "Other" = c(2,8,5)
+                       )
 
         annots <- do.list.switch(annots)
         names(annots) <- c("Values", "Population")
@@ -250,8 +392,8 @@
         cell.sub <- do.add.cols(cell.sub, "FlowSOM_metacluster", annots, "Values")
         cell.sub
         
-        make.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", col.type = 'factor', add.label = TRUE)
-        make.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", group.col, col.type = 'factor')
+        make.colour.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "Population", col.type = 'factor', add.label = TRUE)
+        make.multi.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "Population", group.col, col.type = 'factor')
 
     ### Expression heatmap
         
@@ -260,10 +402,7 @@
         make.pheatmap(exp, "Population", cellular.cols)
         
     ### Write FCS files
-        
-        setwd(OutputDirectory)
-        setwd("Output 3 - annotation")
-        
+
         fwrite(cell.dat, "Annotated.data.csv")
         fwrite(cell.sub, "Annotated.data.DR.csv")
         
@@ -275,108 +414,9 @@
                     divide.by = sample.col,
                     write.csv = FALSE,
                     write.fcs = TRUE)
-        
-##########################################################################################################
-#### 7. Summary data and statistical analysis
-##########################################################################################################
-
-    setwd(OutputDirectory)
-    dir.create("Output 4 - summary data")
-    setwd("Output 4 - summary data")
-
-    ### Setup
-    
-        variance.test <- 'kruskal.test'
-        pairwise.test <- "wilcox.test"
-    
-        comparisons <- list(c("Mock", "WNV"))
-        comparisons
-        
-        grp.order <- c("Mock", "WNV")
-        grp.order
-    
-    ### Select columns to measure MFI
-    
-        as.matrix(cellular.cols)
-        dyn.cols <- cellular.cols[c(5,8)]
-        dyn.cols
-    
-    ### Create summary tables
-    
-        sum.dat <- create.sumtable(dat = cell.dat, 
-                                   sample.col = sample.col,
-                                   pop.col = "Population",
-                                   use.cols = dyn.cols, 
-                                   annot.cols = c(group.col, batch.col), 
-                                   counts = counts)
-        
-    ### Review summary data
-        
-        sum.dat
-        as.matrix(names(sum.dat))
-        
-        annot.cols <- c(group.col, batch.col)
-        
-        plot.cols <- names(sum.dat)[c(4:27)]
-        plot.cols
-        
-    ### Reorder summary data and SAVE
-        
-        sum.dat <- do.reorder(sum.dat, group.col, grp.order)
-        sum.dat[,c(1:3)]
-        
-        fwrite(sum.dat, 'sum.dat.csv')
-        
-    ### Autographs
-
-        for(i in plot.cols){
-            
-            measure <- gsub("\\ --.*", "", i)
-            measure
-            
-            pop <- gsub("^[^--]*.-- ", "", i)
-            pop
-            
-            make.autograph(sum.dat,
-                           x.axis = group.col,
-                           y.axis = i,
-                           y.axis.label = measure,
-                           
-                           grp.order = grp.order,
-                           my_comparisons = comparisons,
-                           
-                           Variance_test = variance.test,
-                           Pairwise_test = pairwise.test,
-                           
-                           title = pop,
-                           subtitle = measure,
-                           filename = paste0(i, '.pdf'))
-            
-        }
-        
-    ### Create a fold change heatmap
-        
-        ## Z-score calculation
-        sum.dat.z <- do.zscore(sum.dat, plot.cols)
-        
-        ## Group 
-        t.first <- match(grp.order, sum.dat.z[[group.col]])
-        t.first <- t.first -1
-        t.first
-        
-        ## Make heatmap
-        make.pheatmap(sum.dat.z, 
-                      sample.col = sample.col, 
-                      plot.cols = paste0(plot.cols, '_zscore'), 
-                      is.fold = TRUE, 
-                      plot.title = 'Z-score',
-                      annot.cols = annot.cols,
-                      dendrograms = 'column',
-                      row.sep = t.first,
-                      cutree_cols = 3)
 
 ##########################################################################################################
-#### 8. Output session info
+#### Output session info
 ##########################################################################################################
 
     ### Session info and metadata
@@ -386,9 +426,10 @@
         setwd("Output - info")
 
         sink(file = "session_info.txt", append=TRUE, split=FALSE, type = c("output", "message"))
-        sessionInfo()
+        session_info()
         sink()
 
+        write(raw.cols, "raw.cols.txt")
+        write(aligned.cols, "aligned.cols.txt")
         write(cellular.cols, "cellular.cols.txt")
         write(cluster.cols, "cluster.cols.txt")
-
