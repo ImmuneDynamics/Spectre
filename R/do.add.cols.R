@@ -16,10 +16,13 @@
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #' 
 #' @examples
-#' add.dt <- data.table('Files' = unique(Spectre::demo.asinh$FileName),
+#' 
+#' dat <- Spectre::demo.clustered[,1:19]
+#' 
+#' add.dt <- data.table('Files' = unique(dat$FileName),
 #'                      'SampleNumber' = c(1:12))
 #' 
-#' cell.dat <- do.add.cols(dat = Spectre::demo.asinh,
+#' cell.dat <- do.add.cols(dat = dat,
 #'                         base.col = "FileName",
 #'                         add.dat = add.dt,
 #'                         add.by = "Files")
