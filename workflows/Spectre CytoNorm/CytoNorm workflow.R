@@ -1,10 +1,29 @@
 ##########################################################################################################
-#### Spectre - Batch alignment and analysis workflow
-#### Batch alignment, clustering, dimensionality reduction, plotting, and summarise data
+#### Spectre - batch alignment and analaysis of cytometry data using CytoNorm
 ##########################################################################################################
 
     # Spectre R package: https://immunedynamics.github.io/spectre/
     # Thomas Myles Ashhurst, Felix Marsh-Wakefield, Givanna Putri
+
+##########################################################################################################
+#### Create a folder structure for your analysis run
+##########################################################################################################
+
+    ### Create a master folder with a meaningful name. Then inside that folder, insert the following:
+    
+        # One folder called 'data' -- this will contain your data CSV or FCS files
+        # One folder called 'metadata' -- this will contain a CSV containg your sample metadata
+        # One folder called 'Spectre CytoNorm' or similar -- place this analysis script there
+        
+    ### Example:
+    
+        # CNS analysis
+        #   /data
+        #       -- Contains data files, one CSV or FCS per sample
+        #   /metadata
+        #       -- Contains a CSV containing sample metadata (group, batch, etc)
+        #   /Spectre CytoNorm
+        #       -- CytoNorm workflow.R
 
 ##########################################################################################################
 #### 1. Load packages, and set working directory
@@ -53,11 +72,11 @@
         setwd("Output_Spectre")
         OutputDirectory <- getwd()
         setwd(PrimaryDirectory)
-        
+      
 ##########################################################################################################
-#### Demo dataset
+#### 2. Import and prep data
 ##########################################################################################################
-        
+
     ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
         
         # setwd(PrimaryDirectory)
@@ -73,10 +92,6 @@
         # }
         # unlink(c('simBatches/', 'simBatches.zip', '__MACOSX'), recursive = TRUE)
         
-##########################################################################################################
-#### 2. Import and prep data
-##########################################################################################################
-
     ### Import data
 
         setwd(InputDirectory)
@@ -143,9 +158,6 @@
         
         sample.info <- meta.dat[,c(1:4)]
         sample.info
-        
-        # counts <- meta.dat[,c(2,5)]
-        # counts
 
         cell.dat <- do.add.cols(cell.dat, "FileName", sample.info, "FileName", rmv.ext = TRUE)
         cell.dat
@@ -414,7 +426,6 @@
                                    pop.col = "Population",
                                    use.cols = dyn.cols, 
                                    annot.cols = c(group.col, batch.col)
-                                   #counts = counts
                                    )
         
     ### Review summary data
