@@ -32,9 +32,9 @@ Usage instructions and protocols are available from [https://immunedynamics.gith
 
 ## Installing Spectre
 
-Detailed installation instructions are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre). Spectre can be installed in R directly, or can be used via a pre-compiled Docker image. Brief instructions below.
+Detailed installation instructions are available from [https://immunedynamics.github.io/spectre/getting-started](https://immunedynamics.github.io/spectre/getting-started). Spectre can be installed in R directly, or can be used via a pre-compiled Docker image. Brief instructions below.
 
-_**In v1.1 we have removed the package dependencies `rgeos` and `rgdal` as these are no longer available on CRAN. The package should install fine without these dependencies, but some spatial functions may not work properly. If required, one can download the archived packages, unzip them, and then placed them in the R library location.**_
+_**In v1.1 and above we have removed the package dependencies `rgeos` and `rgdal` as these are no longer available on CRAN. The package should install fine without these dependencies, but some spatial functions may not work properly. If required, one can download the archived packages, unzip them, and then placed them in the R library location.**_
 
 <br/>
 
