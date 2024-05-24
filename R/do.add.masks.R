@@ -34,7 +34,7 @@ do.add.masks <- function(dat, # list of spatial objects
   
       require('raster')
       require('rhdf5')
-      require('HDF5Array')
+      # require('HDF5Array')
   
   ###
   

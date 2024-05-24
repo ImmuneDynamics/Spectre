@@ -27,7 +27,7 @@
     ### Set metadata directory
 
         setwd(PrimaryDirectory)
-        setwd("metadata")
+        setwd("../metadata")
         MetaDirectory <- getwd()
         MetaDirectory
         
@@ -80,7 +80,7 @@
         
         as.matrix(names(cell.dat))
         
-        to.asinh <- names(cell.dat)[c(8:20)]
+        to.asinh <- names(cell.dat)[c(6:13)]
         to.asinh
         
     ### Arcsinh
@@ -101,14 +101,14 @@
         
         as.matrix(names(cell.dat))
         
-        cellular.cols <- names(cell.dat)[c(28:40)]
+        cellular.cols <- names(cell.dat)[c(29:36)]
         cellular.cols
         
     ### Select clustering columns
         
         as.matrix(names(cell.dat))
         
-        cluster.cols <- names(cell.dat)[c(28:40)]
+        cluster.cols <- names(cell.dat)[c(29:34)]
         cluster.cols
         
     ### Sample, group, etc columns
@@ -162,7 +162,7 @@
         for(i in cellular.cols){
           make.spatial.plot(spatial.dat, 
                             image.roi =  roi.plot,
-                            image.channel = gsub('_asinh', '', i), 
+                            image.channel = gsub('_asinh_rescaled', '', i), 
                             mask.outlines = 'cell.mask',
                             cell.dat = cell.dat[cell.dat[['ROI']] == roi.plot], 
                             cell.col = 'Annotated cell type', 
@@ -197,7 +197,7 @@
         
     ### Multi plots
 
-        make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', plot.by = cellular.cols, figure.title = 'Cellular cols')
+        make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', plot.by = cellular.cols, figure.title = 'Cellular cols', col.type = 'continuous')
         make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', plot.by = cluster.cols, col.type = 'factor', figure.title = 'Clustering cols')
 
         make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'Annotated cell type', 'ROI', col.type = 'factor', figure.title = 'FlowSOM_metacluster by ROI')
@@ -213,25 +213,28 @@
 ### Annotate clusters
 ###################################################################################
         
-    # ### Cluster annotations
-    #     
-    #     cluster.annots <- list('T cells' = c(12,14,15),
-    #                            'B cells' = c(1,10,5,9))
-    #     
-    #     cluster.annots <- do.list.switch(cluster.annots)
-    #     names(cluster.annots) <- c('Values', 'Annotated metacluster')
-    #     cluster.annots
-    #     
-    # ### Add annotations, fill in NAs
-    #     
-    #     cell.dat <- do.add.cols(cell.dat, 'FlowSOM_metacluster', cluster.annots, 'Values')
-    #     cell.dat[['Annotated metacluster']][is.na(cell.dat[['Annotated metacluster']])] <- 'Other'
-    #     cell.dat
-    # 
-    # ### Extra plots
-    #     
-    #     make.colour.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'Annotated metacluster', 'factor', add.label = TRUE)
-    #     make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'Annotated metacluster', 'ROI', col.type = 'factor', figure.title = 'Annotated metacluster by ROI')
+    ### Cluster annotations
+
+        cluster.annots <- list('CD4 T cells' = c(14,15,13,8),
+                               'CD8 T cells' = c(11,12,10),
+                               'CD11b+ cells' = c(6,5),
+                               'B cells' = c(7,1,9)
+        )
+
+        cluster.annots <- do.list.switch(cluster.annots)
+        names(cluster.annots) <- c('Values', 'Annotated metacluster')
+        cluster.annots
+
+    ### Add annotations, fill in NAs
+
+        cell.dat <- do.add.cols(cell.dat, 'FlowSOM_metacluster', cluster.annots, 'Values')
+        cell.dat[['Annotated metacluster']][is.na(cell.dat[['Annotated metacluster']])] <- 'Other'
+        cell.dat
+
+    ### Extra plots
+
+        make.colour.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'Annotated metacluster', 'factor', add.label = TRUE)
+        make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'Annotated metacluster', 'ROI', col.type = 'factor', figure.title = 'Annotated metacluster by ROI')
 
 ###################################################################################
 ### Save data
@@ -244,6 +247,7 @@
     ### Save cellular data
     
         fwrite(cell.dat, 'cell.dat.csv')
+        qsave(spatial.dat, 'spatial.dat.qs')
         
     ### FCS files
         
@@ -258,28 +262,16 @@
 ### Spatial plotting of cluster data
 ###################################################################################
 
-    ### Clusters
-    
-        # setwd(OutputDirectory)
-        # dir.create('Annotated clusters')
-        # setwd('Annotated clusters')
-        # 
-        #     for(i in unique(cell.dat$ROI)){
-        #         temp <- cell.dat[cell.dat[['ROI']] == i,]
-        #         make.spatial.plot(spatial.dat, i, 'DNA1_Ir191', mask.outlines = 'cell.mask', temp, cell.col = 'Annotated metacluster', cell.col.type = 'factor')
-        #     }
-
-    ### Cell type
+    ### Annotated metaclusters
     
         setwd(OutputDirectory)
-        dir.create('Annotated cell types')
-        setwd('Annotated cell types')
-    
+        dir.create('Annotated metaclusters')
+        setwd('Annotated metaclusters')
+
             for(i in unique(cell.dat$ROI)){
                 temp <- cell.dat[cell.dat[['ROI']] == i,]
-                make.spatial.plot(spatial.dat, i, 'DNA1_Ir191', mask.outlines = 'cell.mask', temp, cell.col = 'Annotated cell type', cell.col.type = 'factor')
+                make.spatial.plot(spatial.dat, i, 'DNA1_Ir191', mask.outlines = 'cell.mask', temp, cell.col = 'Annotated metacluster', cell.col.type = 'factor')
             }
-
 
     ### Regions
     

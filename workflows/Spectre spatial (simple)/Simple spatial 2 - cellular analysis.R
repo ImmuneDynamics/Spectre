@@ -108,7 +108,7 @@
         
         as.matrix(names(cell.dat))
         
-        cluster.cols <- names(cell.dat)[c(25:32)]
+        cluster.cols <- names(cell.dat)[c(25:30)]
         cluster.cols
         
     ### Sample, group, etc columns
@@ -146,7 +146,7 @@
         
     ### Multi plots
 
-        make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', plot.by = cellular.cols, figure.title = 'Cellular cols')
+        make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', plot.by = cellular.cols, figure.title = 'Cellular cols', col.type = 'continuous')
         make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', plot.by = cluster.cols, col.type = 'factor', figure.title = 'Clustering cols')
         make.multi.plot(cell.dat, 'FItSNE_X', 'FItSNE_Y', 'FlowSOM_metacluster', 'ROI', col.type = 'factor', figure.title = 'FlowSOM_metacluster by ROI')
         
@@ -164,10 +164,10 @@
         
     ### Cluster annotations
 
-        cluster.annots <- list('CD4 T cells' = c(4,14,11,10),
-                               'CD8 T cells' = c(2,15),
-                               'CD11b+ cells' = c(5,9),
-                               'B cells' = c(1,3,6)
+        cluster.annots <- list('CD4 T cells' = c(8,11,15),
+                               'CD8 T cells' = c(14,6),
+                               'CD11b+ cells' = c(1,3,5),
+                               'B cells' = c(9,4,2)
                                )
 
         cluster.annots <- do.list.switch(cluster.annots)

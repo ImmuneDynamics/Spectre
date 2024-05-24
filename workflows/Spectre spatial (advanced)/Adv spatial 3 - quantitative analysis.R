@@ -77,7 +77,7 @@
         group.col <- 'Group'
         batch.col <- 'Batch'
         
-        pop.col <- 'Annotated cell type'
+        pop.col <- 'Annotated metacluster'
         region.col <- 'Annotated region'
         
     ### Some checks

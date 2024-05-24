@@ -16,13 +16,45 @@ Spectre::package.load() # If you do not have anaconda installed in your system, 
 
 primary.dir <- 'M:/givanna/spectre_paper/WNV CNS timecourse (channel value)/'
 
+### Set or create 'input' directory
+
+setwd(primary.dir)
+dir.create('../data', showWarnings = FALSE)
+setwd("../data/")
+InputDirectory <- getwd()
+setwd(primary.dir)
+
+### Set or create 'metadata' directory
+
+setwd(primary.dir)
+dir.create('../metadata', showWarnings = FALSE)
+setwd("../metadata/")
+MetaDirectory <- getwd()
+setwd(primary.dir)
+
 ## Create output directory
+setwd(primary.dir)
 output.dir <- paste0(primary.dir, "/Output_Spectre_cc")
 dir.create(output.dir, showWarnings = FALSE)
 
 ##########################################################################################################
 #### 2. Read and prepare data
 ##########################################################################################################
+
+### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
+
+    # setwd(primary.dir)
+    # setwd("../")
+    # getwd()
+    # download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/timeSeries.zip?raw=TRUE", destfile = 'timeSeries.zip', mode = 'wb')
+    # unzip(zipfile = 'timeSeries.zip')
+    # for(i in list.files('timeSeries/data', full.names = TRUE)){
+    #   file.rename(from = i,  to = gsub('timeSeries/', '', i))
+    # }
+    # for(i in list.files('timeSeries/metadata', full.names = TRUE)){
+    #   file.rename(from = i,  to = gsub('timeSeries/', '', i))
+    # }
+    # unlink(c('timeSeries/', 'timeSeries.zip', '__MACOSX'), recursive = TRUE)
 
 ### Read SAMPLES (data) into workspace and review
 

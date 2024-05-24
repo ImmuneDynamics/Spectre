@@ -1,13 +1,48 @@
+##########################################################################################################
+#### Create a folder structure for your analysis run
+##########################################################################################################
+
+    ### Create a master folder with a meaningful name. Then inside that folder, insert the following:
+    
+        # One folder called 'data' -- this will contain your 'ROIs' folder and 'masks' folder
+        # One folder called 'metadata' -- this will contain a CSV containg your sample metadata
+        # One folder called 'Spectre Simple spatial' or similar -- place analysis scripts there
+        
+    ### Example:
+    
+        # Spleen analysis
+        #   /data
+        #       /ROIs -- contains one folder per ROI, filled with TIFF files (one per channel)
+        #       /masks -- contains mask files (TIFFs). Can have multiple mask types (e.g. cell mask, region mask)
+        #   /metadata
+        #       -- Contains a CSV containing sample metadata (group, batch, etc)
+        #   /Spectre Simple spatial
+        #       -- Simple spatial 1 - add masks.R
+
 ###################################################################################
 ### Spectre: spatial 1 - add masks and extract cellular data
 ###################################################################################
-    
+        
     ### Load libraries
     
-    library('Spectre')
+        library('Spectre')
     
-    Spectre::package.check(type = 'spatial')
-    Spectre::package.load(type = 'spatial')
+    ### Extra packages
+    
+        if(!require('raster')) {install.packages('raster')}
+        if(!require('tiff')) {install.packages('tiff')}
+        if(!require('rhdf5')) {BiocManager::install("rhdf5")}
+        if(!require('s2')) {install.packages('s2')}
+        if(!require('sf')) {install.packages('sf')}
+        if(!require('stars')) {install.packages('stars')}
+        if(!require('sp')) {install.packages('sp')}
+        if(!require('exactextractr')) {install.packages('exactextractr')}
+        if(!require('qs')) {install.packages('qs')}
+    
+    ### Check and load packages
+    
+        Spectre::package.check(type = 'spatial')
+        Spectre::package.load(type = 'spatial')
     
     ### Set PrimaryDirectory
     
@@ -20,6 +55,8 @@
     ### Set InputDirectory (ROI TIFFs)
     
     setwd(PrimaryDirectory)
+    dir.create('../data/', showWarnings = FALSE)
+    dir.create('../data/ROIs/', showWarnings = FALSE)
     setwd("../data/ROIs/")
     InputDirectory <- getwd()
     InputDirectory
@@ -27,9 +64,19 @@
     ### Set MaskDirectory (ROI mask TIFFs)
     
     setwd(PrimaryDirectory)
+    dir.create('../data/', showWarnings = FALSE)
+    dir.create('../data/masks/', showWarnings = FALSE)
     setwd("../data/masks")
     MaskDirectory <- getwd()
     MaskDirectory
+    
+    ### Set metadata directory
+    
+    setwd(PrimaryDirectory)
+    dir.create('../metadata/', showWarnings = FALSE)
+    setwd("../metadata/")
+    MetaDirectory <- getwd()
+    MetaDirectory
     
     ### Create output directory
     
@@ -43,24 +90,39 @@
 ### Check ROIs and TIFFs
 ###################################################################################
     
+    ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
+# 
+#         setwd(PrimaryDirectory)
+#         setwd("../")
+#         getwd()
+#         download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/spatialSimple.zip?raw=TRUE", destfile = 'spatialSimple.zip', mode = 'wb')
+#         unzip(zipfile = 'spatialSimple.zip')
+#         for(i in list.files('spatialSimple/data', full.names = TRUE)){
+#           file.rename(from = i,  to = gsub('spatialSimple/', '', i))
+#         }
+#         for(i in list.files('spatialSimple/metadata', full.names = TRUE)){
+#           file.rename(from = i,  to = gsub('spatialSimple/', '', i))
+#         }
+#         unlink(c('spatialSimple/', 'spatialSimple.zip', '__MACOSX'), recursive = TRUE)
+    
     ### Initialise the spatial data object with channel TIFF files
-
-    setwd(InputDirectory)
-
-    rois <- list.dirs(full.names = FALSE, recursive = FALSE)
-    as.matrix(rois)
+    
+        setwd(InputDirectory)
+    
+        rois <- list.dirs(full.names = FALSE, recursive = FALSE)
+        as.matrix(rois)
 
     ### Check channel names
+        
+        tiff.list <- list()
     
-    tiff.list <- list()
-
-    for(i in rois){
-      setwd(InputDirectory)
-      setwd(i)
-      tiff.list[[i]] <- list.files(getwd())
-    }
-
-    t(as.data.frame(tiff.list))
+        for(i in rois){
+          setwd(InputDirectory)
+          setwd(i)
+          tiff.list[[i]] <- list.files(getwd())
+        }
+    
+        t(as.data.frame(tiff.list))
 
 ###################################################################################
 ### Read in TIFF files and create spatial objects
@@ -68,13 +130,13 @@
     
     ### Read in ROI channel TIFFs
 
-    setwd(InputDirectory)
-    spatial.dat <- read.spatial.files(dir = InputDirectory)
+        setwd(InputDirectory)
+        spatial.dat <- read.spatial.files(dir = InputDirectory)
 
     ### Check results
 
-    str(spatial.dat, 3)
-    spatial.dat[[1]]@RASTERS
+        str(spatial.dat, 3)
+        spatial.dat[[1]]@RASTERS
 
 ###################################################################################
 ### Read in masks files
@@ -88,7 +150,6 @@
         as.matrix(all.masks)
       
         mask.types <- list('cell.mask' = '_Cell_mask.tiff')
-        
         mask.types
         
     ### Read in masks
@@ -201,11 +262,11 @@
         
         spatial.dat[[1]]@DATA
         
-    ### Factor plot setup
+    ### Plot setup
       
         setwd(OutputDirectory)
-        dir.create('Plots - factors')
-        setwd('Plots - factors')
+        dir.create('Plots - points')
+        setwd('Plots - points')
         
         as.matrix(names(spatial.dat))
         
@@ -217,7 +278,7 @@
         base
         
         plot.factors <- names(spatial.dat[[1]]@MASKS)[-which('cell.mask' == names(spatial.dat[[1]]@MASKS))]
-        plot.factors
+        plot.factors # might be empty if no other mask types present
         
         plot.exp <- names(spatial.dat[[1]]@RASTERS)
         plot.exp
@@ -227,7 +288,7 @@
         for(i in plot.rois){
           
           setwd(OutputDirectory)
-          setwd('Plots - factors')
+          setwd('Plots - points')
           dir.create(i)
           setwd(i)
           
@@ -248,7 +309,7 @@
         for(i in plot.rois){
           
           setwd(OutputDirectory)
-          setwd('Plots - factors')
+          setwd('Plots - points')
           dir.create(i)
           setwd(i)
           

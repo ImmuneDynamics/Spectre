@@ -216,11 +216,6 @@ package.check <- function(type = "general"){
       message(' -- rhdf5 is required for SPATIAL analysis but is not installed')
       res.list[['rhdf5']] <- 'rhdf5'
     } 
-    
-    if(!is.element('HDF5Array', installed.packages()[,1])) {
-      message(' -- HDF5Array is required for SPATIAL analysis but is not installed')
-      res.list[['HDF5Array']] <- 'HDF5Array'
-    } 
 
   }
   
