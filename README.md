@@ -41,6 +41,13 @@ For detailed installation instructions, and instructions for installing Spectre 
 
 ## Workflows and protocols
 
-Analysis workflows and protocols are available from <https://immunedynamics.github.io/spectre>.
+When you are ready to start analysis, check out our structured workflows
+and tutorials on the following pages:
+
+-   Analysis of [high-dimensional cytometry](https://immunedynamics.github.io/spectre/cytometry) data
+-   Analysis of [high-dimensional imaging/spatial](https://immunedynamics.github.io/spectre/spatial/)
+    data
+-   Analysis of [single-cell genomics](https://immunedynamics.github.io/spectre/single-cell/)
+    data
 
 <br/>
