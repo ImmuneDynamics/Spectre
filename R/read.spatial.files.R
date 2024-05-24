@@ -10,7 +10,6 @@
 #'
 #' @return Returns a list of spatial data objects.
 #'
-#' @examples
 #'
 #' @import data.table
 #'

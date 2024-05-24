@@ -112,20 +112,20 @@ Spectre::run.pca(dat = Spectre::demo.clustered,
                  )
         
 # When prompted, type in "5" and click enter to continue function 
-(this selects the elbow point based off the scree plot)
+# (this selects the elbow point based off the scree plot)
 
 ## Possible issues ##
 # Remove any NA present
 na.omit(dat)
 
 # Remove columns that have zero variance (e.g. if MFI is the same for all 
-samples for a marker)
+# samples for a marker)
 dat <- data.table::as.data.table(dat)
 dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] 
 
 
 # Ellipses are only generated in 'plot.ind.group' when there are at least 
-2 samples per group ('group.ind')
+# 2 samples per group ('group.ind')
 
 }
 \author{

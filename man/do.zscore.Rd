@@ -21,3 +21,7 @@ Returns a new data.table with z-score calculations for each selected column
 \description{
 do.zscore - Calculate z.score for a dataset
 }
+\examples{
+res <- do.zscore(dat = Spectre::demo.sum, use.cols = names(Spectre::demo.sum)[c(4:15)])
+
+}

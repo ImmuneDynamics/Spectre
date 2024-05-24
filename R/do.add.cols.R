@@ -198,7 +198,6 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
-#' @examples
 #'
 #' @import data.table
 #'
