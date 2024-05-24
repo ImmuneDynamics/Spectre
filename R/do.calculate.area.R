@@ -33,8 +33,17 @@ do.calculate.area <- function(dat,
               
               poly.names <- dat[[i]]@MASKS[[region]]$polygons@data
               
-              areas <- area(dat[[i]]@MASKS[[region]]$polygons)
-              areas <- sqrt(areas)
+              # areas <- area(dat[[i]]@MASKS[[region]]$polygons)
+              
+              res <- data.table()
+              
+              for(i in c(1:length(dat[[i]]@MASKS[[region]]$polygons@polygons))){
+                x <- data.table('ID' = i, 'Area' = dat[[i]]@MASKS[[region]]$polygons@polygons[[i]]@area)
+                res <- rbindlist(list(res, x))
+                rm(x)
+              }
+              
+              areas <- sqrt(res[,2])
               areas <- as.data.table(t(areas))
               
               names(areas) <- as.character(poly.names[[1]])

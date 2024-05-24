@@ -17,12 +17,14 @@ do.create.outlines <- function(dat,
 
       #message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
+      require(s2)
+      require(sf)
       require(raster)
       require(tiff)
-      require(rgeos)
       require(tidyr)
       require(ggplot2)
       require(dplyr)
+      require(sp)
 
       # polygons.name <- paste0(mask.name, "_polygons")
       # outlines.name <- paste0(mask.name, "_outlines")
@@ -30,8 +32,8 @@ do.create.outlines <- function(dat,
 
   ### Initial warning
   
-      os.deets <- devtools::session_info()
-      if(grepl('Windows', os.deets$platform$os)){
+      os.deets <- sessionInfo()
+      if(grepl('Windows', os.deets$running)){
         message("Warning: the generation of mask outlines may differ between Mac and Windows. See 'https://github.com/ImmuneDynamics/Spectre/issues/56' for more information.")
       }
       
@@ -59,7 +61,7 @@ do.create.outlines <- function(dat,
   ### Run
 
       for(i in names(dat)){
-        # i <- names(spatial.dat)[[1]]
+        # i <- names(dat)[[1]]
         start.time <- Sys.time()
 
         mask <- dat[[i]]@MASKS[[mask.name]]$maskraster
@@ -78,7 +80,6 @@ do.create.outlines <- function(dat,
 
               require(stars)
               require(sf)
-              require(sp)
               require(s2)
 
               names(mask) <- "TEMP_MASK"
@@ -120,7 +121,8 @@ do.create.outlines <- function(dat,
         message("     ... outlines complete")
 
     ### Create centroids
-        centroids <- gCentroid(polygon,byid=TRUE)
+        centroids <- sp::coordinates(polygon#,byid=TRUE
+                                 )
         dat[[i]]@MASKS[[mask.name]][["centroids"]] <- centroids
         message("     ... centroids complete")
       }

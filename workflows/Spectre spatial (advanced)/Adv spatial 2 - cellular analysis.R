@@ -27,7 +27,7 @@
     ### Set metadata directory
 
         setwd(PrimaryDirectory)
-        setwd("metadata")
+        setwd("../metadata")
         MetaDirectory <- getwd()
         MetaDirectory
         
@@ -80,7 +80,7 @@
         
         as.matrix(names(cell.dat))
         
-        to.asinh <- names(cell.dat)[c(8:20)]
+        to.asinh <- names(cell.dat)[c(6:13)]
         to.asinh
         
     ### Arcsinh
@@ -101,14 +101,14 @@
         
         as.matrix(names(cell.dat))
         
-        cellular.cols <- names(cell.dat)[c(28:40)]
+        cellular.cols <- names(cell.dat)[c(29:36)]
         cellular.cols
         
     ### Select clustering columns
         
         as.matrix(names(cell.dat))
         
-        cluster.cols <- names(cell.dat)[c(28:40)]
+        cluster.cols <- names(cell.dat)[c(29:34)]
         cluster.cols
         
     ### Sample, group, etc columns
@@ -162,7 +162,7 @@
         for(i in cellular.cols){
           make.spatial.plot(spatial.dat, 
                             image.roi =  roi.plot,
-                            image.channel = gsub('_asinh', '', i), 
+                            image.channel = gsub('_asinh_rescaled', '', i), 
                             mask.outlines = 'cell.mask',
                             cell.dat = cell.dat[cell.dat[['ROI']] == roi.plot], 
                             cell.col = 'Annotated cell type', 

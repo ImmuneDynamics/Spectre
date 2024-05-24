@@ -20,6 +20,8 @@
     ### Set InputDirectory (ROI TIFFs)
     
     setwd(PrimaryDirectory)
+    dir.create('../data/', showWarnings = FALSE)
+    dir.create('../data/ROIs/', showWarnings = FALSE)
     setwd("../data/ROIs/")
     InputDirectory <- getwd()
     InputDirectory
@@ -27,6 +29,8 @@
     ### Set MaskDirectory (ROI mask TIFFs)
     
     setwd(PrimaryDirectory)
+    dir.create('../data/', showWarnings = FALSE)
+    dir.create('../data/masks/', showWarnings = FALSE)
     setwd("../data/masks")
     MaskDirectory <- getwd()
     MaskDirectory
@@ -43,24 +47,36 @@
 ### Check ROIs and TIFFs
 ###################################################################################
     
+    ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
+    
+        # setwd(PrimaryDirectory)
+        # setwd("../")
+        # getwd()
+        # download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/spatialSimple.zip?raw=TRUE", destfile = 'spatialSimple.zip', mode = 'wb')
+        # unzip(zipfile = 'spatialSimple.zip')
+        # for(i in list.files('spatialSimple/data', full.names = TRUE)){
+        #   file.rename(from = i,  to = gsub('spatialSimple/', '', i))
+        # }
+        # unlink(c('spatialSimple/', 'spatialSimple.zip', '__MACOSX'), recursive = TRUE)
+    
     ### Initialise the spatial data object with channel TIFF files
-
-    setwd(InputDirectory)
-
-    rois <- list.dirs(full.names = FALSE, recursive = FALSE)
-    as.matrix(rois)
+    
+        setwd(InputDirectory)
+    
+        rois <- list.dirs(full.names = FALSE, recursive = FALSE)
+        as.matrix(rois)
 
     ### Check channel names
+        
+        tiff.list <- list()
     
-    tiff.list <- list()
-
-    for(i in rois){
-      setwd(InputDirectory)
-      setwd(i)
-      tiff.list[[i]] <- list.files(getwd())
-    }
-
-    t(as.data.frame(tiff.list))
+        for(i in rois){
+          setwd(InputDirectory)
+          setwd(i)
+          tiff.list[[i]] <- list.files(getwd())
+        }
+    
+        t(as.data.frame(tiff.list))
 
 ###################################################################################
 ### Read in TIFF files and create spatial objects
@@ -68,13 +84,13 @@
     
     ### Read in ROI channel TIFFs
 
-    setwd(InputDirectory)
-    spatial.dat <- read.spatial.files(dir = InputDirectory)
+        setwd(InputDirectory)
+        spatial.dat <- read.spatial.files(dir = InputDirectory)
 
     ### Check results
 
-    str(spatial.dat, 3)
-    spatial.dat[[1]]@RASTERS
+        str(spatial.dat, 3)
+        spatial.dat[[1]]@RASTERS
 
 ###################################################################################
 ### Read in masks files
@@ -88,7 +104,6 @@
         as.matrix(all.masks)
       
         mask.types <- list('cell.mask' = '_Cell_mask.tiff')
-        
         mask.types
         
     ### Read in masks
@@ -204,8 +219,8 @@
     ### Factor plot setup
       
         setwd(OutputDirectory)
-        dir.create('Plots - factors')
-        setwd('Plots - factors')
+        dir.create('Plots - points')
+        setwd('Plots - points')
         
         as.matrix(names(spatial.dat))
         
@@ -217,7 +232,7 @@
         base
         
         plot.factors <- names(spatial.dat[[1]]@MASKS)[-which('cell.mask' == names(spatial.dat[[1]]@MASKS))]
-        plot.factors
+        plot.factors # might be empty if no other mask types present
         
         plot.exp <- names(spatial.dat[[1]]@RASTERS)
         plot.exp
@@ -227,7 +242,7 @@
         for(i in plot.rois){
           
           setwd(OutputDirectory)
-          setwd('Plots - factors')
+          setwd('Plots - points')
           dir.create(i)
           setwd(i)
           
@@ -248,7 +263,7 @@
         for(i in plot.rois){
           
           setwd(OutputDirectory)
-          setwd('Plots - factors')
+          setwd('Plots - points')
           dir.create(i)
           setwd(i)
           

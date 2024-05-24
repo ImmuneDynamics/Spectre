@@ -17,10 +17,8 @@ do.extract <- function(dat, # spatial.data object
 
   #message("This is a developmental Spectre-spatial function that is still in testing phase with limited documentation. We recommend only using this function if you know what you are doing.")
 
-      require('rgeos')
       require('sp')
       require('sf')
-      require('rgdal')
       require('exactextractr')
       require('data.table')
 
@@ -58,12 +56,24 @@ do.extract <- function(dat, # spatial.data object
         ply.df <- as.data.frame(roi.poly)
         ply.df
 
-        ply.centroids <- gCentroid(roi.poly,byid=TRUE)
+        ply.centroids <- sp::coordinates(roi.poly)
+        
         ply.centroids.df <- as.data.frame(ply.centroids)
         ply.centroids.df # mask number, with X and Y coordinates
 
-        ply.centroids.df <- cbind(ply.centroids.df, as.data.frame(area(roi.poly)))
-        names(ply.centroids.df)[3] <- "Area"
+        # ply.centroids.df <- cbind(ply.centroids.df, as.data.frame(area(roi.poly)))
+        
+        res <- data.table()
+        
+        for(i in c(1:length(roi.poly@polygons))){
+          x <- data.table('ID' = i, 'Area' = roi.poly@polygons[[i]]@area)
+          res <- rbindlist(list(res, x))
+          rm(x)
+        }
+        
+        ply.centroids.df <- cbind(ply.centroids.df, res[,2])
+        
+        names(ply.centroids.df) <- c("x", "y", "Area")
 
         ## RASTERS
 

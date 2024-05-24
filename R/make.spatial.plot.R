@@ -211,11 +211,11 @@ make.spatial.plot <- function(dat, # spatial data object
         outline <- dat[[roi]]@MASKS[[mask.outlines]]$outlines
         centroids <- dat[[roi]]@MASKS[[mask.outlines]]$centroids
     
-        centroid.xmin <- centroids@bbox[1]
-        centroid.xmax <- centroids@bbox[3]
+        centroid.xmin <- min(centroids[,1])
+        centroid.xmax <- max(centroids[,1])
     
-        centroid.ymin <- centroids@bbox[2]
-        centroid.ymax <- centroids@bbox[4]
+        centroid.ymin <- min(centroids[,2])
+        centroid.ymax <- max(centroids[,2])
       }
     
       ## Flip y-axis values
