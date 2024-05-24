@@ -52,7 +52,7 @@ do.create.outlines <- function(dat,
       }
 
       if(method == 'gdal'){
-        message("GDAL version not currently supportedb -- reverting to stars method")
+        message("GDAL version not currently supported -- reverting to stars method")
         # if(length(Sys.which("gdal_polygonize.py")) > 1){
         #   message(paste0("Creating polygons, outlines, and centroids using GDAL -- this step may take some time, please be patient"))
         # }

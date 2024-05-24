@@ -35,6 +35,14 @@
     MaskDirectory <- getwd()
     MaskDirectory
     
+    ### Set metadata directory
+    
+    setwd(PrimaryDirectory)
+    dir.create('../metadata/', showWarnings = FALSE)
+    setwd("../metadata/")
+    MetaDirectory <- getwd()
+    MetaDirectory
+    
     ### Create output directory
     
     setwd(PrimaryDirectory)
@@ -48,16 +56,19 @@
 ###################################################################################
     
     ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
-    
-        # setwd(PrimaryDirectory)
-        # setwd("../")
-        # getwd()
-        # download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/spatialSimple.zip?raw=TRUE", destfile = 'spatialSimple.zip', mode = 'wb')
-        # unzip(zipfile = 'spatialSimple.zip')
-        # for(i in list.files('spatialSimple/data', full.names = TRUE)){
-        #   file.rename(from = i,  to = gsub('spatialSimple/', '', i))
-        # }
-        # unlink(c('spatialSimple/', 'spatialSimple.zip', '__MACOSX'), recursive = TRUE)
+# 
+#         setwd(PrimaryDirectory)
+#         setwd("../")
+#         getwd()
+#         download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/spatialSimple.zip?raw=TRUE", destfile = 'spatialSimple.zip', mode = 'wb')
+#         unzip(zipfile = 'spatialSimple.zip')
+#         for(i in list.files('spatialSimple/data', full.names = TRUE)){
+#           file.rename(from = i,  to = gsub('spatialSimple/', '', i))
+#         }
+#         for(i in list.files('spatialSimple/metadata', full.names = TRUE)){
+#           file.rename(from = i,  to = gsub('spatialSimple/', '', i))
+#         }
+#         unlink(c('spatialSimple/', 'spatialSimple.zip', '__MACOSX'), recursive = TRUE)
     
     ### Initialise the spatial data object with channel TIFF files
     
@@ -216,7 +227,7 @@
         
         spatial.dat[[1]]@DATA
         
-    ### Factor plot setup
+    ### Plot setup
       
         setwd(OutputDirectory)
         dir.create('Plots - points')

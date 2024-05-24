@@ -230,7 +230,7 @@
         
         spatial.dat[[1]]@DATA
         
-    ### Factor plot setup
+    ### Plot setup
       
         setwd(OutputDirectory)
         dir.create('Plots - points')
@@ -249,7 +249,7 @@
         plot.exp <- names(spatial.dat[[1]]@RASTERS)
         plot.exp
         
-    ### Make factor plots
+    ### Make plots
         
         for(i in plot.rois){
           
