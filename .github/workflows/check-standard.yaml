@@ -48,3 +48,4 @@ jobs:
         with:
           upload-snapshots: false
           build_args: 'c("--no-manual")'
+          error-on: '"error"'
