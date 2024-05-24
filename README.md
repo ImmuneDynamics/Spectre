@@ -33,7 +33,7 @@ if(!require('remotes')) {install.packages('remotes')} # Installs the package 're
 remotes::install_github(repo = "immunedynamics/spectre") # Install the Spectre package
 ```
 
-For detailed installation instructions, and instructions for installing Spectre via Docker, see our [installation guide](https://immunedynamics.io/spectre/install/#Install_via_Docker).
+For detailed installation instructions, and instructions for installing Spectre via Docker, see our [installation guide](https://immunedynamics.io/spectre/install/).
 
 ***In Spectre v1.1 and above we have removed the package dependencies `rgeos` and `rgdal` as these are no longer available on CRAN. The package should install fine without these dependencies, but some spatial functions may not work properly. If required, one can download the archived packages, unzip them, and then placed them in the R library location.***
 
