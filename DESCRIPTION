@@ -1,67 +1,80 @@
-Package: Spectre
 Type: Package
-Version: 1.1.0
+Package: Spectre
+Title: High-dimensional cytometry and imaging analysis.
+Version: 1.2.0
 Date: 2023-11-12
-Title: High-dimensional cytometry and imaging analysis. 
-Description: A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data. 
 Authors@R: c(
-  person(given = "Thomas", family = "Ashhurst", email = "thomas.ashhurst@sydney.edu.au", role = c("aut", "cre")),
-  person(given = "Felix", family = "Marsh-Wakefield", email = "felix.marsh-wakefield@sydney.edu.au", role = "aut"),
-  person(given = "Givanna", family = "Putri", email = "putri.g@wehi.edu.au", role = "aut")
+    person("Thomas", "Ashhurst", , "thomas.ashhurst@sydney.edu.au", role = c("aut", "cre")),
+    person("Felix", "Marsh-Wakefield", , "felix.marsh-wakefield@sydney.edu.au", role = "aut"),
+    person("Givanna", "Putri", , "putri.g@wehi.edu.au", role = "aut")
   )
+Description: A computational toolkit in R for the integration,
+    exploration, and analysis of high-dimensional single-cell cytometry
+    and imaging data.
+License: `use_mit_license()`
 URL: https://github.com/ImmuneDynamics/Spectre
 BugReports: https://github.com/ImmuneDynamics/Spectre/issues
-Maintainer: Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>
-Depends: R (>= 3.6.0)
-License: MIT Licence
+Depends: 
+    R (>= 3.6.0)
+biocViews:
+Imports:
+    colorRamps,
+    data.table,
+    dendsort,
+    factoextra,
+    flowCore,
+    FlowSOM,
+    ggplot2,
+    ggpointdensity,
+    ggpubr,
+    ggthemes,
+    gridExtra,
+    gtools,
+    irlba,
+    parallel,
+    patchwork,
+    pheatmap,
+    RColorBrewer,
+    rstudioapi,
+    rsvd,
+    Rtsne,
+    scales,
+    scattermore,
+    umap,
+    uwot,
+    viridis
+Suggests:
+    Biobase,
+    caret,
+    CytofRUV,
+    CytoNorm,
+    devtools,
+    EnhancedVolcano,
+    exactextractr,
+    FNN,
+    formatR,
+    harmony,
+    HDF5Array,
+    limma,
+    qs,
+    raster,
+    Rcpp,
+    rgdal,
+    rgeos,
+    rhdf5,
+    Rphenograph,
+    s2,
+    Seurat,
+    SeuratObject,
+    sf,
+    SingleCellExperiment,
+    sp,
+    stars,
+    testthat (>= 3.0.0),
+    tiff,
+    usethis
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
-biocViews: flowCore
-Imports:
-    flowCore,
-    matrixStats,
-    Biobase,
-    flowViz,
-    FlowSOM,
-    rhdf5,
-    HDF5Array,
-    devtools,
-    BiocManager,
-    plyr,
-    dplyr,
-    data.table,
-    tidyr,
-    rstudioapi,
-    Rtsne,
-    umap,
-    ggplot2,
-    ggthemes,
-    scales,
-    colorRamps,
-    RColorBrewer,
-    gridExtra,
-    pheatmap,
-    ggpubr,
-    class,
-    caret,
-    FNN,
-    ggpointdensity,
-    factoextra,
-    gtools,
-    tidygraph,
-    ggraph,
-    stringr,
-    rsvd,
-    irlba,
-    gridExtra,
-    raster,
-    tiff,
-    tidyr,
-    sp,
-    sf,
-    stars,
-    qs,
-    s2,
-    exactextractr,
-RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1

@@ -4,7 +4,7 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 
 <img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png">
 
-**Current version**: [`v1.1.0`](https://github.com/ImmuneDynamics/Spectre/releases)
+**Current version**: [`v1.2.0`](https://github.com/ImmuneDynamics/Spectre/releases)
 
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true)](https://ci.appveyor.com/project/tomashhurst/spectre)
 
@@ -32,9 +32,9 @@ Usage instructions and protocols are available from [https://immunedynamics.gith
 
 ## Installing Spectre
 
-Detailed installation instructions are available from [https://immunedynamics.github.io/spectre](https://immunedynamics.github.io/spectre). Spectre can be installed in R directly, or can be used via a pre-compiled Docker image. Brief instructions below.
+Detailed installation instructions are available from [https://immunedynamics.github.io/spectre/getting-started](https://immunedynamics.github.io/spectre/getting-started). Spectre can be installed in R directly, or can be used via a pre-compiled Docker image. Brief instructions below.
 
-_**In v1.1 we have removed the package dependencies `rgeos` and `rgdal` as these are no longer available on CRAN. The package should install fine without these dependencies, but some spatial functions may not work properly. If required, one can download the archived packages, unzip them, and then placed them in the R library location.**_
+_**In v1.1 and above we have removed the package dependencies `rgeos` and `rgdal` as these are no longer available on CRAN. The package should install fine without these dependencies, but some spatial functions may not work properly. If required, one can download the archived packages, unzip them, and then placed them in the R library location.**_
 
 <br/>
 
@@ -43,14 +43,14 @@ _**In v1.1 we have removed the package dependencies `rgeos` and `rgdal` as these
 Install and load the 'devtools' library.
 
 ```     
-if(!require('devtools')) {install.packages('devtools')}
-library('devtools')
+if(!require('remotes')) {install.packages('remotes')}
+library('remotes')
 ```
 
 Subsequently, use the 'install_github' function to install and load the Spectre package. By default this will load the 'master' branch, which is the same as the latest stable release version (listed at https://github.com/immunedynamics/Spectre/releases). To install a specific release version, see https://cran.r-project.org/web/packages/githubinstall/vignettes/githubinstall.html.
 
 ```
-install_github("immunedynamics/spectre")
+remotes::install_github(repo = "immunedynamics/spectre")
 ```
 
 You will see the following returned. We suggest selecting 'none' (in this example, by entering '3' and pressing return) to avoid updating other packages. You can update your packages after installation.

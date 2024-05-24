@@ -28,6 +28,8 @@ prep.cytonorm()
 \item{seed}{DEFAULT = 42. Seed for reproducibility.}
 
 \item{mem.ctrl}{DEFAULT = TRUE. Allows the function to clear held memory on occasion.}
+
+\item{n.cells}{DEFAULT = 10000000. Maxium cells allowed to be read for the prep.cytonorm functionality. Cells read from each file will be the lesser of n.cells / number of files or the total number of cells in the file.}
 }
 \value{
 Returns an object which represents the alignment model. In this preparation stage, it contains the FlowSOM object containing the reference data. The 'train.align' function can then be used to calculate the conversions between batches for each metacluser.

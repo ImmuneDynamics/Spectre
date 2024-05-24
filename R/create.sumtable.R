@@ -1,4 +1,4 @@
-#' create.sumtables - create a data.table 'summarising' cellular data by sample and population/cluster.
+#' create.sumtable - create a data.table 'summarising' cellular data by sample and population/cluster.
 #'
 #' This function summarises cellular data and generates a summary data.table
 #'
@@ -47,404 +47,357 @@ create.sumtable <- function(dat,
                             sep = " -- "){
   
   ### Packages
-      if(!is.element('Spectre', installed.packages()[,1])) stop('pheatmap is required but not installed')
-      if(!is.element('data.table', installed.packages()[,1])) stop('pheatmap is required but not installed')
-      
-      require(data.table)
   
-  ### Demo data
- 
-      # dat <- Spectre::demo.clustered
-      # sample.col <- 'Sample'
-      # pop.col <- 'Population'
-      # annot.cols <- c('Group', 'Batch')
-      # use.cols <- c('Ly6C_asinh', 'CD11b_asinh', 'CD45_asinh')
-      # sep = " -- "
-      # func = 'median'
-      # 
-      # parent.col = 'Lineage'
-      # 
-      # counts <- data.table('Sample' = unique(dat[['Sample']]),
-      #                      'Counts' = c(rep(100000, 6), rep(1000000, 6)))
-      # perc.pos <- data.table('Marker' = c('Ly6C_asinh', 'CD11b_asinh', 'CD45_asinh'),
-      #                        'Cutoff' = c(3, 3.5, 3))
-      # 
-      # double.pos <- data.table('Marker1' = c('Ly6C_asinh'),
-      #                          'Marker2' = c('CD11b_asinh'),
-      #                          'Cutoff1' = c(3),
-      #                          'Cutoff2' = c(3.5))
-      # 
-      # lin.tb <- data.table('Population' = unique(dat$Population),
-      #                      'Lineage' = c('Resident' , 'Infiltrating', 'Infiltrating','Infiltrating','Infiltrating','Infiltrating'))
-      # 
-      # dat <- do.add.cols(dat, 'Population', lin.tb, 'Population')
-
-  ### Checks
+  if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')
+  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
   
-      dat <- as.data.table(dat)
-      
-      if(!is.null(counts)){
-        
-        if(is.data.frame(counts)){
-          
-          counts <- as.data.table(counts)
-          
-        } else {
-          
-          warning("counts are not a correctly formatted data.frame or data.table. Using counts = NULL")
-          counts <- NULL
-          
-        }
-        
+  require('Spectre')
+  require('data.table')
+  
+  ### Setup and tests
+  
+  message("Creating sumtable")
+  message(' -- running some initial tests')
+  
+  dat <- as.data.table(dat)
+  exp.cols <- use.cols
+  
+  if(!is.null(counts)){
+    if(is.data.frame(counts)){
+      counts <- as.data.table(counts)
+    } else {
+      stop("counts are not a correctly formatted data.frame or data.table. Either correct the counts, or use counts = NULL")
+    }
+  }
+  
+  if(!is.null(parent.col)){
+    
+    test <- list()
+    test2 <- c()
+    
+    for(i in unique(dat[[pop.col]])){
+      # i <- unique(dat[[pop.col]])[1]
+      test[[i]] <- unique(unlist(dat[dat[[pop.col]] == i,parent.col, with = FALSE]))
+      if(length(test[[i]]) > 1){
+        test2[i] <- TRUE
+      } else {
+        test2[i] <- FALSE
       }
-  
-  ### Per sample loop
-      
-      message('Creating summary table')
-      
-      samps <- sort(unique(dat[[sample.col]]))
-      pops <- sort(unique(dat[[pop.col]]))
-  
-      if(!is.null(parent.col)){
-        parents <- sort(unique(dat[[parent.col]]))
+    }
+    
+    if(any(test2)){
+      message('Error: some subpopulations have multiple parent populations listed')
+      message(' ')
+      for(i in names(test)){
+        message(paste0(' -- Parents for ', i, ': '))
+        message(paste0('       ', test[[i]]))
       }
+      message(' ')
+      stop('Either adjust the dataset, or use parent.col = NULL')
+    }
+    rm(test)
+    rm(test2)
+  }
+  
+  ### Test data
+  
+  # dat <- Spectre::demo.clustered
+  # sample.col <- 'Sample'
+  # pop.col <- 'FlowSOM_metacluster'
+  # annot.cols <- c('Group', 'Batch')
+  # exp.cols <- c('CD4_asinh', 'Ly6C_asinh')
+  # parent.col <- 'Population'
+  # func = 'median'
+  # sep <- ' -- '
+  # counts <- data.table('A' = unique(dat$Sample),'B' = c(rep(100000, 6), rep(1000000, 6)))
+  # perc.pos <- data.table('A' = c('CD4_asinh', 'Ly6C_asinh'), 'B' = c(2.5,2.5))
+  # double.pos <- c('CD4_asinh', 'Ly6C_asinh')
+  
+  ### Cell proportions
+  
+  message(" -- calculting cell proportions")
+  
+  # props <- data.frame(with(dat, table(Population, Sample)))
+  props <- data.frame(with(dat, table(dat[[pop.col]], dat[[sample.col]])))
+  names(props) <- c(pop.col, sample.col, 'nrows')
+  props$NAME <- paste0(props[[pop.col]], ' -- ', props[[sample.col]])
+  props <- props[,c(4,1,2,3)]
+  
+  for(i in unique(props[[sample.col]])){
+    props[props[[sample.col]] == i,'Percent of sample'] <- props[props[[sample.col]] == i,'nrows'] / sum(props[props[[sample.col]] == i,'nrows']) * 100
+  }
+  
+  template <- data.table('NAME' = props$NAME)
+  template
+  
+  ### Cell counts
+  
+  if(!is.null(counts)){
+    message(" -- calculating cell counts")
+    for(i in unique(props[[sample.col]])){
+      props[props[[sample.col]] == i,'Cells per sample'] <- props[props[[sample.col]] == i,'Percent of sample'] * counts[counts[[1]] == i,2][[1]] / 100
+    }
+  }
+  
+  ### Proportion adjust
+  
+  props[[sample.col]] <- NULL
+  props[[pop.col]] <- NULL
+  
+  template <- do.add.cols(template, 'NAME', props, 'NAME', show.status = FALSE)
+  
+  # template
+  # 
+  # test <- tidyr::separate(template, 'NAME', sep = ' -- ', into = c(pop.col, sample.col))
+  # test$nrows <- NULL
+  # test <- reshape(test, idvar = sample.col, timevar = pop.col, direction = "wide", sep = sep)
+  # test <- as.data.table(test)
+  # test    
+  
+  gc()
+  
+  ### Percent of parent
+  
+  if(!is.null(parent.col)){
+    
+    message(" -- calculting percent of parent")
+    
+    res.list <- list()
+    
+    for(i in unique(dat[[parent.col]])){
+      # i <- unique(dat[[parent.col]])[1]
       
-      res.list <- list()
+      message(paste0("   ... ", i))
       
-      for(i in samps){
-        # i <- samps[[7]]
-
-        message(paste0(' -- processing sample ', i))
-        
-        ## Initialise table
-            dt <- as.data.table(pops)
-            names(dt) <- pop.col
-        
-        ## Subset sample
-            temp <- dat[dat[[sample.col]] == i,]
-            
-            if(is.null(annot.cols)){
-              annots <- temp[1,c(sample.col),with = FALSE]  
-            }
-            
-            if(!is.null(annot.cols)){
-              annots <- temp[1,c(sample.col, annot.cols),with = FALSE]  
-            }
-            
-        ## Population percentages
-            percent <- temp[, .(Percent = .N), by = pop.col]
-            percent[[2]] <- percent[[2]] / sum(percent[[2]]) * 100
-            names(percent) <- c(pop.col, 'Percent of sample')
-            
-        ## Cell counts
-            if(!is.null(counts)){
-              ttl <- counts[counts[[1]] == i,2]
-              ttl <- ttl[[1]]
-              
-              counts.per.sample <- percent
-              counts.per.sample[[2]] <- (counts.per.sample[[2]] * ttl) / 100
-              names(counts.per.sample) <- c(pop.col, 'Cells per sample')
-            }
-        
-        ## Percent of parent
-            
-            if(!is.null(parent.col)){
-              
-              all.perc.of.parent <- list()
-            
-              for(a in parents){
-                # a <- parents[[1]]
-                
-                tp <- temp[temp[[parent.col]] == a,]
-                
-                percent.of.parent <- tp[, .(Percent = .N), by = pop.col]
-                percent.of.parent[[2]] <- percent.of.parent[[2]] / sum(percent.of.parent[[2]]) * 100
-                names(percent.of.parent) <- c(pop.col, paste0('Percent of ', parent.col))
-                
-                all.perc.of.parent[[a]] <- percent.of.parent
-                
-                rm(a)
-                rm(tp)
-                rm(percent.of.parent)
-              }
-              
-              all.perc.of.parent <- rbindlist(all.perc.of.parent, fill = TRUE)
-            }
-            
-        ## MFIs
-            
-            if(!is.null(use.cols)){
-              mfis <- do.aggregate(temp, use.cols = use.cols, by = pop.col, func = func)
-              names(mfis)[c(2:length(names(mfis)))] <- paste0('MFI of ', names(mfis)[c(2:length(names(mfis)))])
-            }
-
-        ## Percent positive
-
-            if(!is.null(perc.pos)){
-              
-              all.pos.list <- list()
-              
-              for(o in perc.pos[,1][[1]]){
-                # o <- perc.pos[,1][[1]][[1]]
-                
-                ctf <- perc.pos[perc.pos[[1]] == o,2]
-                ctf <- ctf[[1]]
-                
-                pos.res.lst <- list()
-                for(f in pops){
-                  # f <- pops[[1]]
-                  pop.dt <- temp[temp[[pop.col]] == f,] 
-                  
-                  if(nrow(pop.dt) != 0){
-                    pos.res.lst[[f]] <- nrow(pop.dt[pop.dt[[o]] > ctf,]) / nrow(pop.dt) * 100
-                  }
-                  
-                  if(nrow(pop.dt) == 0){
-                    pos.res.lst[[f]] <- NA
-                  }
-                }
-                
-                all.pos.list[[o]] <- as.data.table(unlist(pos.res.lst))
-              }
-              
-              perc.res <- data.table('Population' = pops)
-              names(perc.res) <- pop.col
-              
-              perc.res <- cbind(perc.res, as.data.table(all.pos.list))
-              
-              names(perc.res)[c(2:length(names(perc.res)))] <- paste0("Percent expressing ", names(perc.res)[c(2:length(names(perc.res)))])
-            }
-
-            
-        ## Percent double positive
-            
-            # list(c(),
-            #      c(),
-            #      c())
-            
-            # double.pos <- list(c('CD11b_asinh', 'Ly6C_asinh'),
-            #                    c('CD45_asinh', 'CD11b_asinh', 'CD45_asinh'))
-            # 
-            # double.pos
-
-            if(!is.null(double.pos)){
-              
-              double.pos.list <- list()
-              double.pos.list.OR <- list()
-              
-              for(o in c(1:length(double.pos))){
-                # o <- 1
-                
-                ### PREP
-                    
-                    mlt <- double.pos[[o]]
-                    mlt
-                    
-                    ctffs <- vector()
-                    
-                    for(u in mlt){
-                      # u <- mlt[[1]]
-                      ctffs <- c(ctffs, perc.pos[perc.pos[[1]] == u,2][[1]])
-                    }
-                    
-                    mlt
-                    ctffs
-                    
-                    # mrkrs <- c(double.pos[o,c(1)][[1]], double.pos[o,c(2)][[1]])
-                    # ctffs <- c(double.pos[o,c(3)][[1]], double.pos[o,c(4)][[1]])
-                    
-                    # ctf <- double.pos[double.pos[[1]] == o,2]
-                    # ctf <- ctf[[1]]
-                
-                ### AND
-                    
-                    double.pos.res.list <- list()
-                    for(f in pops){
-                      # f <- pops[[1]]
-                      
-                      pop.dt <- temp[temp[[pop.col]] == f,] 
-                      
-                      if(nrow(pop.dt) != 0){
-                        
-                        tp <- pop.dt[pop.dt[[mlt[1]]] > ctffs[1],]
-                        
-                        for(e in c(2:length(mlt))){
-                          tp <- tp[tp[[mlt[e]]] > ctffs[e],]
-                        }
-
-                        double.pos.res.list[[f]] <- nrow(tp) / nrow(pop.dt) * 100
-                      }
-                      
-                      if(nrow(pop.dt) == 0){
-                        double.pos.res.list[[f]] <- NA
-                      }
-                    }
-                    
-                    if(length(mlt) == 2){
-                      double.pos.list[[paste0(mlt[1], ' and ', mlt[2])]] <- as.data.table(unlist(double.pos.res.list))
-                    }
-                    
-                    if(length(mlt) == 3){
-                      double.pos.list[[paste0(mlt[1], ' and ', mlt[2], ' and ', mlt[3])]] <- as.data.table(unlist(double.pos.res.list))
-                    }
-                    
-                    if(length(mlt) == 4){
-                      double.pos.list[[paste0(mlt[1], ' and ', mlt[2]), ' and ', mlt[3], ' and ', mlt[4]]] <- as.data.table(unlist(double.pos.res.list))
-                    }
-                    
-                    if(length(mlt) == 5){
-                      double.pos.list[[paste0(mlt[1], ' and ', mlt[2]), ' and ', mlt[3], ' and ', mlt[4], ' and ', mlt[5]]] <- as.data.table(unlist(double.pos.res.list))
-                    }
-                    
-                ### OR
-                    
-                    double.pos.res.list.OR <- list()
-                    for(f in pops){
-                      # f <- pops[[1]]
-                      
-                      pop.dt <- temp[temp[[pop.col]] == f,] 
-                      
-                      if(nrow(pop.dt) != 0){
-                        
-                        if(length(mlt) == 2){
-                          tp <- pop.dt[pop.dt[[mlt[1]]] > ctffs[1] |
-                                         pop.dt[[mlt[2]]] > ctffs[2],]
-                        }
-                        
-                        if(length(mlt) == 3){
-                          tp <- pop.dt[pop.dt[[mlt[1]]] > ctffs[1] |
-                                         pop.dt[[mlt[2]]] > ctffs[2] |
-                                         pop.dt[[mlt[2]]] > ctffs[3],]
-                        }
-                        
-                        if(length(mlt) == 4){
-                          tp <- pop.dt[pop.dt[[mlt[1]]] > ctffs[1] |
-                                         pop.dt[[mlt[2]]] > ctffs[2] |
-                                         pop.dt[[mlt[2]]] > ctffs[3] |
-                                         pop.dt[[mlt[2]]] > ctffs[4],]
-                        }
-                        
-                        if(length(mlt) == 5){
-                          tp <- pop.dt[pop.dt[[mlt[1]]] > ctffs[1] |
-                                         pop.dt[[mlt[2]]] > ctffs[2] |
-                                         pop.dt[[mlt[2]]] > ctffs[3] |
-                                         pop.dt[[mlt[2]]] > ctffs[4] |
-                                         pop.dt[[mlt[2]]] > ctffs[5],]
-                        }
-                        
-                        double.pos.res.list.OR[[f]] <- nrow(tp) / nrow(pop.dt) * 100
-                      }
-                      
-                      if(nrow(pop.dt) == 0){
-                        double.pos.res.list.OR[[f]] <- NA
-                      }
-                    }
-                    
-                    if(length(mlt) == 2){
-                      double.pos.list.OR[[paste0(mlt[1], ' or ', mlt[2])]] <- as.data.table(unlist(double.pos.res.list.OR))
-                    }
-                    
-                    if(length(mlt) == 3){
-                      double.pos.list.OR[[paste0(mlt[1], ' or ', mlt[2], ' or ', mlt[3])]] <- as.data.table(unlist(double.pos.res.list.OR))
-                    }
-                    
-                    if(length(mlt) == 4){
-                      double.pos.list.OR[[paste0(mlt[1], ' or ', mlt[2]), ' or ', mlt[3], ' or ', mlt[4]]] <- as.data.table(unlist(double.pos.res.list.OR))
-                    }
-                    
-                    if(length(mlt) == 5){
-                      double.pos.list.OR[[paste0(mlt[1], ' or ', mlt[2]), ' or ', mlt[3], ' or ', mlt[4], ' or ', mlt[5]]] <- as.data.table(unlist(double.pos.res.list.OR))
-                    }
-                    
-                    
-                    # double.pos.res.list.OR <- list()
-                    # for(f in pops){
-                    #   # f <- pops[[1]]
-                    #   
-                    #   pop.dt <- temp[temp[[pop.col]] == f,] 
-                    #   
-                    #   if(nrow(pop.dt) != 0){
-                    #     
-                    #     tp <- pop.dt[pop.dt[[mrkrs[1]]] > ctffs[1] |
-                    #                    pop.dt[[mrkrs[2]]] > ctffs[2],]
-                    #     
-                    #     double.pos.res.list.OR[[f]] <- nrow(tp) / nrow(pop.dt) * 100
-                    #     
-                    #   }
-                    #   
-                    #   if(nrow(pop.dt) == 0){
-                    #     double.pos.res.list.OR[[f]] <- NA
-                    #   }
-                    # }
-
-                    # double.pos.list.OR[[paste0(mrkrs[1], ' or ', mrkrs[2])]] <- as.data.table(unlist(double.pos.res.list.OR))
-              }
-              
-              double.res <- data.table('Population' = pops)
-              names(double.res) <- pop.col
-              
-              double.res <- cbind(double.res, as.data.table(double.pos.list), as.data.table(double.pos.list.OR))
-              
-              names(double.res)[c(2:length(names(double.res)))] <- paste0("Percent expressing ", names(double.res)[c(2:length(names(double.res)))])
-            }
-            
-            
-            
-        ## Combine results
-            
-            ## Percent 
-            dt <- do.add.cols(dt, pop.col, percent, pop.col, show.status = FALSE)
-            
-            ## Counts
-            if(!is.null(counts)){
-              dt <- do.add.cols(dt, pop.col, counts.per.sample, pop.col, show.status = FALSE)
-            }
-            
-            ## Percent of parent
-            if(!is.null(parent.col)){
-              dt <- do.add.cols(dt, pop.col, all.perc.of.parent, pop.col, show.status = FALSE)
-            }
-
-            ## MFIs
-            if(!is.null(use.cols)){
-              dt <- do.add.cols(dt, pop.col, mfis, pop.col, show.status = FALSE)
-            }
-            
-            ## Percent positive
-              if(!is.null(perc.pos)){
-                dt <- do.add.cols(dt, pop.col, perc.res, pop.col, show.status = FALSE)
-              }
-            
-            ## Double positive
-              if(!is.null(double.pos)){
-                dt <- do.add.cols(dt, pop.col, double.res, pop.col, show.status = FALSE)
-              }
-            
-        ## Reshape
-            
-            dt <- melt(dt, id.vars=c(pop.col))
-            dt$Measurement <- paste0(dt$variable, sep, dt[[pop.col]])
-            dt <- dt[,c('Measurement', 'value'), with = FALSE]
-            names(dt) <- c("Measurement", 'Value')
-
-            Tdt <- transpose(dt)
-            
-            names(Tdt) <- dt[[1]]
-            Tdt <- Tdt[-1,]
-            
-            Tdt[] <- lapply(Tdt, function(x) as.numeric(x))
-            Tdt <- as.data.table(cbind(annots, Tdt))
- 
-            res.list[[i]] <- Tdt
-            
-            rm(i)
-            rm(dt)
-            rm(Tdt)
-      }
+      rws <- dat[[parent.col]] == i
       
-  ### Finalise and return
+      tmp <- dat[rws,]
+      unique(tmp[[pop.col]])
       
-      res <- rbindlist(res.list, fill = TRUE) 
-      return(res)
+      res.1 <- data.frame(with(tmp, table(tmp[[parent.col]], tmp[[sample.col]])))
+      res.2 <- data.frame(with(tmp, table(tmp[[pop.col]], tmp[[sample.col]])))
       
-} 
+      res.2 <- do.filter(res.2, 'Var1', unique(tmp[[pop.col]]))
+      
+      names(res.1)[3] <- 'ParentCounts'
+      names(res.2)[3] <- 'PopCounts'
+      
+      res.3 <- do.add.cols(res.2, 'Var2', res.1[,2:3], 'Var2', show.status = FALSE)
+      res.3$NAME <- paste0(res.3[['Var1']], ' -- ', res.3[['Var2']]) 
+      res.3[[paste0('Perc of parent')]] <- res.3$PopCounts / res.3$ParentCounts * 100
+      res.3$Var1 <- NULL
+      res.3$Var2 <- NULL
+      res.3$PopCounts <- NULL
+      res.3$ParentCounts <- NULL
+      res.list[[i]] <- res.3
+      
+      rm(res.1)
+      rm(res.2)
+      rm(res.3)
+      rm(tmp)
+      rm(rws)
+    }
+    
+    template <- do.add.cols(template, 'NAME', rbindlist(res.list), 'NAME', show.status = FALSE)
+    
+    rm(res.list)
+    gc()
+  }
+  
+  ### Expression
+  
+  if(!is.null(exp.cols)){
+    
+    message(" -- calculting expression levels")
+    
+    if(func == 'median'){
+      exps <- dat[, lapply(.SD, median), by = c(sample.col, pop.col), .SDcols = exp.cols]
+    }
+    if(func == 'mean'){
+      exps <- dat[, lapply(.SD, mean), by = c(sample.col, pop.col), .SDcols = exp.cols]
+    }
+    if(func == 'sum'){
+      exps <- dat[, lapply(.SD, sum), by = c(sample.col, pop.col), .SDcols = exp.cols]
+    }
+    
+    names(exps)[-c(1:2)] <- paste0('Exp ', names(exps)[-c(1:2)])
+    exps$NAME <- paste0(exps[[pop.col]], ' -- ', exps[[sample.col]])
+    exps[[sample.col]] <- NULL
+    exps[[pop.col]] <- NULL
+    
+    template <- do.add.cols(template, 'NAME', exps, 'NAME', show.status = FALSE)
+    rm(exps)
+    gc()
+  }
+  
+  ### Percent positive
+  
+  if(!is.null(perc.pos)){
+    
+    message(" -- calculting percent positive")
+    
+    alt <- dat[,c(sample.col, pop.col, perc.pos[[1]]), with = FALSE]
+    
+    for(i in c(1:nrow(perc.pos))){
+      # i <- 1
+      
+      message(paste0("     ... ", perc.pos[[1]][i]))
+      
+      mrk <- perc.pos[i,1][[1]]
+      val <- perc.pos[i,2][[1]]
+      
+      alt[alt[[mrk]] > val,paste0('POS ', mrk)] <- TRUE
+      alt[alt[[mrk]] <= val,paste0('POS ', mrk)] <- FALSE
+    }
+    
+    alt.res <- alt[, lapply(.SD, sum), by = c(sample.col, pop.col), .SDcols = paste0('POS ', perc.pos[[1]])]
+    alt.res$NAME <- paste0(alt.res[[pop.col]], ' -- ', alt.res[[sample.col]])
+    alt.res[[sample.col]] <- NULL
+    alt.res[[pop.col]] <- NULL
+    alt.res <- do.add.cols(alt.res, 'NAME', props[,c('NAME', 'nrows')], 'NAME', show.status = FALSE)
+    alt.res[,paste0('PROP POS ', perc.pos[[1]])] <- alt.res[,paste0('POS ', perc.pos[[1]]), with = FALSE] / alt.res$nrows * 100
+    alt.res <- alt.res[,c('NAME', names(alt.res)[grepl('PROP POS ', names(alt.res))]), with = FALSE]
+    
+    template <- do.add.cols(template, 'NAME', alt.res, 'NAME', show.status = FALSE)
+    rm(alt.res)
+    rm(alt)
+    gc()
+  }
+  
+  ### Multiple positives
+  
+  if(!is.null(double.pos)){
+    
+    message(" -- calculting multiple positive")
+    
+    alt <- dat[,c(sample.col, pop.col, double.pos), with = FALSE]
+    
+    for(i in c(1:length(double.pos))){
+      # i <- 1
+      
+      mrk <- double.pos[i]
+      val <- perc.pos[perc.pos[[1]] == mrk,2][[1]]
+      
+      alt[alt[[mrk]] > val,paste0('EXP-', mrk)] <- TRUE
+      alt[alt[[mrk]] <= val,paste0('EXP-', mrk)] <- FALSE
+    }
+    
+    pos.cols <- names(alt)[grepl('EXP-', names(alt))]
+    
+    tmp.list <- list()
+    
+    if(length(pos.cols) == 2){
+      tmp.list[[paste0(pos.cols[1], ' POS', ' + ', pos.cols[2], ' POS')]] <- alt[alt[[pos.cols[1]]] == TRUE &
+                                                                                   alt[[pos.cols[2]]] == TRUE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' POS', ' + ', pos.cols[2], ' NEG')]] <- alt[alt[[pos.cols[1]]] == TRUE &
+                                                                                   alt[[pos.cols[2]]] == FALSE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' NEG', ' + ', pos.cols[2], ' POS')]] <- alt[alt[[pos.cols[1]]] == FALSE &
+                                                                                   alt[[pos.cols[2]]] == TRUE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' NEG', ' + ', pos.cols[2], ' NEG')]] <- alt[alt[[pos.cols[1]]] == FALSE &
+                                                                                   alt[[pos.cols[2]]] == FALSE,] 
+    }
+    
+    if(length(pos.cols) == 3){
+      tmp.list[[paste0(pos.cols[1], ' POS', ' + ', pos.cols[2], ' POS', ' + ', pos.cols[3], ' POS')]] <- alt[alt[[pos.cols[1]]] == TRUE &
+                                                                                                               alt[[pos.cols[2]]] == TRUE &
+                                                                                                               alt[[pos.cols[3]]] == TRUE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' POS', ' + ', pos.cols[2], ' POS', ' + ', pos.cols[3], ' NEG')]] <- alt[alt[[pos.cols[1]]] == TRUE &
+                                                                                                               alt[[pos.cols[2]]] == TRUE &
+                                                                                                               alt[[pos.cols[3]]] == FALSE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' POS', ' + ', pos.cols[2], ' NEG', ' + ', pos.cols[3], ' POS')]] <- alt[alt[[pos.cols[1]]] == TRUE &
+                                                                                                               alt[[pos.cols[2]]] == FALSE &
+                                                                                                               alt[[pos.cols[3]]] == TRUE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' NEG', ' + ', pos.cols[2], ' POS', ' + ', pos.cols[3], ' POS')]] <- alt[alt[[pos.cols[1]]] == FALSE &
+                                                                                                               alt[[pos.cols[2]]] == TRUE &
+                                                                                                               alt[[pos.cols[3]]] == TRUE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' POS', ' + ', pos.cols[2], ' NEG', ' + ', pos.cols[3], ' NEG')]] <- alt[alt[[pos.cols[1]]] == TRUE &
+                                                                                                               alt[[pos.cols[2]]] == FALSE &
+                                                                                                               alt[[pos.cols[3]]] == FALSE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' NEG', ' + ', pos.cols[2], ' POS', ' + ', pos.cols[3], ' NEG')]] <- alt[alt[[pos.cols[1]]] == FALSE &
+                                                                                                               alt[[pos.cols[2]]] == TRUE &
+                                                                                                               alt[[pos.cols[3]]] == FALSE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' NEG', ' + ', pos.cols[2], ' NEG', ' + ', pos.cols[3], ' POS')]] <- alt[alt[[pos.cols[1]]] == FALSE &
+                                                                                                               alt[[pos.cols[2]]] == FALSE &
+                                                                                                               alt[[pos.cols[3]]] == TRUE,]
+      
+      tmp.list[[paste0(pos.cols[1], ' NEG', ' + ', pos.cols[2], ' NEG', ' ', pos.cols[3], ' NEG')]] <- alt[alt[[pos.cols[1]]] == FALSE &
+                                                                                                             alt[[pos.cols[2]]] == FALSE &
+                                                                                                             alt[[pos.cols[3]]] == FALSE,]
+    }
+    
+    rm(alt)
+    gc()
+    
+    names(tmp.list)
+    
+    multi.list <- list()
+    
+    for(a in names(tmp.list)){
+      # a <- names(tmp.list)[1]
+      
+      message(paste0('    ... ', gsub('EXP-', '', a)))
+      
+      tp <- tmp.list[[a]]
+      tp$MULTIKEY <- TRUE
+      multi.res <- tp[, lapply(.SD, sum), by = c(sample.col, pop.col), .SDcols = 'MULTIKEY']
+      multi.res$NAME <- paste0(multi.res[[pop.col]], ' -- ', multi.res[[sample.col]])
+      multi.res[[sample.col]] <- NULL
+      multi.res[[pop.col]] <- NULL
+      multi.res <- do.add.cols(multi.res, 'NAME', props[,c('NAME', 'nrows')], 'NAME', show.status = FALSE)
+      multi.res[,paste0('PROP MULTIPOS ', a)] <- multi.res[,'MULTIKEY', with = FALSE] / multi.res$nrows * 100
+      multi.res$MULTIKEY <- NULL
+      multi.res$nrows <- NULL
+      
+      names(multi.res) <- gsub('EXP-', '', names(multi.res))
+      
+      template <- do.add.cols(template, 'NAME', multi.res, 'NAME', show.status = FALSE)
+      
+      rm(tp)
+      rm(multi.res)
+      gc()
+    }
+    
+    rm(multi.list)
+    gc()
+  }
+  
+  ### Wrap up
+  
+  message(' -- wrapping up')
+  
+  final <- tidyr::separate(template, 'NAME', sep = ' -- ', into = c(pop.col, sample.col))
+  final$nrows <- NULL
+  final <- reshape(final, idvar = sample.col, timevar = pop.col, direction = "wide", sep = sep)
+  final <- as.data.table(final)
+  
+  if(!is.null(annot.cols)){
+    res.cols <- names(final)[-1]
+    
+    ann <- data.table()
+    
+    for(i in unique(dat[[sample.col]])){
+      # i <- unique(dat[[sample.col]])[1]
+      tp <- dat[dat[[sample.col]] == i,]
+      tp <- tp[1,c(sample.col, annot.cols), with = FALSE]  
+      ann <- rbind(ann, tp)
+    }
+    
+    final <- do.add.cols(final, sample.col, ann, sample.col, show.status = FALSE)
+    final <- final[,c(sample.col, annot.cols, sort(res.cols)), with = FALSE] 
+  }
+  
+  ### Return
+  
+  message(' -- sumtable complete!')
+  return(final)
+  
+}
