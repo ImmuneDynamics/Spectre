@@ -17,7 +17,7 @@
     
     ### Example:
     
-        # CNS analysis
+        # BM analysis
         #   /data
         #       -- Contains data files, one CSV or FCS per sample
         #   /metadata
