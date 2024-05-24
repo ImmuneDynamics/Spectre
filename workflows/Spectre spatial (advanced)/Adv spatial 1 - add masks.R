@@ -1,3 +1,24 @@
+##########################################################################################################
+#### Create a folder structure for your analysis run
+##########################################################################################################
+
+    ### Create a master folder with a meaningful name. Then inside that folder, insert the following:
+    
+        # One folder called 'data' -- this will contain your 'ROIs' folder and 'masks' folder
+        # One folder called 'metadata' -- this will contain a CSV containg your sample metadata
+        # One folder called 'Spectre advanced spatial' or similar -- place analysis scripts there
+        
+    ### Example:
+    
+        # Spleen analysis
+        #   /data
+        #       /ROIs -- contains one folder per ROI, filled with TIFF files (one per channel)
+        #       /masks -- contains mask files (TIFFs). Can have multiple mask types (e.g. cell mask, region mask)
+        #   /metadata
+        #       -- Contains a CSV containing sample metadata (group, batch, etc)
+        #   /Spectre advanced spatial
+        #       -- Adv spatial 1- add masks.R
+
 ###################################################################################
 ### Spectre: spatial 1 - add masks and extract cellular data
 ###################################################################################

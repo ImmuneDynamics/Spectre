@@ -1,3 +1,21 @@
+##########################################################################################################
+#### Create a folder structure for your analysis run
+##########################################################################################################
+
+    ### Create a master folder with a meaningful name. Then inside that folder, insert the following:
+    
+        # One folder called 'data' -- this will contain your 'ROIs' folder and 'masks' folder
+        # One folder called 'Spectre FlowJo' or similar -- place analysis scripts there
+    
+    ### Example:
+    
+        # Spleen analysis
+        #   /data
+        #       /ROIs -- contains one folder per ROI, filled with TIFF files (one per channel)
+        #       /masks -- contains mask files (TIFFs). Can have multiple mask types (e.g. cell mask, region mask)
+        #   /Spectre FlowJo
+        #       -- TIFF to FCS.R
+
 ###################################################################################
 ### Spectre: TIFF to FCS
 ###################################################################################
