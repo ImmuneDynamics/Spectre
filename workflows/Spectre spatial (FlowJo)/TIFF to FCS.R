@@ -23,16 +23,12 @@
     ### Load libraries
         
         library('Spectre')
-        
-        Spectre::package.check(type = 'spatial')
-        Spectre::package.load(type = 'spatial')
-        
+
     ### Extra packages
-        
+
         if(!require('raster')) {install.packages('raster')}
         if(!require('tiff')) {install.packages('tiff')}
         if(!require('rhdf5')) {BiocManager::install("rhdf5")}
-        # if(!require('HDF5Array')) {BiocManager::install("HDF5Array")}
         if(!require('s2')) {install.packages('s2')}
         if(!require('sf')) {install.packages('sf')}
         if(!require('stars')) {install.packages('stars')}
@@ -40,17 +36,11 @@
         if(!require('exactextractr')) {install.packages('exactextractr')}
         if(!require('qs')) {install.packages('qs')}
         
-        library('raster')
-        library('tiff')
-        library('rhdf5')
-        # library('HDF5Array')
-        library('s2')
-        library('sf')
-        library('stars')
-        library('sp')
-        library('exactextractr')
-        library('qs')
-        
+    ### Check and load packages
+
+        Spectre::package.check(type = 'spatial')
+        Spectre::package.load(type = 'spatial')
+
     ### Set PrimaryDirectory
         
         dirname(rstudioapi::getActiveDocumentContext()$path)            # Finds the directory where this script is located

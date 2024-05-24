@@ -22,13 +22,27 @@
 ###################################################################################
 ### Spectre: spatial 1 - add masks and extract cellular data
 ###################################################################################
-    
+        
     ### Load libraries
     
-    library('Spectre')
+        library('Spectre')
     
-    Spectre::package.check(type = 'spatial')
-    Spectre::package.load(type = 'spatial')
+    ### Extra packages
+    
+        if(!require('raster')) {install.packages('raster')}
+        if(!require('tiff')) {install.packages('tiff')}
+        if(!require('rhdf5')) {BiocManager::install("rhdf5")}
+        if(!require('s2')) {install.packages('s2')}
+        if(!require('sf')) {install.packages('sf')}
+        if(!require('stars')) {install.packages('stars')}
+        if(!require('sp')) {install.packages('sp')}
+        if(!require('exactextractr')) {install.packages('exactextractr')}
+        if(!require('qs')) {install.packages('qs')}
+    
+    ### Check and load packages
+    
+        Spectre::package.check(type = 'spatial')
+        Spectre::package.load(type = 'spatial')
     
     ### Set PrimaryDirectory
     
