@@ -1,7 +1,7 @@
 Type: Package
 Package: Spectre
 Title: High-dimensional cytometry and imaging analysis.
-Version: 1.2.0-beta
+Version: 1.2.0-00
 Date: 2023-11-12
 Authors@R: c(
     person("Thomas", "Ashhurst", , "thomas.ashhurst@sydney.edu.au", role = c("aut", "cre")),
