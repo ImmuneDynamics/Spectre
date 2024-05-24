@@ -26,19 +26,27 @@ If you use Spectre in your work, please consider citing [Ashhurst TM, Marsh-Wake
 
 ## Getting started
 
-We recommend using Spectre with [R](https://cran.r-project.org/mirrors.html) and [RStudio](https://www.rstudio.com/products/rstudio/download/#download). If you are unfamiliar with using R and RStudio, check out our [R and Spectre basics guides](https://immunedynamics.io/spectre/install/#Basics_guide) for assistance. Once R and RStudio are installed, run the following to install the Spectre package.
+### Installation
+
+We recommend using Spectre with [R](https://cran.r-project.org/mirrors.html) and [RStudio](https://www.rstudio.com/products/rstudio/download/#download). Once R and RStudio are installed, run the following to install the Spectre package.
 
 ```         
 if(!require('remotes')) {install.packages('remotes')} # Installs the package 'remotes'
 remotes::install_github(repo = "immunedynamics/spectre") # Install the Spectre package
 ```
 
-For detailed installation instructions, and instructions for installing Spectre via Docker, see our [installation guide](https://immunedynamics.io/spectre/install/).
+If you are unfamiliar with using R and RStudio, check out our [R and Spectre basics guides](https://immunedynamics.io/spectre/install/#Basics_guide) for assistance. For detailed installation instructions, and instructions for installing Spectre via Docker, see our [installation guide](https://immunedynamics.io/spectre/install/).
 
-<br />
+### New to R or Spectre?
 
-## Workflows and protocols
+New users can check out our [basics guides](https://immunedynamics.io/spectre/install/#Basics_guide) to get acquainted with using R and Spectre.
 
-Analysis workflows and protocols are available from <https://immunedynamics.github.io/spectre>.
+### Workflows and protocols
+
+When you are ready to start analysis, check out our structured workflows and tutorials on the following pages:
+
+-   Analysis of [high-dimensional cytometry](https://immunedynamics.github.io/spectre/cytometry) data
+-   Analysis of [high-dimensional imaging/spatial](https://immunedynamics.github.io/spectre/spatial/) data  
+-   Analysis of [single-cell genomics](https://immunedynamics.github.io/spectre/single-cell/) data
 
 <br/>
