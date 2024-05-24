@@ -92,7 +92,7 @@
 #' 
 #' 
 #' # Ellipses are only generated in 'plot.ind.group' when there are at least 
-#' 2 samples per group ('group.ind')
+#' # 2 samples per group ('group.ind')
 #' 
 #' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export
