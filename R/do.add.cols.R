@@ -16,7 +16,7 @@
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #' 
 #' @examples
-#' 
+#' library(data.table)
 #' dat <- Spectre::demo.clustered[,1:19]
 #' 
 #' add.dt <- data.table('Files' = unique(dat$FileName),
