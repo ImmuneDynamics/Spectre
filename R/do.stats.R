@@ -1,8 +1,10 @@
 #' Statistical analysis
 #'
 #' @import data.table
+#' 
+#' @usage NULL
 #'
-#' @export
+#' @export do.stats
 
 do.stats <- function(dat,
                      use.cols,

@@ -31,11 +31,11 @@
 #' 
 #'
 #'
-#' @author Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
+#' @author Givanna Putri
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
-#' @export
+#' @export train.knn.classifier
 
 train.knn.classifier <- function(dat, 
                                  use.cols,

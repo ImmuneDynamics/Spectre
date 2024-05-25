@@ -18,12 +18,10 @@
 #'
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
-#' @examples
-#' align.model <- train.cytonorm()
 #'
 #' @import data.table
 #'
-#' @export
+#' @export train.cytonorm
 
 train.cytonorm <- function(model,
                           align.cols,

@@ -40,25 +40,16 @@
 #' @usage make.colour.plot(dat, x.axis, y.axis, col.axis)
 #'
 #' @examples
-#' # Load packages
-#' library(Spectre)
-#' package.check()
-#' package.load()
-#'
-#' # Read data
-#' cell.dat <- Spectre::demo.umap
-#' cell.dat <- as.data.table(cell.dat)
-#'
 #' # Draw plot
-#' Spectre::make.colour.plot(dat = cell.dat,
-#'                           x.axis = "UMAP_42_X",
-#'                           y.axis = "UMAP__42Y",
-#'                           col.axis = "BV605.Ly6C")
+#' Spectre::make.colour.plot(dat = Spectre::demo.clustered,
+#'                           x.axis = "UMAP_X",
+#'                           y.axis = "UMAP_Y",
+#'                           col.axis = "CD4_asinh")
 #'
 #'
 #' @author
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#' Givanna Putri, \email{ghar1821@@uni.sydney.edu.au}
+#' Givanna Putri
 #'
 #' @import data.table
 #'

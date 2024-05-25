@@ -84,15 +84,9 @@ More information on PCA plots can be found here http://www.sthda.com/english/art
 }
 \examples{
 # Set directory to save files. By default it will save files at get()
-setwd("/Users/felixmarsh-wakefield/Desktop")
 
 # Run PCA on demonstration dataset, adding PC to dataset
 dat <- Spectre::demo.clustered
-dat <- test.pca(dat = dat,
-                        use.cols = c(11:19),
-                        add.pca.col = TRUE,
-                        pca.lite = TRUE
-                        )
                         
 # Run PCA on demonstration dataset
 Spectre::run.pca(dat = Spectre::demo.clustered,
@@ -101,6 +95,7 @@ Spectre::run.pca(dat = Spectre::demo.clustered,
                 )
 
 # Compare between groups
+\dontrun{
 Spectre::run.pca(dat = Spectre::demo.clustered,
                  use.cols = c(11:19),
                  comp.no = NULL,
@@ -110,6 +105,7 @@ Spectre::run.pca(dat = Spectre::demo.clustered,
                  mean.point = FALSE,
                  randomise.order = TRUE
                  )
+}
         
 # When prompted, type in "5" and click enter to continue function 
 # (this selects the elbow point based off the scree plot)

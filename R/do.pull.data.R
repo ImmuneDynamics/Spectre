@@ -4,8 +4,10 @@
 #' @param target.dat NO DEFAULT. Dataset to pull.
 #'
 #' @import data.table
+#' 
+#' @usage do.pull.data(spatial.dat, target.dat)
 #'
-#' @export
+#' @export do.pull.data
 
 do.pull.data <- function(spatial.dat,
                           target.dat){

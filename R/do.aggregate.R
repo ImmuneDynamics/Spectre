@@ -27,7 +27,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.aggregate
 
 do.aggregate <- function(dat,
                              use.cols,

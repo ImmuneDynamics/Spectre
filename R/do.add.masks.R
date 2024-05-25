@@ -13,16 +13,18 @@
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' 
+#' @usage do.add.masks(dat, mask.dir, mask.pattern, mask.label,correct.extent = TRUE, 
+#' flip.y = TRUE, value.modifier = 65535, HDF5 = FALSE, array = FALSE)
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.add.masks
 
 do.add.masks <- function(dat, # list of spatial objects
                          mask.dir,
                          mask.pattern,
                          mask.label,
-                      
                          correct.extent = TRUE,
                          flip.y = TRUE,
                          value.modifier = 65535,

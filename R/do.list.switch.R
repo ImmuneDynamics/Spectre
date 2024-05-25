@@ -19,7 +19,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.list.switch
 
 do.list.switch <- function(dat){
 

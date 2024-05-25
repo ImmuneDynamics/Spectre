@@ -24,10 +24,11 @@
 #'
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
-#' @examples
-#' aligned.dat <- do.align()
+#' @usage do.align(ref.dat, target.dat, batch.col, align.cols, method = "CytoNorm", 
+#' goal = "mean", nQ = 101, Qmin = 0.01, Qmax = 0.99, write.ref.fcs = TRUE,
+#' write.target.fcs = TRUE, mem.ctrl = TRUE)
 #'
-#' @export
+#' @export do.align
 
 do.align <- function(ref.dat,
                      target.dat,

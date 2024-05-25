@@ -30,24 +30,39 @@
 #' row.sep, col.sep, cell.size, standard.colours, path)
 #'
 #' @examples
+#' 
+#' # Create some sample data
+#' library(data.table)
+#' 
+#' dat <- Spectre::demo.clustered
+#' 
 #' ## MFI cluster vs marker heatmap
-#' Spectre::make.pheatmap(dat = Spectre::demo.exp,
+#' 
+#' # mock MFI data per sample, population.
+#' demo.exp <- Spectre::demo.clustered[, lapply(.SD, mean), .SDcols = c("CD45_asinh", "Ly6G_asinh", "CD11b_asinh", "B220_asinh", "CD8a_asinh"), by = Population]
+#' 
+#' 
+#' Spectre::make.pheatmap(dat = demo.exp,
 #'                        file.name = "Expression pheatmap.png",
 #'                        plot.title = "Expression",
 #'                        sample.col = "Population",
-#'                        plot.cols = names(Spectre::demo.exp)[c(2:10)])
+#'                        plot.cols = c("CD45_asinh", "Ly6G_asinh", "CD11b_asinh", "B220_asinh", "CD8a_asinh"))
 #'
+#' # create mock population count per sample
+#' demo.sum <- Spectre::demo.clustered[, .(count = .N), by = c("Sample", "Population", "Group", "Batch")]
+#' demo.sum <- dcast(demo.sum, Sample+Group+Batch ~ Population, value.var='count')
+#' 
 #' ## Z-scrore of fold-change type heatmap
-#' z.dat <- do.zscore(dat = Spectre::demo.sum,
-#'                    use.cols = names(Spectre::demo.sum)[c(4:15)],
+#' z.dat <- do.zscore(dat = demo.sum,
+#'                    use.cols = c("CD4 T cells", "CD8 T cells", "Infil Macrophages", "Microglia", "NK cells", "Neutrophils"),
 #'                    replace = TRUE)
 #'
 #' Spectre::make.pheatmap(dat = z.dat,
 #'                        file.name = "z-score.png",
 #'                        plot.title = "z-score",
 #'                        sample.col = "Sample",
-#'                        plot.cols = names(z.dat)[c(4:15)],
-#'                        annot.cols = names(z.dat)[c(2:3)],
+#'                        plot.cols = c("CD4 T cells", "CD8 T cells", "Infil Macrophages", "Microglia", "NK cells", "Neutrophils"),
+#'                        annot.cols = c("Group", "Batch"),
 #'                        is.fold = TRUE,
 #'                        fold.range = c(3,-3)
 #'                        )

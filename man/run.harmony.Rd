@@ -78,10 +78,6 @@ Returns a data.table with aligned data added in new columns.
 \description{
 This function allows you to run the 'Harmony' data alignment algorithm on single cell or cytometry data stored in a data.table
 }
-\examples{
-cell.dat <- run.harmony()
-
-}
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 }

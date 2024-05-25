@@ -4,8 +4,12 @@
 #' @param region DEFAULT = NULL. Name of the region mask, if present.
 #'
 #' @import data.table
+#' 
+#' @usage do.calculate.area(dat, region = NULL)
 #'
-#' @export
+#' @export do.calculate.area
+#' 
+#' 
 
 do.calculate.area <- function(dat,
                               region = NULL){

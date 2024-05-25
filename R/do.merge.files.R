@@ -12,9 +12,15 @@
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
 #' @examples
+#' data.list <- list(
+#' "01_Mock_01" = Spectre::demo.clustered[Sample == '01_Mock_01'],
+#' "02_Mock_02" = Spectre::demo.clustered[Sample == '02_Mock_02']
+#' )
 #' cell.dat <- do.merge.files(dat = data.list, remove.duplicates = TRUE)
+#' 
+#' @usage do.merge.files(dat, remove.duplicates = TRUE)
 #'
-#' @export
+#' @export do.merge.files
 
 do.merge.files <- function(dat, remove.duplicates = TRUE){
   

@@ -22,8 +22,11 @@
 #'
 #' @examples
 #' # Run FlowSOM on demonstration dataset
-#' res <- Spectre::run.flowsom(Spectre::demo.asih,
-#'                             use.cols = names(demo.asinh)[c(11:19)])
+#' res <- Spectre::run.flowsom(Spectre::demo.clustered,
+#'                             use.cols = c("NK11_asinh", "CD3_asinh", 
+#'                             "CD45_asinh", "Ly6G_asinh", "CD11b_asinh", 
+#'                             "B220_asinh", "CD8a_asinh", "Ly6C_asinh", 
+#'                             "CD4_asinh"))
 #'
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}

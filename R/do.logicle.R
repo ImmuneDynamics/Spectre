@@ -39,14 +39,15 @@
 #'   
 #' @examples 
 #' library(Spectre)
-#' dat = demo.asinh
-#' use.cols = names(dat)[c(2:10)]
-#' dat_lgcl = do.logicle(dat, use.cols = use.cols)
+#' dat = Spectre::demo.clustered[, 2:9]
+#' use.cols = names(dat)
+#' do.logicle(dat, use.cols = use.cols)
 #' 
-#' @author
-#' Givanna Putri, \email{givanna.haryonoputri@@sydney.edu.au}
+#' @usage do.logicle(dat, use.cols, auto.infer.function = TRUE,
+#' linearisation.width = 1.2, max.scale.val = 262144, full.transform.width = 4.5,
+#' additional.negative.range = 0)
 #'   
-#' @export
+#' @export do.logicle
 
 do.logicle <- function(dat, 
                        use.cols,

@@ -1,6 +1,6 @@
 Type: Package
 Package: Spectre
-Title: High-dimensional cytometry and imaging analysis.
+Title: High-dimensional cytometry and imaging analysis
 Version: 1.2.0-00
 Date: 2023-11-12
 Authors@R: c(
@@ -11,7 +11,7 @@ Authors@R: c(
 Description: A computational toolkit in R for the integration,
     exploration, and analysis of high-dimensional single-cell cytometry
     and imaging data.
-License: `use_mit_license()`
+License: `use_mit_license()` + file LICENSE
 URL: https://github.com/ImmuneDynamics/Spectre
 BugReports: https://github.com/ImmuneDynamics/Spectre/issues
 Depends: 

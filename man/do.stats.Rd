@@ -3,18 +3,6 @@
 \name{do.stats}
 \alias{do.stats}
 \title{Statistical analysis}
-\usage{
-do.stats(
-  dat,
-  use.cols,
-  sample.col,
-  grp.col,
-  comparisons,
-  variance.test = "kruskal.test",
-  pairwise.test = "wilcox.text",
-  corrections = "fdr"
-)
-}
 \description{
 Statistical analysis
 }

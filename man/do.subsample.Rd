@@ -24,11 +24,11 @@ Useful to decrease total cells for generating dimensionality reduction plots (tS
 }
 \examples{
 # Subsample 10,000 cells randomly from the total dataset
-sub.dat <- Spectre::do.subsample(dat = Spectre::demo.start,
+sub.dat <- Spectre::do.subsample(dat = Spectre::demo.clustered,
                                  targets = 10000)
 
 # Subsample based on the sample with the smallest number of cells
-sub.dat.sample <- Spectre::do.subsample(dat = Spectre::demo.start,
+sub.dat.sample <- Spectre::do.subsample(dat = Spectre::demo.clustered,
                                         divide.by = "FileName",
                                         min.per = TRUE)
 
