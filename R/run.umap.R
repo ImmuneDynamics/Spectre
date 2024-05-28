@@ -39,8 +39,10 @@
 #' # Run UMAP on a subset of the  demonstration dataset
 #'
 #' cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
-#' cell.dat <- Spectre::run.umap(dat = cell.dat,
-#'                               use.cols = names(demo.asinh)[c(2:10)])
+#' cell.dat <- Spectre::run.umap(
+#'   dat = cell.dat,
+#'   use.cols = names(demo.asinh)[c(2:10)]
+#' )
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
@@ -70,66 +72,120 @@ run.umap <- function(dat,
                      transform_state = 42,
                      knn.repeats = 1,
                      verbose = TRUE,
-                     umap_learn_args = NA
-                     )
-{
+                     umap_learn_args = NA,
+                     
+                     # For Fast UMAP
+                     fast = TRUE,
+                     n_threads = detectCores() - 1,
+                     n_sgd_threads = 'auto',
+                     batch = TRUE) {
 
   ### Test data
-      # dat <- iris
-      # umap.seed <- 42
-      # use.cols <- c(1:4)
+  # dat <- iris
+  # umap.seed <- 42
+  # use.cols <- c(1:4)
 
   ## Check that necessary packages are installed
-  if(!is.element('umap', installed.packages()[,1])) stop('umap is required but not installed')
-  if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
-
-  ## Require packages
-  require(umap)
+  check_packages_installed(c("data.table"))
   require(data.table)
+  
+  if (!"data.frame" %in% class(dat)) {
+    stop("dat must be of type data.frame or data.table")
+  }
+  
+  if(fast == TRUE){
+    if (!is.element("parallel", installed.packages()[, 1])){
+      message("For 'fast' UMAP, parallel is required but not installed. Switching to slow UMAP")
+      fast <- FALSE
+    }
+  }
+  
+  
+  if(fast == FALSE){
+    
+    check_packages_installed(c("umap"))
+    require(umap)
+  
+    ###
+    custom.config <- umap::umap.defaults
+    custom.config$random_state <- umap.seed
 
-  ###
-  custom.config <- umap::umap.defaults
-  custom.config$random_state <- umap.seed
+    custom.config$n_neighbors <- neighbours
+    custom.config$n_components <- n_components
+    custom.config$metric <- metric
+    custom.config$n_epochs <- n_epochs
+    custom.config$input <- input
+    custom.config$init <- init
+    custom.config$min_dist <- min_dist
+    custom.config$set_op_mix_ratio <- set_op_mix_ratio
+    custom.config$local_connectivity <- local_connectivity
+    custom.config$bandwidth <- bandwidth
+    custom.config$alpha <- alpha
+    custom.config$gamma <- gamma
+    custom.config$negative_sample_rate <- negative_sample_rate
+    custom.config$a <- a_gradient
+    custom.config$b <- b_gradient
+    custom.config$spread <- spread
+    custom.config$transform_state <- transform_state
+    custom.config$knn.repeats <- knn.repeats
+    custom.config$verbose <- verbose
+    custom.config$umap_learn_args <- umap_learn_args
 
-  custom.config$n_neighbors <- neighbours
-  custom.config$n_components <- n_components
-  custom.config$metric <- metric
-  custom.config$n_epochs <- n_epochs
-  custom.config$input <- input
-  custom.config$init <- init
-  custom.config$min_dist <- min_dist
-  custom.config$set_op_mix_ratio <- set_op_mix_ratio
-  custom.config$local_connectivity <- local_connectivity
-  custom.config$bandwidth <- bandwidth
-  custom.config$alpha <- alpha
-  custom.config$gamma <- gamma
-  custom.config$negative_sample_rate <- negative_sample_rate
-  custom.config$a <- a_gradient
-  custom.config$b <- b_gradient
-  custom.config$spread <- spread
-  custom.config$transform_state <- transform_state
-  custom.config$knn.repeats <- knn.repeats
-  custom.config$verbose <- verbose
-  custom.config$umap_learn_args <- umap_learn_args
+    ###
+    
+    res <- umap::umap(
+      d = dat[, ..use.cols],
+      config = custom.config
+    )
 
-  dat.start <- data.table(dat)
-  dat.bk <- data.table(dat)
+    umap.res <- res$layout
+    umap.res <- as.data.frame(umap.res)
+    names(umap.res)[names(umap.res) == "V1"] <- umap.x.name
+    names(umap.res)[names(umap.res) == "V2"] <- umap.y.name
 
-  dat.bk <- dat.bk[, ..use.cols]
+    # assign("umap.res", umap.res, envir = globalenv())
+    res <- cbind(dat, umap.res) # Merge UMAP results with data
+    return(res)
+  }
+  
+  if(fast == TRUE){
+    
+    # Irritating. Can't peeps just settle on using either NA or NULL?
+    if (is.na(a_gradient)) {
+      a_gradient <- NULL
+    }
+    if (is.na(b_gradient)) {
+      b_gradient <- NULL
+    }
+    
+    set.seed(umap.seed)
+    
+    dat.umap <- uwot::umap(
+      X = dat[, use.cols, with = FALSE],
+      n_threads = n_threads,
+      n_sgd_threads = n_sgd_threads,
+      batch = batch,
+      n_neighbors = neighbours,
+      n_components = n_components,
+      metric = metric,
+      n_epochs = n_epochs,
+      init = init,
+      min_dist = min_dist,
+      set_op_mix_ratio = set_op_mix_ratio,
+      local_connectivity = local_connectivity,
+      bandwidth = bandwidth,
+      negative_sample_rate = negative_sample_rate,
+      a = a_gradient,
+      b = b_gradient,
+      spread = spread,
+      verbose = verbose
+    )
 
-  res <- umap::umap(d = dat.bk,
-              config = custom.config)
+    # Preparing data to return
+    colnames(dat.umap) <- c(umap.x.name, umap.y.name)
+    res <- cbind(dat, dat.umap)
 
-  umap.res <- res$layout
-  head(umap.res)
+    return(res)
+  }
 
-  umap.res <- as.data.frame(umap.res)
-  head(umap.res)
-
-  names(umap.res)[names(umap.res) == "V1"] <- umap.x.name
-  names(umap.res)[names(umap.res) == "V2"] <- umap.y.name
-
-  #assign("umap.res", umap.res, envir = globalenv())
-  res <- cbind(dat.start, umap.res) # Merge UMAP results with data
-  return(res)
 }

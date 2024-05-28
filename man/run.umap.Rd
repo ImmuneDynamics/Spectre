@@ -69,8 +69,10 @@ Uses the R package "umap" to calculate plots and "data.table" to handle data.
 # Run UMAP on a subset of the  demonstration dataset
 
 cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
-cell.dat <- Spectre::run.umap(dat = cell.dat,
-                              use.cols = names(demo.asinh)[c(2:10)])
+cell.dat <- Spectre::run.umap(
+  dat = cell.dat,
+  use.cols = names(demo.asinh)[c(2:10)]
+)
 }
 \author{
 Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
