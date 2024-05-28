@@ -17,6 +17,8 @@ read.files(file.loc, file.type, do.embed.file.names, header)
 
 \item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?}
 
+\item{add.cell.id}{DEFAULT = TRUE. Add a column containing unique cell IDs.}
+
 \item{header}{DEFAULT = TRUE. Does the first line of data contain column names?}
 }
 \value{

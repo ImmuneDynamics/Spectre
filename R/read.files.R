@@ -9,6 +9,7 @@
 #' @param files DEFAULT = NULL. A vector of selected file names to import.
 #' @param nrows DEFAULT = NULL. Can specify a numerical target for the number of cells (rows) to be read from each file. Please note, order is random in FCS files.
 #' @param do.embed.file.names DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?
+#' @param add.cell.id DEFAULT = TRUE. Add a column containing unique cell IDs.
 #' @param header DEFAULT = TRUE. Does the first line of data contain column names?
 #'
 #' @return Returns a list of data.tables -- one per CSV file.
@@ -31,6 +32,7 @@ read.files <- function(file.loc = getwd(),
                        files = NULL,
                        nrows = NULL,
                        do.embed.file.names = TRUE,
+                       add.cell.id = TRUE,
                        header = TRUE)
 {
 
@@ -158,6 +160,14 @@ read.files <- function(file.loc = getwd(),
           for (a in all.file.names) {data.list[[a]]$FileName <- a} # Inserting names doesn't stop the rest working, just messes with some auto visual stuff
           for (i in all.file.nums) {data.list[[i]]$FileNo <- i}
 
+        }
+        
+    ## For CellID
+        
+        if(isTRUE(add.cell.id)){
+          for (i in names(data.list)){
+            data.list[[i]]$CellID <- paste0(i, '_', 'CellID', sprintf(paste0("%0", nchar(nrow(data.list[[i]])), "d"), c(1:nrow(data.list[[i]])))) 
+          }
         }
 
     ## Return result and result message
