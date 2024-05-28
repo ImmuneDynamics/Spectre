@@ -4,7 +4,9 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 
 <img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png"/>
 
-**Current version**: [`v1.2.0-beta`](https://github.com/ImmuneDynamics/Spectre/releases)
+**Current version**: [`v2.0.0-dev`](https://github.com/ImmuneDynamics/Spectre/releases)
+
+*Development version of Spectre v2*
 
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true)](https://ci.appveyor.com/project/tomashhurst/spectre)
 
