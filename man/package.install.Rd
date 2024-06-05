@@ -4,7 +4,7 @@
 \alias{package.install}
 \title{package.install - a function to install packages required for Spectre.}
 \usage{
-See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+package.install(type = "general", update = FALSE)
 }
 \arguments{
 \item{type}{DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis.}
@@ -16,6 +16,7 @@ returns an error message if one of the common use packages are not installed. Pr
 }
 \description{
 This function allows you to check to see if all the common use packages dependencies for Spectre are installed. Will only install if the package has not been installed, will not update packages.
+See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
 \examples{
 package.install()

@@ -4,7 +4,10 @@
 \alias{make.multi.plot}
 \title{Make multiple plots for multiple columns and/or multiple sample/group/clusters}
 \usage{
-make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, col.min.threshold, col.max.threshold, path, plot.width, plot.height, blank.axis, save.each.plot)
+make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, 
+col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, 
+col.min.threshold, col.max.threshold, path, plot.width, plot.height, 
+blank.axis, save.each.plot)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A data frame containing all the data you wish to plot}
@@ -55,11 +58,10 @@ This function allows you to create a grid of plots, where the cells are plotted 
 Makes use of Spectre functions make.colour.plot and make.density.plot.
 }
 \examples{
-# Create grid of plots on demonstration data
-Spectre::make.multi.plot(dat = as.data.table(Spectre::demo.umap),
-                          x.axis = "UMAP_42_X",
-                          y.axis = "UMAP_42_Y",
-                          plot.by = c("BV605.Ly6C", "BUV737.B220", "AF700.CD45"))
+Spectre::make.multi.plot(dat = Spectre::demo.clustered,
+                          x.axis = "UMAP_X",
+                          y.axis = "UMAP_Y",
+                          plot.by = c("Ly6C_asinh", "B220_asinh", "CD45_asinh"))
 
 }
 \author{

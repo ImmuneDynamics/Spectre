@@ -13,7 +13,7 @@
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
-#' @export
+#' @export do.combine.cols
 
 do.combine.cols <- function(dat, col1, col2, na.rm = TRUE){
       

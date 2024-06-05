@@ -5,8 +5,10 @@
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
 #' @import data.table
+#' 
+#' @usage do.add.percell(spatial.dat, percell.dat, roi.col, name = "per.cell")
 #'
-#' @export
+#' @export do.add.percell
 
 do.add.percell <- function(spatial.dat,
                            percell.dat,

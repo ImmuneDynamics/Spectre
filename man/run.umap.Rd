@@ -4,7 +4,14 @@
 \alias{run.umap}
 \title{Run the UMAP algorithm (using umap::umap())}
 \usage{
-run.umap(dat, use.cols, umap.x.name = "UMAP_X", umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, n_components = 2, metric = "euclidean", n_epochs = 200, input = "data", init = "spectral", min_dist = 0.1, set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, b_gradient = NA, spread = 1, transform_state = 42, knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
+run.umap(dat, use.cols, umap.x.name = "UMAP_X", 
+umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, 
+n_components = 2, metric = "euclidean", n_epochs = 200, 
+input = "data", init = "spectral", min_dist = 0.1, 
+set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, 
+alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, 
+b_gradient = NA, spread = 1, transform_state = 42, 
+knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input data.table or data.frame.}
@@ -68,9 +75,12 @@ Uses the R package "umap" to calculate plots and "data.table" to handle data.
 \examples{
 # Run UMAP on a subset of the  demonstration dataset
 
-cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
+cell.dat <- do.subsample(Spectre::demo.clustered, 10000) # Subsample the demo dataset to 10000 cells
 cell.dat <- Spectre::run.umap(dat = cell.dat,
-                              use.cols = names(demo.asinh)[c(2:10)])
+                              use.cols = c("NK11_asinh", "CD3_asinh", 
+                              "CD45_asinh", "Ly6G_asinh", "CD11b_asinh", 
+                              "B220_asinh", "CD8a_asinh", "Ly6C_asinh", 
+                              "CD4_asinh"))
 }
 \author{
 Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

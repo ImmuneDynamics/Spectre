@@ -26,7 +26,7 @@ Returns the data.table with new columns embedded.
 do.add.cols
 }
 \examples{
-
+library(data.table)
 dat <- Spectre::demo.clustered[,1:19]
 
 add.dt <- data.table('Files' = unique(dat$FileName),

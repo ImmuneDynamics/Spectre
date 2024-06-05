@@ -16,7 +16,7 @@
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #' 
 #' @examples
-#' 
+#' library(data.table)
 #' dat <- Spectre::demo.clustered[,1:19]
 #' 
 #' add.dt <- data.table('Files' = unique(dat$FileName),
@@ -29,7 +29,7 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.add.cols
 
 do.add.cols <- function(dat, # the list of dataframes (samples) where each dataframe will have the columns embedded
                          base.col, # column name in the actual dataset
@@ -198,11 +198,10 @@ do.add.cols <- function(dat, # the list of dataframes (samples) where each dataf
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}.
 #'
-#' @examples
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.embed.columns
 
 do.embed.columns <- function(dat, # the list of dataframes (samples) where each dataframe will have the columns embedded
                              base.col, # column name in the actual dataset

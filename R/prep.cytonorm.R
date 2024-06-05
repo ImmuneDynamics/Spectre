@@ -23,7 +23,8 @@
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
 #' @examples
-#' align.model <- prep.cytonorm()
+#' # TBC
+#' # align.model <- prep.cytonorm()
 #'
 #' @import data.table
 #'

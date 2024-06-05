@@ -14,8 +14,10 @@
 #' @return A data.table with new columns added, that contain the clipped data.
 #'
 #' @import data.table
+#' 
+#' @usage do.clip(dat, use.cols, min.value = NULL, max.value = NULL, append.name = '_clipped')
 #'
-#' @export
+#' @export do.clip
 
 do.clip <- function(dat,
                     use.cols,

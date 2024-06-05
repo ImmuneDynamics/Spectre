@@ -4,7 +4,7 @@
 \alias{do.create.outlines}
 \title{do.create.outlines}
 \usage{
-do.create.outlines(dat, mask.name, method = "stars")
+do.create.outlines(dat, mask.name, method = 'stars')
 }
 \arguments{
 \item{mask.name}{NO DEFAULT. Name of the mask to create outlines for}

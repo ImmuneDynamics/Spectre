@@ -1,6 +1,7 @@
 #' package.check - a function to check the installation of all required packages.
 #'
 #' This function allows you to check to see if all the common use packages dependencies for Spectre are installed.
+#' See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @return returns an error message if one of the common use packages are not installed. Proceeds in order of package importance, and only the first error message encountered will be returned.
 #'
@@ -10,7 +11,7 @@
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+#' 
 #'
 #' @examples
 #' package.check()

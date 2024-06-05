@@ -6,7 +6,10 @@
 #'
 #' @import data.table
 #'
-#' @export
+#' @usage do.create.outlines(dat, mask.name, method = 'stars')
+#' 
+#' @export do.create.outlines
+#' 
 
 do.create.outlines <- function(dat,
                                mask.name,

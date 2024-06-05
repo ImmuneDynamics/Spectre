@@ -4,7 +4,12 @@
 \alias{do.align}
 \title{do.align - Function to align multiple batches of a dataset.}
 \usage{
-do.align(ref.dat, target.dat, batch.col, align.cols, method, goal, nQ, Qmin, Qmax, write.ref.fcs, write.target.fcs)
+do.align(ref.dat, target.dat, batch.col, align.cols, method, goal, 
+nQ, Qmin, Qmax, write.ref.fcs, write.target.fcs)
+
+do.align(ref.dat, target.dat, batch.col, align.cols, method = "CytoNorm", 
+goal = "mean", nQ = 101, Qmin = 0.01, Qmax = 0.99, write.ref.fcs = TRUE,
+write.target.fcs = TRUE, mem.ctrl = TRUE)
 }
 \arguments{
 \item{ref.dat}{NO DEFAULT. If using method = "CytoNorm", this must be a FlowSOM object created by Spectre::do.prep.fsom. If using "Quantiles", then this must be}
@@ -36,10 +41,6 @@ Returns a data.table with selected columns (align.cols) replaced with aligned da
 }
 \description{
 This function allows you to align multiple batches of a dataset, using either a "Quantile" approach, or using "CytoNorm"
-}
-\examples{
-aligned.dat <- do.align()
-
 }
 \references{
 Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}

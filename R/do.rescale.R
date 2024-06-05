@@ -9,13 +9,17 @@
 #' @param use.cols NO DEFAULT. Vector of character column names -- these columns will be normalised and added to the data.table as new columns.
 #' @param new.min DEFAULT = 0. The new minimum value.
 #' @param new.max DEFAULT = 1. The new maximum value.
-#' @param append.name DEFAULT = '_rescaled'. Text to be appended to the column names of re-scaled data.
+#' @param append.name DEFAULT = '_rescaled'. 
+#' Text to be appended to the column names of re-scaled data.
 #' 
 #' @return A data.table with new columns added, that contain the re-scaled data.
 #'
 #' @import data.table
+#' 
+#' @usage do.rescale(dat, use.cols, new.min = 0, new.max = 1, 
+#' append.name = '_rescaled')
 #'
-#' @export
+#' @export do.rescale
 
 do.rescale <- function(dat,
                        use.cols,

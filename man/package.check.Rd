@@ -4,7 +4,7 @@
 \alias{package.check}
 \title{package.check - a function to check the installation of all required packages.}
 \usage{
-See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+package.check(type = "general")
 }
 \arguments{
 \item{type}{DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis. If "ML", then checks for additional packages required for machine-learing functionality.}
@@ -14,6 +14,7 @@ returns an error message if one of the common use packages are not installed. Pr
 }
 \description{
 This function allows you to check to see if all the common use packages dependencies for Spectre are installed.
+See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
 \examples{
 package.check()
