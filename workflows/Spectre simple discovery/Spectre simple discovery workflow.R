@@ -71,7 +71,8 @@
 #### 2. Import and prep data
 ##########################################################################################################
     
-    ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
+    ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download.
+    ### Alternative: download from https://github.com/ImmuneDynamics/data/blob/main/msCNS.zip?raw=TRUE
         
         # setwd(PrimaryDirectory)
         # setwd("../")
