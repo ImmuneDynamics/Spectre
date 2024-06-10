@@ -22,22 +22,23 @@
 #'
 #' @param mfi.type DEFAULT = "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.
 #' @param path DEFAULT = getwd(). Defines the directory for write CSV files.
-#' 
+#'
 #' @usage make.sumtables(dat, sample.col, pop.col, measure.col, annot.col, group.col, do.proportions, cell.counts, do.mfi.per.sample, do.mfi.per.marker, perc.pos.markers, perc.pos.cutoff, mfi.type, path)
 #'
 #' @examples
 #' # Calculate and export results from demonstration data
-#' Spectre::write.sumtables(dat = Spectre::demo.clustered,
-#'                          sample.col = "Sample",
-#'                          pop.col = "FlowSOM_metacluster",
-#'                          measure.col = c(2,5:6,8:9,11:13,16:19,21:30,32),
-#'                          annot.col = c(33:34,36:37),
-#'                          group.col = "Group",
-#'                          cell.counts = c(rep(2.0e+07, 6), rep(1.8e+07, 6)),
-#'                          do.mfi.per.marker = TRUE,
-#'                          perc.pos.markers = c("BV711.SCA.1","APC.BrdU"),
-#'                          perc.pos.cutoff = c(580, 450)
-#'                          )
+#' Spectre::write.sumtables(
+#'   dat = Spectre::demo.clustered,
+#'   sample.col = "Sample",
+#'   pop.col = "FlowSOM_metacluster",
+#'   measure.col = c(2, 5:6, 8:9, 11:13, 16:19, 21:30, 32),
+#'   annot.col = c(33:34, 36:37),
+#'   group.col = "Group",
+#'   cell.counts = c(rep(2.0e+07, 6), rep(1.8e+07, 6)),
+#'   do.mfi.per.marker = TRUE,
+#'   perc.pos.markers = c("BV711.SCA.1", "APC.BrdU"),
+#'   perc.pos.cutoff = c(580, 450)
+#' )
 #'
 #' @author
 #' Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
@@ -47,30 +48,22 @@
 #' @export
 
 write.sumtables <- function(dat,
-                           sample.col, # name
-                           pop.col, # name
-                           measure.col, # numbers
-
-                           ## Optional extras -- with implications
-                           annot.col = NULL, # numbers # takes the first value from each 'sample' -- as these are annotations that are entered per 'cell', but should be equivalent for each sample
-                           group.col = NULL, # name
-
-                           ## Functions
-                           do.proportions = TRUE,
-                           cell.counts = NULL,
-                           do.mfi.per.sample = TRUE,
-                           do.mfi.per.marker = FALSE, # coming soon
-
-                           ## Functions for percentage positive calculations
-                           perc.pos.markers = NULL,
-                           perc.pos.cutoff = NULL,
-
-                           ## Other defaults
-                           mfi.type = "median",
-                           path = getwd())
-{
-
+                            sample.col, # name
+                            pop.col, # name
+                            measure.col, # numbers
+                            ## Optional extras -- with implications
+                            annot.col = NULL, # numbers # takes the first value from each 'sample' -- as these are annotations that are entered per 'cell', but should be equivalent for each sample
+                            group.col = NULL, # name
+                            ## Functions
+                            do.proportions = TRUE,
+                            cell.counts = NULL,
+                            do.mfi.per.sample = TRUE,
+                            do.mfi.per.marker = FALSE, # coming soon
+                            ## Functions for percentage positive calculations
+                            perc.pos.markers = NULL,
+                            perc.pos.cutoff = NULL,
+                            ## Other defaults
+                            mfi.type = "median",
+                            path = getwd()) {
   message("The 'write.sumtables' function has been depreciated. Please use 'create.sumtable' instead")
-
 }
-

@@ -46,14 +46,14 @@ For more information on what logicle transformation does, please read the manusc
 }
 \examples{
 library(Spectre)
-dat = demo.asinh
-use.cols = names(dat)[c(2:10)]
-dat_lgcl = do.logicle(dat, use.cols = use.cols)
+dat <- demo.asinh
+use.cols <- names(dat)[c(2:10)]
+dat_lgcl <- do.logicle(dat, use.cols = use.cols)
 
 }
 \references{
 Parks, David R., Mario Roederer, and Wayne A. Moore. "A new “Logicle” display method avoids deceptive effects of logarithmic scaling for low signals and compensated data." Cytometry Part A: The Journal of the International Society for Analytical Cytology 69.6 (2006): 541-551.
 }
 \author{
-Givanna Putri, \email{givanna.haryonoputri@sydney.edu.au}
+Givanna Putri
 }

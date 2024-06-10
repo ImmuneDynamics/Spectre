@@ -7,10 +7,10 @@
 run.fitsne(dat, use.cols, seed = 42, fitsne.x.name = "FItSNE_X", fitsne.y.name = "FItSNE_Y",
   dims = 2, perplexity = 30, theta = 0.5, max_iter = 750, fft_not_bh = TRUE, ann_not_vptree = TRUE,
   stop_early_exag_iter = 250, exaggeration_factor = 12.0, no_momentum_during_exag = FALSE,
-  start_late_exag_iter = -1, late_exag_coeff = 1.0, mom_switch_iter = 250, momentum = 0.5, 
-  final_momentum = 0.8, learning_rate = 'auto', n_trees = 50, search_k = -1, nterms = 3, 
+  start_late_exag_iter = -1, late_exag_coeff = 1.0, mom_switch_iter = 250, momentum = 0.5,
+  final_momentum = 0.8, learning_rate = 'auto', n_trees = 50, search_k = -1, nterms = 3,
   intervals_per_integer = 1, min_num_intervals = 50, K = -1, sigma = -30, initialization = 'pca',
-  max_step_norm = 5, load_affinities = NULL, fast_tsne_path = NULL, nthreads = 0, 
+  max_step_norm = 5, load_affinities = NULL, fast_tsne_path = NULL, nthreads = 0,
   perplexity_list = NULL, get_costs = FALSE,  df = 1.0)
 }
 \arguments{
@@ -123,5 +123,5 @@ dat.reduced <- run.fitsne(dat = dat.sub, use.cols = use.cols)
 
 }
 \author{
-Givanna Putri, \email{givanna.haryonoputri@sydney.edu.au}
+Givanna Putri
 }

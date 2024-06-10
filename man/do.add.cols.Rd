@@ -13,11 +13,9 @@ do.add.cols(dat, base.col, add.dat, add.by, rmv.ext)
 
 \item{add.dat}{NO DEFAULT. A data table of new values to embed as a new columns, with one column containing values used for matching with the target data.table.}
 
-\item{add.by}{NO DEFAULT. Character, name of the column in add.dat that is used for matching to the taret dataset.}
+\item{add.by}{NO DEFAULT. Character, name of the column in add.dat that is used for matching to the target dataset.}
 
-\item{rmv.ext}{DEFAULTS TO FALSE. Logical, can be TRUE or FALSE. Removes a ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs.}
-
-\item{mem.ctrl}{DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.}
+\item{rmv.ext}{DEFAULTS TO FALSE. Logical, can be TRUE or FALSE. Removes a ".csv" or ".fcs" extension from a the 'match.to' vector -- especially useful if 'match.to' is a list of sample names that end in .csv or .fcs or .qs.}
 }
 \value{
 Returns the data.table with new columns embedded.
@@ -26,16 +24,18 @@ Returns the data.table with new columns embedded.
 do.add.cols
 }
 \examples{
+library(data.table)
+add.dt <- data.table(
+  "Files" = unique(demo.asinh$FileName),
+  "SampleNumber" = c(1:12)
+)
 
-dat <- Spectre::demo.clustered[,1:19]
-
-add.dt <- data.table('Files' = unique(dat$FileName),
-                     'SampleNumber' = c(1:12))
-
-cell.dat <- do.add.cols(dat = dat,
-                        base.col = "FileName",
-                        add.dat = add.dt,
-                        add.by = "Files")
+cell.dat <- do.add.cols(
+  dat = demo.asinh,
+  base.col = "FileName",
+  add.dat = add.dt,
+  add.by = "Files"
+)
 
 }
 \references{

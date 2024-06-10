@@ -2,30 +2,145 @@
 % Please edit documentation in R/do.asinh.R
 \name{do.asinh}
 \alias{do.asinh}
-\title{do.asinh - Transform data in selected columns using ArcSinH}
+\alias{do.asinh,Spectre-method}
+\alias{do.asinh,data.table-method}
+\title{Do ArcSinh transformation}
 \usage{
-do.asinh(dat, use.cols, cofactor = 5, append.cf = FALSE, reduce.noise = FALSE)
+do.asinh(
+  dat,
+  use.cols,
+  cofactor = 5,
+  cofactor_inference_method = c("flowVS", "top10"),
+  append.cf = FALSE,
+  reduce.noise = FALSE,
+  digits = NULL,
+  verbose = TRUE,
+  ...
+)
+
+\S4method{do.asinh}{Spectre}(
+  dat,
+  use.cols,
+  data_source,
+  output_name,
+  cofactor = 5,
+  cofactor_inference_method = c("flowVS", "top10"),
+  append.cf = FALSE,
+  reduce.noise = FALSE,
+  digits = NULL,
+  verbose = TRUE
+)
+
+\S4method{do.asinh}{data.table}(
+  dat,
+  use.cols,
+  cofactor = 5,
+  cofactor_inference_method = c("flowVS", "top10"),
+  append.cf = FALSE,
+  reduce.noise = FALSE,
+  digits = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
-\item{dat}{NO DEFAULT. data.table Input sample.}
+\item{dat}{NO DEFAULT.
+Either a data.table or a Spectre object to apply arc-sinh transformation to.}
 
-\item{use.cols}{NO DEFAULT. Vector of character column names -- these columns will be transformed and added to the data.table as new columns.}
+\item{use.cols}{NO DEFAULT.
+A vector of character column names to apply arc-sinh transformation to.}
 
-\item{cofactor}{DEFAULT = 5. Co-factor to use for arcsinh transformation.}
+\item{cofactor}{DEFAULT = 5. Co-factor to use for arcsinh transformation.
+Can be vector of co-factors that align with columns in 'use.cols'
+See details for more information.
+It can also be set to NULL to get the function to automatically infer the co-factors.}
 
-\item{append.cf}{DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.}
+\item{cofactor_inference_method}{DEFAULT flowVS.
+Whether to automatically calculates co-factor for each marker.
+Only used if cofactor is NULL, and will force 'append.cf' to TRUE.
+Accepted options: 'flowVS' or 'top10'.
+flowVS uses the flowVS::estParamFlowVS (be patient as it takes time).
+'top10' uses the 90th percentile of values that are negative (based on absolute value)
+as the co-factor, and if values are all positive it will use the 10th percentile as co-factor.}
 
-\item{reduce.noise}{DEFAULT = FALSE. This is an experimental calculation which should reduce noise from negative values. Use with caution.}
-}
-\value{
-A data.table with new columns added, that contain the asinh transformed data.
+\item{append.cf}{DEFAULT = FALSE. Appends the co-factor used to the end of
+the name of the transformed columns.}
+
+\item{reduce.noise}{DEFAULT = FALSE. This is an experimental calculation
+which should reduce noise from negative values. Use with caution.}
+
+\item{digits}{DEFAULT = NULL. Number of decimal places as a limit, not used if NULL.
+Values beyond will be rounded.
+Equal to the number or less (i.e. if 9 is used, but only 5 digits are present,
+then 5 digits will be used). Important to control for small floating point
+error differences in different OS.}
+
+\item{verbose}{DEFAULT = TRUE.
+If TRUE, the function will print progress updates as it executes.}
+
+\item{...}{Other arguments applicable if dat is a Spectre object.}
+
+\item{data_source}{Character. The name of the data in Spectre object to
+apply arc-sinh transformation to.
+Only used if dat is a Spectre object.}
+
+\item{output_name}{Character. What name should the arc-sinh transformed
+data be stored under in the Spectre object.
+Only used if dat is a Spectre object.}
 }
 \description{
-This function allows you to transform the data in selected columns using ArcSinH with a specified co-factor
+Transform data in selected columns using ArcSinh transformation with a specified co-factor.
+}
+\details{
+\subsection{Specifying different cofactor for different marker}{
+
+If use.cols is \code{c("CD3", "CD4")}, and cofactor is \code{c(5,6)}, co-factor
+5 will be applied to CD3 and 6 will be applied to CD4.
+
+In the case where there is more than one cofactor specified, but there are more or less
+cofactors than the number of markers in use.cols, the function will give you an error.
+Hence, if you intend to specify different co-factor for different marker,
+make sure each marker is assigned a co-factor (repeat values if necessary),
+
+An exception to this is when you have multiple markers in use.cols but you only specify
+one cofactor as either a numerical value or a vector of size one,
+e.g., \code{cofactor = 5} or \code{cofactor = c(5)}.
+In this case, the function will apply a cofactor of 5 to all the markers in use.cols.
+Unfortunately there is no way in R to differentiate a numerical variable and a vector.
+}
+}
+\examples{
+library(data.table)
+# Assuming dat is a data.table
+dat <- data.table(NK11=rnorm(10, 2), CD3=rnorm(10,1), cell_id=paste0("cell_", seq(10)))
+# Default co-factor 5 will be used for both NK11 and CD3
+dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"))
+dat_asinh
+
+# Apply asinh with default co-factor to only NK11
+dat_asinh <- do.asinh(dat, use.cols=c("NK11"))
+dat_asinh
+
+# Apply different co-factor to the markers
+dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=c(5,10))
+dat_asinh
+
+# If dat is a Spectre object
+obj <- create.spectre.object(cell_id_col = "cell_id")
+obj <- add.new.data(obj, dat, "test")
+
+obj = do.asinh(
+ dat = obj,
+ data_source = "test",
+ output_name = "test_asinh",
+ use.cols = c("NK11", "CD3"), 
+ cofactor = 5,
+ append.cf = FALSE
+)
+
 }
 \references{
-\url{https://sydneycytometry.org.au/spectre}
+\url{https://immunedynamics.io/spectre/}
 }
 \seealso{
-\url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+\url{https://immunedynamics.io/spectre/} for usage instructions and vignettes.
 }

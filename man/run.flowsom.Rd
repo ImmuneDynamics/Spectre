@@ -38,7 +38,8 @@ Uses the R packages "FlowSOM" for clustering, "flowCore" for handling .fcs files
 \examples{
 # Run FlowSOM on demonstration dataset
 res <- Spectre::run.flowsom(Spectre::demo.asih,
-                            use.cols = names(demo.asinh)[c(11:19)])
+  use.cols = names(demo.asinh)[c(11:19)]
+)
 
 }
 \author{

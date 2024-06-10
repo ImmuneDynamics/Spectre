@@ -1,6 +1,7 @@
-#' do.clip - Clips data using a specified lower and upper value
+#' Clip data
 #'
-#' This function allows you to clip data using specified lower and upper values. E.g. if the upper value is set to 1000, then any values above 1000 will be converted to 1000. No rows are lost, rather the values in those rows are converted.
+#' Clips data using a specified lower and upper value.
+#' E.g. if the upper value is set to 1000, then any values above 1000 will be converted to 1000. No rows are lost, rather the values in those rows are converted.
 #'
 #' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #' @references \url{https://sydneycytometry.org.au/spectre}
@@ -13,70 +14,70 @@
 #'
 #' @return A data.table with new columns added, that contain the clipped data.
 #'
+#' @usage do.clip(dat, use.cols)
+#'
 #' @import data.table
 #'
-#' @export
+#' @export do.clip
 
 do.clip <- function(dat,
                     use.cols,
                     min.value = NULL,
                     max.value = NULL,
-                    append.name = '_clipped') {
+                    append.name = "_clipped") {
 
   ### Packages
-  
-      require('data.table')
-  
+
+  require("data.table")
+
   ### Demo data
-  
-      # dat <- demo.asinh
-      # use.cols <- names(demo.asinh)[c(11:19)]
-      # min.value <- 1
-      # max.value <- 3
-      # append.name = '_clipped'
-  
+
+  # dat <- demo.asinh
+  # use.cols <- names(demo.asinh)[c(11:19)]
+  # min.value <- 1
+  # max.value <- 3
+  # append.name = '_clipped'
+
   ### Setup data
-  
-      value <- dat[,use.cols,with = FALSE]
+
+  value <- dat[, use.cols, with = FALSE]
 
   ### Numeric checks
-  
-      if(isFALSE(all(sapply(value, is.numeric)))){
-          message("It appears that one column in your dataset is non numeric")
-          print(sapply(value, is.numeric))
-          stop("do.clip stopped")
-      }
-  
-  ### Lower clipping
-      
-      if(!is.null(min.value)){
-        for(a in use.cols){
-          # a <- use.cols[[1]]
-          
-          temp <- value[,a,with = FALSE]
-          temp[temp[[a]] < min.value,] <- min.value
-          value[,a] <- temp
 
-        }
-      }
-      
+  if (isFALSE(all(sapply(value, is.numeric)))) {
+    message("It appears that one column in your dataset is non numeric")
+    print(sapply(value, is.numeric))
+    stop("do.clip stopped")
+  }
+
+  ### Lower clipping
+
+  if (!is.null(min.value)) {
+    for (a in use.cols) {
+      # a <- use.cols[[1]]
+
+      temp <- value[, a, with = FALSE]
+      temp[temp[[a]] < min.value, ] <- min.value
+      value[, a] <- temp
+    }
+  }
+
   ### Upper clipping
-      
-      if(!is.null(max.value)){
-        for(a in use.cols){
-          # a <- use.cols[[1]]
-          
-          temp <- value[,a,with = FALSE]
-          temp[temp[[a]] > max.value,] <- max.value
-          value[,a] <- temp
-          
-        }
-      }
-      
+
+  if (!is.null(max.value)) {
+    for (a in use.cols) {
+      # a <- use.cols[[1]]
+
+      temp <- value[, a, with = FALSE]
+      temp[temp[[a]] > max.value, ] <- max.value
+      value[, a] <- temp
+    }
+  }
+
   ### Wrap up
-      
-      names(value) <- paste0(names(value), append.name)
-      
-      dat <- cbind(dat, value)
-      return(dat)
+
+  names(value) <- paste0(names(value), append.name)
+
+  dat <- cbind(dat, value)
+  return(dat)
 }

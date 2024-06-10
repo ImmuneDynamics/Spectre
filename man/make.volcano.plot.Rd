@@ -4,28 +4,70 @@
 \alias{make.volcano.plot}
 \title{Make an enhanced volcano plot}
 \usage{
-make.volcano.plot(
-  dat.p,
-  dat.fc,
-  vars,
-  title,
-  subtitle = NULL,
-  xlim = c(-6, 8),
-  ylim = c(0, 4),
-  path = getwd(),
-  width = 7,
-  height = 8,
-  pCutoff = 0.05,
-  FCcutoff = 0.26,
-  hline = c(0.01, 0.05),
-  hlineCol = c("grey75", "grey25"),
-  pointSize = 3,
-  labSize = 3,
-  col = c("black", "black", "blue", "red3"),
-  colAlpha = 1,
-  ...
-)
+make.volcano.plot(dat.p, dat.fc, vars, title, subtitle, xlim, ylim, path, width, height, pCutoff, FCcutoff, hline, hlineCol, pointSize, labSize, col, colAlpha, ...)
+}
+\arguments{
+\item{dat.p}{NO DEFAULT.}
+
+\item{dat.fc}{NO DEFAULT.}
+
+\item{vars}{NO DEFAULT.}
+
+\item{title}{NO DEFAULT.}
+
+\item{subtitle}{DEFAULT = NULL.}
+
+\item{xlim}{DEFAULT = c(-6, 8). x-axis limits.}
+
+\item{ylim}{DEFAULT = c(0, 4). y-axis limits.}
+
+\item{path}{DEFAULT = getwd(). The location to save plots.}
+
+\item{width}{DEFAULT = 7.}
+
+\item{height}{DEFAULT = 8.}
+
+\item{pCutoff}{DEFAULT = 0.05. Statistical significance cut-off.}
+
+\item{FCcutoff}{DEFAULT = 0.26. Absolute log2 fold-change cut-off.}
+
+\item{hline}{DEFAULT = c(0.01, 0.05). Horizontal line(s).}
+
+\item{hlineCol}{DEFAULT = c("grey75", "grey25"). Horizontal line colour(s).}
+
+\item{pointSize}{DEFAULT = 3.0.}
+
+\item{labSize}{DEFAULT = 3.0. Label size.}
+
+\item{col}{DEFAULT = c("black", "black", "blue", "red3").}
+
+\item{colAlpha}{DEFAULT = 1.}
 }
 \description{
-Make an enhanced volcano plot
+This function creates a volcano plot using 'EnhancedVolcano'.
+}
+\examples{
+# Prepare data
+sum.dat <- Spectre::demo.sum
+colnames(sum.dat)
+to.plot <- names(sum.dat)[c(4:15)]
+
+# Calculate statistics
+stat.dat <- Spectre::create.stats(dat = sum.dat, 
+                                  use.cols = to.plot, 
+                                  sample.col = 'Sample', 
+                                  group.col = 'Group', 
+                                  comparisons = list(c('Mock', 'WNV')
+                                  )
+
+# Make volcano plot
+Spectre::make.volcano.plot(dat.p = stat.dat[2,..to.plot], 
+                           dat.fc = stat.dat[1,..to.plot], 
+                           vars = to.plot, title = 'Volcano'
+                           )
+
+}
+\author{
+Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
+Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
 }

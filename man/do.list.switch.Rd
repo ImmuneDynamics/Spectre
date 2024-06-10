@@ -16,7 +16,7 @@ Returns a data.table of the switched/inverted li
 List switch or inversion
 }
 \examples{
-lst <- list("A" = c(1,2,3), "B" = c(4,5,6), "C" = c(7,8,9))
+lst <- list("A" = c(1, 2, 3), "B" = c(4, 5, 6), "C" = c(7, 8, 9))
 lst
 
 res <- do.list.switch(lst)

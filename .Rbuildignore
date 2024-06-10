@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^docker$
+^image$
+^other$
+^scripts$
+^workflows$

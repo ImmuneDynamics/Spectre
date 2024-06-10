@@ -2,19 +2,10 @@
 % Please edit documentation in R/do.stats.R
 \name{do.stats}
 \alias{do.stats}
-\title{Statistical analysis}
+\title{do.stats}
 \usage{
-do.stats(
-  dat,
-  use.cols,
-  sample.col,
-  grp.col,
-  comparisons,
-  variance.test = "kruskal.test",
-  pairwise.test = "wilcox.text",
-  corrections = "fdr"
-)
+do.stats(dat, use.cols, sample.col, grp.col, comparisons)
 }
 \description{
-Statistical analysis
+The function has been depreciated. Please use 'create.stats' instead
 }

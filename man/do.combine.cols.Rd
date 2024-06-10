@@ -2,7 +2,7 @@
 % Please edit documentation in R/do.combine.cols.R
 \name{do.combine.cols}
 \alias{do.combine.cols}
-\title{do.combine.cols - Combine the values of two columns into a single column}
+\title{Combine two columns}
 \usage{
 do.combine.cols(dat, col1, col2, na.rm)
 }
@@ -19,7 +19,7 @@ do.combine.cols(dat, col1, col2, na.rm)
 Returns a data.table with adjusted columns
 }
 \description{
-This function allows you to combine the values of two columns, with an option to remove any 'NA' values
+Combine the values of two columns into a single column, with an option to remove any 'NA' values.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

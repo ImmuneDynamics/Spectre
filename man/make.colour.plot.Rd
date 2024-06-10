@@ -19,11 +19,11 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{add.label}{DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".}
 
-\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.}
+\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently only works when specifying col.axis, so does not work with density plots.}
 
 \item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
 
-\item{colours}{DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu".}
+\item{colours}{DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu". Can also provide a data.table with the first column being the factors, and the second column being the corresponding colour code.}
 
 \item{col.min.threshold}{DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.}
 
@@ -33,9 +33,17 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{align.col.by}{DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.}
 
+\item{regression.line}{DEFAULT = NULL. Regression line to add to show the trend of the data. This will be passed on to ggplot2::geom_smooth function, and accepts either NULL or a character vector, e.g. "lm", "glm", "gam", "loess" or a function.}
+
 \item{title}{DEFAULT = col.axis. Character. Title for the plot.}
 
+\item{filename}{DEFAULT = NULL. Character. The name of the file to save the plot to.}
+
 \item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
+
+\item{randomise.order}{DEFAULT = TRUE. Option to randomise plotting order of individuals to control for overlap.}
+
+\item{order.seed}{DEFAULT = 42. Set the seed for randomising plotting order of individuals.}
 
 \item{plot.width}{DEFAULT = 9. Width of the ggplot when saved to disk.}
 
@@ -67,15 +75,22 @@ package.check()
 package.load()
 
 # Read data
-cell.dat <- Spectre::demo.umap
-cell.dat <- as.data.table(cell.dat)
+cell.dat <- Spectre::demo.clustered
 
 # Draw plot
-Spectre::make.colour.plot(dat = cell.dat,
-                          x.axis = "UMAP_42_X",
-                          y.axis = "UMAP__42Y",
-                          col.axis = "BV605.Ly6C")
+Spectre::make.colour.plot(
+  dat = cell.dat,
+  x.axis = "UMAP_X",
+  y.axis = "UMAP_Y",
+  col.axis = "Ly6C_asinh"
+)
 
+Spectre::make.colour.plot(
+  dat = cell.dat,
+  x.axis = "UMAP_X",
+  y.axis = "UMAP_Y",
+  col.axis = "Batch"
+)
 
 }
 \references{
@@ -86,5 +101,6 @@ Spectre::make.colour.plot(dat = cell.dat,
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
-Givanna Putri, \email{ghar1821@uni.sydney.edu.au}
+Givanna Putri,
+Felix Marsh-Wakefield \email{felix.marsh-wakefield@sydney.edu.au}
 }
