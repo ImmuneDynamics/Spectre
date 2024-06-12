@@ -3,8 +3,7 @@
 #' Use Seurat rPCA to do batch correction.
 #' For more details on rPCA, see https://satijalab.org/seurat/articles/integration_rpca.html.
 #'
-#' @param dat NO DEFAULT. 
-#' A Spectre object containing the data to apply batch correction to.
+#' @param dat NO DEFAULT. A data.table
 #' @param use_cols NO DEFAULT. 
 #' A vector of character column names to apply batch correction to.
 #' @param batch_col Character. The column in the data in Spectre object that identifies
@@ -17,8 +16,10 @@
 #' @param seed DEFAULT 42. Seed used when running PCA. 
 #' @param verbose DEFAULT = TRUE.
 #' If TRUE, the function will print progress updates as it executes.
+#' @param cell_id_col Character. The column in `dat` denoting
+#' the unique identifier of the cells.
 #'
-#' @return Spectre object with new element.
+#' @return batch corrected data.table
 #'
 #' 
 #' @export

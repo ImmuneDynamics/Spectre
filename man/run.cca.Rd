@@ -32,7 +32,7 @@ Seurat's FindIntegrationAnchors is picking anchors.}
 If TRUE, the function will print progress updates as it executes.}
 }
 \value{
-Spectre object with new element.
+batch corrected data.table
 }
 \description{
 Use Seurat CCA to do batch correction.

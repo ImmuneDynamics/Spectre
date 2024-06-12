@@ -19,7 +19,7 @@
 #' @param cell_id_col Character. The column in `dat` denoting
 #' the unique identifier of the cells.
 #'
-#' @return Spectre object with new element.
+#' @return batch corrected data.table
 #' 
 #' @usage run.cca(dat, use_cols, batch_col, cell_id_col,
 #' reference_batch = NULL, k_anchor = 5, seed = 42, verbose = TRUE)

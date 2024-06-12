@@ -16,11 +16,13 @@ run.rpca(
 )
 }
 \arguments{
-\item{dat}{NO DEFAULT.
-A Spectre object containing the data to apply batch correction to.}
+\item{dat}{NO DEFAULT. A data.table}
 
 \item{batch_col}{Character. The column in the data in Spectre object that identifies
 which batch each cell belongs to.}
+
+\item{cell_id_col}{Character. The column in \code{dat} denoting
+the unique identifier of the cells.}
 
 \item{use_cols}{NO DEFAULT.
 A vector of character column names to apply batch correction to.}
@@ -38,7 +40,7 @@ Seurat's FindIntegrationAnchors is picking anchors.}
 If TRUE, the function will print progress updates as it executes.}
 }
 \value{
-Spectre object with new element.
+batch corrected data.table
 }
 \description{
 Use Seurat rPCA to do batch correction.
