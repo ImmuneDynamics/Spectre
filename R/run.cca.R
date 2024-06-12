@@ -3,12 +3,7 @@
 #' Use Seurat CCA to do batch correction.
 #' For more details on CCA, see https://satijalab.org/seurat/reference/runcca.
 #'
-#' @param dat NO DEFAULT. 
-#' A Spectre object containing the data to apply batch correction to.
-#' @param data_source NO DEFAULT. Character. The name of the data in Spectre object to 
-#' apply batch correction to.
-#' @param output_name NO DEFAULT. Character. The name of the data in Spectre object to 
-#' store the batch corrected data to.
+#' @param dat NO DEFAULT. A data.table
 #' @param use_cols NO DEFAULT. 
 #' A vector of character column names to apply batch correction to.
 #' @param batch_col Character. The column in the data in Spectre object that identifies
@@ -21,64 +16,62 @@
 #' @param seed DEFAULT 42. Seed used when running PCA. 
 #' @param verbose DEFAULT = TRUE.
 #' If TRUE, the function will print progress updates as it executes.
+#' @param cell_id_col Character. The column in `dat` denoting
+#' the unique identifier of the cells.
 #'
 #' @return Spectre object with new element.
+#' 
+#' @usage run.cca(dat, use_cols, batch_col, cell_id_col,
+#' reference_batch = NULL, k_anchor = 5, seed = 42, verbose = TRUE)
 #'
 #' @examples
-#' dat_raw = Spectre::demo.batches
-#' dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
-#' dat = create.spectre.object(cell_id_col = "cell_id")
-#' dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+#' library(data.table)
 #' 
-#' markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
-#' "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
-#' "CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn", 
-#'          "CD3e_chn", "CD16.32_chn", "MHCII_chn")
+#' # download sample data
+#' download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/demo.batches.1.RData?raw=TRUE", destfile = 'demo.batches.1.RData', mode = 'w')
 #' 
-#' dat = run.cca(
-#'  dat = dat,
-#'  data_source = "cyto_batch",
-#'  output_name = "cyto_batch_corrected",
-#'  use_cols = markers,
-#'  batch_col = "Batch",
-#'  verbose = FALSE,
-#'  reference_batch = NULL
+#' # this will store data in a variable call demo.batches.1
+#' load("demo.batches.1.RData")
+#' 
+#' # clean up
+#' unlink(c('demo.batches.1.RData'))
+#' 
+#' # cca can be slow. subsample so it doesn't take too long
+#' demo.batches.1 <- Spectre::do.subsample(
+#'     demo.batches.1, targets = rep(100, 2), 
+#'     divide.by = "Batch"
 #' )
-setGeneric("run.cca", function(dat,
-                                data_source,
-                                output_name,
-                                use_cols,
-                                batch_col,
-                                reference_batch = NULL,
-                                k_anchor = 5,
-                                seed = 42,
-                                verbose = TRUE) {
-    standardGeneric("run.cca")
-    
-})
-
-#' @exportMethod run.cca
-#' @rdname run.cca
-setMethod("run.cca", "Spectre", function(
-        dat,
-        data_source,
-        output_name,
-        use_cols,
-        batch_col,
-        reference_batch = NULL,
-        k_anchor = 5,
-        seed = 42,
-        verbose = TRUE
-) {
-    
-    
+#' 
+#' # assign unique id to each cell
+#' demo.batches.1[, cell_id := paste0("Cell_", seq(nrow(demo.batches.1)))]
+#' 
+#' markers <- c("CD45_chn", "CD48_chn", "CD117_chn",
+#'              "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn",
+#'              "CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn",
+#'              "CD3e_chn", "CD16.32_chn", "MHCII_chn")
+#' 
+#' dat_batch_corrected = run.cca(
+#'     dat = demo.batches.1,
+#'     cell_id_col = "cell_id",
+#'     use_cols = markers,
+#'     batch_col = "Batch",
+#'     verbose = FALSE,
+#'     reference_batch = NULL
+#' )
+#' 
+#' dat_batch_corrected
+#' 
+run.cca <- function(dat,
+                    use_cols,
+                    batch_col,
+                    cell_id_col,
+                    reference_batch = NULL,
+                    k_anchor = 5,
+                    seed = 42,
+                    verbose = TRUE) {
     # for testing only
-    # dat_raw = Spectre::demo.batches
-    # dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
-    # dat = create.spectre.object(cell_id_col = "cell_id")
-    # dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+    # dat = Spectre::demo.batches
     # 
-    # data_source = "cyto_batch"
     # output_name = "cyto_batch_corrected"
     # use_cols = names(dat$cyto_batch)[1:15]
     # batch_col = "Batch"
@@ -98,21 +91,18 @@ setMethod("run.cca", "Spectre", function(
     new_col_name <- paste0("Col", seq(length(use_cols)))
     names(new_col_name) <- use_cols
     
-    batches <- unique(dat[[data_source]][[batch_col]])
-    
-    cell_id_col <- dat@cell_id_col
+    batches <- unique(dat[[batch_col]])
     
     seurat_objs <- lapply(batches, function(batch) {
         
         # batch <- batches[1]
         
-        cnt_mtx <- dat[[data_source]]
-        cnt_mtx <- cnt_mtx[cnt_mtx[[batch_col]] == batch, c(use_cols, cell_id_col), with = FALSE]
+        cnt_mtx <- dat[dat[[batch_col]] == batch, c(use_cols, cell_id_col), with = FALSE]
         setnames(cnt_mtx, names(new_col_name), new_col_name)
         
         sparse_cnt_mtx <- t(as.matrix(cnt_mtx[, new_col_name, with = FALSE]))
         colnames(sparse_cnt_mtx) <- cnt_mtx[[cell_id_col]]
-        sparse_cnt_mtx <- Matrix::Matrix(sparse_cnt_mtx)
+        sparse_cnt_mtx <- Matrix::Matrix(sparse_cnt_mtx, sparse = TRUE)
         
         if (verbose) {
             message(paste('(2/6) creating Seurat object for batch', batch))
@@ -144,13 +134,13 @@ setMethod("run.cca", "Spectre", function(
     
     seurat_objs <- lapply(seurat_objs, function(seurat_obj) {
         seurat_obj <- Seurat::ScaleData(seurat_obj, features = integ_features, 
-                                       verbose = verbose, assay = 'cyto')
+                                        verbose = verbose, assay = 'cyto')
         # no need to set PCs as it will just default either 50 or less if we have less markers than 50
         # TODO not sure about the approx parameter to run standard svd instead. Note, the number of PCs will be the number of markers
         # if setting approx=FALSE. If approx is true, npcs will be number of markers - 1. Not sure why.
         # TODO manually setting the npcs rather than getting the function to infer it. Is this the best way?
         seurat_obj <- Seurat::RunPCA(seurat_obj, features = integ_features, verbose = verbose, 
-                                    assay = 'cyto', seed.use = seed, npcs = length(use_cols))
+                                     assay = 'cyto', seed.use = seed, npcs = length(use_cols))
         
         return(seurat_obj)
     })
@@ -212,7 +202,7 @@ setMethod("run.cca", "Spectre", function(
     setnames(batch_corrected_dat, new_col_name, names(new_col_name))
     
     # order the cell id 
-    cell_id_batch_info <- dat[[data_source]][, c(cell_id_col, batch_col), with = FALSE]
+    cell_id_batch_info <- dat[, c(cell_id_col, batch_col), with = FALSE]
     # because sort is set to false, the order of cell_id_batch_info is preserved.
     # Purrrfect!
     batch_corrected_dat <- merge.data.table(
@@ -222,8 +212,6 @@ setMethod("run.cca", "Spectre", function(
         sort = FALSE
     )
     
-    dat <- add.new.data(dat, batch_corrected_dat, output_name)
-    
     # check umap. very simple check just to see cca is correcting the batches.
     # umap_dat <- run.umap(dat$cyto_batch_corrected, use.cols = use_cols)
     # make.colour.plot(umap_dat, "UMAP_X", "UMAP_Y", "Batch", randomise.order = FALSE)
@@ -231,10 +219,12 @@ setMethod("run.cca", "Spectre", function(
     # umap_pre_cor <- run.umap(dat$cyto_batch, use.cols = use_cols)
     # make.colour.plot(umap_pre_cor, "UMAP_X", "UMAP_Y", "Batch", randomise.order = FALSE)
     
-    return(dat)
+    return(batch_corrected_dat)
     
     
-})
+}
+
+
 
 
 

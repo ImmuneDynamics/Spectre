@@ -4,7 +4,7 @@
 \alias{do.calculate.area}
 \title{do.calculate.area}
 \usage{
-do.calculate.area(dat)
+do.calculate.area(dat, region = NULL)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Spatial data list}

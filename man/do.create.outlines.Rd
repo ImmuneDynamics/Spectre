@@ -4,14 +4,14 @@
 \alias{do.create.outlines}
 \title{do.create.outlines}
 \usage{
-do.create.outlines(dat, mask.name)
+do.create.outlines(dat, mask.name, method = "stars")
 }
 \arguments{
-\item{dat}{NO DEFAULT. Spatial data list}
-
 \item{mask.name}{NO DEFAULT. Name of the mask to create outlines for}
 
 \item{method}{DEFAULT = 'stars'. Can be 'stars' or 'raster'}
+
+\item{spatial.dat}{NO DEFAULT. Spatial data list}
 }
 \description{
 do.create.outlines

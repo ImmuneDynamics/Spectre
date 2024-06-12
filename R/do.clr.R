@@ -21,7 +21,8 @@ do.clr <- function(dat, data_source, output_name,
                    use_cols, how = c("across_cells", "across_features"),
                    verbose = FALSE) {
     
-    # TODO need to add check whether dat is a spectre object
+    # TODO. need to work out whether to use Seurat's CLR or not. 
+    # Need to kind of benchmark what to use really.
     
     dat_to_apply_clr <- dat[[data_source]]
     

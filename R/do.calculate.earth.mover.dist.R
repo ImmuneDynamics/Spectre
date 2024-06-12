@@ -1,6 +1,6 @@
-#' Title
+#' Calculate earth. mover distance
 #'
-#' @param dat 
+#' @param dat data.table
 #' @param markers 
 #' @param sample_source_col 
 #' @param batch_id_col 

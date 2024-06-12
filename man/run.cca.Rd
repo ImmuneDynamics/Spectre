@@ -2,48 +2,22 @@
 % Please edit documentation in R/run.cca.R
 \name{run.cca}
 \alias{run.cca}
-\alias{run.cca,Spectre-method}
 \title{Run CCA}
 \usage{
-run.cca(
-  dat,
-  data_source,
-  output_name,
-  use_cols,
-  batch_col,
-  reference_batch = NULL,
-  k_anchor = 5,
-  seed = 42,
-  verbose = TRUE
-)
-
-\S4method{run.cca}{Spectre}(
-  dat,
-  data_source,
-  output_name,
-  use_cols,
-  batch_col,
-  reference_batch = NULL,
-  k_anchor = 5,
-  seed = 42,
-  verbose = TRUE
-)
+run.cca(dat, use_cols, batch_col, cell_id_col,
+reference_batch = NULL, k_anchor = 5, seed = 42, verbose = TRUE)
 }
 \arguments{
-\item{dat}{NO DEFAULT.
-A Spectre object containing the data to apply batch correction to.}
-
-\item{data_source}{NO DEFAULT. Character. The name of the data in Spectre object to
-apply batch correction to.}
-
-\item{output_name}{NO DEFAULT. Character. The name of the data in Spectre object to
-store the batch corrected data to.}
+\item{dat}{NO DEFAULT. A data.table}
 
 \item{use_cols}{NO DEFAULT.
 A vector of character column names to apply batch correction to.}
 
 \item{batch_col}{Character. The column in the data in Spectre object that identifies
 which batch each cell belongs to.}
+
+\item{cell_id_col}{Character. The column in \code{dat} denoting
+the unique identifier of the cells.}
 
 \item{reference_batch}{DEFAULT NULL. Whether to align to batches to a given batch.
 If yes, then supply this parameter with the name of the batch you want to align the other batches to.}
@@ -65,23 +39,40 @@ Use Seurat CCA to do batch correction.
 For more details on CCA, see https://satijalab.org/seurat/reference/runcca.
 }
 \examples{
-dat_raw = Spectre::demo.batches
-dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
-dat = create.spectre.object(cell_id_col = "cell_id")
-dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+library(data.table)
 
-markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
-"CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
-"CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn", 
-         "CD3e_chn", "CD16.32_chn", "MHCII_chn")
+# download sample data
+download.file(url = "https://github.com/ImmuneDynamics/data/blob/main/demo.batches.1.RData?raw=TRUE", destfile = 'demo.batches.1.RData', mode = 'w')
 
-dat = run.cca(
- dat = dat,
- data_source = "cyto_batch",
- output_name = "cyto_batch_corrected",
- use_cols = markers,
- batch_col = "Batch",
- verbose = FALSE,
- reference_batch = NULL
+# this will store data in a variable call demo.batches.1
+load("demo.batches.1.RData")
+
+# clean up
+unlink(c('demo.batches.1.RData'))
+
+# cca can be slow. subsample so it doesn't take too long
+demo.batches.1 <- Spectre::do.subsample(
+    demo.batches.1, targets = rep(100, 2), 
+    divide.by = "Batch"
 )
+
+# assign unique id to each cell
+demo.batches.1[, cell_id := paste0("Cell_", seq(nrow(demo.batches.1)))]
+
+markers <- c("CD45_chn", "CD48_chn", "CD117_chn",
+             "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn",
+             "CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn",
+             "CD3e_chn", "CD16.32_chn", "MHCII_chn")
+
+dat_batch_corrected = run.cca(
+    dat = demo.batches.1,
+    cell_id_col = "cell_id",
+    use_cols = markers,
+    batch_col = "Batch",
+    verbose = FALSE,
+    reference_batch = NULL
+)
+
+dat_batch_corrected
+
 }

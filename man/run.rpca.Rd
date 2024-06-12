@@ -2,10 +2,45 @@
 % Please edit documentation in R/run.rpca.R
 \name{run.rpca}
 \alias{run.rpca}
-\title{run.rpca}
+\title{Run rPCA for batch correction}
 \usage{
-run.rpca(dat, use.cols, batch.col, reference = NULL, k.anchor = 5)
+run.rpca(
+  dat,
+  batch_col,
+  cell_id_col,
+  use_cols,
+  reference_batch = NULL,
+  k_anchor = 5,
+  seed = 42,
+  verbose = TRUE
+)
+}
+\arguments{
+\item{dat}{NO DEFAULT.
+A Spectre object containing the data to apply batch correction to.}
+
+\item{batch_col}{Character. The column in the data in Spectre object that identifies
+which batch each cell belongs to.}
+
+\item{use_cols}{NO DEFAULT.
+A vector of character column names to apply batch correction to.}
+
+\item{reference_batch}{DEFAULT NULL. Whether to align to batches to a given batch.
+If yes, then supply this parameter with the name of the batch you want to align the other batches to.}
+
+\item{k_anchor}{DEFAULT 5. Passed to Seurat's FindIntegrationAnchors function.
+Essentially, it determines the number of neighbors (k) to use when
+Seurat's FindIntegrationAnchors is picking anchors.}
+
+\item{seed}{DEFAULT 42. Seed used when running PCA.}
+
+\item{verbose}{DEFAULT = TRUE.
+If TRUE, the function will print progress updates as it executes.}
+}
+\value{
+Spectre object with new element.
 }
 \description{
-run.rpca
+Use Seurat rPCA to do batch correction.
+For more details on rPCA, see https://satijalab.org/seurat/articles/integration_rpca.html.
 }

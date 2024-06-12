@@ -2,12 +2,12 @@
 % Please edit documentation in R/do.calculate.earth.mover.dist.R
 \name{do.calculate.earth.mover.dist}
 \alias{do.calculate.earth.mover.dist}
-\title{Title}
+\title{Calculate earth. mover distance}
 \usage{
 do.calculate.earth.mover.dist(dat, markers, sample_source_col, batch_id_col)
 }
 \arguments{
-\item{dat}{}
+\item{dat}{data.table}
 
 \item{markers}{}
 
@@ -16,5 +16,5 @@ do.calculate.earth.mover.dist(dat, markers, sample_source_col, batch_id_col)
 \item{batch_id_col}{}
 }
 \description{
-Title
+Calculate earth. mover distance
 }

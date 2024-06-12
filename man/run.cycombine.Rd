@@ -10,6 +10,7 @@ run.cycombine(
   output_name,
   use_cols,
   batch_col,
+  cell_id_col,
   xdim = 8,
   ydim = 8,
   rlen = 10,

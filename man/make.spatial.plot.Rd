@@ -16,8 +16,6 @@ make.spatial.plot(
   image.mask.colour = "gold",
   image.min.threshold = 0,
   image.max.threshold = 0.99,
-  max = NA,
-  min = NA,
   image.blank = FALSE,
   cell.x = "x",
   cell.y = "y",

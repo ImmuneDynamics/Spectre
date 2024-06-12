@@ -4,7 +4,7 @@
 \alias{do.extract}
 \title{do.extract}
 \usage{
-do.extract(dat, mask)
+do.extract(dat, mask, name = "CellData", fun = "mean")
 }
 \arguments{
 \item{dat}{NO DEFAULT. List of spatial data objects}
