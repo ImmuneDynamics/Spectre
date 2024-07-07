@@ -43,6 +43,8 @@
 #' See ?rank for other options.
 #' @param verbose DEFAULT TRUE 
 #' Whether to print progress messages. TRUE to print, FALSE to suppress.
+#' @param cell_id_col Character. The column in `dat` denoting
+#' the unique identifier of the cells.
 #'
 #' @return batch corrected data.table
 #' 
