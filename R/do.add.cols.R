@@ -212,7 +212,7 @@ do.embed.columns <- function(dat, # the list of dataframes (samples) where each 
                              mem.ctrl = TRUE)
 {
   
-  message("Warning: Please note, the 'do.embed.columns' function has been depreciated. Please use 'do.add.cols' instead")
+  warning("Warning: 'do.embed.columns' function has been depreciated. Please use 'do.add.cols' instead")
   
 #   ## Packages
 #   if(!is.element('Spectre', installed.packages()[,1])) stop('Spectre is required but not installed')

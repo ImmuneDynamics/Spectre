@@ -25,6 +25,7 @@ data.list <- list(
 "02_Mock_02" = Spectre::demo.clustered[Sample == '02_Mock_02']
 )
 cell.dat <- do.merge.files(dat = data.list, remove.duplicates = TRUE)
+head(cell.dat)
 
 }
 \references{
