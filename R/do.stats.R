@@ -17,6 +17,6 @@ do.stats <- function(dat,
                      pairwise.test = "wilcox.text", ## Add t-test
                      corrections = "fdr"){
   
- message("The 'do.stats' function has been depreciated. Please use 'create.stats' instead")
+ warning("'do.stats' function has been depreciated. Please use 'create.stats' instead")
   
 }
