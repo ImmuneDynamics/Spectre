@@ -53,6 +53,7 @@ Suggests:
     exactextractr,
     FNN,
     formatR,
+    ggrepel,
     harmony,
     HDF5Array,
     limma,

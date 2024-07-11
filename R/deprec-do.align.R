@@ -47,9 +47,9 @@ do.align <- function(ref.dat,
                      write.ref.fcs = TRUE,
                      write.target.fcs = TRUE,
                      mem.ctrl = TRUE) {
-  .Deprecated("run.align", package = "Spectre")
+  # .Deprecated("run.align", package = "Spectre")
 
-  # message("The 'do.align' function has been depreciated. Please use 'run.align' instead. Use '? run.align' for more information.")
+  warning("The 'do.align' function has been depreciated. Please use 'run.align' instead. Use '? run.align' for more information.")
 
 
   #   ###########################################################################################

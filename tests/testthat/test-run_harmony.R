@@ -1,13 +1,7 @@
-test_that("harmony batch correction works", {
-    dat_raw = Spectre::demo.batches
+test_that("harmony with pca works", {
+    dat = qs::qread(test_path("testdata", "artificial_batch_effect.qs"))
     
-    # subsample for speedy execution
-    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(1000, 2), 
-                                    divide.by = "Batch")
-    
-    dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
-    dat = create.spectre.object(cell_id_col = "cell_id")
-    dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+    dat[, cell_id := paste0("Cell_", seq(nrow(dat)))]
     
     markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
                 "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
@@ -15,10 +9,9 @@ test_that("harmony batch correction works", {
                 "CD3e_chn", "CD16.32_chn", "MHCII_chn")
     
     suppressWarnings(
-        dat <- run.harmony(
+        res <- run.harmony(
             dat = dat,
-            data_source = "cyto_batch",
-            output_name = "cyto_batch_corrected",
+            cell_id_col = "cell_id",
             use_cols = markers,
             batch_col = "Batch",
             verbose = FALSE
@@ -26,24 +19,19 @@ test_that("harmony batch correction works", {
     )
     
     # just check there is a new element
-    expect_true("cell_id" %in% names(dat$cyto_batch_corrected))
-    expect_true("Batch" %in% names(dat$cyto_batch_corrected))
-    expect_equal(nrow(dat$cyto_batch), nrow(dat$cyto_batch_corrected))
+    expect_true("cell_id" %in% names(res))
+    expect_true("Batch" %in% names(res))
+    expect_equal(nrow(dat), nrow(res))
+    expect_true(all(paste0("PC_", seq(length(markers) - 1)) %in% names(res)))
     
     # check the metadata
-    expect_true("harmony_parameter" %in% names(attributes(dat$cyto_batch_corrected)))
+    expect_true("harmony_parameter" %in% names(attributes(res)))
 })
 
-test_that("harmony batch correction with return object works", {
-    dat_raw = Spectre::demo.batches
+test_that("harmony NO pca works", {
+    dat = qs::qread(test_path("testdata", "artificial_batch_effect.qs"))
     
-    # subsample for speedy execution
-    dat_raw = Spectre::do.subsample(dat_raw, targets = rep(1000, 2), 
-                                    divide.by = "Batch")
-    
-    dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
-    dat = create.spectre.object(cell_id_col = "cell_id")
-    dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
+    dat[, cell_id := paste0("Cell_", seq(nrow(dat)))]
     
     markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
                 "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
@@ -51,10 +39,40 @@ test_that("harmony batch correction with return object works", {
                 "CD3e_chn", "CD16.32_chn", "MHCII_chn")
     
     suppressWarnings(
-        dat <- run.harmony(
+        res <- run.harmony(
             dat = dat,
-            data_source = "cyto_batch",
-            output_name = "cyto_batch_corrected",
+            cell_id_col = "cell_id",
+            use_cols = markers,
+            batch_col = "Batch",
+            verbose = FALSE,
+            do_pca = FALSE
+        )
+    )
+    
+    # just check there is a new element
+    expect_true("cell_id" %in% names(res))
+    expect_true("Batch" %in% names(res))
+    expect_equal(nrow(dat), nrow(res))
+    expect_true(all(markers %in% names(res)))
+    
+    # check the metadata
+    expect_true("harmony_parameter" %in% names(attributes(res)))
+})
+
+test_that("return_object works", {
+    dat = qs::qread(test_path("testdata", "artificial_batch_effect.qs"))
+    
+    dat[, cell_id := paste0("Cell_", seq(nrow(dat)))]
+    
+    markers = c("CD45_chn", "CD48_chn", "CD117_chn", 
+                "CD11b_chn", "SiglecF_chn", "NK11_chn", "B220_chn", 
+                "CD8a_chn", "CD4_chn", "Ly6C_chn", "Ly6G_chn", "CD115_chn", 
+                "CD3e_chn", "CD16.32_chn", "MHCII_chn")
+    
+    suppressWarnings(
+        res <- run.harmony(
+            dat = dat,
+            cell_id_col = "cell_id",
             use_cols = markers,
             batch_col = "Batch",
             verbose = FALSE,
@@ -62,13 +80,8 @@ test_that("harmony batch correction with return object works", {
         )
     )
     
-    # just check there is a new element
-    expect_true("cell_id" %in% names(dat$cyto_batch_corrected))
-    expect_true("Batch" %in% names(dat$cyto_batch_corrected))
-    expect_equal(nrow(dat$cyto_batch), nrow(dat$cyto_batch_corrected))
-    
-    # check the metadata
-    expect_true("harmony_parameter" %in% names(attributes(dat$cyto_batch_corrected)))
-    expect_true("harmony_object" %in% names(attributes(dat$cyto_batch_corrected)))
+    expect_true("harmony_object" %in% names(attributes(res)))
 })
+
+
 

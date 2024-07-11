@@ -31,7 +31,6 @@
 #' error differences in different OS.
 #' @param verbose DEFAULT = TRUE.
 #' If TRUE, the function will print progress updates as it executes.
-#' @param ... Other arguments applicable if dat is a Spectre object.
 #' 
 #' @details
 #' ## Specifying different cofactor for different marker
@@ -53,7 +52,6 @@
 #' 
 #' @examples
 #' library(data.table)
-#' # Assuming dat is a data.table
 #' dat <- data.table(NK11=rnorm(10, 2), CD3=rnorm(10,1), cell_id=paste0("cell_", seq(10)))
 #' # Default co-factor 5 will be used for both NK11 and CD3
 #' dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"))
@@ -67,190 +65,17 @@
 #' dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=c(5,10))
 #' dat_asinh
 #' 
-#' # If dat is a Spectre object
-#' obj <- create.spectre.object(cell_id_col = "cell_id")
-#' obj <- add.new.data(obj, dat, "test")
-#' 
-#' obj = do.asinh(
-#'  dat = obj,
-#'  data_source = "test",
-#'  output_name = "test_asinh",
-#'  use.cols = c("NK11", "CD3"), 
-#'  cofactor = 5,
-#'  append.cf = FALSE
-#' )
 #' 
 #' @export
-setGeneric("do.asinh", function(dat,
-                                use.cols,
-                                cofactor = 5,
-                                cofactor_inference_method = c("flowVS", "top10"),
-                                append.cf = FALSE,
-                                reduce.noise = FALSE,
-                                digits = NULL,
-                                verbose = TRUE,
-                                ...) {
-    standardGeneric("do.asinh")
-    
-})
 
-#' @param data_source Character. The name of the data in Spectre object to 
-#' apply arc-sinh transformation to.
-#' Only used if dat is a Spectre object.
-#' @param output_name Character. What name should the arc-sinh transformed 
-#' data be stored under in the Spectre object.
-#' Only used if dat is a Spectre object.
-#'
-#' @exportMethod do.asinh
-#' @rdname do.asinh
-setMethod("do.asinh", "Spectre", function(
-        dat,
-        use.cols,
-        data_source,
-        output_name,
-        cofactor = 5,
-        cofactor_inference_method = c("flowVS", "top10"),
-        append.cf = FALSE,
-        reduce.noise = FALSE,
-        digits = NULL,
-        verbose = TRUE) {
-    
-    dat_to_apply_asinh <- dat[[data_source]]
-    
-    if (verbose) {
-        message(paste(
-            "Performing arcsinh transformation to", data_source, "containing",
-            nrow(dat_to_apply_asinh), "cells and",
-            ncol(dat_to_apply_asinh), "features"))
-    }
-        
-    asinh_res <- do_actual_transformation(
-        dat = dat_to_apply_asinh,
-        use.cols = use.cols,
-        cofactor = cofactor,
-        cofactor_inference_method = cofactor_inference_method,
-        append.cf = append.cf,
-        reduce.noise = reduce.noise,
-        digits = digits,
-        verbose = verbose
-    )
-    
-    # just so the cell id column is first!
-    cell_id_col <- dat@cell_id_col
-    asinh_dat <- data.table(cell_id = dat_to_apply_asinh[[cell_id_col]], asinh_res$transformed_val)
-    setnames(asinh_dat, "cell_id", cell_id_col)
-    
-    # we want to remove the _asinh bit if cofactor is not meant to be appended.
-    # this only make sense for spectre object. Not for data.table.
-    if (! append.cf) {
-        setnames(asinh_dat, paste0(use.cols, "_asinh"), use.cols)
-    }
-    
-    # regardless of append.cf or not, add the co-factor used as metadata
-    cofactor_dt <- data.table(
-        marker = names(asinh_res$cofactors),
-        cofactor = asinh_res$cofactors
-    )
-    
-    dat <- add.new.data(
-        spectre_obj = dat, 
-        dat = asinh_dat, 
-        dat_name = output_name,
-        metadata = list("cofactors" = cofactor_dt)
-    )
-    
-    return(dat)
-    
-})
-
-#' @rdname do.asinh
-#' @exportMethod do.asinh
-setMethod("do.asinh", "data.table", function(
-        dat,
-        use.cols,
-        cofactor = 5,
-        cofactor_inference_method = c("flowVS", "top10"),
-        append.cf = FALSE,
-        reduce.noise = FALSE,
-        digits = NULL,
-        verbose = TRUE) {
-    
-    if (verbose) {
-        message(paste("Performing arcsinh transformation for data.table containing",
-                      nrow(dat), "cells and",
-                      ncol(dat), "features"))
-    }
-        
-    asinh_res <- do_actual_transformation(
-        dat = dat,
-        use.cols = use.cols,
-        cofactor = cofactor,
-        cofactor_inference_method = cofactor_inference_method,
-        append.cf = append.cf,
-        reduce.noise = reduce.noise,
-        digits = digits,
-        verbose = verbose
-    )
-    
-    dat <- cbind(dat, asinh_res$transformed_val)
-    
-    if (verbose) {
-        message("Asinh success. The following co-factors are applied")
-        
-        for (i in seq(length(asinh_res$cofactors))) {
-            message(paste0(
-                names(asinh_res$cofactors)[i], ": ",
-                asinh_res$cofactors[i]
-            ))
-        }
-    }
-    
-    return(dat)
-    
-})
-
-
-#' Do actual asinh transformation
-#' 
-#' Internal function that actually do the asinh transformation
-#' 
-#' @param dat NO DEFAULT. 
-#' Either a data.table or a Spectre object to apply arc-sinh transformation to.
-#' @param use.cols NO DEFAULT. 
-#' A vector of character column names to apply arc-sinh transformation to.
-#' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
-#' Can be vector of co-factors that align with columns in 'use.cols'
-#' See details for more information.
-#' It can also be set to NULL to get the function to automatically infer the co-factors.
-#' @param cofactor_inference_method DEFAULT flowVS.
-#' Whether to automatically calculates co-factor for each marker.
-#' Only used if cofactor is NULL, and will force 'append.cf' to TRUE.
-#' Accepted options: 'flowVS' or 'top10'.
-#' flowVS uses the flowVS::estParamFlowVS (be patient as it takes time). 
-#' 'top10' uses the 90th percentile of values that are negative (based on absolute value) 
-#' as the co-factor, and if values are all positive it will use the 10th percentile as co-factor. 
-#' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of 
-#' the name of the transformed columns.
-#' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation 
-#' which should reduce noise from negative values. Use with caution.
-#' @param digits DEFAULT = NULL. Number of decimal places as a limit, not used if NULL. 
-#' Values beyond will be rounded. 
-#' Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, 
-#' then 5 digits will be used). Important to control for small floating point 
-#' error differences in different OS.
-#' @param verbose DEFAULT = TRUE.
-#' If TRUE, the function will print progress updates as it executes.
-#'
-#' @return a data.table containing asinh transformed markers
-#' 
-do_actual_transformation <- function(dat,
-                                     use.cols,
-                                     cofactor = 5,
-                                     cofactor_inference_method = c("flowVS", "top10"),
-                                     append.cf = FALSE,
-                                     reduce.noise = FALSE,
-                                     digits = NULL,
-                                     verbose = TRUE) {
+do.asinh <- function(dat,
+                     use.cols,
+                     cofactor = 5,
+                     cofactor_inference_method = c("flowVS", "top10"),
+                     append.cf = FALSE,
+                     reduce.noise = FALSE,
+                     digits = NULL,
+                     verbose = TRUE) {
     
     if (verbose) {
         message("Doing some checks on columns in use.cols.")

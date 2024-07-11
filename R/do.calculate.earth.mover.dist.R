@@ -7,8 +7,6 @@
 #'
 #' @export
 #'
-#' @importFrom graphics hist
-#' @importFrom emdist emd2d
 #' @import data.table
 #' 
 do.calculate.earth.mover.dist <- function(dat, markers, sample_source_col, batch_id_col) {
@@ -24,10 +22,10 @@ do.calculate.earth.mover.dist <- function(dat, markers, sample_source_col, batch
             
             hist_bins <- lapply(batches, function(bat_id) {
                 exp_bat <- exp[get(batch_id_col) == bat_id, ][[marker]]
-                exp_bat <- as.matrix(hist(exp_bat, breaks = seq(-100, 100, by = 0.1), plot = FALSE)$counts)
+                exp_bat <- as.matrix(graphics::hist(exp_bat, breaks = seq(-100, 100, by = 0.1), plot = FALSE)$counts)
                 return(exp_bat)
             })
-            emd2d(hist_bins[[1]], hist_bins[[2]])
+            emdist::emd2d(hist_bins[[1]], hist_bins[[2]])
             
         })
         emd_per_marker <- data.table(

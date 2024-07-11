@@ -9,10 +9,8 @@
 #'
 #' @export
 #'
-#' @importFrom limma plotMDS
 #' @import data.table
 #' @import ggplot2 
-#' @import ggrepel
 #' 
 make.mds.plot <- function(dat,
                           sample_col,
@@ -20,11 +18,17 @@ make.mds.plot <- function(dat,
                           colour_by,
                           add_point_label = TRUE,
                           font_size = 4) {
+    
+    check_packages_installed("limma")
+    if (add_point_label) {
+        check_packages_installed("ggrepel")
+    }
+    
     agg_dat <- dat[, lapply(.SD, mean), by = sample_col, .SDcols = markers]
     agg_dat_transposed <- t(agg_dat[, markers, with = FALSE])
     colnames(agg_dat_transposed) <- agg_dat[[sample_col]]
     
-    mds <- plotMDS(agg_dat_transposed, plot = FALSE)
+    mds <- limma::plotMDS(agg_dat_transposed, plot = FALSE)
     
     # To get unique combination of sample and colour by
     if (sample_col == colour_by) {
@@ -54,7 +58,7 @@ make.mds.plot <- function(dat,
         geom_point()
 
     if (add_point_label) {
-        plt <- plt + geom_label_repel(aes(label = !! sym(sample_col)), 
+        plt <- plt + ggrepel::geom_label_repel(aes(label = !! sym(sample_col)), 
                                       show.legend = FALSE, max.overlaps = 50, size = font_size, 
                                       box.padding = unit(0.1, "lines"))
     }

@@ -54,7 +54,11 @@
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
+#' 
+#' @import data.table
+#' 
 #' @export
+#' 
 
 run.umap <- function(dat,
                      use.cols,
@@ -84,7 +88,7 @@ run.umap <- function(dat,
                      
                      # For Fast UMAP
                      fast = TRUE,
-                     n_threads = parallel::detectCores() - 1,
+                     n_threads = 'auto',
                      n_sgd_threads = 'auto',
                      batch = TRUE) {
 
@@ -94,14 +98,14 @@ run.umap <- function(dat,
   # use.cols <- c(1:4)
 
   ## Check that necessary packages are installed
-  check_packages_installed(c("data.table"))
-  require(data.table)
+  # check_packages_installed(c("data.table"))
+  # require(data.table)
   
   if (!"data.frame" %in% class(dat)) {
     stop("dat must be of type data.frame or data.table")
   }
   
-  if(fast == TRUE){
+  if(fast){
     if (!is.element("parallel", installed.packages()[, 1])){
       message("For 'fast' UMAP, parallel is required but not installed. Switching to slow UMAP")
       fast <- FALSE
@@ -156,7 +160,7 @@ run.umap <- function(dat,
     return(res)
   }
   
-  if(fast == TRUE){
+  if (fast){
     
     # Irritating. Can't peeps just settle on using either NA or NULL?
     if (is.na(a_gradient)) {
@@ -168,9 +172,17 @@ run.umap <- function(dat,
     
     set.seed(umap.seed)
     
+    # set number of threads
+    # the following could easy just check for is not numeric, but whatever. 
+    # no need to do anything if n_threads is numeric as it will automatically 
+    # be passed on.
+    if (n_threads == 'auto' || !is.numeric(n_threads)) {
+        n_threads <- parallel::detectCores() - 1
+    }
+    
     dat.umap <- uwot::umap(
       X = dat[, use.cols, with = FALSE],
-      n_threads = n_threads,
+      n_threads = n_threads, 
       n_sgd_threads = n_sgd_threads,
       batch = batch,
       n_neighbors = neighbours,

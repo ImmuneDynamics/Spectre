@@ -23,7 +23,6 @@
 #'
 #' @import data.table
 #'
-#' @export
 
 run.ruv <- function(dat,
                     sample.col,
