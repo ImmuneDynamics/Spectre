@@ -89,10 +89,11 @@ More information on PCA plots can be found here http://www.sthda.com/english/art
 dat <- Spectre::demo.clustered
                         
 # Run PCA on demonstration dataset
-Spectre::run.pca(dat = Spectre::demo.clustered,
-                use.cols = c(11:19),
-                repel = TRUE
-                )
+Spectre::run.pca(
+  dat = Spectre::demo.clustered,
+  use.cols = c(11:19),
+  repel = TRUE
+)
 
 # Compare between groups
 \dontrun{

@@ -5,6 +5,8 @@
 \title{do.pull.data}
 \usage{
 do.pull.data(spatial.dat, target.dat)
+
+do.pull.data(spatial.dat, target.dat)
 }
 \arguments{
 \item{target.dat}{NO DEFAULT. Dataset to pull.}

@@ -7,7 +7,7 @@
 #' @param dt Data.table object containing the data to plot
 #' @param markers_to_plot Vector of markers to plot
 #' @param cluster Name of the column in dt which specify the clusters
-#' @col.scheme Colour scheme to use. Must be something from 
+#' @param col.scheme Colour scheme to use. Must be something from 
 #' the RColorBrewer or the viridis package.
 #' Default to 'RdYlBu' in the RColorBrewer package
 #' 

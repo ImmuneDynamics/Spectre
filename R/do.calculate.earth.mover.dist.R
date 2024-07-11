@@ -5,7 +5,6 @@
 #' @param sample_source_col 
 #' @param batch_id_col 
 #'
-#' @return
 #' @export
 #'
 #' @importFrom graphics hist

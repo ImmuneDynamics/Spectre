@@ -5,6 +5,8 @@
 \title{do.add.percell}
 \usage{
 do.add.percell(spatial.dat, percell.dat, roi.col)
+
+do.add.percell(spatial.dat, percell.dat, roi.col, name = "per.cell")
 }
 \description{
 do.add.percell

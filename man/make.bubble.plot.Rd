@@ -12,6 +12,10 @@ make.bubble.plot(dt, markers_to_plot, cluster, col.scheme = "RdYlBu")
 \item{markers_to_plot}{Vector of markers to plot}
 
 \item{cluster}{Name of the column in dt which specify the clusters}
+
+\item{col.scheme}{Colour scheme to use. Must be something from
+the RColorBrewer or the viridis package.
+Default to 'RdYlBu' in the RColorBrewer package}
 }
 \value{
 ggplot object containing the plot

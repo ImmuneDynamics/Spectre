@@ -31,6 +31,9 @@ A vector of character column names to apply batch correction to.}
 \item{batch_col}{NO default.
 The column that denotes the batch or dataset that each cell belongs to}
 
+\item{cell_id_col}{Character. The column in \code{dat} denoting
+the unique identifier of the cells.}
+
 \item{xdim}{DEFAULT 8. X-dimension size of the SOM grid.}
 
 \item{ydim}{DEFAULT 8. Y-dimension size of the SOM grid.}

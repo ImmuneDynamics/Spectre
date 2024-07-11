@@ -7,7 +7,6 @@
 #' @param markers 
 #' @param colour_by 
 #'
-#' @return
 #' @export
 #'
 #' @importFrom limma plotMDS
