@@ -22,8 +22,11 @@
 #'
 #' @param mfi.type DEFAULT = "median". Can be "median" or "mean". Defines the type of function for calculating MFI data.
 #' @param path DEFAULT = getwd(). Defines the directory for write CSV files.
-#'
-#' @usage make.sumtables(dat, sample.col, pop.col, measure.col, annot.col, group.col, do.proportions, cell.counts, do.mfi.per.sample, do.mfi.per.marker, perc.pos.markers, perc.pos.cutoff, mfi.type, path)
+#' 
+#' @usage make.sumtables(dat, sample.col, pop.col, measure.col, 
+#' annot.col, group.col, do.proportions, cell.counts, 
+#' do.mfi.per.sample, do.mfi.per.marker, perc.pos.markers, 
+#' perc.pos.cutoff, mfi.type, path)
 #'
 #' @examples
 #' # Calculate and export results from demonstration data

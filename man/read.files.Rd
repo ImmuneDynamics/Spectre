@@ -28,7 +28,14 @@ Returns a list of data.tables -- one per CSV file.
 This function allows you to read in sample files (.csv or .fcs) into a list, where each file is saved as a data.table.
 }
 \examples{
-data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
+# download sample data
+download.file(url='https://github.com/ImmuneDynamics/data/blob/main/msCNS.zip?raw=TRUE', destfile = 'msCNS.zip', mode = 'wb')
+unzip(zipfile = 'msCNS.zip')
+setwd("msCNS/data")
+data.list <- read.files(file.type = ".csv", do.embed.file.names = TRUE)
+
+# return to previous working directory
+setwd("../../")
 
 }
 \references{

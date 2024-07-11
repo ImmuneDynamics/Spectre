@@ -2,10 +2,7 @@
 % Please edit documentation in R/do.stats.R
 \name{do.stats}
 \alias{do.stats}
-\title{do.stats}
-\usage{
-do.stats(dat, use.cols, sample.col, grp.col, comparisons)
-}
+\title{Statistical analysis}
 \description{
-The function has been depreciated. Please use 'create.stats' instead
+Statistical analysis
 }

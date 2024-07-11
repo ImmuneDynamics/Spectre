@@ -4,7 +4,12 @@
 \alias{do.logicle}
 \title{Using logicle to transform data}
 \usage{
-do.logicle(dat, use.cols, linearisation.width, max.scale.val, full.transform.width, additional.negative.range)
+do.logicle(dat, use.cols, linearisation.width, max.scale.val, 
+full.transform.width, additional.negative.range)
+
+do.logicle(dat, use.cols, auto.infer.function = TRUE,
+linearisation.width = 1.2, max.scale.val = 262144, full.transform.width = 4.5,
+additional.negative.range = 0)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table. Input data}
@@ -46,14 +51,11 @@ For more information on what logicle transformation does, please read the manusc
 }
 \examples{
 library(Spectre)
-dat <- demo.asinh
-use.cols <- names(dat)[c(2:10)]
-dat_lgcl <- do.logicle(dat, use.cols = use.cols)
+dat = Spectre::demo.clustered[, 2:9]
+use.cols = names(dat)
+do.logicle(dat, use.cols = use.cols)
 
 }
 \references{
 Parks, David R., Mario Roederer, and Wayne A. Moore. "A new “Logicle” display method avoids deceptive effects of logarithmic scaling for low signals and compensated data." Cytometry Part A: The Journal of the International Society for Analytical Cytology 69.6 (2006): 541-551.
-}
-\author{
-Givanna Putri
 }

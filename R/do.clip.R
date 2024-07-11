@@ -17,6 +17,8 @@
 #' @usage do.clip(dat, use.cols)
 #'
 #' @import data.table
+#' 
+#' @usage do.clip(dat, use.cols, min.value = NULL, max.value = NULL, append.name = '_clipped')
 #'
 #' @export do.clip
 

@@ -19,8 +19,6 @@
 #'
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
-#' @examples
-#' cell.dat <- run.align()
 #'
 #' @import data.table
 #'

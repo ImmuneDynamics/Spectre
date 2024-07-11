@@ -1,6 +1,7 @@
 #' package.install - a function to install packages required for Spectre.
 #'
 #' This function allows you to check to see if all the common use packages dependencies for Spectre are installed. Will only install if the package has not been installed, will not update packages.
+#' See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @return returns an error message if one of the common use packages are not installed. Proceeds in order of package importance, and only the first error message encountered will be returned.
 #'
@@ -11,9 +12,6 @@
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @seealso See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
-#'
-#' @usage package.install()
 #'
 #' @examples
 #' package.install()

@@ -4,17 +4,8 @@
 \alias{do.add.masks}
 \title{do.add.masks}
 \usage{
-do.add.masks(
-  dat,
-  mask.dir,
-  mask.pattern,
-  mask.label,
-  correct.extent = TRUE,
-  flip.y = TRUE,
-  value.modifier = 65535,
-  HDF5 = FALSE,
-  array = FALSE
-)
+do.add.masks(dat, mask.dir, mask.pattern, mask.label,correct.extent = TRUE, 
+flip.y = TRUE, value.modifier = 65535, HDF5 = FALSE, array = FALSE)
 }
 \arguments{
 \item{dat}{NO DEFAULT. A list of spatial data objects}

@@ -38,7 +38,8 @@ Returns an object which represents the alignment model. In this preparation stag
 This function allows you to prepare reference data ahead of performing batch alignment.
 }
 \examples{
-align.model <- prep.cytonorm()
+# TBC
+# align.model <- prep.cytonorm()
 
 }
 \references{

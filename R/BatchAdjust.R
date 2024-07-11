@@ -1,8 +1,7 @@
-#' BatchAdjust
-#'
-#' Functions provided for BatchAdjust
-#'
-#' @export
+# BatchAdjust
+# 
+# Functions provided for BatchAdjust
+# 
 
 ######## Version from https://github.com/i-cyto/CytofBatchAdjust/edit/master/BatchAdjust.R to allow on windows
 

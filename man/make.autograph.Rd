@@ -4,7 +4,9 @@
 \alias{make.autograph}
 \title{make.autograph - Creates plots using ggplot2}
 \usage{
-make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
+make.autograph(dat, x.axis, y.axis, colour.by, colours, 
+y.axis.label, grp.order, title, filename, scale, dot.size, width, 
+height, path)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}

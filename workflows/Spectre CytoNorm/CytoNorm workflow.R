@@ -78,6 +78,7 @@
 ##########################################################################################################
 
     ### If you need the demo dataset, uncomment the following code (select all, CMD+SHIFT+C) and run to download
+    ### Alternative: download from https://github.com/ImmuneDynamics/data/blob/main/simBatches.zip?raw=TRUE
         
         # setwd(PrimaryDirectory)
         # setwd("../")

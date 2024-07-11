@@ -14,7 +14,6 @@
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
 #'
 #' @import data.table
-#'
 #' @export do.filter
 
 do.filter <- function(dat,

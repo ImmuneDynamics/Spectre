@@ -7,7 +7,11 @@
 #' @usage do.filter.percell(spatial.dat, per.cell, to, filter.by)
 #'
 #' @import data.table
-#'
+#' 
+#' @usage do.filter.percell(spatial.dat, per.cell, to, filter.by,
+#' id.col = "ObjectNumber", x.col = "Location_Center_X", y.col = "Location_Center_Y",
+#' simplify.cp.colname = TRUE, value.modifier = 65535)
+#' 
 #' @export do.filter.percell
 
 do.filter.percell <- function(spatial.dat,

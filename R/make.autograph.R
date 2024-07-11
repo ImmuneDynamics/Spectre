@@ -29,7 +29,9 @@
 #' If yes, it will be saved in the directory specified in the `path` parameter.
 #' 
 #'
-#' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
+#' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, 
+#' y.axis.label, grp.order, title, filename, scale, dot.size, width, 
+#' height, path)
 #'
 #' @examples
 #' dat <- data.frame(Samples = c("Mock_01", "Mock_02", "Mock_03", "WNV_01", "WNV_02", "WNV_03"),

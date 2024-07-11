@@ -4,7 +4,10 @@
 \alias{run.tsne}
 \title{Run the tSNE algorithm (using Rtsne::Rtsne())}
 \usage{
-run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, dims, initial_dims, perplexity, theta, check_duplicates, pca, max_iter, verbose, is_distance, Y_init, stop_lying_iter, mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
+run.tsne(dat, use.cols, tsne.x.name, tsne.y.name, tsne.seed, 
+dims, initial_dims, perplexity, theta, check_duplicates, pca, 
+max_iter, verbose, is_distance, Y_init, stop_lying_iter, 
+mom_switch_iter, momentum, final_momentum, eta, exaggeration_factor)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.frame.}
@@ -60,11 +63,12 @@ Uses the R package "Rtsne" to calculate plots.
 \examples{
 # Run tSNE on a subset of the  demonstration dataset
 
-cell.dat <- do.subsample(Spectre::demo.asinh, 10000) # Subsample the demo dataset to 10000 cells
-cell.dat <- Spectre::run.tsne(
-  dat = cell.dat,
-  use.cols = names(demo.asinh)[c(2:10)]
-)
+cell.dat <- do.subsample(Spectre::demo.clustered, 10000) # Subsample the demo dataset to 10000 cells
+cell.dat <- Spectre::run.tsne(dat = cell.dat,
+                              use.cols = c("NK11_asinh", "CD3_asinh", 
+                              "CD45_asinh", "Ly6G_asinh", "CD11b_asinh",
+                               "B220_asinh", "CD8a_asinh", 
+                               "Ly6C_asinh", "CD4_asinh"))
 
 }
 \author{

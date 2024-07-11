@@ -7,6 +7,8 @@
 #' @usage do.add.percell(spatial.dat, percell.dat, roi.col)
 #'
 #' @import data.table
+#' 
+#' @usage do.add.percell(spatial.dat, percell.dat, roi.col, name = "per.cell")
 #'
 #' @export do.add.percell
 

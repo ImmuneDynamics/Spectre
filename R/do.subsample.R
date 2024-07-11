@@ -14,17 +14,13 @@
 #'
 #' @examples
 #' # Subsample 10,000 cells randomly from the total dataset
-#' sub.dat <- Spectre::do.subsample(
-#'   dat = Spectre::demo.start,
-#'   targets = 10000
-#' )
+#' sub.dat <- Spectre::do.subsample(dat = Spectre::demo.clustered,
+#'                                  targets = 10000)
 #'
 #' # Subsample based on the sample with the smallest number of cells
-#' sub.dat.sample <- Spectre::do.subsample(
-#'   dat = Spectre::demo.start,
-#'   divide.by = "FileName",
-#'   min.per = TRUE
-#' )
+#' sub.dat.sample <- Spectre::do.subsample(dat = Spectre::demo.clustered,
+#'                                         divide.by = "FileName",
+#'                                         min.per = TRUE)
 #'
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}

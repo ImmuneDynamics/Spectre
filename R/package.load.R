@@ -1,6 +1,7 @@
 #' package.load - a function to load (library) all required packages.
 #'
 #' This function allows you to load all of the common use packages dependencies for Spectre.
+#' See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @return loads all the common use package libraries.
 #'
@@ -11,7 +12,6 @@
 #'
 #' @references \url{https://sydneycytometry.org.au/spectre}
 #'
-#' @usage See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 #'
 #' @examples
 #' package.load()

@@ -7,7 +7,6 @@
 #' @usage do.extract.cell.dat(spatial.dat, target.dat)
 #'
 #' @import data.table
-#'
 #' @export do.extract.cell.dat
 
 do.extract.cell.dat <- function(spatial.dat,

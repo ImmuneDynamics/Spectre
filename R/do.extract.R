@@ -6,8 +6,10 @@
 #' @param fun DEFAULT = 'mean'. Summarisation function.
 #'
 #' @import data.table
+#' 
+#' @usage do.extract(dat, mask, name = "CellData", fun = "mean")
 #'
-#' @export
+#' @export do.extract
 
 do.extract <- function(dat, # spatial.data object
                        mask, # name of the mask being summarised

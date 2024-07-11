@@ -5,6 +5,8 @@
 #'
 #' @usage do.pull.data(spatial.dat, target.dat)
 #' @import data.table
+#' 
+#' @usage do.pull.data(spatial.dat, target.dat)
 #'
 #' @export do.pull.data
 
