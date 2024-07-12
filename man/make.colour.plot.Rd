@@ -13,27 +13,41 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{y.axis}{NO DEFAULT. Character. Column for Y axis.}
 
-\item{col.axis}{DEFAULT = NULL. If not specified, plot is coloured by density. If you provide a character name of a column (e.g. "BV605.Ly6C", "Group", "FlowSOM_metacluster" etc), then each point will be coloured by the value in that column.}
+\item{col.axis}{DEFAULT = NULL. If not specified, plot is coloured by density.
+If you provide a character name of a column (e.g. "BV605.Ly6C", "Group",
+"FlowSOM_metacluster" etc), then each point will be coloured by the value in that column.}
 
 \item{col.type}{DEFAULT = "continuous". Can also be "factor".}
 
 \item{add.label}{DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".}
 
-\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently only works when specifying col.axis, so does not work with density plots.}
+\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the
+average expression of the bin. Currently only works when specifying col.axis.}
 
 \item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
 
-\item{colours}{DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu". Can also provide a data.table with the first column being the factors, and the second column being the corresponding colour code.}
+\item{colours}{DEFAULT = "spectral". Only used if col.type = 'continuous',
+ignored if type = 'factor'. Specify a colour scheme.
+Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu".
+Can also provide a data.table with the first column being the factors,
+and the second column being the corresponding colour code.}
 
-\item{col.min.threshold}{DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.}
+\item{col.min.threshold}{DEFAULT = 0.01. Numeric.
+Define minimum threshold for colour scale.
+Values below this limit will be coloured as the chosen minimum threshold.}
 
-\item{col.max.threshold}{DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.}
+\item{col.max.threshold}{DEFAULT = 0.995 Numeric.
+Define maximum threshold for colour scale.
+Values above this limit will be coloured as the chosen maximum threshold.}
 
-\item{align.xy.by}{DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.}
+\item{align.xy.by}{DEFAULT = dat.
+Sample to use to determine minimum and maximum X and Y axis values.}
 
-\item{align.col.by}{DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.}
+\item{align.col.by}{DEFAULT = dat.
+Sample to use to determine minimum and maximum colour values.}
 
-\item{regression.line}{DEFAULT = NULL. Regression line to add to show the trend of the data. This will be passed on to ggplot2::geom_smooth function, and accepts either NULL or a character vector, e.g. "lm", "glm", "gam", "loess" or a function.}
+\item{regression.line}{DEFAULT = NULL. Regression line to add to show the trend of the data.
+This will be passed on to ggplot2::geom_smooth function, and accepts either NULL or a character vector, e.g. "lm", "glm", "gam", "loess" or a function.}
 
 \item{title}{DEFAULT = col.axis. Character. Title for the plot.}
 
@@ -41,7 +55,8 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
 
-\item{randomise.order}{DEFAULT = TRUE. Option to randomise plotting order of individuals to control for overlap.}
+\item{randomise.order}{DEFAULT = TRUE.
+Option to randomise plotting order of individuals to control for overlap.}
 
 \item{order.seed}{DEFAULT = 42. Set the seed for randomising plotting order of individuals.}
 
@@ -49,19 +64,29 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 
 \item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
 
-\item{nudge_x}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.}
+\item{nudge_x}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted
+from the centroid point on the X axis.}
 
-\item{nudge_y}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.}
+\item{nudge_y}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted
+from the centroid point on the Y axis.}
 
-\item{square}{DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.}
+\item{square}{DEFAULT = TRUE. Ensures the plot is saved as a square.
+Set to FALSE if you want a plot with different X and Y lengths.}
 
-\item{legend.loc}{DEFAULT = 'right'. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.}
+\item{legend.loc}{DEFAULT = 'right'.
+By default plot legends will be on the right hand side.
+Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.}
 
-\item{save.to.disk}{DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.}
+\item{save.to.disk}{DEFAULT = TRUE. Whether to save the plot to disk.
+If FALSE, will only show the ggplot.}
 
-\item{path}{DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.}
+\item{path}{DEFAULT = getwd(). The location to save your plot.
+By default, will save to current working directory. Can be overidden.}
 
-\item{blank.axis}{DEFAULT = FALSE Logical, do you want a minimalist graph?}
+\item{blank.axis}{DEFAULT = FALSE Logical, do you want a minimalist graph without
+any axes?}
+
+\item{return_object}{DEFAULT = FALSE. Whether to return the ggplot object.}
 }
 \description{
 This function allows you to create a coloured XY plot where each cell is coloured by a

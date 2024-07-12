@@ -10,34 +10,57 @@
 #' @param dat NO DEFAULT. data.table Input sample.
 #' @param x.axis NO DEFAULT. Character. Column for X axis.
 #' @param y.axis NO DEFAULT. Character. Column for Y axis.
-#'
-#' @param col.axis DEFAULT = NULL. If not specified, plot is coloured by density. If you provide a character name of a column (e.g. "BV605.Ly6C", "Group", "FlowSOM_metacluster" etc), then each point will be coloured by the value in that column.
-#'
+#' @param col.axis DEFAULT = NULL. If not specified, plot is coloured by density. 
+#' If you provide a character name of a column (e.g. "BV605.Ly6C", "Group", 
+#' "FlowSOM_metacluster" etc), then each point will be coloured by the value in that column.
 #' @param col.type DEFAULT = "continuous". Can also be "factor".
 #' @param add.label DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".
-#' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently only works when specifying col.axis, so does not work with density plots.
+#' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the 
+#' average expression of the bin. Currently only works when specifying col.axis.
 #' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
-#' @param colours DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu". Can also provide a data.table with the first column being the factors, and the second column being the corresponding colour code.
-#' @param col.min.threshold DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.
-#' @param col.max.threshold DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.
-#' @param align.xy.by DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.
-#' @param align.col.by DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.
-#' @param regression.line DEFAULT = NULL. Regression line to add to show the trend of the data. This will be passed on to ggplot2::geom_smooth function, and accepts either NULL or a character vector, e.g. "lm", "glm", "gam", "loess" or a function.
+#' @param colours DEFAULT = "spectral". Only used if col.type = 'continuous', 
+#' ignored if type = 'factor'. Specify a colour scheme. 
+#' Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu". 
+#' Can also provide a data.table with the first column being the factors, 
+#' and the second column being the corresponding colour code.
+#' @param col.min.threshold DEFAULT = 0.01. Numeric. 
+#' Define minimum threshold for colour scale. 
+#' Values below this limit will be coloured as the chosen minimum threshold.
+#' @param col.max.threshold DEFAULT = 0.995 Numeric. 
+#' Define maximum threshold for colour scale. 
+#' Values above this limit will be coloured as the chosen maximum threshold.
+#' @param align.xy.by DEFAULT = dat.
+#' Sample to use to determine minimum and maximum X and Y axis values.
+#' @param align.col.by DEFAULT = dat. 
+#' Sample to use to determine minimum and maximum colour values.
+#' @param regression.line DEFAULT = NULL. Regression line to add to show the trend of the data. 
+#' This will be passed on to ggplot2::geom_smooth function, and accepts either NULL or a character vector, e.g. "lm", "glm", "gam", "loess" or a function.
 #' @param title DEFAULT = col.axis. Character. Title for the plot.
 #' @param filename DEFAULT = NULL. Character. The name of the file to save the plot to.
 #' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
-#' @param randomise.order DEFAULT = TRUE. Option to randomise plotting order of individuals to control for overlap.
+#' @param randomise.order DEFAULT = TRUE. 
+#' Option to randomise plotting order of individuals to control for overlap.
 #' @param order.seed DEFAULT = 42. Set the seed for randomising plotting order of individuals.
 #' @param plot.width DEFAULT = 9. Width of the ggplot when saved to disk.
 #' @param plot.height DEFAULT = 7. Height of the ggplot when saved to disk.
-#' @param nudge_x DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.
-#' @param nudge_y DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.
-#' @param square DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.
-#' @param legend.loc DEFAULT = 'right'. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.
-#' @param save.to.disk DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.
-#' @param path DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.
-#' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
-
+#' @param nudge_x DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted 
+#' from the centroid point on the X axis.
+#' @param nudge_y DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted 
+#' from the centroid point on the Y axis.
+#' @param square DEFAULT = TRUE. Ensures the plot is saved as a square. 
+#' Set to FALSE if you want a plot with different X and Y lengths.
+#' @param legend.loc DEFAULT = 'right'. 
+#' By default plot legends will be on the right hand side. 
+#' Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.
+#' @param save.to.disk DEFAULT = TRUE. Whether to save the plot to disk. 
+#' If FALSE, will only show the ggplot.
+#' @param path DEFAULT = getwd(). The location to save your plot. 
+#' By default, will save to current working directory. Can be overidden.
+#' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph without
+#' any axes?
+#' @param return_object DEFAULT = FALSE. Whether to return the ggplot object.
+#' @param verbose DEFAULT = TRUE. Whether to print progress out.
+#'
 #' @usage make.colour.plot(dat, x.axis, y.axis, col.axis)
 #'
 #' @examples
@@ -61,13 +84,10 @@ make.colour.plot <- function(dat,
                              y.axis,
                              col.axis = NULL,
                              col.type = "continuous",
-                             # can be "continuous" or "factor"
                              add.label = FALSE,
-                             # only works for 'factor'
                              hex = FALSE,
                              hex.bins = 30,
                              colours = "spectral",
-                             # can be spectral, jet, etc      # only works for continuous #
                              col.min.threshold = 0.01,
                              col.max.threshold = 0.995,
                              align.xy.by = dat,
@@ -89,7 +109,7 @@ make.colour.plot <- function(dat,
                              save.to.disk = TRUE,
                              path = getwd(),
                              blank.axis = FALSE,
-                             col.tab = NULL) {
+                             return_object = FALSE) {
     
     ### Demo data
     
@@ -129,12 +149,10 @@ make.colour.plot <- function(dat,
     
     if (hex == TRUE) {
         if (is.null(col.axis)) {
-            message(
+            stop(
                 "Note: hex bins do not currently work for density plots, only for colour plots when col.axis is specified and can be plotted as a continuous numeric variable"
             )
-        }
-        
-        if (!is.null(col.axis)) {
+        } else {
             if (!is.numeric(dat[[col.axis]])) {
                 # tests to see if there are any non numeric values
                 stop(
@@ -148,15 +166,15 @@ make.colour.plot <- function(dat,
         if (col.type == "continuous") {
             if (!is.numeric(dat[[col.axis]])) {
                 # tests to see if there are any non numeric values
-                message("Non-numeric values detected in col.axis -- using col.type = 'factor'")
+                warning("Non-numeric values detected in col.axis -- using col.type = 'factor'")
                 col.type <- "factor"
             }
         }
         
         if (col.type == "factor") {
             if (length(unique(as.factor(dat[[col.axis]]))) > 200) {
-                message(
-                    "Over 200 factors detected, using continuous scale instead of a factor scale"
+                warning(
+                    "Over 200 factors detected, setting col.type to continuous instead of factor"
                 )
                 col.type <- "continuous"
             }
@@ -296,10 +314,6 @@ make.colour.plot <- function(dat,
         colour.list <- rev(colour.list)
         colour.scheme <- colorRampPalette(c(colour.list))
     }
-    
-    # if('data.table' %in% class(colours)){
-    #
-    # }
     
     ### Define limits
     
@@ -681,21 +695,32 @@ make.colour.plot <- function(dat,
         )
     }
     
+    if (randomise.order == TRUE) {
+        # Breakdown plot
+        # https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
+        edit.plot <- ggplot2::ggplot_build(p)
+        
+        # Randomise order
+        set.seed(order.seed)
+        nsub <- sample(nrow(edit.plot[["data"]][[1]]))
+        edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub, ]
+        
+        # Re-create plot
+        p <- ggplot2::ggplot_gtable(edit.plot)
+    }
+    
     ### Save plot
     if (save.to.disk == TRUE) {
         if (!is.null(col.axis)) {
             if (col.type == "continuous") {
                 lb <- "Colour"
-            }
-            
-            if (col.type == "factor") {
+            } else if (col.type == "factor") {
                 lb <- "Factor"
             }
-        }
-        
-        if (is.null(col.axis)) {
+        } else {
             lb <- "Density plot"
         }
+        
         
         if (is.null(filename)) {
             filename <-
@@ -708,21 +733,6 @@ make.colour.plot <- function(dat,
                        y.axis,
                        ".png")
         }
-      
-      if (randomise.order == TRUE) {
-        # Breakdown plot
-        # https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
-        edit.plot <- ggplot2::ggplot_build(p)
-        
-        # Randomise order
-        set.seed(order.seed)
-        nsub <- sample(nrow(edit.plot[["data"]][[1]]))
-        edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub, ]
-        
-        # Re-create plot
-        p <- ggplot2::ggplot_gtable(edit.plot)
-      }
-        
         ggsave(
             filename = filename,
             plot = p,
@@ -732,28 +742,12 @@ make.colour.plot <- function(dat,
             limitsize = FALSE
         )
     } else {
-      
-        if (randomise.order == TRUE) {
-          # Breakdown plot
-          # https://stackoverflow.com/questions/41940000/modifying-ggplot-objects-after-creation
-          edit.plot <- ggplot2::ggplot_build(p)
-          
-          # Randomise order
-          set.seed(order.seed)
-          nsub <- sample(nrow(edit.plot[["data"]][[1]]))
-          edit.plot[["data"]][[1]] <- edit.plot[["data"]][[1]][nsub, ]
-          
-          # Re-create plot
-          p <- ggplot2::ggplot_gtable(edit.plot)
-        }
-      
         # print(p) #doesn't work ggtable objects
         plot(p)
         
     }
     
-    ### Print plot
-    # print(p)
-    # maybe return, i'm not sure.
-    return(p)
+    if (return_object) {
+        return(p)
+    }
 }
