@@ -63,9 +63,9 @@ run.rpca <- function(dat,
         dat.batch <- dat[rws,..new.names]
         
         counts <- as.matrix(dat.batch)
-        counts <- Matrix::Matrix(counts, sparse = TRUE)
         rownames(counts) <- paste0('Cell-', i, '-', c(1:nrow(counts)))
         counts <- t(counts)
+        counts <- Matrix::Matrix(counts, sparse = TRUE)
         
         srt <- CreateSeuratObject(counts = counts, assay = 'cyto')
         VariableFeatures(srt) <- rownames(counts)
