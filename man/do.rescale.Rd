@@ -2,18 +2,15 @@
 % Please edit documentation in R/do.rescale.R
 \name{do.rescale}
 \alias{do.rescale}
-\title{do.rescale}
+\title{do.rescale - Re-scale data in selected columns between two values, usually 0 and 1.}
 \usage{
-do.rescale(dat, use.cols)
-
 do.rescale(dat, use.cols, new.min = 0, new.max = 1, 
 append.name = '_rescaled')
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
 
-\item{use.cols}{NO DEFAULT. Vector of character column names -- these columns
-will be normalised and added to the data.table as new columns.}
+\item{use.cols}{NO DEFAULT. Vector of character column names -- these columns will be normalised and added to the data.table as new columns.}
 
 \item{new.min}{DEFAULT = 0. The new minimum value.}
 
@@ -26,15 +23,11 @@ Text to be appended to the column names of re-scaled data.}
 A data.table with new columns added, that contain the re-scaled data.
 }
 \description{
-Re-scale data in selected columns between two values, usually 0
-and 1.
-This function allows you to re-scale the data in selected columns between two
-values, usually 0 and 1.
+This function allows you to re-scale the data in selected columns between two values, usually 0 and 1.
 }
 \references{
 \url{https://sydneycytometry.org.au/spectre}
 }
 \seealso{
-\url{https://sydneycytometry.org.au/spectre} for usage instructions
-and vignettes.
+\url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }

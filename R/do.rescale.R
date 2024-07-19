@@ -16,6 +16,7 @@
 #' @param new.max DEFAULT = 1. The new maximum value.
 #' @param append.name DEFAULT = '_rescaled'. 
 #' Text to be appended to the column names of re-scaled data.
+#' 
 #' @return A data.table with new columns added, that contain the re-scaled data.
 #'
 #' @usage do.rescale(dat, use.cols)

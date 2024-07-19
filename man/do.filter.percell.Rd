@@ -4,14 +4,10 @@
 \alias{do.filter.percell}
 \title{do.filter.percell}
 \usage{
-do.filter.percell(spatial.dat, per.cell, to, filter.by)
-
 do.filter.percell(spatial.dat, per.cell, to, filter.by,
 id.col = "ObjectNumber", x.col = "Location_Center_X", y.col = "Location_Center_Y",
 simplify.cp.colname = TRUE, value.modifier = 65535)
 }
 \description{
-This is a developmental Spectre-spatial function that is
-still in testing phase with limited documentation. We recommend only using
-this function if you know what you are doing.
+do.filter.percell
 }

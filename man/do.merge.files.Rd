@@ -2,23 +2,22 @@
 % Please edit documentation in R/do.merge.files.R
 \name{do.merge.files}
 \alias{do.merge.files}
-\title{do.merge.files}
+\title{do.merge.files - Function to merge a list of data.tables (one data.table per 'sample') into a single large data.table.}
 \usage{
-do.merge.files(dat)
+do.merge.files(dat, remove.duplicates)
 
 do.merge.files(dat, remove.duplicates = TRUE)
 }
 \arguments{
 \item{dat}{NO DEFAULT. List of data.tables (or data.frames)}
 
-\item{remove.duplicates}{DEFAULT = TRUE. Do you want to remove duplicated cells?}
+\item{remove.duplicates}{DEFAULT = TRUE. Do you want to remove duplicates?}
 }
 \value{
-A combined data.table.
+Returns a combined data.table.
 }
 \description{
-Function to merge a list of data.tables (one data.table per 'sample')
-into a single large data.table.
+do.merge.files - Function to merge a list of data.tables (one data.table per 'sample') into a single large data.table.
 }
 \examples{
 data.list <- list(

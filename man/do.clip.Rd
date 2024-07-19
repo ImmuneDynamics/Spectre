@@ -2,10 +2,8 @@
 % Please edit documentation in R/do.clip.R
 \name{do.clip}
 \alias{do.clip}
-\title{Clip data}
+\title{do.clip - Clips data using a specified lower and upper value}
 \usage{
-do.clip(dat, use.cols)
-
 do.clip(dat, use.cols, min.value = NULL, max.value = NULL, append.name = '_clipped')
 }
 \arguments{
@@ -23,8 +21,7 @@ do.clip(dat, use.cols, min.value = NULL, max.value = NULL, append.name = '_clipp
 A data.table with new columns added, that contain the clipped data.
 }
 \description{
-Clips data using a specified lower and upper value.
-E.g. if the upper value is set to 1000, then any values above 1000 will be converted to 1000. No rows are lost, rather the values in those rows are converted.
+This function allows you to clip data using specified lower and upper values. E.g. if the upper value is set to 1000, then any values above 1000 will be converted to 1000. No rows are lost, rather the values in those rows are converted.
 }
 \references{
 \url{https://sydneycytometry.org.au/spectre}

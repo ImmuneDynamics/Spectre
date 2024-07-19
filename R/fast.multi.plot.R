@@ -75,209 +75,209 @@ fast.multi.plot <- function(dat,
                             plot.height = 7, # each plot
                             blank.axis = FALSE,
                             save.each.plot = FALSE){
-  
-  ### Check packages
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
-  if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
-  if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
-  if(!is.element('scattermore', installed.packages()[,1])) stop('scattermore is required but not installed')
-  
-  ### Load packages
-  require(ggplot2)
-  require(scales)
-  require(colorRamps)
-  require(ggthemes)
-  require(RColorBrewer)
-  require(ggpointdensity)
-  require(scattermore)
-  
-  ### Overall plot settings
-  #title <- figure.title
-  
-  plots <- list()
-  to.plot <- plot.by
-  
-  ### Divide by, if requested
-  
-  dat.list <- list()
-  
-  if(is.null(divide.by)){ # the complete dataset
-    dat.list[["Only"]] <- dat
-  }
-  
-  if(!is.null(divide.by)){ # divide dataset by sample/group etc
-    to.divide <- unique(dat[[divide.by]])
     
-    for(i in to.divide){
-      rws <- dat[[divide.by]] == i
-      dat.list[[i]] <- dat[rws,]
-    }
-  }
-  
-  
-  ### Loop - plot each colour
-  
-  for(a in names(dat.list)){
-    # a <- "Only"
-    # a <- "Mock"
+    ### Check packages
+    if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
+    if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
+    if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
+    if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
+    if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
+    if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
+    if(!is.element('scattermore', installed.packages()[,1])) stop('scattermore is required but not installed')
     
-    plot.dat <- dat.list[[a]]
+    ### Load packages
+    require(ggplot2)
+    require(scales)
+    require(colorRamps)
+    require(ggthemes)
+    require(RColorBrewer)
+    require(ggpointdensity)
+    require(scattermore)
     
-    ## Create plots
-    for(i in to.plot){
-      
-      if(length(dat.list) == 1){
-        plot.nme <- paste0(i)
-      }
-      
-      if(length(dat.list) > 1){
-        plot.nme <- paste0(a, " - ", i)
-      }
-      
-      if(global.xy == FALSE){
-        align.xy.by <- plot.dat
-      }
-      
-      if(global.col == FALSE){
-        align.col.by <- plot.dat
-      }
-      
-      plots[[plot.nme]] <- Spectre::fast.colour.plot(dat = plot.dat, #instead, use d[d[$Sample][plot.by] == to.plot[i], ] ## Spectre::
-                                                     x.axis = x.axis,
-                                                     y.axis = y.axis,
-                                                     col.axis = i,
-                                                     col.type = col.type,
-                                                     hex = hex,
-                                                     hex.bins = hex.bins,
-                                                     title = plot.nme,
-                                                     align.xy.by = align.xy.by, ###
-                                                     align.col.by = align.col.by, ###
-                                                     colours = colours,
-                                                     col.min.threshold = col.min.threshold,
-                                                     col.max.threshold = col.max.threshold,
-                                                     dot.size = dot.size,
-                                                     path = path,
-                                                     plot.width = plot.width,
-                                                     plot.height = plot.height,
-                                                     blank.axis = blank.axis,
-                                                     save.to.disk = save.each.plot)
+    ### Overall plot settings
+    #title <- figure.title
+    
+    plots <- list()
+    to.plot <- plot.by
+    
+    ### Divide by, if requested
+    
+    dat.list <- list()
+    
+    if(is.null(divide.by)){ # the complete dataset
+        dat.list[["Only"]] <- dat
     }
     
-    ## Add density plot (if desired)
-    if(length(dat.list) == 1){
-      if(add.density == TRUE){
+    if(!is.null(divide.by)){ # divide dataset by sample/group etc
+        to.divide <- unique(dat[[divide.by]])
         
+        for(i in to.divide){
+            rws <- dat[[divide.by]] == i
+            dat.list[[i]] <- dat[rws,]
+        }
+    }
+    
+    
+    ### Loop - plot each colour
+    
+    for(a in names(dat.list)){
+        # a <- "Only"
+        # a <- "Mock"
         
-        if(global.xy == TRUE){
-          align.xy.by <- dat
-        } else {
-          align.xy.by <- plot.dat
+        plot.dat <- dat.list[[a]]
+        
+        ## Create plots
+        for(i in to.plot){
+            
+            if(length(dat.list) == 1){
+                plot.nme <- paste0(i)
+            }
+            
+            if(length(dat.list) > 1){
+                plot.nme <- paste0(a, " - ", i)
+            }
+            
+            if(global.xy == FALSE){
+                align.xy.by <- plot.dat
+            }
+            
+            if(global.col == FALSE){
+                align.col.by <- plot.dat
+            }
+            
+            plots[[plot.nme]] <- Spectre::fast.colour.plot(dat = plot.dat, #instead, use d[d[$Sample][plot.by] == to.plot[i], ] ## Spectre::
+                                                           x.axis = x.axis,
+                                                           y.axis = y.axis,
+                                                           col.axis = i,
+                                                           col.type = col.type,
+                                                           hex = hex,
+                                                           hex.bins = hex.bins,
+                                                           title = plot.nme,
+                                                           align.xy.by = align.xy.by, ###
+                                                           align.col.by = align.col.by, ###
+                                                           colours = colours,
+                                                           col.min.threshold = col.min.threshold,
+                                                           col.max.threshold = col.max.threshold,
+                                                           dot.size = dot.size,
+                                                           path = path,
+                                                           plot.width = plot.width,
+                                                           plot.height = plot.height,
+                                                           blank.axis = blank.axis,
+                                                           save.to.disk = save.each.plot)
         }
         
-        plots[[length(plots) + 1]] <- Spectre::fast.colour.plot(dat = plot.dat,
-                                                                x.axis = x.axis,
-                                                                y.axis = y.axis,
-                                                                colours = colours,
-                                                                dot.size = dot.size,
-                                                                title = "Density",
-                                                                align.xy.by = align.xy.by,
-                                                                save.to.disk = save.each.plot,
-                                                                path = path,
-                                                                plot.width = plot.width,
-                                                                plot.height = plot.height,
-                                                                blank.axis = blank.axis)
-        names(plots)[length(plots)] <- paste0("Density")
-      }
-    }
-    
-    if(length(dat.list) > 1){
-      if(add.density == TRUE){
-        
-        if(global.xy == TRUE){
-          align.xy.by <- dat
-        } else {
-          align.xy.by <- plot.dat
+        ## Add density plot (if desired)
+        if(length(dat.list) == 1){
+            if(add.density == TRUE){
+                
+                
+                if(global.xy == TRUE){
+                    align.xy.by <- dat
+                } else {
+                    align.xy.by <- plot.dat
+                }
+                
+                plots[[length(plots) + 1]] <- Spectre::fast.colour.plot(dat = plot.dat,
+                                                                        x.axis = x.axis,
+                                                                        y.axis = y.axis,
+                                                                        colours = colours,
+                                                                        dot.size = dot.size,
+                                                                        title = "Density",
+                                                                        align.xy.by = align.xy.by,
+                                                                        save.to.disk = save.each.plot,
+                                                                        path = path,
+                                                                        plot.width = plot.width,
+                                                                        plot.height = plot.height,
+                                                                        blank.axis = blank.axis)
+                names(plots)[length(plots)] <- paste0("Density")
+            }
         }
         
-        plots[[length(plots) + 1]] <- Spectre::fast.colour.plot(dat = plot.dat,
-                                                                x.axis = x.axis,
-                                                                y.axis = y.axis,
-                                                                colours = colours,
-                                                                dot.size = dot.size,
-                                                                title = paste0(a, "_Density"),
-                                                                align.xy.by = align.xy.by,
-                                                                save.to.disk = save.each.plot,
-                                                                path = path,
-                                                                plot.width = plot.width,
-                                                                plot.height = plot.height,
-                                                                blank.axis = blank.axis)
-        names(plots)[length(plots)] <- paste0(a, "_Density")
-      }
+        if(length(dat.list) > 1){
+            if(add.density == TRUE){
+                
+                if(global.xy == TRUE){
+                    align.xy.by <- dat
+                } else {
+                    align.xy.by <- plot.dat
+                }
+                
+                plots[[length(plots) + 1]] <- Spectre::fast.colour.plot(dat = plot.dat,
+                                                                        x.axis = x.axis,
+                                                                        y.axis = y.axis,
+                                                                        colours = colours,
+                                                                        dot.size = dot.size,
+                                                                        title = paste0(a, "_Density"),
+                                                                        align.xy.by = align.xy.by,
+                                                                        save.to.disk = save.each.plot,
+                                                                        path = path,
+                                                                        plot.width = plot.width,
+                                                                        plot.height = plot.height,
+                                                                        blank.axis = blank.axis)
+                names(plots)[length(plots)] <- paste0(a, "_Density")
+            }
+        }
     }
-  }
-  
-  
-  ### Arrange plots in grid
-  
-  if(length(plots) < 4){
-    num.cols <- length(plots)
-    num.rows <- 1
-  }
-  
-  if(length(plots) == 4){
-    num.cols <- 4
-    num.rows <- 1
-  }
-  
-  if(length(plots) > 4){
-    num.cols <- 4
-    num.rows <- length(plots)/4
-    num.rows <- ceiling(num.rows)
-  }
-  
-  gp <- gridExtra::grid.arrange(grobs = plots,
-                                ncol = num.cols,
-                                nrow = num.rows)
-  #top = figure.title,
-  #top = textGrob(figure.title,gp=gpar(fontsize=20,font=3)),
-  #top = figure.title) #top = "Main Title" -- need to fix size issues
-  
-  ### Save to disk
-  # if (save.each.plot == TRUE) {
-  #   message("The option to save each plot individually is not currently available")
-  # }
-  
-  # width = 9 per graph (4 graphs across max, so 4 cols max)
-  wdth <- num.cols*plot.width
-  
-  # height = 7 per graph
-  hght <- num.rows*plot.height
-  
-  if(add.density == TRUE){
-    figure.title <- paste0(figure.title, " plus density")
-  }
-  
-  if(!is.null(divide.by)){
-    figure.title <- paste0(figure.title, " divided by ", divide.by)
-  }
-  
-  ggplot2::ggsave(filename = paste0(figure.title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
-                  plot = gp,
-                  path = path,
-                  width = wdth,
-                  height = hght,
-                  limitsize = FALSE)
-  
-  if(exists(x = "gp")){
-    message(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
-  }
-  
-  ### Message if grid was NOT created
-  
-  if(exists(x = "gp") == FALSE){
-    message(paste0("Grid image was not created successfully"))
-  }
+    
+    
+    ### Arrange plots in grid
+    
+    if(length(plots) < 4){
+        num.cols <- length(plots)
+        num.rows <- 1
+    }
+    
+    if(length(plots) == 4){
+        num.cols <- 4
+        num.rows <- 1
+    }
+    
+    if(length(plots) > 4){
+        num.cols <- 4
+        num.rows <- length(plots)/4
+        num.rows <- ceiling(num.rows)
+    }
+    
+    gp <- gridExtra::grid.arrange(grobs = plots,
+                                  ncol = num.cols,
+                                  nrow = num.rows)
+    #top = figure.title,
+    #top = textGrob(figure.title,gp=gpar(fontsize=20,font=3)),
+    #top = figure.title) #top = "Main Title" -- need to fix size issues
+    
+    ### Save to disk
+    # if (save.each.plot == TRUE) {
+    #   message("The option to save each plot individually is not currently available")
+    # }
+    
+    # width = 9 per graph (4 graphs across max, so 4 cols max)
+    wdth <- num.cols*plot.width
+    
+    # height = 7 per graph
+    hght <- num.rows*plot.height
+    
+    if(add.density == TRUE){
+        figure.title <- paste0(figure.title, " plus density")
+    }
+    
+    if(!is.null(divide.by)){
+        figure.title <- paste0(figure.title, " divided by ", divide.by)
+    }
+    
+    ggplot2::ggsave(filename = paste0(figure.title, " - plotted on ", x.axis, " by ", y.axis, ".png"),
+                    plot = gp,
+                    path = path,
+                    width = wdth,
+                    height = hght,
+                    limitsize = FALSE)
+    
+    if(exists(x = "gp")){
+        message(paste0("Check your working directory for a new .png called ", "'",figure.title,".png'"))
+    }
+    
+    ### Message if grid was NOT created
+    
+    if(exists(x = "gp") == FALSE){
+        message(paste0("Grid image was not created successfully"))
+    }
 }

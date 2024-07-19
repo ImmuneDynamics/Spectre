@@ -65,8 +65,13 @@
 #' dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=c(5,10))
 #' dat_asinh
 #' 
+#' @return A data.table with new columns added, that contain the asinh transformed data.
+#'
+#' @import data.table
 #' 
-#' @export
+#' @usage do.asinh(dat, use.cols, cofactor=5, append.cf=FALSE, reduce.noise=FALSE)
+#'
+#' @export do.asinh
 
 do.asinh <- function(dat,
                      use.cols,

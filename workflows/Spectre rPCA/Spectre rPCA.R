@@ -90,7 +90,7 @@
         #   file.rename(from = i,  to = gsub('simBatches/', '', i))
         # }
         # unlink(c('simBatches/', 'simBatches.zip', '__MACOSX'), recursive = TRUE)
-        
+
 ##########################################################################################################
 #### 2. Import and prep data
 ##########################################################################################################
@@ -148,7 +148,7 @@
         transformed.cols <- paste0(to.asinh, "_asinh")
 
         for(i in transformed.cols){
-          make.colour.plot(do.subsample(cell.dat, 20000), i, plot.against)
+          fast.colour.plot(do.subsample(cell.dat, 100000), i, plot.against)
         }
 
 ##########################################################################################################
@@ -242,12 +242,12 @@
         test <- do.subsample(cell.dat, sub.targets.batch, divide.by = batch.col)
         test
         
-        test <- run.fitsne(test, raw.cols, perplexity = 200)
+        test <- run.umap(test, raw.cols)
         test
         
-        make.colour.plot(test, 'FItSNE_X', 'FItSNE_Y', batch.col)
-        make.multi.plot(test, 'FItSNE_X', 'FItSNE_Y', cellular.cols)
-        make.multi.plot(test, 'FItSNE_X', 'FItSNE_Y', batch.col, batch.col)
+        fast.colour.plot(test, 'UMAP_X', 'UMAP_Y', batch.col)
+        fast.multi.plot(test, 'UMAP_X', 'UMAP_Y', cellular.cols)
+        fast.multi.plot(test, 'UMAP_X', 'UMAP_Y', batch.col, batch.col)
     
     ### Alignment test
         
@@ -264,19 +264,18 @@
         
         test[,..aligned.cols]
         
-        test <- run.fitsne(test, aligned.cols, perplexity = 200, fitsne.x.name = 'FItSNE_X_Integrated', fitsne.y.name = 'FItSNE_Y_Integrated')
+        test <- run.umap(test, aligned.cols, umap.x.name = 'UMAP_X_Integrated', umap.y.name = 'UMAP_Y_Integrated')
         test
         
-        make.colour.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col)
-        
-        make.multi.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', raw.cols, figure.title = 'Raw cols')
-        make.multi.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', aligned.cols, figure.title = 'Aligned cols')
-        make.multi.plot(test, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col, batch.col)
+        fast.colour.plot(test, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', batch.col)
+        fast.multi.plot(test, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', raw.cols, figure.title = 'Raw cols')
+        fast.multi.plot(test, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', aligned.cols, figure.title = 'Aligned cols')
+        fast.multi.plot(test, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', batch.col, batch.col)
         
     ### Comparison plots
 
         for(i in raw.cols){
-          make.colour.plot(test, paste0(i, '_rPCA_aligned'), i, batch.col)
+          fast.colour.plot(test, paste0(i, '_rPCA_aligned'), i, batch.col)
         }
         
     ### Clean up
@@ -304,21 +303,21 @@
         batch.sub <- do.subsample(cell.dat, sub.targets.batch, divide.by = batch.col)
         batch.sub
         
-        batch.sub <- run.fitsne(batch.sub, aligned.cols, perplexity = 200, fitsne.x.name = 'FItSNE_X_Integrated', fitsne.y.name = 'FItSNE_Y_Integrated')
+        batch.sub <- run.umap(batch.sub, aligned.cols, umap.x.name = 'UMAP_X_Integrated', umap.y.name = 'UMAP_Y_Integrated')
         batch.sub
         
     ### Plots
         
-        make.colour.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col)
+        fast.colour.plot(batch.sub, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', batch.col)
         
-        make.multi.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', raw.cols, figure.title = 'Raw cols')
-        make.multi.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', aligned.cols, figure.title = 'Aligned cols')
-        make.multi.plot(batch.sub, 'FItSNE_X_Integrated', 'FItSNE_Y_Integrated', batch.col, batch.col)
+        fast.multi.plot(batch.sub, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', raw.cols, figure.title = 'Raw cols')
+        fast.multi.plot(batch.sub, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', aligned.cols, figure.title = 'Aligned cols')
+        fast.multi.plot(batch.sub, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', batch.col, batch.col)
     
     ### Comparison plots
         
         for(i in raw.cols){
-          make.colour.plot(batch.sub, paste0(i, '_rPCA_aligned'), i, batch.col)
+          fast.colour.plot(batch.sub, paste0(i, '_rPCA_aligned'), i, batch.col)
         }
         
 ##########################################################################################################
@@ -347,14 +346,14 @@
         cell.sub <- do.subsample(cell.dat, sub.targets.group, group.col)
         cell.sub
         
-        cell.sub <- run.fitsne(cell.sub, cluster.cols, perplexity = 200)
+        cell.sub <- run.umap(cell.sub, cluster.cols)
         cell.sub
 
     ### DR plots
 
-        make.colour.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "FlowSOM_metacluster", col.type = 'factor', add.label = TRUE)
-        make.multi.plot(cell.sub, "FItSNE_X", "FItSNE_Y", cellular.cols)
-        make.multi.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "FlowSOM_metacluster", group.col, col.type = 'factor')
+        fast.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "FlowSOM_metacluster", col.type = 'factor', add.label = TRUE)
+        fast.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", cellular.cols)
+        fast.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "FlowSOM_metacluster", group.col, col.type = 'factor')
 
     ### Expression heatmap
 
@@ -392,8 +391,8 @@
         cell.sub <- do.add.cols(cell.sub, "FlowSOM_metacluster", annots, "Values")
         cell.sub
         
-        make.colour.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "Population", col.type = 'factor', add.label = TRUE)
-        make.multi.plot(cell.sub, "FItSNE_X", "FItSNE_Y", "Population", group.col, col.type = 'factor')
+        fast.colour.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", col.type = 'factor', add.label = TRUE)
+        fast.multi.plot(cell.sub, "UMAP_X", "UMAP_Y", "Population", group.col, col.type = 'factor')
 
     ### Expression heatmap
         
