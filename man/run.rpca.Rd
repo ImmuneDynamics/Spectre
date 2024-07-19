@@ -2,10 +2,30 @@
 % Please edit documentation in R/run.rpca.R
 \name{run.rpca}
 \alias{run.rpca}
-\title{run.rpca}
+\title{Run rPCA for batch correction}
 \usage{
 run.rpca(dat, use.cols, batch.col, reference = NULL, k.anchor = 5)
 }
+\arguments{
+\item{dat}{NO DEFAULT. A data.table}
+
+\item{use.cols}{NO DEFAULT.
+A vector of character column names to apply batch correction to.}
+
+\item{batch.col}{Character. The column in the data in data.table that identifies
+which batch each cell belongs to.}
+
+\item{reference}{DEFAULT NULL. Whether to align to batches to a given batch.
+If yes, then supply this parameter with the name of the batch you want to align the other batches to.}
+
+\item{k.anchor}{DEFAULT 5. Passed to Seurat's FindIntegrationAnchors function.
+Essentially, it determines the number of neighbors (k) to use when
+Seurat's FindIntegrationAnchors is picking anchors.}
+}
+\value{
+batch corrected data.table
+}
 \description{
-run.rpca
+Use Seurat rPCA to do batch correction.
+For more details on rPCA, see https://satijalab.org/seurat/articles/integration_rpca.html.
 }
