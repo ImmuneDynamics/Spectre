@@ -1,8 +1,24 @@
-#' run.rpca
+#' Run rPCA for batch correction
+#' 
+#' Use Seurat rPCA to do batch correction.
+#' For more details on rPCA, see https://satijalab.org/seurat/articles/integration_rpca.html.
 #'
-#' @import data.table
+#' @param dat NO DEFAULT. A data.table
+#' @param use.cols NO DEFAULT. 
+#' A vector of character column names to apply batch correction to.
+#' @param batch.col Character. The column in the data in data.table that identifies
+#' which batch each cell belongs to.
+#' @param reference DEFAULT NULL. Whether to align to batches to a given batch.
+#' If yes, then supply this parameter with the name of the batch you want to align the other batches to.
+#' @param k.anchor DEFAULT 5. Passed to Seurat's FindIntegrationAnchors function.
+#' Essentially, it determines the number of neighbors (k) to use when 
+#' Seurat's FindIntegrationAnchors is picking anchors.
 #'
+#' @return batch corrected data.table
+#'
+#' 
 #' @export
+#' 
 
 run.rpca <- function(dat,
                      use.cols,
