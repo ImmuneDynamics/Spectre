@@ -264,7 +264,7 @@
         
         test[,..aligned.cols]
         
-        test <- run.umap(test, aligned.cols, umap.x.name = 'UMAP_X_Integrated', umap.x.name = 'UMAP_Y_Integrated')
+        test <- run.umap(test, aligned.cols, umap.x.name = 'UMAP_X_Integrated', umap.y.name = 'UMAP_Y_Integrated')
         test
         
         make.colour.plot(test, 'UMAP_X_Integrated', 'UMAP_Y_Integrated', batch.col)
