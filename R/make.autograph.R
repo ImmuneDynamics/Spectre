@@ -26,7 +26,9 @@
 #' @param max.y DEFAULT = 1.4. Multiplier for plot heigh -- allowing room for stats.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #'
-#' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, y.axis.label, grp.order, title, filename, scale, dot.size, width, height, path)
+#' @usage make.autograph(dat, x.axis, y.axis, colour.by, colours, 
+#' y.axis.label, grp.order, title, filename, scale, dot.size, width, 
+#' height, path)
 #'
 #' @examples
 #' dat <- data.frame(Samples = c("Mock_01", "Mock_02", "Mock_03", "WNV_01", "WNV_02", "WNV_03"),

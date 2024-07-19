@@ -1,8 +1,10 @@
 #' Statistical analysis
 #'
 #' @import data.table
+#' 
+#' @usage NULL
 #'
-#' @export
+#' @export do.stats
 
 do.stats <- function(dat,
                      use.cols,
@@ -15,6 +17,6 @@ do.stats <- function(dat,
                      pairwise.test = "wilcox.text", ## Add t-test
                      corrections = "fdr"){
   
- message("The 'do.stats' function has been depreciated. Please use 'create.stats' instead")
+ warning("'do.stats' function has been depreciated. Please use 'create.stats' instead")
   
 }

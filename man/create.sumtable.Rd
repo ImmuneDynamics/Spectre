@@ -2,7 +2,7 @@
 % Please edit documentation in R/create.sumtable.R
 \name{create.sumtable}
 \alias{create.sumtable}
-\title{create.sumtables - create a data.table 'summarising' cellular data by sample and population/cluster.}
+\title{create.sumtable - create a data.table 'summarising' cellular data by sample and population/cluster.}
 \usage{
 create.sumtable(dat, sample.col, pop.col, use.cols, annot.cols, counts, func, sep)
 }
@@ -35,7 +35,8 @@ This function summarises cellular data and generates a summary data.table
 \examples{
 ## Calculate and export results from demonstration data
 dat <- Spectre::demo.clustered
-counts <- data.frame('Sample' = unique(dat[['Sample']]), 'Counts' = c(rep(100000, 6), rep(1000000, 6)))
+counts <- data.frame('Sample' = unique(dat[['Sample']]), 
+'Counts' = c(rep(100000, 6), rep(1000000, 6)))
 
 sum.dat <- create.sumtable(dat = dat,
                             sample.col = "Sample",

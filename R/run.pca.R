@@ -38,19 +38,22 @@
 #' @param var.numb DEFAULT = 20. Top number of variables to be plotted. Note the greater the number, the longer plots will take.
 #' @param path DEFAULT = getwd(). The location to save plots. By default, will save to current working directory. Can be overidden.
 #' 
-#' @usage run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, comp.no = 2, variable.contribution = TRUE, plot.individuals = TRUE, plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", pointsize.group = 1.5, ellipse.type = "confidence", ellipse.level = 0.95, mean.point = TRUE, randomise.order = TRUE, order.seed = 42, plot.variables = TRUE, colour.var = "solid", plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
+#' @usage run.pca(dat, use.cols, scale = TRUE, add.pca.col = FALSE, 
+#' pca.col.no = 50, pca.lite = FALSE, scree.plot = TRUE, comp.no = 2, 
+#' variable.contribution = TRUE, plot.individuals = TRUE, 
+#' plot.ind.label = "point", pointsize.ind = 1.5, row.names = NULL, 
+#' plot.ind.group = FALSE, group.ind = NULL, colour.group = "viridis", 
+#' pointsize.group = 1.5, ellipse.type = "confidence", 
+#' ellipse.level = 0.95, mean.point = TRUE, 
+#' randomise.order = TRUE, order.seed = 42, 
+#' plot.variables = TRUE, colour.var = "solid", 
+#' plot.combined = TRUE, repel = FALSE, var.numb = 20, path = getwd())
 #'
 #' @examples
 #' # Set directory to save files. By default it will save files at get()
-#' setwd("/Users/felixmarsh-wakefield/Desktop")
 #' 
 #' # Run PCA on demonstration dataset, adding PC to dataset
 #' dat <- Spectre::demo.clustered
-#' dat <- test.pca(dat = dat,
-#'                         use.cols = c(11:19),
-#'                         add.pca.col = TRUE,
-#'                         pca.lite = TRUE
-#'                         )
 #'                         
 #' # Run PCA on demonstration dataset
 #' Spectre::run.pca(dat = Spectre::demo.clustered,
@@ -59,6 +62,7 @@
 #'                 )
 #' 
 #' # Compare between groups
+#' \dontrun{
 #' Spectre::run.pca(dat = Spectre::demo.clustered,
 #'                  use.cols = c(11:19),
 #'                  comp.no = NULL,
@@ -68,18 +72,23 @@
 #'                  mean.point = FALSE,
 #'                  randomise.order = TRUE
 #'                  )
+#' }
 #'         
-#' # When prompted, type in "5" and click enter to continue function (this selects the elbow point based off the scree plot)
+#' # When prompted, type in "5" and click enter to continue function 
+#' # (this selects the elbow point based off the scree plot)
 #' 
 #' ## Possible issues ##
 #' # Remove any NA present
 #' na.omit(dat)
 #' 
-#' # Remove columns that have zero variance (e.g. if MFI is the same for all samples for a marker)
+#' # Remove columns that have zero variance (e.g. if MFI is the same for all 
+#' # samples for a marker)
 #' dat <- data.table::as.data.table(dat)
-#' dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] #for data table format
+#' dat <- dat[ , lapply(.SD, function(v) if(data.table::uniqueN(v, na.rm = TRUE) > 1) v)] 
 #' 
-#' # Ellipses are only generated in 'plot.ind.group' when there are at least 2 samples per group ('group.ind')
+#' 
+#' # Ellipses are only generated in 'plot.ind.group' when there are at least 
+#' # 2 samples per group ('group.ind')
 #' 
 #' @author Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' @export

@@ -17,12 +17,16 @@
 #' @param meta.clust.name DEFAULT = "FlowSOM_metacluster". Character. Name of the resulting 'metacluster' parameter.
 #' @param mem.ctrl DEFAULT = TRUE. Runs gc() (garbage collection) after a number of steps to free up memory that hasn't been released quickly enough.
 #'
-#' @usage run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, meta.seed, clust.name, meta.clust.name)
+#' @usage run.flowsom(dat, use.cols, meta.k, xdim, ydim, clust.seed, 
+#' meta.seed, clust.name, meta.clust.name)
 #'
 #' @examples
 #' # Run FlowSOM on demonstration dataset
-#' res <- Spectre::run.flowsom(Spectre::demo.asih,
-#'                             use.cols = names(demo.asinh)[c(11:19)])
+#' res <- Spectre::run.flowsom(Spectre::demo.clustered,
+#'                             use.cols = c("NK11_asinh", "CD3_asinh", 
+#'                             "CD45_asinh", "Ly6G_asinh", "CD11b_asinh", 
+#'                             "B220_asinh", "CD8a_asinh", "Ly6C_asinh", 
+#'                             "CD4_asinh"))
 #'
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}

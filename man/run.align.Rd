@@ -29,10 +29,6 @@ Returns a data.table with aligned data added in new columns.
 \description{
 This function allows you to prepare reference data ahead of performing batch alignment, using on of the CytofBatchAdjust functions
 }
-\examples{
-cell.dat <- run.align()
-
-}
 \references{
 Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 }

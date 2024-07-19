@@ -16,14 +16,16 @@ Returns a data.table with clustering results added
 This function allows you to perform phenograph clustering on a data.table
 }
 \examples{
-
-cell.dat <- Spectre::demo.asinh
+\dontrun{
+cell.dat <- Spectre::demo.clustered
 cell.dat <- Spectre::do.subsample(cell.dat, 5000)
 
-use.cols <- names(cell.dat)[c(11:19)]
+use.cols <- c("NK11_asinh", "CD3_asinh", "CD45_asinh", 
+"Ly6G_asinh", "CD11b_asinh", "B220_asinh", "CD8a_asinh", 
+"Ly6C_asinh", "CD4_asinh")
 
 cell.dat <- run.phenograph(dat = cell.dat, use.cols = use.cols)
-
+}
 }
 \references{
 Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}

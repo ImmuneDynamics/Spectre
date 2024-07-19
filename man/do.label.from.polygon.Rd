@@ -4,15 +4,8 @@
 \alias{do.label.from.polygon}
 \title{do.label.from.polygon}
 \usage{
-do.label.from.polygon(
-  spatial.dat,
-  cell.dat,
-  mask,
-  labels,
-  name = "Label",
-  id.col = "ID",
-  roi.col = "ROI"
-)
+do.label.from.polygon(spatial.dat, cell.dat, mask, labels,
+name = "Label", id.col = 'ID', roi.col = 'ROI')
 }
 \description{
 do.label.from.polygon

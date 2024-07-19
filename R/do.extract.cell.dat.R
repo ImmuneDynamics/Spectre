@@ -2,7 +2,9 @@
 #' 
 #' @import data.table
 #' 
-#' @export
+#' @usage do.extract.cell.dat(spatial.dat, target.dat)
+#' 
+#' @export do.extract.cell.dat
 
 do.extract.cell.dat <- function(spatial.dat,
                                 target.dat){

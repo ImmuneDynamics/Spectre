@@ -1,5 +1,5 @@
 # Get base image. Tidyverse R studio
-FROM rocker/geospatial:4.1.0
+FROM rocker/geospatial:4.4.0
 LABEL maintainer="Thomas Ashhurst <thomas.ashhurst@sydney.edu.au>"
 
 # Set Locale to utf-8
@@ -15,60 +15,42 @@ RUN apt-get update --fix-missing && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-
-
-
-
-
 # Install all the packages Spectre depends on
-RUN install2.r --error  devtools \
-			data.table \
-                        plyr \
-                        dplyr \
-                        tidyr \
-                        rstudioapi \
-                        Rtsne \
-                        umap \
-                        ggplot2 \
-                        ggthemes \
-                        scales \
+RUN install2.r --error  remotes \
                         colorRamps \
-                        RColorBrewer \
-                        gridExtra \
-                        reticulate \
-                        pheatmap \
+			            data.table \
+                        dendsort \
+                        factoextra \
+                        ggplot2 \
                         ggpointdensity \
                         ggpubr \
-                        viridis \
-                        BiocManager \
-			gtools \
-                        tidygraph \
-                        ggraph \
-                        stringr \
-                        caret \
-                        FNN \
-                        factoextra \
-			raster \
-                        tiff \
-                        rgeos \
-                        tidyr \
-                        sp \
-                        stars \
-                        qs \
-                        s2 \
-                        exactextractr \
-			sf
+                        ggthemes \
+                        gridExtra \
+                        gtools \
+                        irlba \
+                        parallel \
+                        patchwork \
+                        pheatmap \
+                        RColorBrewer \
+                        rstudioapi \
+                        rsvd \
+                        Rtsne \
+                        scales \
+                        scattermore \
+                        umap \
+                        uwot \
+			            viridis
 
 # Install Spectre dependencies from Bioconductor
-RUN R -e "library(BiocManager); BiocManager::install(c('flowCore', 'Biobase', 'flowViz', 'FlowSOM', 'rhdf5', 'HDF5Array'), dependencies=TRUE)"
+RUN R -e "library(BiocManager); BiocManager::install(c('flowCore', 'FlowSOM'), dependencies=TRUE)"
      
                  
 # Install Spectre package. Master branch
-RUN R -e "library(devtools); install_github('ImmuneDynamics/Spectre')"
+RUN R -e "library(remotes); install_github('ImmuneDynamics/Spectre')"
 
 
 # Install cytonorm package.
-RUN R -e "library(devtools); install_github('saeyslab/CytoNorm')"
+RUN R -e "library(remotes); install_github('saeyslab/CytoNorm')"
 
 
 # Install miniconda for ChronoClust

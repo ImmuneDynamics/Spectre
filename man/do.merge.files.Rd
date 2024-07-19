@@ -5,6 +5,8 @@
 \title{do.merge.files - Function to merge a list of data.tables (one data.table per 'sample') into a single large data.table.}
 \usage{
 do.merge.files(dat, remove.duplicates)
+
+do.merge.files(dat, remove.duplicates = TRUE)
 }
 \arguments{
 \item{dat}{NO DEFAULT. List of data.tables (or data.frames)}
@@ -18,7 +20,12 @@ Returns a combined data.table.
 do.merge.files - Function to merge a list of data.tables (one data.table per 'sample') into a single large data.table.
 }
 \examples{
+data.list <- list(
+"01_Mock_01" = Spectre::demo.clustered[Sample == '01_Mock_01'],
+"02_Mock_02" = Spectre::demo.clustered[Sample == '02_Mock_02']
+)
 cell.dat <- do.merge.files(dat = data.list, remove.duplicates = TRUE)
+head(cell.dat)
 
 }
 \references{

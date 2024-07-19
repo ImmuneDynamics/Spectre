@@ -49,7 +49,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
       require('data.table')
       require('raster')
       require('rhdf5')
-      require('HDF5Array')
+      # require('HDF5Array')
   
   ### Testing
   
@@ -326,7 +326,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
             if(!is.null(random.crop.x)){
               if(!is.null(random.crop.y)){
                 
-                if(!paste0(i, "_crop.h5") %in% list.files(getwd())){
+                if(paste0(i, "_crop.h5") %in% list.files(getwd())){
                   file.remove(paste0(i, "_crop.h5"))
                 }
 
@@ -347,7 +347,7 @@ write.hdf5 <- function(dat, # SpectreMAP object
               
             } else {
               
-              if(!paste0(i, ".h5") %in% list.files(getwd())){
+              if(paste0(i, ".h5") %in% list.files(getwd())){
                 file.remove(paste0(i, ".h5"))
               }
               

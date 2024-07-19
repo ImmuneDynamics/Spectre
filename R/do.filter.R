@@ -15,7 +15,7 @@
 #'
 #' @import data.table
 #' 
-#' @export
+#' @export do.filter
 
 do.filter <- function(dat,
                       use.col,

@@ -15,7 +15,7 @@
 #'
 #' @import data.table
 #' 
-#' @export
+#' @export do.reorder
 
 do.reorder <- function(dat,
                        use.col,

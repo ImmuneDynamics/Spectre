@@ -14,8 +14,10 @@
 #' @return A data.table with new columns added, that contain the asinh transformed data.
 #'
 #' @import data.table
+#' 
+#' @usage do.asinh(dat, use.cols, cofactor=5, append.cf=FALSE, reduce.noise=FALSE)
 #'
-#' @export
+#' @export do.asinh
 
 do.asinh <- function(dat,
                      use.cols,

@@ -13,16 +13,18 @@
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
 #' @references \url{https://github.com/ImmuneDynamics/Spectre}.
+#' 
+#' @usage do.add.masks(dat, mask.dir, mask.pattern, mask.label,correct.extent = TRUE, 
+#' flip.y = TRUE, value.modifier = 65535, HDF5 = FALSE, array = FALSE)
 #'
 #' @import data.table
 #'
-#' @export
+#' @export do.add.masks
 
 do.add.masks <- function(dat, # list of spatial objects
                          mask.dir,
                          mask.pattern,
                          mask.label,
-                      
                          correct.extent = TRUE,
                          flip.y = TRUE,
                          value.modifier = 65535,
@@ -34,7 +36,7 @@ do.add.masks <- function(dat, # list of spatial objects
   
       require('raster')
       require('rhdf5')
-      require('HDF5Array')
+      # require('HDF5Array')
   
   ###
   
@@ -46,7 +48,7 @@ do.add.masks <- function(dat, # list of spatial objects
 
       message('Reading in mask files')
   
-      if(class(dat) != 'list'){
+      if(!is.list(dat)){
         stop("Your input data 'dat' needs to be a list of spectre spatial objects")
       }
 

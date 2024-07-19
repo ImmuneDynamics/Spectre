@@ -26,10 +26,13 @@ Returns the data.table with new columns embedded.
 do.add.cols
 }
 \examples{
-add.dt <- data.table('Files' = unique(Spectre::demo.asinh$FileName),
+library(data.table)
+dat <- Spectre::demo.clustered[,1:19]
+
+add.dt <- data.table('Files' = unique(dat$FileName),
                      'SampleNumber' = c(1:12))
 
-cell.dat <- do.add.cols(dat = Spectre::demo.asinh,
+cell.dat <- do.add.cols(dat = dat,
                         base.col = "FileName",
                         add.dat = add.dt,
                         add.by = "Files")

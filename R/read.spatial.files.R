@@ -10,7 +10,6 @@
 #'
 #' @return Returns a list of spatial data objects.
 #'
-#' @examples
 #'
 #' @import data.table
 #'
@@ -77,8 +76,8 @@ read.spatial.files <- function(dir,
             message("  -- reading single band in TIFF:", i)
             tiff.list[[i]] <- raster(tiff.list[[i]])
           }
-
-          if(class(tiff.list[[i]]) != 'matrix'){
+          if(! is.matrix(tiff.list[[i]])){
+          # if(class(tiff.list[[i]]) != 'matrix'){
             if('array' %in% class(tiff.list[[i]])){
 
               message("  -- merging multiple bands in TIFF:", i)

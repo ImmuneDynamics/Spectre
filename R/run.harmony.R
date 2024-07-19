@@ -54,8 +54,6 @@
 #'
 #' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #'
-#' @examples
-#' cell.dat <- run.harmony()
 #'
 #' @import data.table
 #'

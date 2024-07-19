@@ -11,6 +11,8 @@ read.files(file.loc, file.type, do.embed.file.names, header)
 
 \item{file.type}{DEFAULT = ".csv". What type of files do you want to read. Can be ".csv" or ".fcs".}
 
+\item{files}{DEFAULT = NULL. A vector of selected file names to import.}
+
 \item{nrows}{DEFAULT = NULL. Can specify a numerical target for the number of cells (rows) to be read from each file. Please note, order is random in FCS files.}
 
 \item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?}
@@ -24,7 +26,14 @@ Returns a list of data.tables -- one per CSV file.
 This function allows you to read in sample files (.csv or .fcs) into a list, where each file is saved as a data.table.
 }
 \examples{
-data.list <- read.files(file.loc = getwd(), file.type = ".csv", do.embed.file.names = TRUE)
+# download sample data
+download.file(url='https://github.com/ImmuneDynamics/data/blob/main/msCNS.zip?raw=TRUE', destfile = 'msCNS.zip', mode = 'wb')
+unzip(zipfile = 'msCNS.zip')
+setwd("msCNS/data")
+data.list <- read.files(file.type = ".csv", do.embed.file.names = TRUE)
+
+# return to previous working directory
+setwd("../../")
 
 }
 \references{
