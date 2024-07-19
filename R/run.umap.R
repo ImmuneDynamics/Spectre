@@ -32,6 +32,10 @@
 #' @param knn.repeats DEFAULT = 1. Numeric. Number of times to restart knn search.
 #' @param verbose DEFAULT = TRUE. Logical. Determines whether to show progress messages.
 #' @param umap_learn_args DEFAULT = NA. Vector. Vector of arguments to python package umap-learn.
+#' @param n_threads DEFAULT "auto". Numeric. Number of threads to use (except during stochastic gradient descent). For nearest neighbor search, only applies if `nn_method = "annoy"`. If `n_threads > 1`, then the Annoy index will be temporarily written to disk in the location determined by tempfile. The default "auto" option will automatically set this to the maximum number of threads in the computer - 1.
+#' @param n_sgd_threads DEFAULT "auto". Number of threads to use during stochastic gradient descent. If set to > 1, then be aware that if `batch = FALSE`, results will not be reproducible, even if `set.seed` is called with a fixed seed before running. Set to "auto" to use the same value as n_threads.
+#' @param batch DEFAULT TRUE. If set to TRUE, then embedding coordinates are updated at the end of each epoch rather than during the epoch. In batch mode, results are reproducible with a fixed random seed even with n_sgd_threads > 1, at the cost of a slightly higher memory use. You may also have to modify learning_rate and increase n_epochs, so whether this provides a speed increase over the single-threaded optimization is likely to be dataset and hardware-dependent.
+#' @param fast DEFAULT TRUE Whether to run uwot implementation of UMAP which is much faster.
 #'
 #' @usage run.umap(dat, use.cols, umap.x.name = "UMAP_X", 
 #' umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, 
