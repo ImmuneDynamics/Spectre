@@ -137,7 +137,7 @@ run.rpca <- function(dat,
       
       ordr <- rbindlist(org.list)
       
-      final <- as.data.table(t(immune.combined@assays$integrated@data))
+      final <- as.data.table(t(as.matrix(immune.combined@assays$integrated@data)))
       final$CELLBARCODE <- ordr
       
       setorderv(final, 'CELLBARCODE')
