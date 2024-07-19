@@ -443,41 +443,7 @@ fast.colour.plot <- function(dat,
         p <- ggplot(data = dat,
                     aes(x = .data[[x.axis]],
                         y = .data[[y.axis]])) +
-            ggpointdensity::geom_pointdensity(size = dot.size)
-        
-        if (colours == "viridis" ||
-            colours == "magma" || colours == "inferno") {
-            p <- p + viridis::scale_colour_viridis(option = colours)
-        } else if (colours == "jet") {
-            p <-
-                p + ggplot2::scale_colour_gradientn(
-                    colours = c(
-                        "#00007F",
-                        "blue",
-                        "#007FFF",
-                        "cyan",
-                        "#7FFF7F",
-                        "yellow",
-                        "#FF7F00",
-                        "red",
-                        "#7F0000"
-                    )
-                )
-        } else if (colours == "spectral") {
-            p <-
-                p + ggplot2::scale_colour_gradientn(colours = rev(
-                    colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(50)
-                ))
-        }
-        
-        # Blue to Purple
-        else if (colours == "BuPu") {
-            colour.list <-
-                (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
-            # colours <- colorRampPalette(c(colour.list))
-            p <-
-                p + ggplot2::scale_colour_gradientn(colours = colour.list)
-        }
+            scattermore::geom_scattermore(size = dot.size)
     }
     
     ### Regression lione
