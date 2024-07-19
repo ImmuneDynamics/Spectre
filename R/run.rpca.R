@@ -52,16 +52,10 @@ run.rpca <- function(dat,
       
       new.names <- paste0('Col', c(1:length(raw.cols)))
       match <- data.table('Start' = raw.cols, 'New' = new.names)
-      match
-      
       dat <- dat[,c(batch.col, raw.cols), with = FALSE]
       names(dat)[c(2:length(names(dat)))] <- new.names
-      dat
-      
       dat$CELLBARCODE <- c(1:nrow(dat))
-      
       batches <- unique(dat[[batch.col]])
-      batches
       
       org.list <- list()
       res.list <- list()
@@ -89,10 +83,7 @@ run.rpca <- function(dat,
         
         rm(rws)
       }
-      
-      org.list
-      res.list
-      
+
       rm(dat)
       gc()
   
@@ -101,8 +92,7 @@ run.rpca <- function(dat,
       message(' -- performing scaling and PCA (2/5)')
       
       features <- SelectIntegrationFeatures(object.list = res.list)
-      features
-      
+
       for(i in batches){
         
         message(paste0('    ...', i))
@@ -124,9 +114,6 @@ run.rpca <- function(dat,
                                                  dims = 1:(length(features)-1), 
                                                  k.anchor = k.anchor,
                                                  reduction = 'rpca')
-        
-        immune.anchors
-        
       }
       
       if(!is.null(reference)){
@@ -136,8 +123,6 @@ run.rpca <- function(dat,
                                                  k.anchor = k.anchor,
                                                  reduction = 'rpca', 
                                                  reference = which(names(res.list) == reference))
-        
-        immune.anchors
       }
   
   ### Integrate the data
@@ -161,12 +146,10 @@ run.rpca <- function(dat,
       
       final <- final[,c(match[[2]]), with = FALSE]
       names(final) <- paste0(match[[1]], '_rPCA_aligned')
-      final
-      
+
       dat.start <- cbind(dat.start, final)
   
   ### Return
   
       return(dat.start)
-  
 }
