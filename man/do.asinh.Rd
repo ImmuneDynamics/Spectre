@@ -4,16 +4,7 @@
 \alias{do.asinh}
 \title{Do ArcSinh transformation}
 \usage{
-do.asinh(
-  dat,
-  use.cols,
-  cofactor = 5,
-  cofactor_inference_method = c("flowVS", "top10"),
-  append.cf = FALSE,
-  reduce.noise = FALSE,
-  digits = NULL,
-  verbose = TRUE
-)
+do.asinh(dat, use.cols, cofactor=5, append.cf=FALSE, reduce.noise=FALSE)
 }
 \arguments{
 \item{dat}{NO DEFAULT.
@@ -36,7 +27,10 @@ flowVS uses the flowVS::estParamFlowVS (be patient as it takes time).
 as the co-factor, and if values are all positive it will use the 10th percentile as co-factor.}
 
 \item{append.cf}{DEFAULT = FALSE. Appends the co-factor used to the end of
-the name of the transformed columns.}
+the name of the transformed columns.
+Regardless of whether this is TRUE or FALSE, the cofactors used for each marker
+will be added as attributes to the returned data.table.
+Use \verb{attributes(<returned_data_table>$cofactors)} to check.}
 
 \item{reduce.noise}{DEFAULT = FALSE. This is an experimental calculation
 which should reduce noise from negative values. Use with caution.}
@@ -47,8 +41,17 @@ Equal to the number or less (i.e. if 9 is used, but only 5 digits are present,
 then 5 digits will be used). Important to control for small floating point
 error differences in different OS.}
 
+\item{add_to_table}{DEFAULT = TRUE
+Whether to add the arcsinh-ed columns into the input data (TRUE) or not (FALSE).
+If FALSE, a new data.table containing the arcsinh-ed columns will be returned.
+If TRUE and there happen to be some existing columns in your input data that share
+the same name as the archsinh-ed markers, they will be overwritten.}
+
 \item{verbose}{DEFAULT = TRUE.
 If TRUE, the function will print progress updates as it executes.}
+}
+\value{
+A data.table with new columns added, that contain the asinh transformed data.
 }
 \description{
 Transform data in selected columns using ArcSinh transformation with a specified co-factor.
@@ -85,7 +88,6 @@ dat_asinh
 # Apply different co-factor to the markers
 dat_asinh <- do.asinh(dat, use.cols=c("NK11", "CD3"), cofactor=c(5,10))
 dat_asinh
-
 
 }
 \references{

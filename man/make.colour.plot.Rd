@@ -87,6 +87,8 @@ By default, will save to current working directory. Can be overidden.}
 any axes?}
 
 \item{return_object}{DEFAULT = FALSE. Whether to return the ggplot object.}
+
+\item{verbose}{DEFAULT = TRUE. Whether to print progress out.}
 }
 \description{
 This function allows you to create a coloured XY plot where each cell is coloured by a

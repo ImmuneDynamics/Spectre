@@ -20,7 +20,7 @@ See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vign
 }
 \examples{
 package.install()
-package.install(type = "spatial")
+package.install(type = 'spatial')
 
 }
 \references{

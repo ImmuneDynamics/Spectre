@@ -22,6 +22,9 @@
 #' as the co-factor, and if values are all positive it will use the 10th percentile as co-factor. 
 #' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of 
 #' the name of the transformed columns.
+#' Regardless of whether this is TRUE or FALSE, the cofactors used for each marker
+#' will be added as attributes to the returned data.table.
+#' Use `attributes(<returned_data_table>$cofactors)` to check.
 #' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation 
 #' which should reduce noise from negative values. Use with caution.
 #' @param digits DEFAULT = NULL. Number of decimal places as a limit, not used if NULL. 
@@ -31,6 +34,11 @@
 #' error differences in different OS.
 #' @param verbose DEFAULT = TRUE.
 #' If TRUE, the function will print progress updates as it executes.
+#' @param add_to_table DEFAULT = TRUE 
+#' Whether to add the arcsinh-ed columns into the input data (TRUE) or not (FALSE).
+#' If FALSE, a new data.table containing the arcsinh-ed columns will be returned.
+#' If TRUE and there happen to be some existing columns in your input data that share
+#' the same name as the archsinh-ed markers, they will be overwritten.
 #' 
 #' @details
 #' ## Specifying different cofactor for different marker
@@ -80,6 +88,7 @@ do.asinh <- function(dat,
                      append.cf = FALSE,
                      reduce.noise = FALSE,
                      digits = NULL,
+                     add_to_table = TRUE,
                      verbose = TRUE) {
     
     if (verbose) {
@@ -146,7 +155,6 @@ do.asinh <- function(dat,
             cofactor_inference_method = cofactor_inference_method,
             use.cols = use.cols
         )
-        # TODO: is this a good thing?
         # automatically append the co-factor.
         # append.cf <- TRUE
         
@@ -200,12 +208,19 @@ do.asinh <- function(dat,
         value <- round(value, digits = digits)
     }
     
+    # needed so add_to_data_table works properly
+    value <- data.table(value)
+    
     names(cofactor) <- use.cols
-    res_to_return <- list(
-        transformed_val = value,
-        cofactors = cofactor
-    )
-    return(res_to_return)
+    
+    if (add_to_table) {
+        res_to_return <- add_to_data_table(dat, value)
+        attr(res_to_return, "cofactors") <- cofactor
+        return(res_to_return)
+    } else {
+        attr(value, "cofactors") <- cofactor
+        return(value)
+    }
     
 }
 

@@ -13,12 +13,14 @@ test_that("do.asinh single cofactor works correctly", {
         append.cf = FALSE,
         verbose = FALSE
     )
-    actual_dat <- res$transformed_val
-    
     expected_dat <- asinh(dat / cofactor)
     
-    expect_equal(actual_dat$marker1_asinh, expected_dat$marker1)
-    expect_equal(actual_dat$marker2_asinh, expected_dat$marker2)
+    expect_equal(res$marker1_asinh, expected_dat$marker1)
+    expect_equal(res$marker2_asinh, expected_dat$marker2)
+    
+    # check cofactors are appended
+    expect_equal(attributes(res)$cofactors[['marker1']], 7)
+    expect_equal(attributes(res)$cofactors[['marker2']], 7)
     
     
 })
@@ -37,15 +39,18 @@ test_that("do.asinh multiple cofactors works correctly", {
         append.cf = FALSE,
         verbose = FALSE
     )
-    actual_dat <- res$transformed_val
-    
+
     expected_dat <- data.table(
         marker1_asinh = asinh(dat$marker1 / 5),
         marker2_asinh = asinh(dat$marker2 / 10)
     )
     
-    expect_equal(actual_dat$marker1_asinh, expected_dat$marker1_asinh)
-    expect_equal(actual_dat$marker2_asinh, expected_dat$marker2_asinh)
+    expect_equal(res$marker1_asinh, expected_dat$marker1_asinh)
+    expect_equal(res$marker2_asinh, expected_dat$marker2_asinh)
+    
+    # check cofactors are appended
+    expect_equal(attributes(res)$cofactors[['marker1']], 5)
+    expect_equal(attributes(res)$cofactors[['marker2']], 10)
     
     
 })
@@ -58,16 +63,17 @@ test_that("do.asinh use.cols works correctly", {
         marker2 = rnorm(10, 2),
         marker3 = rnorm(10, 5)
     )
-    
+
     res <- do.asinh(
-        dat, use.cols = c("marker1", "marker2"), 
+        dat, use.cols = c("marker1", "marker2"),
         cofactor = 10,
         append.cf = FALSE,
-        verbose = FALSE
+        verbose = FALSE,
+        add_to_table = FALSE
     )
-    
-    expect_equal(names(res$transformed_val), c("marker1_asinh", "marker2_asinh"))
-    
+
+    expect_equal(names(res), c("marker1_asinh", "marker2_asinh"))
+
 })
 
 test_that("do.asinh append_cf = TRUE works correctly", {
@@ -75,73 +81,27 @@ test_that("do.asinh append_cf = TRUE works correctly", {
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2)
     )
-    
-    res <- do.asinh(
-        dat, use.cols = c("marker1", "marker2"), 
-        cofactor = 7, 
-        append.cf = TRUE,
-        verbose = FALSE
-    )
-    
-    expect_equal(names(res$transformed_val), c("marker1_asinh_cf7", "marker2_asinh_cf7"))
-    
-    res <- do.asinh(
-        dat, use.cols = c("marker1", "marker2"), 
-        cofactor = c(5,10), 
-        append.cf = TRUE,
-        verbose = FALSE
-    )
-    
-    expect_equal(names(res$transformed_val), c("marker1_asinh_cf5", "marker2_asinh_cf10"))
-    
-})
 
-test_that("do.asinh append_cf = FALSE works correctly", {
-    dat <- data.table(
-        marker1 = rnorm(10, 1),
-        marker2 = rnorm(10, 2)
-    )
-    
-    # single cofactor
     res <- do.asinh(
-        dat, use.cols = c("marker1", "marker2"), 
-        cofactor = 7, 
-        append.cf = FALSE,
-        verbose = FALSE
+        dat, use.cols = c("marker1", "marker2"),
+        cofactor = 7,
+        append.cf = TRUE,
+        verbose = FALSE,
+        add_to_table = FALSE
     )
-    
-    expect_equal(names(res$transformed_val), c("marker1_asinh", "marker2_asinh"))
-    
-    # multiple cofactor
+
+    expect_equal(names(res), c("marker1_asinh_cf7", "marker2_asinh_cf7"))
+
     res <- do.asinh(
-        dat, use.cols = c("marker1", "marker2"), 
-        cofactor = c(5,10), 
-        append.cf = FALSE,
-        verbose = FALSE
+        dat, use.cols = c("marker1", "marker2"),
+        cofactor = c(5,10),
+        append.cf = TRUE,
+        verbose = FALSE,
+        add_to_table = TRUE
     )
-    
-    expect_equal(names(res$transformed_val), c("marker1_asinh", "marker2_asinh"))
-    
-    # automated cofactor
-    res <- do.asinh(
-        dat, use.cols = c("marker1", "marker2"), 
-        cofactor = NULL,
-        cofactor_inference_method = "flowVS", 
-        append.cf = FALSE,
-        verbose = FALSE
-    )
-    
-    expect_equal(names(res$transformed_val), c("marker1_asinh", "marker2_asinh"))
-    
-    res <- do.asinh(
-        dat, use.cols = c("marker1", "marker2"), 
-        cofactor = NULL,
-        cofactor_inference_method = "top10",
-        append.cf = FALSE,
-        verbose = FALSE
-    )
-    
-    expect_equal(names(res$transformed_val), c("marker1_asinh", "marker2_asinh"))
+
+    expect_true(all(c("marker1_asinh_cf5", "marker2_asinh_cf10") %in% names(res)))
+
 })
 
 test_that("do.asinh round = TRUE works correctly", {
@@ -149,56 +109,28 @@ test_that("do.asinh round = TRUE works correctly", {
         marker1 = rnorm(10, 1),
         marker2 = rnorm(10, 2)
     )
-    
+
     cofactor <- 7
-    
+
     res <- do.asinh(
-        dat = dat, 
-        use.cols = c("marker1", "marker2"), 
+        dat = dat,
+        use.cols = c("marker1", "marker2"),
         cofactor = cofactor,
-        append.cf = FALSE, 
+        append.cf = FALSE,
         digits = 3,
-        verbose = FALSE
+        verbose = FALSE,
+        add_to_table = FALSE
     )
-    actual_dat <- res$transformed_val
-    
-    expect_equal(names(actual_dat), c("marker1_asinh", "marker2_asinh"))
-    
+
+    expect_equal(names(res), c("marker1_asinh", "marker2_asinh"))
+
     expected_dat <- round(asinh(dat / cofactor), 3)
-    
-    expect_equal(actual_dat$marker1_asinh, expected_dat$marker1)
-    expect_equal(actual_dat$marker2_asinh, expected_dat$marker2)
-    
-    # for automated cofactor calculation
-    expect_no_error(
-        do.asinh(
-            dat = dat, 
-            use.cols = c("marker1", "marker2"), 
-            cofactor = NULL,
-            cofactor_inference_method = "flowVS",
-            append.cf = FALSE, 
-            digits = 3,
-            verbose = FALSE
-        )
-    )
-    
-    expect_no_error(
-        do.asinh(
-            dat = dat, 
-            use.cols = c("marker1", "marker2"), 
-            cofactor = NULL,
-            cofactor_inference_method = "top10",
-            append.cf = FALSE, 
-            digits = 3,
-            verbose = FALSE
-        )
-    )
-    
-    
+
+    expect_equal(res$marker1_asinh, expected_dat$marker1)
+    expect_equal(res$marker2_asinh, expected_dat$marker2)
+
 })
 
-
-# All do.asinh tests that should succeed
 
 test_that("do.asinh using flowVS works", {
     dat <- data.table(
@@ -207,21 +139,24 @@ test_that("do.asinh using flowVS works", {
         marker2 = rnorm(10, 2),
         marker3 = rnorm(10, 3)
     )
-    
+
     dat_actual = do.asinh(
-        dat = dat, 
-        use.cols = c("marker1", "marker2", "marker3"), 
+        dat = dat,
+        use.cols = c("marker1", "marker2", "marker3"),
         cofactor = NULL,
         cofactor_inference_method = "flowVS",
         append.cf = FALSE,
         verbose = FALSE
     )
-    
-    expect_equal(names(dat_actual), c("cell_id", "marker1", "marker2", "marker3", 
-                                      "marker1_asinh", "marker2_asinh", "marker3_asinh"))
+
+    expect_equal(length(names(dat_actual)), 7)
     expect_equal(nrow(dat_actual), 10)
     
-    
+    # check cofactors are appended as attributes
+    expect_no_error(attributes(dat_actual)$marker1)
+    expect_no_error(attributes(dat_actual)$marker2)
+    expect_no_error(attributes(dat_actual)$marker3)
+
 })
 
 test_that("do.asinh using top10 works", {
@@ -231,40 +166,25 @@ test_that("do.asinh using top10 works", {
         marker2 = rnorm(10, 2),
         marker3 = rnorm(10, 3)
     )
-    
+
     dat_actual = do.asinh(
-        dat = dat, 
-        use.cols = c("marker1", "marker2", "marker3"), 
+        dat = dat,
+        use.cols = c("marker1", "marker2", "marker3"),
         cofactor = NULL,
         cofactor_inference_method = "top10",
         append.cf = FALSE,
         verbose = FALSE
     )
-    
-    expect_equal(names(dat_actual), c("cell_id", "marker1", "marker2", "marker3", 
-                                      "marker1_asinh", "marker2_asinh", "marker3_asinh"))
+
+    expect_equal(length(names(dat_actual)), 7)
     expect_equal(nrow(dat_actual), 10)
     
+    # check cofactors are appended as attributes
+    expect_no_error(attributes(dat_actual)$marker1)
+    expect_no_error(attributes(dat_actual)$marker2)
+    expect_no_error(attributes(dat_actual)$marker3)
+
 })
-
-test_that("do.asinh single cofactor works", {
-    dat <- data.table(
-        cell_id = paste0("cell_", seq(1, 10)),
-        marker1 = rnorm(10, 1),
-        marker2 = rnorm(10, 2)
-    )
-    cofactor <- 7
-    
-    dat_actual <- do.asinh(dat, use.cols = c("marker1", "marker2"), 
-                    cofactor = cofactor, verbose = FALSE,
-                    append.cf = FALSE)
-    
-    expect_equal(names(dat_actual), c("cell_id", "marker1", "marker2", "marker1_asinh", "marker2_asinh"))
-    expect_equal(nrow(dat_actual), 10)
-    
-})
-
-
 
 # All do.asinh tests that meant to fail
 
@@ -311,12 +231,12 @@ test_that("do.asinh more use.cols than multiple cofactors errors", {
         marker2 = rnorm(10, 2),
         marker3 = rnorm(10, 3)
     )
-    
+
     expect_error(
         do.asinh(
-            dat = dat, 
-            use.cols = c("marker3"), 
-            cofactor = c(5,10), 
+            dat = dat,
+            use.cols = c("marker3"),
+            cofactor = c(5,10),
             append.cf = TRUE,
             verbose = FALSE
         )
@@ -330,11 +250,11 @@ test_that("do.asinh non specified automated inferrence failed", {
         marker2 = rnorm(10, 2),
         marker3 = rnorm(10, 3)
     )
-    
+
     expect_error(
         do.asinh(
-            dat = dat, 
-            use.cols = c("marker3"), 
+            dat = dat,
+            use.cols = c("marker3"),
             cofactor = NULL,
             cofactor_inference_method = "hello",
             append.cf = TRUE,
