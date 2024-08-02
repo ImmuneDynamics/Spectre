@@ -211,14 +211,27 @@ do.asinh <- function(dat,
     # needed so add_to_data_table works properly
     value <- data.table(value)
     
-    names(cofactor) <- use.cols
+    # better than just having use.cols because it matches the actual
+    # column names and the cofactor used.
+    # Users just have to work out which actual markers those columns refer to.
+    names(cofactor) <- names(value)
     
     if (add_to_table) {
         res_to_return <- add_to_data_table(dat, value)
-        attr(res_to_return, "cofactors") <- cofactor
+        
+        # update existing cofactors if they are already there.
+        existing_cofactors <- attributes(res_to_return)$cofactors
+        if (is.null(existing_cofactors)) {
+            setattr(res_to_return, "cofactors", cofactor)
+        } else {
+            # https://stackoverflow.com/questions/33270500/replace-values-in-named-vector-with-values-from-another-named-vector
+            existing_cofactors[(names(cofactor))] <- cofactor
+            setattr(res_to_return, "cofactors", existing_cofactors)
+        }
+        
         return(res_to_return)
     } else {
-        attr(value, "cofactors") <- cofactor
+        setattr(value, "cofactors", cofactor)
         return(value)
     }
     

@@ -19,8 +19,8 @@ test_that("do.asinh single cofactor works correctly", {
     expect_equal(res$marker2_asinh, expected_dat$marker2)
     
     # check cofactors are appended
-    expect_equal(attributes(res)$cofactors[['marker1']], 7)
-    expect_equal(attributes(res)$cofactors[['marker2']], 7)
+    expect_equal(attributes(res)$cofactors[['marker1_asinh']], 7)
+    expect_equal(attributes(res)$cofactors[['marker2_asinh']], 7)
     
     
 })
@@ -49,8 +49,8 @@ test_that("do.asinh multiple cofactors works correctly", {
     expect_equal(res$marker2_asinh, expected_dat$marker2_asinh)
     
     # check cofactors are appended
-    expect_equal(attributes(res)$cofactors[['marker1']], 5)
-    expect_equal(attributes(res)$cofactors[['marker2']], 10)
+    expect_equal(attributes(res)$cofactors[['marker1_asinh']], 5)
+    expect_equal(attributes(res)$cofactors[['marker2_asinh']], 10)
     
     
 })
@@ -153,9 +153,9 @@ test_that("do.asinh using flowVS works", {
     expect_equal(nrow(dat_actual), 10)
     
     # check cofactors are appended as attributes
-    expect_no_error(attributes(dat_actual)$marker1)
-    expect_no_error(attributes(dat_actual)$marker2)
-    expect_no_error(attributes(dat_actual)$marker3)
+    expect_false(is.null(attributes(dat_actual)$cofactors["marker1_asinh"]))
+    expect_false(is.null(attributes(dat_actual)$cofactors["marker2_asinh"]))
+    expect_false(is.null(attributes(dat_actual)$cofactors["marker3_asinh"]))
 
 })
 
@@ -180,9 +180,9 @@ test_that("do.asinh using top10 works", {
     expect_equal(nrow(dat_actual), 10)
     
     # check cofactors are appended as attributes
-    expect_no_error(attributes(dat_actual)$marker1)
-    expect_no_error(attributes(dat_actual)$marker2)
-    expect_no_error(attributes(dat_actual)$marker3)
+    expect_false(is.null(attributes(dat_actual)$cofactors["marker1_asinh"]))
+    expect_false(is.null(attributes(dat_actual)$cofactors["marker2_asinh"]))
+    expect_false(is.null(attributes(dat_actual)$cofactors["marker3_asinh"]))
 
 })
 
