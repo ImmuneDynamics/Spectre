@@ -69,27 +69,9 @@ run.cycombine <- function(
     # TODO cycombine has label parameter which according to the code
     # can be used as a substitute to clustering the data using SOM.
     # Need to look into this if we want to offer it as a parameter?
-    
-    # for testing only
-    # dat_raw = Spectre::demo.batches
-    # dat_raw[, cell_id := paste0("Cell_", seq(nrow(dat_raw)))]
-    # dat = create.spectre.object(cell_id_col = "cell_id")
-    # dat = add.new.data(spectre_obj = dat, dat = dat_raw, "cyto_batch")
-    # 
-    # data_source = "cyto_batch"
-    # output_name = "cyto_batch_corrected"
-    # use_cols = names(dat$cyto_batch)[1:15]
-    # batch_col = "Batch"
-    # xdim = 8
-    # ydim = 8
-    # rlen = 10
-    # parametric = TRUE
-    # seed = 42
-    # covar = NULL
-    # anchor = NULL
-    # norm_method = "scale"
-    # ties_method = "average"
-    # verbose = TRUE
+    #
+    # TODO this is giving out a weird warnings Unknown or uninitialised column: `sample`.
+    # No idea where it comes from..
     
     check_packages_installed(c("cyCombine"))
     
@@ -106,6 +88,10 @@ run.cycombine <- function(
     
     # cyCombine "batch" column
     setnames(df, batch_col, "batch")
+    
+    # TODO reassess if we need this
+    # setnames(df, "sample_id", "sample")
+    # df <- df[, c(use_cols, "batch"), with = FALSE]
     
     if (verbose) {
         message("(2/3) Running cyCombine")

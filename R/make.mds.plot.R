@@ -72,6 +72,6 @@ make.mds.plot <- function(dat,
             color = colour_by,
             title = "MDS plot of mean protein expression of samples")
 
-return(plt)
+    return(plt)
 
 }
