@@ -2,7 +2,7 @@
 
 A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.
 
-<img src="https://raw.githubusercontent.com/tomashhurst/tomashhurst.github.io/master/images/Spectre.png"/>
+<img src="https://raw.githubusercontent.com/immunedynamics/immunedynamics.github.io/master/images/Spectre.png"/>
 
 **Current version**: [`v1.2.0`](https://github.com/ImmuneDynamics/Spectre/releases)
 
