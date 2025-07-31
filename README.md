@@ -4,7 +4,7 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 
 <img src="https://raw.githubusercontent.com/immunedynamics/immunedynamics.github.io/master/images/Spectre.png"/>
 
-**Current version**: [`v1.2.0`](https://github.com/ImmuneDynamics/Spectre/releases)
+**Current version**: [`v1.2.1`](https://github.com/ImmuneDynamics/Spectre/releases)
 
 [![R-CMD-check](https://github.com/ImmuneDynamics/Spectre/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/ImmuneDynamics/Spectre/actions/workflows/check-standard.yaml)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true)](https://ci.appveyor.com/project/tomashhurst/spectre)
