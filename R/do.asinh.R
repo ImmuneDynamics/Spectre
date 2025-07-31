@@ -24,7 +24,8 @@ do.asinh <- function(dat,
                      use.cols,
                      cofactor = 5,
                      append.cf = FALSE,
-                     reduce.noise = FALSE) {
+                     reduce.noise = FALSE,
+                     digits = NULL) {
 
   ### Setup data
       value <- dat[,use.cols,with = FALSE]
