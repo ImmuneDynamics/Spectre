@@ -10,6 +10,7 @@
 #' @param cofactor DEFAULT = 5. Co-factor to use for arcsinh transformation.
 #' @param append.cf DEFAULT = FALSE. Appends the co-factor used to the end of the name of the transformed columns.
 #' @param reduce.noise DEFAULT = FALSE. This is an experimental calculation which should reduce noise from negative values. Use with caution.
+#' @param digits DEFAULT = NULL. Number of decimal places as a limit, not used if NULL. Values beyond will be rounded. Equal to the number or less (i.e. if 9 is used, but only 5 digits are present, then 5 digits will be used). Important to control for small floating point error differences in different OS.
 #'
 #' @return A data.table with new columns added, that contain the asinh transformed data.
 #'
@@ -52,6 +53,10 @@ do.asinh <- function(dat,
       value <- value / cofactor
       value <- asinh(value) # value <- log(value + sqrt(value^2 + 1))
 
+      if(!is.null(digits)){
+        value <- round(value, digits = digits)
+      }
+  
   ### Options to append the CF used
   
       if(append.cf == TRUE){
