@@ -7,3 +7,4 @@
     if they already exist.
     * Tidied up and simplified code.
 * Added a `NEWS.md` file to track changes to the package.
+* Added `testthat` unittests.
