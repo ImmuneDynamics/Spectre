@@ -67,9 +67,6 @@ run.flowsom <- function(
     mem.ctrl = TRUE,
     verbose = TRUE
 ) {
-  
-
-    
     ### Test
     # dat <- Spectre::demo.clustered
     # use.cols <- names(Spectre::demo.clustered)[c(11:19)]
