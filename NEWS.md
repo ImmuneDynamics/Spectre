@@ -6,5 +6,7 @@
     * Overwrites `clust.name` and `meta.clust.name` columns in input data.table
     if they already exist.
     * Tidied up and simplified code.
+* Updated `run.umap` to overwrite `umap.x.name` and `umap.y.name` columns in 
+input data.table if they already exist.
 * Added a `NEWS.md` file to track changes to the package.
 * Added `testthat` unittests.

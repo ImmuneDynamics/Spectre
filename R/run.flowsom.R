@@ -146,8 +146,8 @@ run.flowsom <- function(
     }
 
     cluster_labels <- FlowSOM_out$map$mapping[, 1]
-    dat <- .add_or_replace_column(
-        dt = dat,
+    dat_out <- .add_or_replace_column(
+        dt = data.table::copy(dat),
         col_name = clust.name,
         values = as.factor(cluster_labels)
     )
@@ -184,12 +184,12 @@ run.flowsom <- function(
             message("Adding metacluster labels to input dataset")
         }
 
-        dat <- .add_or_replace_column(
-            dt = dat,
+        dat_out <- .add_or_replace_column(
+            dt = dat_out,
             col_name = meta.clust.name,
             values = as.factor(meta_labels)
         )
     }
 
-    return(dat)
+    return(dat_out)
 }
