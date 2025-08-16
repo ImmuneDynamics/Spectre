@@ -1,6 +1,3 @@
-library(testthat)
-library(data.table)
-
 test_that(".check_numeric_columns() works as expected", {
 
     # Valid numeric columns
