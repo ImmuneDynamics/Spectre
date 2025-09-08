@@ -5,7 +5,7 @@ test_that("do.asinh works with basic input", {
         B = c(1, 2, 3),
         C = c("x", "y", "z")  # Non-numeric column
     )
-    
+
     # Apply transformation
     result <- do.asinh(dat, use.cols = c("A", "B"))
 
@@ -22,6 +22,56 @@ test_that("do.asinh works with basic input", {
     # Compare results
     expect_equal(result$A_asinh, expected_A)
     expect_equal(result$B_asinh, expected_B)
+})
+
+test_that("do.asinh with multiple cofactors works", {
+    # Sample data
+    dat <- data.table(
+        A = c(0, 5, 10),
+        B = c(1, 2, 3),
+        C = c("x", "y", "z")  # Non-numeric column
+    )
+
+    # Apply transformation
+    result <- do.asinh(dat, use.cols = c("A", "B"), cofactor = c(5, 10), append.cf = TRUE)
+
+    # Check that original columns are still there
+    expect_true(all(c("A", "B", "C") %in% names(result)))
+
+    # Check that transformed columns are added
+    expect_true(all(c("A_asinh_cf5", "B_asinh_cf10") %in% names(result)))
+
+    # Manually calculate expected transformation
+    expected_A <- asinh(dat$A / 5)
+    expected_B <- asinh(dat$B / 10)
+
+    # Compare results
+    expect_equal(result$A_asinh_cf5, expected_A)
+    expect_equal(result$B_asinh_cf10, expected_B)
+})
+
+test_that("do.asinh with one cofactor and one column works", {
+  # Sample data
+  dat <- data.table(
+    A = c(0, 5, 10),
+    B = c(1, 2, 3),
+    C = c("x", "y", "z")  # Non-numeric column
+  )
+
+  # Apply transformation
+  result <- do.asinh(dat, use.cols = c("A"), cofactor = c(10), append.cf = TRUE)
+
+  # Check that original columns are still there
+  expect_true(all(c("A", "B", "C") %in% names(result)))
+
+  # Check that transformed columns are added
+  expect_true(all(c("A_asinh_cf10") %in% names(result)))
+
+  # Manually calculate expected transformation
+  expected_A <- asinh(dat$A / 10)
+
+  # Compare results
+  expect_equal(result$A_asinh_cf10, expected_A)
 })
 
 test_that("do.asinh appends cofactor to new column names when append.cf = TRUE", {
