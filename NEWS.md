@@ -8,6 +8,8 @@
     * Tidied up and simplified code.
 * Updated `run.umap` to overwrite `umap.x.name` and `umap.y.name` columns in 
 input data.table if they already exist.
-* Updated `do.asinh` to overwrite columns in input data.table if they already exist. Can now input string of cofactors, so different values can be assigned to different markers.
+* Updated `do.asinh`: 
+  * Overwrite columns in input data.table if they already exist. 
+  * Added support to specify a list of cofactors, so different values can be assigned to different markers.
 * Added a `NEWS.md` file to track changes to the package.
 * Added `testthat` unittests.
