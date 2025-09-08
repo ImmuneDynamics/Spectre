@@ -122,7 +122,12 @@ make.colour.plot <- function(
     # path = getwd()
     # blank.axis = FALSE
 
-    col.type <- match.arg(col.type)
+    col.type <- tryCatch(
+        match.arg(col.type),
+        error = function(e) {
+            stop("Invalid value for 'col.type': must be either 'continuous' or 'factor'.", call. = FALSE)
+        }
+    )
 
     # some checks
 
@@ -153,27 +158,20 @@ make.colour.plot <- function(
     }
 
     ### Setup colour schemes
-
     colour.scheme <- .get_colour_scheme(colours)
 
+    ### Define limits for x and y axis
 
-
-    ### Define limits
-
-    # X AXIS
     if (is.null(align.xy.by)) {
         Xmax <- max(dat[[x.axis]])
         Xmin <- min(dat[[x.axis]])
-    } else {
-        Xmax <- max(align.xy.by[[x.axis]])
-        Xmin <- min(align.xy.by[[x.axis]])
-    }
 
-    # Y AXIS
-    if (is.null(align.xy.by)) {
         Ymax <- max(dat[[y.axis]])
         Ymin <- min(dat[[y.axis]])
     } else {
+        Xmax <- max(align.xy.by[[x.axis]])
+        Xmin <- min(align.xy.by[[x.axis]])
+
         Ymax <- max(align.xy.by[[y.axis]])
         Ymin <- min(align.xy.by[[y.axis]])
     }
@@ -190,19 +188,13 @@ make.colour.plot <- function(
                 ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold), na.rm = TRUE)
             }
         }
-
-        if (col.type == "factor") {
+        # shouldn't need the check as we have match.arg, but keep it for now.
+        else if (col.type == "factor") {
             if (is.null(align.col.by)) {
-                # ColrMin <- min(d[[col.axis]])
-                # ColrMax <- max(d[[col.axis]])
-
                 colRange <- unique(dat[[col.axis]])
                 colRange <- colRange[order(colRange)]
                 colRange <- as.character(colRange)
             } else {
-                # ColrMin <- min(align.col.by[[col.axis]])
-                # ColrMax <- max(align.col.by[[col.axis]])
-
                 colRange <- unique(align.col.by[[col.axis]])
                 colRange <- colRange[order(colRange)]
                 colRange <- as.character(colRange)
@@ -507,7 +499,7 @@ make.colour.plot <- function(
 #' @keywords internal
 #'
 .get_colour_scheme <- function(colour_scheme) {
-    switch(colour_scheme,
+    res <- switch(colour_scheme,
         "jet" = colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")),
         "spectral" = {
             spectral.list <- colorRampPalette(brewer.pal(11, "Spectral"))(50)
@@ -526,4 +518,18 @@ make.colour.plot <- function(
         "rocket" = colorRampPalette(c(viridis_pal(option = "rocket")(50))),
         NULL
     )
+    if (is.null(res)) {
+        stop(
+            sprintf(
+                "Invalid colour_scheme '%s'. Valid options are: %s",
+                colour_scheme,
+                paste(
+                    c("jet", "spectral", "viridis", "inferno", "magma", "BuPu", "turbo", "mako", "rocket"),
+                    collapse = ", "
+                )
+            ),
+            call. = FALSE
+        )
+    }
+    res
 }
