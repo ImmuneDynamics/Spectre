@@ -18,5 +18,6 @@ input data.table if they already exist.
   and RColorBrewer and jet.
   * Updated documentation.
   * Fixed issue #197 by using `geom_label_repel` to draw centroid labels. 
+* Fixed `package.check` for issue #186.
 * Added a `NEWS.md` file to track changes to the package.
 * Added `testthat` unittests.
