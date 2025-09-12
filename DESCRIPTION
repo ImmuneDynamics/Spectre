@@ -27,7 +27,7 @@ Imports:
     ggplot2,
     ggpointdensity,
     ggpubr,
-    ggrepel
+    ggrepel,
     ggthemes,
     gridExtra,
     gtools,
