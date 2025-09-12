@@ -1,45 +1,50 @@
-#' Make colour plot.
+#' Make colour plot
+#' 
+#' Create a dot plot (e.g., UMAP or tSNE) of cells, 
+#' coloured by a continuous variable (e.g., marker expression) or a factor 
+#' (e.g., cluster, group).
+#' 
+#' @param dat A data.table containing the data to plot.
+#' @param x.axis Character. Column name for the x-axis.
+#' @param y.axis Character. Column name for the y-axis.
+#' @param col.axis Character or NULL. Column name for colouring points. 
+#' If NULL, points are coloured by density.
+#' @param col.type Character. "continuous" (default) or "factor". 
+#' Determines how \code{col.axis} is interpreted.
+#' @param add.label Logical. If TRUE and \code{col.type = "factor"}, 
+#' adds labels at the centroid of each group.
+#' @param hex Logical. If TRUE, uses hex binning (only for continuous colour plots).
+#' @param hex.bins Integer. Number of hex bins if \code{hex = TRUE}.
+#' @param colours Character. Colour scheme for continuous plots. 
+#' Options available are: "jet", all options in \code{RColorBrewer::brewer.pal.info},
+#' and all options in viridis pallete. 
+#' Default is "spectral".
+#' @param col.min.threshold Numeric. Minimum quantile for colour scale (continuous).
+#' @param col.max.threshold Numeric. Maximum quantile for colour scale (continuous).
+#' @param align.xy.by data.table. Data to use for aligning x/y axis limits.
+#' @param align.col.by data.table. Data to use for aligning colour scale limits.
+#' @param regression.line Character or NULL. If not NULL, 
+#' adds a regression line ("lm", "loess", etc.).
+#' @param title Character or NULL. Plot title. Defaults to \code{col.axis}.
+#' @param filename Character or NULL. File name for saving the plot. 
+#' If NULL, a name is generated automatically.
+#' @param dot.size Numeric. Size of points.
+#' @param plot.width Numeric. Width of saved plot (in inches).
+#' @param plot.height Numeric. Height of saved plot (in inches).
+#' @param nudge_x, nudge_y Numeric. Amount to nudge centroid labels 
+#' (if \code{add.label = TRUE}).
+#' @param square Logical. If TRUE, enforces a square aspect ratio.
+#' @param legend.loc Character. 
+#' Legend position: "right" (default), "bottom", "top", "left", or "none".
+#' @param save.to.disk Logical. If TRUE (default), saves the plot to disk. If FALSE, only displays the plot.
+#' @param path Character. Directory to save the plot.
+#' @param blank.axis Logical. If TRUE, produces a minimalist plot with no axis lines or labels.
 #'
-#' Create a dot plot (X vs Y) coloured by a selected continuous
-#' (e.g., marker expression) or factorial (e.g., cluster, group) column.
-#' Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select
-#' cellular markers or clusters, samples, groups etc.
-#'
-#' @seealso \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
-#' @references \url{https://sydneycytometry.org.au/spectre}
-#'
-#' @param dat NO DEFAULT. data.table Input sample.
-#' @param x.axis NO DEFAULT. Character. Column for X axis.
-#' @param y.axis NO DEFAULT. Character. Column for Y axis.
-#' @param col.axis DEFAULT = NULL. If not specified, plot is coloured by density. If you provide a character name of a column (e.g. "BV605.Ly6C", "Group", "FlowSOM_metacluster" etc), then each point will be coloured by the value in that column.
-#' @param col.type DEFAULT = "continuous". Can also be "factor".
-#' @param add.label DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".
-#' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently only works when specifying col.axis, so does not work with density plots.
-#' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
-#' @param colours DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu".
-#' @param col.min.threshold DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.
-#' @param col.max.threshold DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.
-#' @param align.xy.by DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.
-#' @param align.col.by DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.
-#' @param title DEFAULT = col.axis. Character. Title for the plot.
-#' @param dot.size DEFAULT = 1. Numeric. Size of the dots.
-#' @param plot.width DEFAULT = 9. Width of the ggplot when saved to disk.
-#' @param plot.height DEFAULT = 7. Height of the ggplot when saved to disk.
-#' @param nudge_x DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.
-#' @param nudge_y DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.
-#' @param square DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.
-#' @param legend.loc DEFAULT = 'right'. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.
-#' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
-#' @param save.to.disk DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.
-#' @param path DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.
-#'
-#' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.
-#' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
-#'
-#' @usage make.colour.plot(dat, x.axis, y.axis, col.axis)
+#' @return A ggplot2 object representing the plot.
+
+#' @usage make.colour.plot(dat, x.axis, y.axis)
 #'
 #' @examples
-#' # Draw plot
 #' Spectre::make.colour.plot(
 #'     dat = Spectre::demo.clustered,
 #'     x.axis = "UMAP_X",
@@ -57,9 +62,10 @@
 #' @import colorRamps
 #' @import ggthemes
 #' @import RColorBrewer
+#' @import ggrepel
 #'
 #' @export
-
+#' 
 make.colour.plot <- function(
     dat,
     x.axis,
@@ -83,21 +89,19 @@ make.colour.plot <- function(
     nudge_x = 0.5,
     nudge_y = 0.5,
     square = TRUE,
-    legend.loc = "right",
+    legend.loc = c("right", "bottom", "top", "left", "none"),
     save.to.disk = TRUE,
     path = getwd(),
-    blank.axis = FALSE) {
+    blank.axis = FALSE
+) {
     
-    ### Demo data
-
+    # For testing
     # dat <- Spectre::demo.clustered
     # x.axis <- 'UMAP_X'
     # y.axis <- 'UMAP_Y'
     # col.axis <- 'Population'
-    #
     # col.type = "continuous" # can be "continuous" or "factor"
     # add.label = FALSE # only works for 'factor'
-    #
     # hex = FALSE
     # hex.bins = 30
     # colours = "spectral" # can be spectral, jet, etc      # only works for continuous
@@ -105,12 +109,9 @@ make.colour.plot <- function(
     # col.max.threshold = 0.995
     # align.xy.by = dat
     # align.col.by = dat
-    #
     # regression.line = NULL # "lm" # "loess"
-    #
     # title = col.axis
     # filename = NULL
-    #
     # dot.size = 1
     # plot.width = 9
     # plot.height = 7
@@ -157,125 +158,19 @@ make.colour.plot <- function(
         }
     }
 
-    ### Setup colour schemes
-    colour.scheme <- .get_colour_scheme(colours)
-
-    ### Define limits for x and y axis
-
-    if (is.null(align.xy.by)) {
-        Xmax <- max(dat[[x.axis]])
-        Xmin <- min(dat[[x.axis]])
-
-        Ymax <- max(dat[[y.axis]])
-        Ymin <- min(dat[[y.axis]])
-    } else {
-        Xmax <- max(align.xy.by[[x.axis]])
-        Xmin <- min(align.xy.by[[x.axis]])
-
-        Ymax <- max(align.xy.by[[y.axis]])
-        Ymin <- min(align.xy.by[[y.axis]])
-    }
-
-    # COLOUR
-
-    if (!is.null(col.axis)) {
-        if (col.type == "continuous") {
-            if (is.null(align.col.by)) {
-                ColrMin <- quantile(dat[[col.axis]], probs = c(col.min.threshold), na.rm = TRUE)
-                ColrMax <- quantile(dat[[col.axis]], probs = c(col.max.threshold), na.rm = TRUE)
-            } else {
-                ColrMin <- quantile(align.col.by[[col.axis]], probs = c(col.min.threshold), na.rm = TRUE)
-                ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold), na.rm = TRUE)
-            }
-        }
-        # shouldn't need the check as we have match.arg, but keep it for now.
-        else if (col.type == "factor") {
-            if (is.null(align.col.by)) {
-                colRange <- unique(dat[[col.axis]])
-                colRange <- colRange[order(colRange)]
-                colRange <- as.character(colRange)
-            } else {
-                colRange <- unique(align.col.by[[col.axis]])
-                colRange <- colRange[order(colRange)]
-                colRange <- as.character(colRange)
-            }
-        }
-    }
-
     ### Initialise plot
 
     if (!is.null(col.axis)) {
         if (col.type == "continuous") {
-            p <- ggplot(
-                data = dat,
-                aes(
-                    x = .data[[x.axis]],
-                    y = .data[[y.axis]],
-                    colour = .data[[col.axis]]
-                )
-            )
-
-            if (hex == TRUE) {
-                p <- p + stat_summary_hex(aes(z = dat[[col.axis]]),
-                    fun = "mean",
-                    bins = hex.bins
-                )
-                p <- p + scale_fill_gradientn(
-                    colours = c(colour.scheme(50)),
-                    limits = c(ColrMin, ColrMax),
-                    oob = squish
-                )
-            } else {
-                p <- p + geom_point(size = dot.size)
-                p <- p + scale_colour_gradientn(
-                    colours = colour.scheme(50),
-                    limits = c(ColrMin, ColrMax),
-                    oob = squish,
-                    na.value = "grey50"
-                )
-            }
+            p <- .make_continuous_scatter_plot(dat, x.axis, y.axis, col.axis, colours, dot.size, hex, hex.bins, align.col.by, col.min.threshold, col.max.threshold)
         } else if (col.type == "factor") {
-            p <- ggplot(
-                data = dat,
-                aes(
-                    x = .data[[x.axis]],
-                    y = .data[[y.axis]],
-                    colour = as.factor(.data[[col.axis]])
-                )
-            ) +
-                geom_point(size = dot.size) +
-                lims(colour = colRange)
+            p <- .make_factor_scatter_plot(dat, x.axis, y.axis, col.axis, align.col.by, dot.size)
         }
+    } else {
+        p <- .make_density_plot(dat, x.axis, y.axis, dot.size, colours)
     }
 
-    if (is.null(col.axis)) {
-        p <- ggplot(
-            data = dat,
-            aes(
-                x = .data[[x.axis]],
-                y = .data[[y.axis]]
-            )
-        ) +
-            ggpointdensity::geom_pointdensity(size = dot.size)
-
-        if (colours == "viridis" || colours == "magma" || colours == "inferno") {
-            p <- p + viridis::scale_colour_viridis(option = colours)
-        } else if (colours == "jet") {
-            p <- p + ggplot2::scale_colour_gradientn(colours = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-        } else if (colours == "spectral") {
-            p <- p + ggplot2::scale_colour_gradientn(colours = rev(colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(50)))
-        }
-
-        # Blue to Purple
-        else if (colours == "BuPu") {
-            colour.list <- (colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)) # 256
-            # colours <- colorRampPalette(c(colour.list))
-            p <- p + ggplot2::scale_colour_gradientn(colours = colour.list)
-        }
-    }
-
-    ### Regression lione
-
+    ### Regression line
     if (!is.null(regression.line)) {
         p <- p + geom_smooth(method = regression.line)
     }
@@ -289,145 +184,13 @@ make.colour.plot <- function(
     p <- p + ggtitle(title)
 
     ### Set up axis
-    p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(Xmin, Xmax))
-    p <- p + scale_y_continuous(breaks = scales::pretty_breaks(n = 8), name = y.axis, limits = c(Ymin, Ymax))
+    ### Define limits for x and y axis
+    axis.lims <- .get_axis_limits(dat, x.axis, y.axis, align.xy.by)
+    p <- p + scale_x_continuous(breaks = scales::pretty_breaks(n = 8), name = x.axis, limits = c(axis.lims$Xmin, axis.lims$Xmax))
+    p <- p + scale_y_continuous(breaks = scales::pretty_breaks(n = 8), name = y.axis, limits = c(axis.lims$Ymin, axis.lims$Ymax))
 
     ### Set up themes etc
-
-    if (col.type == "continuous") {
-        p <- p + theme(
-            panel.background = element_rect(fill = "white", colour = "black", size = 0.5), # change 'colour' to black for informative axis
-            axis.title.x = element_text(
-                color = "Black",
-                # face="bold",
-                size = 28
-            ),
-            axis.title.y = element_text(
-                color = "Black",
-                # face="bold",
-                size = 28
-            ),
-
-            # axis.ticks = element_line(size = 4),
-            # axis.line = element_line(size = 1),
-            axis.text.x = element_text(color = "Black", size = 24),
-            axis.text.y = element_text(color = "Black", size = 24),
-            panel.border = element_rect(colour = "black", fill = NA, size = 2),
-            plot.title = element_text(color = "Black", face = "bold", size = 32, hjust = 0) # size 70 for large, # 18 for small
-        )
-    }
-
-    if (col.type == "factor") {
-        p <- p + theme(
-            panel.background = element_rect(fill = "white", colour = "black", size = 0.5),
-            axis.title.x = element_text(
-                color = "Black",
-                # face="bold",
-                size = 28
-            ),
-            axis.title.y = element_text(
-                color = "Black",
-                # face="bold",
-                size = 28
-            ),
-
-            # axis.ticks = element_line(size = 4),
-            # axis.line = element_line(size = 1),
-            axis.text.x = element_text(color = "Black", size = 24),
-            axis.text.y = element_text(color = "Black", size = 24),
-            panel.border = element_rect(colour = "black", fill = NA, size = 2),
-            plot.title = element_text(color = "Black", face = "bold", size = 32, hjust = 0) # size 70 for large, # 18 for small
-        )
-
-        # p <- p + theme(legend.position="bottom")
-    }
-
-    if (square == TRUE) {
-        p <- p + theme(aspect.ratio = 1)
-    }
-
-    ### Setup legend
-
-    ## 'top' or 'bottom'
-    if (legend.loc %in% c("top", "bottom")) {
-        p <- p + theme(
-            legend.direction = "horizontal",
-            legend.position = legend.loc,
-            # legend.key.height=unit(0.7,"cm"),
-            # legend.key.width=unit(0.7,"cm"),
-            legend.text = element_text(size = 18), # large = 30 # small = 8
-            legend.title = element_blank()
-        )
-    }
-
-    ## 'left' or 'right'
-    if (legend.loc %in% c("left", "right")) {
-        p <- p + theme(
-            legend.direction = "vertical",
-            legend.position = legend.loc,
-            # legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-            # legend.key.width=unit(0.7,"cm"), # large = 1 # small = 0.4
-            legend.text = element_text(size = 18), # large = 30 # small = 8
-            legend.title = element_blank()
-        )
-    }
-
-    ### Add labels (if desired)
-
-    if (col.type == "factor") {
-        if (add.label == TRUE) {
-            ## Prepare centroids
-            if (is.numeric(dat[[col.axis]])) {
-                centroidX <- tapply(dat[[x.axis]], dat[[col.axis]], median) # median
-                centroidY <- tapply(dat[[y.axis]], dat[[col.axis]], median)
-                centroidCol <- tapply(dat[[col.axis]], dat[[col.axis]], median)
-
-                centroidsDf <- data.frame(centroidX, centroidY, centroidCol)
-            }
-
-            if (!is.numeric(dat[[col.axis]])) {
-                labels <- sort(unique(dat[[col.axis]]))
-
-                centroidsDf <- data.frame(
-                    centroidX = tapply(dat[[x.axis]], dat[[col.axis]], median), # median
-                    centroidY = tapply(dat[[y.axis]], dat[[col.axis]], median),
-                    centroidCol = labels
-                )
-            }
-
-            ## Add labels
-            p <- p + geom_point(
-                data = centroidsDf,
-                aes(
-                    x = centroidX,
-                    y = centroidY
-                ),
-                col = "black",
-                # shape = 1,
-                size = 2
-            )
-
-            p <- p + geom_label(
-                data = centroidsDf,
-                hjust = 0,
-                nudge_x = nudge_x,
-                nudge_y = nudge_y,
-                aes(
-                    x = centroidX,
-                    y = centroidY,
-                    label = centroidCol, alpha = 0.5
-                ),
-                col = "black",
-                fontface = "bold"
-            )
-
-            p <- p + guides(alpha = "none")
-        }
-    }
-
-    ### Blank axis options
-
-    if (blank.axis == TRUE) {
+    if (blank.axis) {
         p <- p + theme(
             axis.line = element_blank(),
             axis.text.x = element_blank(),
@@ -440,36 +203,83 @@ make.colour.plot <- function(
             panel.border = element_blank(),
             panel.grid.minor = element_blank(),
             plot.background = element_blank(),
-            # legend.position = "right",
-            # legend.text=element_text(size=15), # large = 30 # small = 8
-            # legend.key.height=unit(1,"cm"), # large = 3 # small = 1.2
-            # legend.key.width=unit(0.4,"cm"), # large = 1 # small = 0.4
-            # legend.title=element_blank(),
-            # plot.title = element_text(color="Black", face="bold", size=15, hjust=0
         )
+    } else {
+        p <- p + theme(
+            panel.background = element_rect(fill = "white", colour = "black", linewidth = 0.5),
+            axis.title.x = element_text(color = "Black", size = 28),
+            axis.title.y = element_text(color = "Black", size = 28),
+            axis.text.x = element_text(color = "Black", size = 24),
+            axis.text.y = element_text(color = "Black", size = 24),
+            panel.border = element_rect(colour = "black", fill = NA, linewidth = 2),
+            plot.title = element_text(color = "Black", face = "bold", size = 32, hjust = 0)
+        )
+    }
+    
+
+    if (square == TRUE) {
+        p <- p + theme(aspect.ratio = 1)
+    }
+
+    ### Setup legend
+    legend.loc <- tryCatch(
+        match.arg(legend.loc),
+        error = function(e) {
+            stop("Invalid value for 'legend.loc': must be either 'top', 'bottom', 'left', 'right', or 'none'.", call. = FALSE)
+        }
+    )
+    if (legend.loc %in% c("top", "bottom")) {
+        legend.direction <- "horizontal"
+    } else {
+        legend.direction <- "vertical"
+    }
+    p <- p + theme(
+        legend.direction = legend.direction,
+        legend.position = legend.loc,
+        legend.text = element_text(size = 18),
+        legend.title = element_blank()
+    )
+
+    # add centroid
+    if(add.label && col.type == "factor") {
+        centroids <- .calc_centroids_dt(dat, x.axis, y.axis, col.axis)
+
+        p <- p + ggplot2::geom_point(
+            data = centroids, 
+            aes(x = centroidX, y = centroidY), 
+            color = "black", size = 2
+        )
+        p <- p + ggrepel::geom_label_repel(
+            data = centroids,
+            aes(x = centroidX, y = centroidY, label = centroidCol),
+            color = "black",
+            fontface = "bold",
+            nudge_x = nudge_x,
+            nudge_y = nudge_y,
+            alpha = 0.8
+        )
+        p <- p + ggplot2::guides(alpha = "none")
+        
     }
 
     ### Save plot
-    if (save.to.disk == TRUE) {
-        if (!is.null(col.axis)) {
-            if (col.type == "continuous") {
-                lb <- "Colour"
-            }
-
-            if (col.type == "factor") {
-                lb <- "Factor"
-            }
-        }
-
-        if (is.null(col.axis)) {
-            lb <- "Density plot"
-        }
-
+    if (save.to.disk) {
         if (is.null(filename)) {
+            if (!is.null(col.axis)) {
+                if (col.type == "continuous") {
+                    lb <- "Colour"
+                }
+
+                if (col.type == "factor") {
+                    lb <- "Factor"
+                }
+            } else {
+                lb <- "Density"
+            }
             filename <- paste0(lb, " plot - ", title, " - plotted on ", x.axis, " by ", y.axis, ".png")
         }
 
-        ggsave(
+        ggplot2::ggsave(
             filename = filename,
             plot = p,
             path = path,
@@ -481,55 +291,265 @@ make.colour.plot <- function(
         print(p)
     }
 
-    ### Print plot
-    # print(p)
-    # maybe return, i'm not sure.
     return(p)
 }
 
 
 #' Generate a colour scheme
 #'
-#' This internal function creates a colour scheme based on the provided colours.
-#'
+#' Internal function creates a colour scheme based on the provided colours.
 #'
 #' @param colour_scheme A character string specifying the colour scheme to use.
 #'
 #' @return A colour scheme object or vector, depending on implementation.
 #' @keywords internal
+#' @noMd 
 #'
 .get_colour_scheme <- function(colour_scheme) {
-    res <- switch(colour_scheme,
-        "jet" = colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000")),
-        "spectral" = {
-            spectral.list <- colorRampPalette(brewer.pal(11, "Spectral"))(50)
-            spectral.list <- rev(spectral.list)
-            colorRampPalette(c(spectral.list))
-        },
-        "viridis" = colorRampPalette(c(viridis_pal(option = "viridis")(50))),
-        "inferno" = colorRampPalette(c(viridis_pal(option = "inferno")(50))),
-        "magma" = colorRampPalette(c(viridis_pal(option = "magma")(50))),
-        "BuPu" = {
-            colour.list <- colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)
-            colorRampPalette(c(colour.list))
-        },
-        "turbo" = colorRampPalette(c(viridis_pal(option = "turbo")(50))),
-        "mako" = colorRampPalette(c(viridis_pal(option = "mako")(50))),
-        "rocket" = colorRampPalette(c(viridis_pal(option = "rocket")(50))),
-        NULL
-    )
-    if (is.null(res)) {
-        stop(
+
+    brewer_opts <- RColorBrewer::brewer.pal.info
+    viridis_opts <- c("viridis", "magma", "inferno", "plasma", "cividis", "rocket", "mako", "turbo")
+
+    # put spectral here just for backward compatibility
+    available_colours <- c(viridis_opts, rownames(brewer_opts), "jet", "spectral")
+    if (!colour_scheme %in% available_colours) {
+        warning(
             sprintf(
-                "Invalid colour_scheme '%s'. Valid options are: %s",
+                "Invalid colour_scheme '%s'. Valid options are: %s. Defaulting to 'spectral'",
                 colour_scheme,
                 paste(
-                    c("jet", "spectral", "viridis", "inferno", "magma", "BuPu", "turbo", "mako", "rocket"),
+                    available_colours,
                     collapse = ", "
                 )
             ),
             call. = FALSE
         )
+        colour_scheme <- "spectral"
+    }
+
+    if (colour_scheme %in% viridis_opts) {
+        res <- colorRampPalette(c(viridis_pal(option = colour_scheme)(50)))
+    } else if (colour_scheme == "jet") {
+        res <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+    } else if (tolower(colour_scheme) == "spectral") {
+        spectral.list <- colorRampPalette(brewer.pal(11, "Spectral"))(50)
+        spectral.list <- rev(spectral.list)
+        res <- colorRampPalette(c(spectral.list))
+    } else if (colour_scheme %in% rownames(brewer_opts)) {
+        n_max_colour <- brewer_opts[colour_scheme, "maxcolors"]
+        colour.list <- colorRampPalette(RColorBrewer::brewer.pal(n_max_colour, colour_scheme))(50)
+        res <- colorRampPalette(c(colour.list))
     }
     res
+}
+
+#' Calculate Axis Limits for Plotting
+#'
+#' Computes the minimum and maximum values for the x and y axes from the provided data,
+#' with optional alignment of axes by a specified variable.
+#'
+#' @param dat A data frame containing the data to be plotted.
+#' @param x.axis A string specifying the column name in \code{dat} to use for the x-axis.
+#' @param y.axis A string specifying the column name in \code{dat} to use for the y-axis.
+#' @param align.xy.by Optional. A string specifying a column name in \code{dat} by which to align the x and y axes.
+#'
+#' @return A list containing the calculated limits for the x and y axes.
+#'
+#' @keywords internal
+#' @noMd 
+#' @import data.table
+#' 
+.get_axis_limits <- function(dat, x.axis, y.axis, align.xy.by) {
+    # Returns a named list with Xmin, Xmax, Ymin, Ymax
+    if (is.null(align.xy.by)) {
+        Xmax <- max(dat[[x.axis]], na.rm = TRUE)
+        Xmin <- min(dat[[x.axis]], na.rm = TRUE)
+        Ymax <- max(dat[[y.axis]], na.rm = TRUE)
+        Ymin <- min(dat[[y.axis]], na.rm = TRUE)
+    } else {
+        Xmax <- max(align.xy.by[[x.axis]], na.rm = TRUE)
+        Xmin <- min(align.xy.by[[x.axis]], na.rm = TRUE)
+        Ymax <- max(align.xy.by[[y.axis]], na.rm = TRUE)
+        Ymin <- min(align.xy.by[[y.axis]], na.rm = TRUE)
+    }
+    list(Xmin = Xmin, Xmax = Xmax, Ymin = Ymin, Ymax = Ymax)
+}
+
+#' Create a density scatter plot with customizable dot size and color scheme
+#'
+#' This internal function generates a density scatter plot from the provided data frame,
+#' plotting the specified variables on the x and y axes. The appearance of the plot can be
+#' customized by adjusting the dot size and selecting a color palette.
+#'
+#' @param dat A data frame containing the data to be plotted.
+#' @param x.axis A string specifying the column name in \code{dat} to be used for the x-axis.
+#' @param y.axis A string specifying the column name in \code{dat} to be used for the y-axis.
+#' @param dot.size Numeric value indicating the size of the dots in the plot. Default is 1.
+#' @param colours A string specifying the color palette to use. Default is "spectral".
+#'
+#' @return A ggplot2 object representing the density scatter plot.
+#' @keywords internal
+#' @noMd 
+#' 
+#' @import ggplot2
+#' @import ggpointdensity
+#' @import viridis
+#' @import RColorBrewer
+#' 
+.make_density_plot <- function(dat, x.axis, y.axis, dot.size, colours) {
+    p <- ggplot2::ggplot(
+        data = dat,
+        aes(
+            x = .data[[x.axis]],
+            y = .data[[y.axis]]
+        )
+    ) +
+        ggpointdensity::geom_pointdensity(size = dot.size)
+
+    viridis_opts <- c("viridis", "magma", "inferno", "plasma", "cividis", "rocket", "mako", "turbo")
+
+    if (colours %in% viridis_opts) {
+        p <- p + viridis::scale_colour_viridis(option = colours)
+    } else if (colours == "jet") {
+        p <- p + ggplot2::scale_colour_gradientn(colours = c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+    } else if (colours == "spectral") {
+        p <- p + ggplot2::scale_colour_gradientn(colours = rev(colorRampPalette(RColorBrewer::brewer.pal(11, "Spectral"))(50)))
+    } else if (colours == "BuPu") {
+        colour.list <- colorRampPalette(RColorBrewer::brewer.pal(9, "BuPu"))(31)
+        p <- p + ggplot2::scale_colour_gradientn(colours = colour.list)
+    }
+    return(p)
+}
+
+#' Internal: Create a factor colour scatter plot
+#'
+#' Generates a scatter plot for factor (categorical) colouring.
+#'
+#' @param dat Data frame or data.table.
+#' @param x.axis Character, column name for x axis.
+#' @param y.axis Character, column name for y axis.
+#' @param col.axis Character, column name for colour (factor).
+#' @param dot.size Numeric, size of dots.
+#'
+#' @return ggplot2 object
+#' @keywords internal
+#' @noMd 
+#' 
+#' @import ggplot2
+#' @import data.table
+#' 
+.make_factor_scatter_plot <- function(
+    dat, x.axis, y.axis, col.axis, align.col.by, dot.size
+) {
+    if (is.null(align.col.by)) {
+        colRange <- unique(dat[[col.axis]])
+        colRange <- colRange[order(colRange)]
+        colRange <- as.character(colRange)
+    } else {
+        colRange <- unique(align.col.by[[col.axis]])
+        colRange <- colRange[order(colRange)]
+        colRange <- as.character(colRange)
+    }
+
+    p <- ggplot2::ggplot(
+        data = dat,
+        aes(
+            x = .data[[x.axis]], y = .data[[y.axis]], 
+            colour = as.factor(.data[[col.axis]])
+        )
+    ) +
+        ggplot2::geom_point(size = dot.size)
+    if (!is.null(colRange)) {
+        p <- p + ggplot2::lims(colour = colRange)
+    }
+
+    return(p)
+}
+#' Internal: Create a continuous colour scatter plot
+#'
+#' Generates a scatter or hexbin plot for continuous colouring of points.
+#'
+#' @param dat data.table containing the data to plot.
+#' @param x.axis Character. Column name for x axis.
+#' @param y.axis Character. Column name for y axis.
+#' @param col.axis Character. Column name for colour (continuous).
+#' @param colours Character. Colour scheme to use (e.g., "spectral", "jet", "viridis", etc).
+#' @param dot.size Numeric. Size of dots.
+#' @param hex Logical. Whether to use hex binning.
+#' @param hex.bins Integer. Number of hex bins.
+#' @param align.col.by a data.table. Used to align colour scale.
+#' @param col.min.threshold Numeric. Minimum quantile for colour scale.
+#' @param col.max.threshold Numeric. Maximum quantile for colour scale.
+#'
+#' @return ggplot2 object
+#' @keywords internal
+#' @noMd 
+#' 
+#' @import ggplot2
+#' @import scales
+#'
+.make_continuous_scatter_plot <- function(dat, x.axis, y.axis, col.axis, colours, dot.size,
+                                         hex, hex.bins, align.col.by, col.min.threshold, col.max.threshold) {
+
+    
+    colour.scheme <- .get_colour_scheme(colours)
+
+    if (is.null(align.col.by)) {
+        ColrMin <- quantile(dat[[col.axis]], probs = c(col.min.threshold), na.rm = TRUE)
+        ColrMax <- quantile(dat[[col.axis]], probs = c(col.max.threshold), na.rm = TRUE)
+    } else {
+        ColrMin <- quantile(align.col.by[[col.axis]], probs = c(col.min.threshold), na.rm = TRUE)
+        ColrMax <- quantile(align.col.by[[col.axis]], probs = c(col.max.threshold), na.rm = TRUE)
+    }
+
+    p <- ggplot2::ggplot(
+        data = dat,
+        aes(
+            x = .data[[x.axis]],
+            y = .data[[y.axis]],
+            colour = .data[[col.axis]]
+        )
+    )
+
+    if (hex) {
+        p <- p + ggplot2::stat_summary_hex(
+            aes(z = .data[[col.axis]]),
+            fun = "mean",
+            bins = hex.bins
+        )
+        p <- p + ggplot2::scale_fill_gradientn(
+            colours = colour.scheme(50),
+            limits = c(ColrMin, ColrMax),
+            oob = scales::squish
+        )
+    } else {
+        p <- p + ggplot2::geom_point(size = dot.size)
+        p <- p + ggplot2::scale_colour_gradientn(
+            colours = colour.scheme(50),
+            limits = c(ColrMin, ColrMax),
+            oob = scales::squish,
+            na.value = "grey50"
+        )
+    }
+    return(p)
+}
+
+#' Internal: Calculate centroids for factor groups using data.table
+#'
+#' @param dat data.table or data.frame
+#' @param x.axis character, column name for x axis
+#' @param y.axis character, column name for y axis
+#' @param col.axis character, column name for grouping (factor)
+#'
+#' @return data.table with columns: centroidX, centroidY, centroidCol
+#' @keywords internal
+#' @import data.table
+#' @noMd 
+#' 
+.calc_centroids_dt <- function(dat, x.axis, y.axis, col.axis) {
+    centroids <- dat[, lapply(.SD, median), .SDcols = c(x.axis, y.axis), by = col.axis]
+    setnames(centroids, x.axis, "centroidX")
+    setnames(centroids, y.axis, "centroidY")
+    setnames(centroids, col.axis, "centroidCol")
+    return(centroids)
 }
