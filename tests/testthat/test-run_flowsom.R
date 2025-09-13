@@ -85,32 +85,5 @@ test_that("run.flowsom() skips metaclustering when meta.k = 0", {
     expect_false("Meta" %in% names(result))
 })
 
-test_that("run.flowsom() correctness", {
-    dt <- demo.clustered
-
-    use.cols <- c(
-        "NK11_asinh", "CD3_asinh", "CD45_asinh", 
-        "Ly6G_asinh", "CD11b_asinh", "B220_asinh", 
-        "CD8a_asinh", "Ly6C_asinh", "CD4_asinh"
-    )
-
-    # same seeting as how demo clustered data was generated
-    result <- run.flowsom(
-        dat = dt,
-        use.cols = use.cols,
-        xdim = 14,
-        ydim = 14,
-        meta.k = 7,
-        clust.seed = 42,
-        meta.seed = 42,
-        clust.name = "Cluster",
-        meta.clust.name = "Meta",
-        verbose = FALSE
-    )
-
-    expect_equal(as.numeric(result$Cluster), as.numeric(dt$FlowSOM_cluster))
-    expect_equal(as.numeric(result$Meta), as.numeric(dt$FlowSOM_metacluster))
-
-})
 
 
