@@ -1,22 +1,22 @@
-#" package.check - a function to check the installation of all required packages.
-#"
-#" This function allows you to check to see if all the common use packages dependencies for Spectre are installed.
-#" See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
-#"
-#" @return returns an error message if one of the common use packages are not installed. Proceeds in order of package importance, and only the first error message encountered will be returned.
-#"
-#" @param type DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis. If "ML", then checks for additional packages required for machine-learing functionality.
-#"
-#" @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
-#"
-#" @references \url{https://sydneycytometry.org.au/spectre}
-#"
-#" 
-#"
-#" @examples
-#" package.check()
-#"
-#" @export
+#' package.check - a function to check the installation of all required packages.
+#'
+#' This function allows you to check to see if all the common use packages dependencies for Spectre are installed.
+#' See \url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
+#'
+#' @return returns an error message if one of the common use packages are not installed. Proceeds in order of package importance, and only the first error message encountered will be returned.
+#'
+#' @param type DEFAULT = "general". If "general", then checks for the packages required for general Spectre usage. If "spatial", then checks for additional packages required for spatial analysis. If "ML", then checks for additional packages required for machine-learing functionality.
+#'
+#' @author Thomas M Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
+#'
+#' @references \url{https://sydneycytometry.org.au/spectre}
+#'
+#' 
+#'
+#' @examples
+#' package.check()
+#'
+#' @export
 
 package.check <- function(type = "general") {
   
