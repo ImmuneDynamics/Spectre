@@ -63,6 +63,7 @@
 #' @import ggthemes
 #' @import RColorBrewer
 #' @import ggrepel
+#' @import viridis
 #'
 #' @export
 #' 
@@ -303,7 +304,7 @@ make.colour.plot <- function(
 #'
 #' @return A colour scheme object or vector, depending on implementation.
 #' @keywords internal
-#' @noMd 
+#' @noRd 
 #'
 .get_colour_scheme <- function(colour_scheme) {
 
@@ -328,7 +329,7 @@ make.colour.plot <- function(
     }
 
     if (colour_scheme %in% viridis_opts) {
-        res <- colorRampPalette(c(viridis_pal(option = colour_scheme)(50)))
+        res <- colorRampPalette(c(viridis::viridis_pal(option = colour_scheme)(50)))
     } else if (colour_scheme == "jet") {
         res <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
     } else if (tolower(colour_scheme) == "spectral") {
@@ -356,7 +357,7 @@ make.colour.plot <- function(
 #' @return A list containing the calculated limits for the x and y axes.
 #'
 #' @keywords internal
-#' @noMd 
+#' @noRd 
 #' @import data.table
 #' 
 .get_axis_limits <- function(dat, x.axis, y.axis, align.xy.by) {
@@ -389,7 +390,7 @@ make.colour.plot <- function(
 #'
 #' @return A ggplot2 object representing the density scatter plot.
 #' @keywords internal
-#' @noMd 
+#' @noRd 
 #' 
 #' @import ggplot2
 #' @import ggpointdensity
@@ -433,7 +434,7 @@ make.colour.plot <- function(
 #'
 #' @return ggplot2 object
 #' @keywords internal
-#' @noMd 
+#' @noRd 
 #' 
 #' @import ggplot2
 #' @import data.table
@@ -483,7 +484,7 @@ make.colour.plot <- function(
 #'
 #' @return ggplot2 object
 #' @keywords internal
-#' @noMd 
+#' @noRd 
 #' 
 #' @import ggplot2
 #' @import scales
@@ -544,7 +545,7 @@ make.colour.plot <- function(
 #' @return data.table with columns: centroidX, centroidY, centroidCol
 #' @keywords internal
 #' @import data.table
-#' @noMd 
+#' @noRd 
 #' 
 .calc_centroids_dt <- function(dat, x.axis, y.axis, col.axis) {
     centroids <- dat[, lapply(.SD, median), .SDcols = c(x.axis, y.axis), by = col.axis]

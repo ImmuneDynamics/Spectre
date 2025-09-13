@@ -2,78 +2,87 @@
 % Please edit documentation in R/make.colour.plot.R
 \name{make.colour.plot}
 \alias{make.colour.plot}
-\title{Create a dot plot (X vs Y) coloured by a selected continuous  (e.g. marker expression) or factorial (e..g. cluster, group) column.}
+\title{Make colour plot}
 \usage{
-make.colour.plot(dat, x.axis, y.axis, col.axis)
+make.colour.plot(dat, x.axis, y.axis)
 }
 \arguments{
-\item{dat}{NO DEFAULT. data.table Input sample.}
+\item{dat}{A data.table containing the data to plot.}
 
-\item{x.axis}{NO DEFAULT. Character. Column for X axis.}
+\item{x.axis}{Character. Column name for the x-axis.}
 
-\item{y.axis}{NO DEFAULT. Character. Column for Y axis.}
+\item{y.axis}{Character. Column name for the y-axis.}
 
-\item{col.axis}{DEFAULT = NULL. If not specified, plot is coloured by density. If you provide a character name of a column (e.g. "BV605.Ly6C", "Group", "FlowSOM_metacluster" etc), then each point will be coloured by the value in that column.}
+\item{col.axis}{Character or NULL. Column name for colouring points.
+If NULL, points are coloured by density.}
 
-\item{col.type}{DEFAULT = "continuous". Can also be "factor".}
+\item{col.type}{Character. "continuous" (default) or "factor".
+Determines how \code{col.axis} is interpreted.}
 
-\item{add.label}{DEFAULT = FALSE. Adds labels on the plot at the centroid of each factor. Only works if col.type = "factor".}
+\item{add.label}{Logical. If TRUE and \code{col.type = "factor"},
+adds labels at the centroid of each group.}
 
-\item{hex}{DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin.}
+\item{hex}{Logical. If TRUE, uses hex binning (only for continuous colour plots).}
 
-\item{hex.bins}{DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.}
+\item{hex.bins}{Integer. Number of hex bins if \code{hex = TRUE}.}
 
-\item{colours}{DEFAULT = "spectral". Only used if type = 'colour', ignored if type = 'factor'. Specify a colour scheme. Can be "jet", "spectral", "viridis", "inferno", "magma", or "BuPu".}
+\item{colours}{Character. Colour scheme for continuous plots.
+Options available are: "jet", all options in \code{RColorBrewer::brewer.pal.info},
+and all options in viridis pallete.
+Default is "spectral".}
 
-\item{col.min.threshold}{DEFAULT = 0.01. Numeric. Define minimum threshold for colour scale. Values below this limit will be coloured as the chosen minimum threshold.}
+\item{col.min.threshold}{Numeric. Minimum quantile for colour scale (continuous).}
 
-\item{col.max.threshold}{DEFAULT = 0.995 Numeric. Define maximum threshold for colour scale. Values above this limit will be coloured as the chosen maximum threshold.}
+\item{col.max.threshold}{Numeric. Maximum quantile for colour scale (continuous).}
 
-\item{align.xy.by}{DEFAULT = dat. data.table Sample to use to determine minimum and maximum X and Y axis values.}
+\item{align.xy.by}{data.table. Data to use for aligning x/y axis limits.}
 
-\item{align.col.by}{DEFAULT = dat. data.table. Sample to use to determine minimum and maximum colour values.}
+\item{align.col.by}{data.table. Data to use for aligning colour scale limits.}
 
-\item{title}{DEFAULT = col.axis. Character. Title for the plot.}
+\item{regression.line}{Character or NULL. If not NULL,
+adds a regression line ("lm", "loess", etc.).}
 
-\item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
+\item{title}{Character or NULL. Plot title. Defaults to \code{col.axis}.}
 
-\item{plot.width}{DEFAULT = 9. Width of the ggplot when saved to disk.}
+\item{filename}{Character or NULL. File name for saving the plot.
+If NULL, a name is generated automatically.}
 
-\item{plot.height}{DEFAULT = 7. Height of the ggplot when saved to disk.}
+\item{dot.size}{Numeric. Size of points.}
 
-\item{nudge_x}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the X axis.}
+\item{plot.width}{Numeric. Width of saved plot (in inches).}
 
-\item{nudge_y}{DEFAULT = 0.5. When add.label = TRUE, distance the label is shifted from the centroid point on the Y axis.}
+\item{plot.height}{Numeric. Height of saved plot (in inches).}
 
-\item{square}{DEFAULT = TRUE. Ensures the plot is saved as a square. Set to FALSE if you want a plot with different X and Y lengths.}
+\item{nudge_x, }{nudge_y Numeric. Amount to nudge centroid labels
+(if \code{add.label = TRUE}).}
 
-\item{legend.loc}{DEFAULT = 'right'. By default plot legends will be on the right hand side. Can specify the legend location to "bottom" if desired, or 'none' to remove it entirely.}
+\item{square}{Logical. If TRUE, enforces a square aspect ratio.}
 
-\item{save.to.disk}{DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.}
+\item{legend.loc}{Character.
+Legend position: "right" (default), "bottom", "top", "left", or "none".}
 
-\item{path}{DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.}
+\item{save.to.disk}{Logical. If TRUE (default), saves the plot to disk. If FALSE, only displays the plot.}
 
-\item{blank.axis}{DEFAULT = FALSE Logical, do you want a minimalist graph?}
+\item{path}{Character. Directory to save the plot.}
+
+\item{blank.axis}{Logical. If TRUE, produces a minimalist plot with no axis lines or labels.}
+}
+\value{
+A ggplot2 object representing the plot.
 }
 \description{
-This function allows you to create a coloured XY plot where each cell is coloured by a
-selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select
-cellular markers or clusters, samples, groups etc.
+Create a dot plot (e.g., UMAP or tSNE) of cells,
+coloured by a continuous variable (e.g., marker expression) or a factor
+(e.g., cluster, group).
 }
 \examples{
-# Draw plot
-Spectre::make.colour.plot(dat = Spectre::demo.clustered,
-                          x.axis = "UMAP_X",
-                          y.axis = "UMAP_Y",
-                          col.axis = "CD4_asinh")
+Spectre::make.colour.plot(
+    dat = Spectre::demo.clustered,
+    x.axis = "UMAP_X",
+    y.axis = "UMAP_Y",
+    col.axis = "CD4_asinh"
+)
 
-
-}
-\references{
-\url{https://sydneycytometry.org.au/spectre}
-}
-\seealso{
-\url{https://sydneycytometry.org.au/spectre} for usage instructions and vignettes.
 }
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}

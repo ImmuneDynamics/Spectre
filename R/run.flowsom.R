@@ -51,6 +51,7 @@
 #'
 #' @import data.table
 #' @import FlowSOM
+#' @import flowCore
 #'
 #' @export
 #' 
