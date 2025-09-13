@@ -39,6 +39,9 @@
 #' @param save.to.disk Logical. If TRUE (default), saves the plot to disk. If FALSE, only displays the plot.
 #' @param path Character. Directory to save the plot.
 #' @param blank.axis Logical. If TRUE, produces a minimalist plot with no axis lines or labels.
+#' @param fast Logical. If TRUE, uses scattermore for faster plotting of large datasets.
+#' Note, this will reduce the resolution of the plot.
+#' This only works when \code{col.axis} is specified and when hex = FALSE.
 #'
 #' @return A ggplot2 object representing the plot.
 
@@ -93,7 +96,8 @@ make.colour.plot <- function(
     legend.loc = c("right", "bottom", "top", "left", "none"),
     save.to.disk = TRUE,
     path = getwd(),
-    blank.axis = FALSE
+    blank.axis = FALSE,
+    fast = FALSE
 ) {
     
     # For testing
@@ -163,9 +167,14 @@ make.colour.plot <- function(
 
     if (!is.null(col.axis)) {
         if (col.type == "continuous") {
-            p <- .make_continuous_scatter_plot(dat, x.axis, y.axis, col.axis, colours, dot.size, hex, hex.bins, align.col.by, col.min.threshold, col.max.threshold)
+            p <- .make_continuous_scatter_plot(
+                dat, x.axis, y.axis, col.axis, colours, dot.size, hex, hex.bins, 
+                align.col.by, col.min.threshold, col.max.threshold, fast
+            )
         } else if (col.type == "factor") {
-            p <- .make_factor_scatter_plot(dat, x.axis, y.axis, col.axis, align.col.by, dot.size)
+            p <- .make_factor_scatter_plot(
+                dat, x.axis, y.axis, col.axis, align.col.by, dot.size, fast
+            )
         }
     } else {
         p <- .make_density_plot(dat, x.axis, y.axis, dot.size, colours)
@@ -242,24 +251,11 @@ make.colour.plot <- function(
     )
 
     # add centroid
-    if(add.label && col.type == "factor") {
-        centroids <- .calc_centroids_dt(dat, x.axis, y.axis, col.axis)
+    if (add.label && col.type == "factor") {
 
-        p <- p + ggplot2::geom_point(
-            data = centroids, 
-            aes(x = centroidX, y = centroidY), 
-            color = "black", size = 2
+        p <- .add_centroids_and_labels(
+            p, dat, x.axis, y.axis, col.axis, nudge_x, nudge_y, fast
         )
-        p <- p + ggrepel::geom_label_repel(
-            data = centroids,
-            aes(x = centroidX, y = centroidY, label = centroidCol),
-            color = "black",
-            fontface = "bold",
-            nudge_x = nudge_x,
-            nudge_y = nudge_y,
-            alpha = 0.8
-        )
-        p <- p + ggplot2::guides(alpha = "none")
         
     }
 
@@ -431,6 +427,8 @@ make.colour.plot <- function(
 #' @param y.axis Character, column name for y axis.
 #' @param col.axis Character, column name for colour (factor).
 #' @param dot.size Numeric, size of dots.
+#' @param align.col.by a data.table. Used to align colour scale.
+#' @param fast Logical. If TRUE, uses scattermore for faster plotting of large datasets.
 #'
 #' @return ggplot2 object
 #' @keywords internal
@@ -438,9 +436,10 @@ make.colour.plot <- function(
 #' 
 #' @import ggplot2
 #' @import data.table
+#' @import scattermore
 #' 
 .make_factor_scatter_plot <- function(
-    dat, x.axis, y.axis, col.axis, align.col.by, dot.size
+    dat, x.axis, y.axis, col.axis, align.col.by, dot.size, fast
 ) {
     if (is.null(align.col.by)) {
         colRange <- unique(dat[[col.axis]])
@@ -458,8 +457,14 @@ make.colour.plot <- function(
             x = .data[[x.axis]], y = .data[[y.axis]], 
             colour = as.factor(.data[[col.axis]])
         )
-    ) +
-        ggplot2::geom_point(size = dot.size)
+    )
+    
+    if (fast) {
+        p <- p + scattermore::geom_scattermore(size = dot.size)
+    } else {
+        p <- p + ggplot2::geom_point(size = dot.size)
+    }
+        
     if (!is.null(colRange)) {
         p <- p + ggplot2::lims(colour = colRange)
     }
@@ -481,6 +486,7 @@ make.colour.plot <- function(
 #' @param align.col.by a data.table. Used to align colour scale.
 #' @param col.min.threshold Numeric. Minimum quantile for colour scale.
 #' @param col.max.threshold Numeric. Maximum quantile for colour scale.
+#' @param fast Logical. If TRUE, uses scattermore for faster plotting of large datasets.
 #'
 #' @return ggplot2 object
 #' @keywords internal
@@ -488,9 +494,13 @@ make.colour.plot <- function(
 #' 
 #' @import ggplot2
 #' @import scales
+#' @import scattermore
 #'
-.make_continuous_scatter_plot <- function(dat, x.axis, y.axis, col.axis, colours, dot.size,
-                                         hex, hex.bins, align.col.by, col.min.threshold, col.max.threshold) {
+.make_continuous_scatter_plot <- function(
+    dat, x.axis, y.axis, col.axis, colours, dot.size,
+    hex, hex.bins, align.col.by, col.min.threshold, col.max.threshold,
+    fast
+) {
 
     
     colour.scheme <- .get_colour_scheme(colours)
@@ -524,7 +534,13 @@ make.colour.plot <- function(
             oob = scales::squish
         )
     } else {
-        p <- p + ggplot2::geom_point(size = dot.size)
+
+        if (fast) {
+            p <- p + scattermore::geom_scattermore(size = dot.size)
+        } else {
+            p <- p + ggplot2::geom_point(size = dot.size)
+        }
+        
         p <- p + ggplot2::scale_colour_gradientn(
             colours = colour.scheme(50),
             limits = c(ColrMin, ColrMax),
@@ -553,4 +569,55 @@ make.colour.plot <- function(
     setnames(centroids, y.axis, "centroidY")
     setnames(centroids, col.axis, "centroidCol")
     return(centroids)
+}
+
+#' Internal: Add centroid points and labels to a ggplot
+#'
+#' Adds centroid points and non-overlapping labels for factor groups to a ggplot object.
+#'
+#' @param p ggplot2 object to add centroids to.
+#' @param dat data.table or data.frame with the data.
+#' @param x.axis character, column name for x axis.
+#' @param y.axis character, column name for y axis.
+#' @param col.axis character, column name for grouping (factor).
+#' @param nudge_x, nudge_y Numeric. Amount to nudge centroid labels.
+#' @param fast Logical. If TRUE, uses scattermore for faster plotting of large datasets.
+#'
+#' @return ggplot2 object with centroids and labels added.
+#' @keywords internal
+#' @import ggrepel
+#' @import scattermore
+#' @noRd
+#' 
+.add_centroids_and_labels <- function(
+    p, dat, x.axis, y.axis, col.axis, nudge_x, nudge_y, fast
+) {
+    centroids <- .calc_centroids_dt(dat, x.axis, y.axis, col.axis)
+
+    if (fast) {
+        p <- p + scattermore::geom_scattermore(
+            data = centroids, 
+            aes(x = centroidX, y = centroidY), 
+            color = "black", size = 2
+        )
+    } else {
+        p <- p + ggplot2::geom_point(
+            data = centroids, 
+            aes(x = centroidX, y = centroidY), 
+            color = "black", size = 2
+        )
+    }
+
+    p <- p + ggrepel::geom_label_repel(
+        data = centroids,
+        aes(x = centroidX, y = centroidY, label = centroidCol),
+        color = "black",
+        fontface = "bold",
+        nudge_x = nudge_x,
+        nudge_y = nudge_y,
+        alpha = 0.8
+    )
+    p <- p + ggplot2::guides(alpha = "none")
+    return(p)
+    
 }

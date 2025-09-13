@@ -66,6 +66,10 @@ Legend position: "right" (default), "bottom", "top", "left", or "none".}
 \item{path}{Character. Directory to save the plot.}
 
 \item{blank.axis}{Logical. If TRUE, produces a minimalist plot with no axis lines or labels.}
+
+\item{fast}{Logical. If TRUE, uses scattermore for faster plotting of large datasets.
+Note, this will reduce the resolution of the plot.
+This only works when \code{col.axis} is specified and when hex = FALSE.}
 }
 \value{
 A ggplot2 object representing the plot.

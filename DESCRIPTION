@@ -32,6 +32,7 @@ Imports:
     gridExtra,
     gtools,
     irlba,
+    lifecycle,
     parallel,
     patchwork,
     pheatmap,

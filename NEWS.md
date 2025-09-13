@@ -14,10 +14,11 @@ input data.table if they already exist.
 * Refactored `make.colour.plot`:
   * Move some code out to internal functions for modularity.
   * Rewrote and simplified code.
-  * Added more colour scheme options to support all options in viridis
-  and RColorBrewer and jet.
+  * Added more colour scheme options to support all options in viridis and RColorBrewer and jet.
   * Updated documentation.
   * Fixed issue #197 by using `geom_label_repel` to draw centroid labels. 
+  * Added option to do fast plot using `scattermore`.
+* Added deprecated message for `fast.colour.plot`.
 * Fixed `package.check` for issue #186.
 * Added a `NEWS.md` file to track changes to the package.
 * Added `testthat` unittests.
