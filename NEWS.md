@@ -20,5 +20,6 @@ input data.table if they already exist.
   * Added option to do fast plot using `scattermore`.
 * Added deprecated message for `fast.colour.plot`.
 * Fixed `package.check` for issue #186.
+* Refactored `read.files` and remove any `setwd()` for issue #162.
 * Added a `NEWS.md` file to track changes to the package.
 * Added `testthat` unittests.

@@ -2,9 +2,16 @@
 % Please edit documentation in R/read.files.R
 \name{read.files}
 \alias{read.files}
-\title{read.files - Function to read data from CSV or FCS files into a list.}
+\title{Read CSV or FCS files into a list.}
 \usage{
-read.files(file.loc, file.type, do.embed.file.names, header)
+read.files(
+  file.loc = getwd(),
+  file.type = c(".csv", ".fcs"),
+  files = NULL,
+  nrows = NULL,
+  do.embed.file.names = TRUE,
+  header = TRUE
+)
 }
 \arguments{
 \item{file.loc}{DEFAULT = getwd(). What is the location of your files?}
@@ -17,23 +24,21 @@ read.files(file.loc, file.type, do.embed.file.names, header)
 
 \item{do.embed.file.names}{DEFAULT = TRUE. Do you want to embed each row (cell) of each file with the name name?}
 
-\item{header}{DEFAULT = TRUE. Does the first line of data contain column names?}
+\item{header}{DEFAULT = TRUE. Does the first line of data contain column names?
+Only works for file.type = ".csv".}
 }
 \value{
-Returns a list of data.tables -- one per CSV file.
+Returns a list of data.tables -- one per file.
 }
 \description{
-This function allows you to read in sample files (.csv or .fcs) into a list, where each file is saved as a data.table.
+This function allows you to read in sample files (.csv or .fcs) into a list,
+where each file is saved as a data.table object.
 }
 \examples{
 # download sample data
 download.file(url='https://github.com/ImmuneDynamics/data/blob/main/msCNS.zip?raw=TRUE', destfile = 'msCNS.zip', mode = 'wb')
 unzip(zipfile = 'msCNS.zip')
-setwd("msCNS/data")
-data.list <- read.files(file.type = ".csv", do.embed.file.names = TRUE)
-
-# return to previous working directory
-setwd("../../")
+data.list <- read.files(file.loc = "msCNS/data", file.type = ".csv", do.embed.file.names = TRUE)
 
 }
 \references{
@@ -42,4 +47,5 @@ Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/3107710
 \author{
 Thomas M Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
+Givanna Putri
 }
