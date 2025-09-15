@@ -41,6 +41,7 @@
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #'
+#' @import lifecycle
 #' @export
 
 # align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
@@ -75,6 +76,12 @@ fast.multi.plot <- function(dat,
                             plot.height = 7, # each plot
                             blank.axis = FALSE,
                             save.each.plot = FALSE){
+    
+    lifecycle::deprecate_warn(
+        when = "1.3.0", 
+        what = "Spectre::fast.multi.plot()",
+        details = "fast.multi.plot() will be removed in the next version. Please use make.multi.plot(fast = TRUE) instead."
+    )
     
     ### Check packages
     if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')

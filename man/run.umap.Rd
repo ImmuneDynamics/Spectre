@@ -2,16 +2,16 @@
 % Please edit documentation in R/run.umap.R
 \name{run.umap}
 \alias{run.umap}
-\title{Run the UMAP algorithm (using umap::umap())}
+\title{Run UMAP}
 \usage{
 run.umap(dat, use.cols, umap.x.name = "UMAP_X", 
-umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, 
-n_components = 2, metric = "euclidean", n_epochs = 200, 
-input = "data", init = "spectral", min_dist = 0.1, 
-set_op_mix_ratio = 1, local_connectivity = 1, bandwidth = 1, 
-alpha = 1, gamma = 1, negative_sample_rate = 5, a_gradient = NA, 
-b_gradient = NA, spread = 1, transform_state = 42, 
-knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
+umap.y.name = "UMAP_Y", umap.seed = 42, neighbours = 15, n_components = 2, 
+metric = "euclidean", n_epochs = 200, input = "data", init = "spectral", 
+min_dist = 0.1, set_op_mix_ratio = 1, local_connectivity = 1, 
+bandwidth = 1, alpha = 1, gamma = 1, negative_sample_rate = 5, 
+a_gradient = NA, b_gradient = NA, spread = 1, transform_state = 42, 
+knn.repeats = 1, verbose = TRUE, umap_learn_args = NA, fast = TRUE, 
+n_threads = "auto", n_sgd_threads = "auto", batch = TRUE)
 }
 \arguments{
 \item{dat}{NO DEFAULT. Input data.table or data.frame.}
@@ -26,68 +26,115 @@ knn.repeats = 1, verbose = TRUE, umap_learn_args = NA)
 
 \item{neighbours}{DEFAULT = 15. Numeric. Number of nearest neighbours.}
 
-\item{n_components}{DEFAULT = 2. Numeric. Number of dimensions for output results.}
+\item{n_components}{DEFAULT = 2. Numeric.
+Number of dimensions for output results.}
 
-\item{metric}{DEFAULT = "euclidean". Character or function. Determines how distances between data points are computed. Can also be "manhattan".}
+\item{metric}{DEFAULT = "euclidean". Character or function.
+Determines how distances between data points are computed.
+Can also be "manhattan".}
 
-\item{n_epochs}{DEFAULT = 200. Numeric. Number of iterations performed during layout optimisation.}
+\item{n_epochs}{DEFAULT = 200. Numeric.
+Number of iterations performed during layout optimisation.}
 
-\item{input}{DEFAULT = "data". Character. Determines whether primary input argument is a data or distance matrix. Can also be "dist".}
+\item{input}{DEFAULT = "data". Character.
+Determines whether primary input argument is a data or distance matrix.
+Can also be "dist".}
 
-\item{init}{DEFAULT = "spectral". Character or matrix. Deafult "spectral" computes an initial embedding using eigenvectors of the connectivity graph matrix. Can also use "random" (creates an initial layout based on random coordinates).}
+\item{init}{DEFAULT = "spectral". Character or matrix.
+Default "spectral" computes an initial embedding using eigenvectors of the
+connectivity graph matrix.
+Can also use "random" (creates an initial layout based on random coordinates).}
 
-\item{min_dist}{DEFAULT = 0.1. Numeric. Determines how close points appear in final layout.}
+\item{min_dist}{DEFAULT = 0.1. Numeric. Determines how close points appear
+in final layout.}
 
-\item{set_op_mix_ratio}{DEFAULT = 1. Numeric in range \link{0,1}. Determines who the knn-graph is used to create a fuzzy simplicial graph.}
+\item{set_op_mix_ratio}{DEFAULT = 1. Numeric in range \link{0,1}. Determines
+who the knn-graph is used to create a fuzzy simplicial graph.}
 
-\item{local_connectivity}{DEFAULT = 1. Numeric. Used during construction of fuzzy simplicial set.}
+\item{local_connectivity}{DEFAULT = 1. Numeric. Used during construction of
+fuzzy simplicial set.}
 
-\item{bandwidth}{DEFAULT = 1. Numeric. Used during construction of fuzzy simplicial set.}
+\item{bandwidth}{DEFAULT = 1. Numeric. Used during construction of fuzzy
+simplicial set.}
 
-\item{alpha}{DEFAULT = 1. Numeric. Initial value of "learning rate" of layout optimisation.}
+\item{alpha}{DEFAULT = 1. Numeric. Initial value of "learning rate" of layout
+optimisation.}
 
-\item{gamma}{DEFAULT = 1. Numeric. Together with alpha, it determines the learning rate of layout optimisation.}
+\item{gamma}{DEFAULT = 1. Numeric. Together with alpha, it determines the
+learning rate of layout optimisation.}
 
-\item{negative_sample_rate}{DEFAULT = 5. Numeric. Determines how many non-neighbour points are used per point and per iteration during layout optimisation.}
+\item{negative_sample_rate}{DEFAULT = 5. Numeric. Determines how many
+non-neighbour points are used per point and per iteration during layout
+optimisation.}
 
-\item{a_gradient}{DEFAULT = NA. Numeric. Contributes to gradient calculations during layout optimisation. When left at NA, a suitable value will be estimated automatically.}
+\item{a_gradient}{DEFAULT = NA. Numeric. Contributes to gradient calculations
+during layout optimisation. When left at NA, a suitable value will be
+estimated automatically.}
 
-\item{b_gradient}{DEFAULT = NA. Numeric. Contributes to gradient calculations during layout optimisation. When left at NA, a suitable value will be estimated automatically.}
+\item{b_gradient}{DEFAULT = NA. Numeric. Contributes to gradient calculations
+during layout optimisation. When left at NA, a suitable value will be
+estimated automatically.}
 
-\item{spread}{DEFAULT = 1. Numeric. Used during automatic estimation of a_gradient/b_gradient parameters.}
+\item{spread}{DEFAULT = 1. Numeric. Used during automatic estimation of
+a_gradient/b_gradient parameters.}
 
-\item{transform_state}{DEFAULT = 42. Numeric. Seed for random number generation used during predict().}
+\item{transform_state}{DEFAULT = 42. Numeric. Seed for random number
+generation used during predict().}
 
-\item{knn.repeats}{DEFAULT = 1. Numeric. Number of times to restart knn search.}
+\item{knn.repeats}{DEFAULT = 1. Numeric. Number of times to restart knn
+search.}
 
-\item{verbose}{DEFAULT = TRUE. Logical. Determines whether to show progress messages.}
+\item{verbose}{DEFAULT = TRUE. Logical. Determines whether to show progress
+messages.}
 
-\item{umap_learn_args}{DEFAULT = NA. Vector. Vector of arguments to python package umap-learn.}
+\item{umap_learn_args}{DEFAULT = NA. Vector. Vector of arguments to python
+package umap-learn.}
 
-\item{fast}{DEFAULT TRUE Whether to run uwot implementation of UMAP which is much faster.}
+\item{fast}{DEFAULT TRUE Whether to run uwot implementation of UMAP which is
+much faster.}
 
-\item{n_threads}{DEFAULT "auto". Numeric. Number of threads to use (except during stochastic gradient descent). For nearest neighbor search, only applies if \code{nn_method = "annoy"}. If \code{n_threads > 1}, then the Annoy index will be temporarily written to disk in the location determined by tempfile. The default "auto" option will automatically set this to the maximum number of threads in the computer - 1.}
+\item{n_threads}{DEFAULT "auto". Numeric. Number of threads to use (except
+during stochastic gradient descent). For nearest neighbor search, only
+applies if \code{nn_method = "annoy"}. If \code{n_threads > 1}, then the Annoy index
+will be temporarily written to disk in the location determined by tempfile.
+The default "auto" option will automatically set this to the maximum number
+of threads in the computer - 1.}
 
-\item{n_sgd_threads}{DEFAULT "auto". Number of threads to use during stochastic gradient descent. If set to > 1, then be aware that if \code{batch = FALSE}, results will not be reproducible, even if \code{set.seed} is called with a fixed seed before running. Set to "auto" to use the same value as n_threads.}
+\item{n_sgd_threads}{DEFAULT "auto". Number of threads to use during
+stochastic gradient descent. If set to > 1, then be aware that if
+\code{batch = FALSE}, results will not be reproducible, even if \code{set.seed} is
+called with a fixed seed before running. Set to "auto" to use the same value
+as n_threads.}
 
-\item{batch}{DEFAULT TRUE. If set to TRUE, then embedding coordinates are updated at the end of each epoch rather than during the epoch. In batch mode, results are reproducible with a fixed random seed even with n_sgd_threads > 1, at the cost of a slightly higher memory use. You may also have to modify learning_rate and increase n_epochs, so whether this provides a speed increase over the single-threaded optimization is likely to be dataset and hardware-dependent.}
+\item{batch}{DEFAULT TRUE. If set to TRUE, then embedding coordinates are
+updated at the end of each epoch rather than during the epoch.
+In batch mode, results are reproducible with a fixed random seed
+even with n_sgd_threads > 1,
+at the cost of a slightly higher memory use. You may also have to modify
+learning_rate and increase n_epochs, so whether this provides a speed
+increase over the single-threaded optimization is likely to be dataset and
+hardware-dependent.}
 }
 \description{
-Method to run a UMAP dimensionality reduction algorithm.
-A UMAP (uniform manifold approximation and projection) plot is a useful means to visualise data.
+Function to run a UMAP dimensionality reduction algorithm.
+UMAP (uniform manifold approximation and projection) plot is a useful
+means to visualise data.
 As it is a dimensionality reduction algorithm, some data will be lost.
-It is good practice to validate any populations (namely through manual gating).
+It is good practice to validate any populations (namely through
+manual gating).
 For more information on parameter choices, see ?umap::umap.defaults.
 Uses the R package "umap" to calculate plots and "data.table" to handle data.
 }
 \examples{
 # Run UMAP on a subset of the  demonstration dataset
 
-cell.dat <- do.subsample(Spectre::demo.clustered, 10000) # Subsample the demo dataset to 10000 cells
+library(Spectre)
+# Subsample the demo dataset to 10000 cells
+cell.dat <- do.subsample(demo.clustered, 10000)
 cell.dat$UMAP_X <- NULL
 cell.dat$UMAP_Y <- NULL
 
-cell.dat <- Spectre::run.umap(dat = cell.dat,
+cell.dat <- run.umap(dat = cell.dat,
                               use.cols = c("NK11_asinh", "CD3_asinh", 
                               "CD45_asinh", "Ly6G_asinh", "CD11b_asinh", 
                               "B220_asinh", "CD8a_asinh", "Ly6C_asinh", 

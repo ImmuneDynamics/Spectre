@@ -61,6 +61,7 @@
 #' Givanna Putri
 #'
 #' @import data.table
+#' @import lifecycle
 #'
 #' @export
 
@@ -130,7 +131,13 @@ fast.colour.plot <- function(dat,
     # save.to.disk = TRUE
     # path = getwd()
     # blank.axis = FALSE
-    
+
+    lifecycle::deprecate_warn(
+        when = "1.3.0", 
+        what = "Spectre::fast.colour.plot()",
+        details = "fast.colour.plot() will be removed in the next version. Please use make.colour.plot(fast = TRUE) instead."
+    )
+
     ### Some tests
     
     if (hex == TRUE) {

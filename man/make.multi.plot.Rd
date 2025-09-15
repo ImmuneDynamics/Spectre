@@ -51,6 +51,13 @@ blank.axis, save.each.plot)
 \item{blank.axis}{DEFAULT = FALSE. Logical. Do you want a minimalist graph?}
 
 \item{save.each.plot}{DEFAULT = FALSE. Logical. Do you want to save each plot?}
+
+\item{add.label}{Logical. If TRUE and \code{col.type = "factor"},
+adds labels at the centroid of each group.}
+
+\item{fast}{Logical. If TRUE, uses scattermore for faster plotting of large datasets.
+Note, this will reduce the resolution of the plot.
+This only works when \code{col.axis} is specified and when hex = FALSE.}
 }
 \description{
 Method to create multiple plots for each marker.
@@ -67,4 +74,5 @@ Spectre::make.multi.plot(dat = Spectre::demo.clustered,
 \author{
 Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
+Givanna Putri
 }
