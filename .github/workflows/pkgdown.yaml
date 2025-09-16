@@ -34,6 +34,9 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          dependencies: |
+            Imports
+            Depends
           extra-packages: any::pkgdown, local::.
           needs: website
 
