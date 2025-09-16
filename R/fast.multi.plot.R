@@ -1,6 +1,6 @@
 #' DEPRECATED fast multi plot
 #' 
-#' Please use make.multi.plot(fast = TRUE) instead.
+#' Please use `make.multi.plot(fast = TRUE)` instead.
 #'
 #' Method to create multiple plots for each marker.
 #' This function allows you to create a grid of plots, where the cells are plotted by a series of columns, and/or subsetted by a certain factor (e.g. one sample per plot).

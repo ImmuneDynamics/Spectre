@@ -1,6 +1,6 @@
 #' DEPRECATED fast colour plot
 #' 
-#' Please use make.colour.plot(fast = TRUE) instead.
+#' Please use `make.colour.plot(fast = TRUE)` instead.
 #' 
 #' Create a FAST dot plot (X vs Y) coloured by a selected continuous  (e.g. marker expression) or factorial (e..g. cluster, group) column.
 #'
@@ -39,16 +39,10 @@
 #' @param save.to.disk DEFAULT = TRUE. Will save the ggplot to disk. If FALSE, will only show the ggplot.
 #' @param path DEFAULT = getwd(). The location to save your ggplot. By default, will save to current working directory. Can be overidden.
 #' @param blank.axis DEFAULT = FALSE Logical, do you want a minimalist graph?
-
-#' @usage make.colour.plot(dat, x.axis, y.axis, col.axis)
 #'
 #' @examples
 #' # Load packages
 #' library(Spectre)
-#' package.check()
-#' package.load()
-#'
-#' # Read data
 #' cell.dat <- Spectre::demo.umap
 #' cell.dat <- as.data.table(cell.dat)
 #'

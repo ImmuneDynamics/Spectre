@@ -50,7 +50,7 @@ fast.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, 
 \item{save.each.plot}{DEFAULT = FALSE. Logical. Do you want to save each plot?}
 }
 \description{
-Please use make.multi.plot(fast = TRUE) instead.
+Please use \code{make.multi.plot(fast = TRUE)} instead.
 }
 \details{
 Method to create multiple plots for each marker.

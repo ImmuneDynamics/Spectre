@@ -4,7 +4,35 @@
 \alias{fast.colour.plot}
 \title{DEPRECATED fast colour plot}
 \usage{
-make.colour.plot(dat, x.axis, y.axis, col.axis)
+fast.colour.plot(
+  dat,
+  x.axis,
+  y.axis,
+  col.axis = NULL,
+  col.type = "continuous",
+  add.label = FALSE,
+  hex = FALSE,
+  hex.bins = 30,
+  colours = "spectral",
+  col.min.threshold = 0.01,
+  col.max.threshold = 0.995,
+  align.xy.by = dat,
+  align.col.by = dat,
+  regression.line = NULL,
+  title = col.axis,
+  filename = NULL,
+  dot.size = 1,
+  plot.width = 9,
+  plot.height = 7,
+  nudge_x = 0.5,
+  nudge_y = 0.5,
+  square = TRUE,
+  legend.loc = "right",
+  save.to.disk = TRUE,
+  path = getwd(),
+  blank.axis = FALSE,
+  col.tab = NULL
+)
 }
 \arguments{
 \item{dat}{NO DEFAULT. data.table Input sample.}
@@ -60,7 +88,7 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 \item{blank.axis}{DEFAULT = FALSE Logical, do you want a minimalist graph?}
 }
 \description{
-Please use make.colour.plot(fast = TRUE) instead.
+Please use \code{make.colour.plot(fast = TRUE)} instead.
 }
 \details{
 Create a FAST dot plot (X vs Y) coloured by a selected continuous  (e.g. marker expression) or factorial (e..g. cluster, group) column.
@@ -72,10 +100,6 @@ cellular markers or clusters, samples, groups etc.
 \examples{
 # Load packages
 library(Spectre)
-package.check()
-package.load()
-
-# Read data
 cell.dat <- Spectre::demo.umap
 cell.dat <- as.data.table(cell.dat)
 
