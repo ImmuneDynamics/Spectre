@@ -4,7 +4,17 @@
 \alias{run.ruv}
 \title{run.ruv - Run the the CytofRUV alignment method.}
 \usage{
-run.align()
+run.ruv(
+  dat,
+  sample.col,
+  batch.col,
+  align.cols,
+  ref.samples,
+  cluster.col = NULL,
+  k = 5,
+  dir = getwd(),
+  append.name = "_ruv"
+)
 }
 \arguments{
 \item{dat}{NO DEFAULT.A data.table consisting of the data (both reference and taret) you wish to align}

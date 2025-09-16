@@ -72,7 +72,8 @@
 #'   visualization of single-cell RNA-seq data. Nature Methods.
 #'   \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6402590/}.
 #'
-#' @export
+#' @noRd 
+#' 
 fftRtsne <- function(X, 
                      dims = 2, 
                      perplexity = 30, 
