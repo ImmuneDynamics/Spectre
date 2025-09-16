@@ -5,3 +5,7 @@
 ^scripts$
 ^other$
 ^docker$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$
