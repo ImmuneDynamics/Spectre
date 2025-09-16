@@ -32,6 +32,12 @@ jobs:
         with:
           use-public-rspm: true
 
+      # install some dependencies only available on github
+      - name: Install Github-only suggests
+        run: |
+          Rscript -e 'install.packages("pak")'
+          Rscript -e 'pak::pkg_install(c("JinmiaoChenLab/Rphenograph", "saeyslab/CytoNorm"))'
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::pkgdown, local::.

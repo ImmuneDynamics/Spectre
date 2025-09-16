@@ -49,7 +49,6 @@ Imports:
 Suggests:
     Biobase,
     caret,
-    CytofRUV,
     CytoNorm,
     devtools,
     EnhancedVolcano,
@@ -63,8 +62,6 @@ Suggests:
     qs,
     raster,
     Rcpp,
-    rgdal,
-    rgeos,
     rhdf5,
     rmarkdown,
     Rphenograph,

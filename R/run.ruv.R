@@ -2,7 +2,6 @@
 #'
 #' This function allows you to run the CytofRUV alignment method.
 #' 
-#' @usage run.align()
 #'
 #' @param dat NO DEFAULT.A data.table consisting of the data (both reference and taret) you wish to align
 #' @param sample.col NO DEFAULT. Column name of the data.table that contains sample names
