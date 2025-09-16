@@ -15,6 +15,7 @@ permissions: read-all
 
 jobs:
   pkgdown:
+    needs: website
     runs-on: ubuntu-latest
     # Only restrict concurrency for non-PR jobs
     concurrency:
@@ -37,8 +38,11 @@ jobs:
           dependencies: |
             Imports
             Depends
-          extra-packages: any::pkgdown, local::.
-          needs: website
+          extra-packages: |
+            pkgdown
+
+      - name: Install package
+        run: R CMD INSTALL .
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
