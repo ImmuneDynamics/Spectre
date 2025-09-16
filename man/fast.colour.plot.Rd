@@ -2,7 +2,7 @@
 % Please edit documentation in R/fast.colour.plot.R
 \name{fast.colour.plot}
 \alias{fast.colour.plot}
-\title{Create a FAST dot plot (X vs Y) coloured by a selected continuous  (e.g. marker expression) or factorial (e..g. cluster, group) column.}
+\title{DEPRECATED fast colour plot}
 \usage{
 make.colour.plot(dat, x.axis, y.axis, col.axis)
 }
@@ -60,6 +60,11 @@ make.colour.plot(dat, x.axis, y.axis, col.axis)
 \item{blank.axis}{DEFAULT = FALSE Logical, do you want a minimalist graph?}
 }
 \description{
+Please use make.colour.plot(fast = TRUE) instead.
+}
+\details{
+Create a FAST dot plot (X vs Y) coloured by a selected continuous  (e.g. marker expression) or factorial (e..g. cluster, group) column.
+
 This function allows you to create a coloured XY plot where each cell is coloured by a
 selected column. Typically used to plot cells on tSNE1/2 or UMAP1/2 coloured by select
 cellular markers or clusters, samples, groups etc.

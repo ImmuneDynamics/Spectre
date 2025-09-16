@@ -1,3 +1,7 @@
+#' DEPRECATED fast colour plot
+#' 
+#' Please use make.colour.plot(fast = TRUE) instead.
+#' 
 #' Create a FAST dot plot (X vs Y) coloured by a selected continuous  (e.g. marker expression) or factorial (e..g. cluster, group) column.
 #'
 #' This function allows you to create a coloured XY plot where each cell is coloured by a
