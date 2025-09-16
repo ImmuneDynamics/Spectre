@@ -30,6 +30,8 @@
 #' @param fast Logical. If TRUE, uses scattermore for faster plotting of large datasets.
 #' Note, this will reduce the resolution of the plot.
 #' This only works when \code{col.axis} is specified and when hex = FALSE.
+#' @param legend.loc Character. 
+#' Legend position: "right" (default), "bottom", "top", "left", or "none".
 #'
 #' @usage make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, 
 #' col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, 
@@ -46,6 +48,14 @@
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
 #' Givanna Putri
+#' 
+#' @import ggplot2
+#' @import scales
+#' @import colorRamps
+#' @import ggthemes
+#' @import RColorBrewer
+#' @import ggpointdensity
+#' @import gridExtra
 #' @export
 
 # align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
@@ -53,50 +63,43 @@
 
 make.multi.plot <- function(
     dat,
-      x.axis,
-      y.axis,
-      plot.by, # vector of column names -- one colour plot will be created for each
-      divide.by = NULL,
-      add.density = FALSE,   
-      hex = FALSE,
-      hex.bins = 30,
-      col.type = "continuous",
-      figure.title = 'Multi plot',
-      global.xy = TRUE,
-      global.col = TRUE,
-      align.xy.by = dat, # alignment for X and Y
-      align.col.by = dat, # alignment for colours
-      colours = 'spectral',
-      dot.size = 1,
-      col.min.threshold = 0.01,
-      col.max.threshold = 0.995,
-      path = getwd(),
-      plot.width = 9, # each plot
-      plot.height = 7, # each plot
-      blank.axis = FALSE,
-      save.each.plot = FALSE,
-      add.label = FALSE,
-      fast = FALSE
+    x.axis,
+    y.axis,
+    plot.by, # vector of column names -- one colour plot will be created for each
+    divide.by = NULL,
+    add.density = FALSE,   
+    hex = FALSE,
+    hex.bins = 30,
+    col.type = "continuous",
+    figure.title = 'Multi plot',
+    global.xy = TRUE,
+    global.col = TRUE,
+    align.xy.by = dat, # alignment for X and Y
+    align.col.by = dat, # alignment for colours
+    colours = 'spectral',
+    dot.size = 1,
+    col.min.threshold = 0.01,
+    col.max.threshold = 0.995,
+    path = getwd(),
+    plot.width = 9, # each plot
+    plot.height = 7, # each plot
+    blank.axis = FALSE,
+    save.each.plot = FALSE,
+    add.label = FALSE,
+    fast = FALSE,
+    legend.loc = c("right", "bottom", "top", "left", "none")
 ) {
-
-  ### Check packages
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
-  if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
-  if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
-
-  ### Load packages
-  require(ggplot2)
-  require(scales)
-  require(colorRamps)
-  require(ggthemes)
-  require(RColorBrewer)
-  require(ggpointdensity)
 
   ### Overall plot settings
   #title <- figure.title
+
+  ### Setup legend
+  legend.loc <- tryCatch(
+      match.arg(legend.loc),
+      error = function(e) {
+          stop("Invalid value for 'legend.loc': must be either 'top', 'bottom', 'left', 'right', or 'none'.", call. = FALSE)
+      }
+  )
 
   plots <- list()
   to.plot <- plot.by
@@ -165,7 +168,9 @@ make.multi.plot <- function(
                                             blank.axis = blank.axis,
                                             save.to.disk = save.each.plot,
                                             add.label = add.label,
-                                            fast = fast)
+                                            fast = fast,
+                                            legend.loc = legend.loc
+                                            )
     }
 
     ## Add density plot (if desired)
