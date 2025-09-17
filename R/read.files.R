@@ -125,7 +125,7 @@ read.files <- function(
                 paste0(channel_name, "_", antibody_name)
             )
             
-            tempdata <- as.data.table(exprs(x))
+            tempdata <- data.table::as.data.table(Biobase::exprs(x))
             names(tempdata) <- tempdata_colnames
             
             if (do.embed.file.names) {

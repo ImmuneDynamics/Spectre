@@ -63,7 +63,7 @@ do.asinh <- function(dat,
     }
     # Calculate asinh
     value <- asinh(value)
-    value <- as.data.table(value)
+    value <- data.table::as.data.table(value)
 
     ### Options to append the CF used
     dat_out <- data.table::copy(dat)
