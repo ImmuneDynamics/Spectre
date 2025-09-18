@@ -5,8 +5,11 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Spectre installation and getting started guide}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -42,16 +45,17 @@ CRAN)](https://cran.r-project.org/) and [R
 Studio](https://www.rstudio.com/products/rstudio/download/#download).
 
 There are two ways to install Spectre, using `pak` or `remotes` package.
-You can try installing using `pak` first, and if that does not work, you 
-can use the `remotes` package.
-Instructions for both are available below.
+You can try installing using `pak` first, and if that does not work, you
+can use the `remotes` package. Instructions for both are available
+below.
 
-***Important: If you are unfamiliar with running R code using Rstudio, please visit our 
-[Basics guide] section first.***
+***Important: If you are unfamiliar with running R code using Rstudio,
+please visit our [Basics guide] section first.***
 
 #### Using the pak package
 
-Run the following R code to install Spectre using the [pak](https://pak.r-lib.org/) R package. 
+Run the following R code to install Spectre using the
+[pak](https://pak.r-lib.org/) R package.
 
 ```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
 # Installs the package 'pak' if required
@@ -62,14 +66,15 @@ if (!requireNamespace("pak", quietly = TRUE)) {
 pak::pkg_install("immunedynamics/Spectre")
 ```
 
-When running the first command to install the `pak` package for the first time, it might ask you 
-to select which CRAN mirror to use. 
-Pick any mirror closest to where you are, enter the number, and press enter.
+When running the first command to install the `pak` package for the
+first time, it might ask you to select which CRAN mirror to use. Pick
+any mirror closest to where you are, enter the number, and press enter.
 
-When running the second command, Pak will show a list of dependency packages it has to install before it can install Spectre.
-The list may look like the following:
+When running the second command, Pak will show a list of dependency
+packages it has to install before it can install Spectre. The list may
+look like the following:
 
-```
+```         
 → Will install 52 packages.
 → Will update 1 package.
 → Will download 49 CRAN packages (68.97 MB), cached: 4 (0 B).
@@ -129,15 +134,16 @@ The list may look like the following:
 
 ? Do you want to continue (Y/n)
 ```
+
 To continue type letter `Y` and enter.
 
-You should see a progress bar and messages showing the installation progress.
-Wait until it finishes.
+You should see a progress bar and messages showing the installation
+progress. Wait until it finishes.
 
 #### Using the remotes package
 
-If you have trouble installing using the `pak` package above, you can use `remotes` package 
-to do the installation instead.
+If you have trouble installing using the `pak` package above, you can
+use `remotes` package to do the installation instead.
 
 ```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
 # Installs the package 'remotes' if required
@@ -148,35 +154,40 @@ if (!requireNamespace("remotes", quietly = TRUE)) {
 remotes::install_github("immunedynamics/Spectre")
 ```
 
-R might ask you to update some packages. 
-In general we recommend updating packages – to do this, enter 1. 
-*However, you might wish to delay this if you are in the middle of an analysis project.*
+R might ask you to update some packages. In general we recommend
+updating packages – to do this, enter 1. *However, you might wish to
+delay this if you are in the middle of an analysis project.*
 
 ![](images/Tutorial/remotes_1.png)
 
-Some packages may have two different versions, *compiled* and *not compiled*.
-Rstudio will ask whether you want to install the version that require compilation.
+Some packages may have two different versions, *compiled* and *not
+compiled*. Rstudio will ask whether you want to install the version that
+require compilation.
 
-If you want, then enter `Yes` so it will download the version that need to be compiled,
-compile it, then install.
-*However this may require extra softwares installed on your computer to run properly.*
+If you want, then enter `Yes` so it will download the version that need
+to be compiled, compile it, then install. *However this may require
+extra softwares installed on your computer to run properly.*
 
-It is ok to also enter `No` so it will install the version that has been precompiled.
-This is often easier.
+It is ok to also enter `No` so it will install the version that has been
+precompiled. This is often easier.
 
-***However***, some packages must be compiled on your computer to run, like so:
+***However***, some packages must be compiled on your computer to run,
+like so:
 
 ![](images/Tutorial/remotes_2.png)
 
-In this case, we recommend you specify `Yes` and let the computer do the compiling.
+In this case, we recommend you specify `Yes` and let the computer do the
+compiling.
 
-If the installation was successful, you should see something similar to the following:
+If the installation was successful, you should see something similar to
+the following:
 
 ![](images/Tutorial/remotes_3.png)
 
 #### Check that Spectre is installed
 
-To check whether Spectre has been installed successfully, run the following command:
+To check whether Spectre has been installed successfully, run the
+following command:
 
 ```{r}
 if (requireNamespace("Spectre", quietly = TRUE)) {
@@ -186,7 +197,8 @@ if (requireNamespace("Spectre", quietly = TRUE)) {
 }
 ```
 
-If you get the message "Spectre is installed", then it has successfully been installed.
+If you get the message "Spectre is installed", then it has successfully
+been installed.
 
 <br /> <br />
 
@@ -213,16 +225,16 @@ Go to the following address:
 
 Download the correct version of Docker Desktop.
 
-![](images/docker/Docker%201.png){width="300"}
+![](images/clipboard-3229987611.png)
 
 Go to your downloads folder and open the '.dmg' file.
 
-![](images/docker/Docker%202.png){width="300"}
+![](images/clipboard-2467909613.png)
 
 When the following window opens, drag and drop the 'Docker.app' icon
 into the 'Applications' shortcut.
 
-![](images/docker/Docker%203.png){width="300"}
+![](images/clipboard-3081680616.png)
 
 You should now be able to find 'Docker' in your applications folder.
 
@@ -233,21 +245,21 @@ You should now be able to find 'Docker' in your applications folder.
 Open Docker app from the applications folder or bar at the bottom of the
 screen.
 
-![](images/docker/Docker%204.png){width="300"}
+![](images/clipboard-1205500608.png)
 
 Once you turn it on, you should see the following icon in the bar at the
 top of the screen.
 
-![](images/docker/Docker%205.png){width="300"}
+![](images/clipboard-1529692579.png)
 
 Additionally the program itself should open. Wait a few moments while
 the 'Docker Engine' starts.
 
-![](images/docker/Docker%206.png){width="300"}
+![](images/clipboard-543128652.png)
 
 The icon in the lower left will turn green when ready.
 
-![](images/docker/Docker%207.png){width="300"}
+![](images/clipboard-4095703419.png)
 
 Click the gears icon to open 'preferences'. Make sure you untick the
 options in General to mimic the screenshot below. This is to ensure
@@ -255,7 +267,7 @@ Docker doesn't start when you boot your computer, and it doesn't share
 your usage data to Docker by default. Leave the automatic update checked
 if you prefer it to check for updates regularly.
 
-![](images/docker/Docker%208.png){width="300"}
+![](images/clipboard-391766560.png)
 
 Press 'Apply & Restart' when done. Close app until you would like to use
 it.
@@ -266,22 +278,22 @@ it.
 
 Open the Docker app.
 
-![](images/docker/Docker%209.png){width="300"}
+![](images/clipboard-1205500608.png)
 
 Wait a few moments while the 'Docker Engine' starts.
 
-![](images/docker/Docker%2010.png){width="300"}
+![](images/clipboard-543128652.png)
 
 The icon in the lower left will turn green when ready.
 
-![](images/docker/Docker%2011.png){width="300"}
+![](images/clipboard-4095703419.png)
 
 Open 'Terminal' (on Mac, can be found in the applications folder, or the
 bar at the bottom of your screen).
 
-![](images/docker/Docker%2012.png){width="300"}
+![](images/clipboard-2584547186.png)
 
-![](images/docker/Docker%2013.png){width="300"}
+![](images/clipboard-1375122379.png)
 
 Copy the following code into the terminal and press ENTER.
 
@@ -289,7 +301,7 @@ Copy the following code into the terminal and press ENTER.
 docker run --rm -e PASSWORD=spectre -p 8787:8787 -v ~:/home/rstudio/spectre_dir --name=spectre immunedynamics/spectre:master
 ```
 
-![](images/docker/Docker%2014.png){width="300"}
+![](images/clipboard-1681374938.png)
 
 By default, the RStudio session that Docker will launch will be able to
 see everything in your Home directory and below. This is achieved in the
@@ -312,838 +324,40 @@ following address
 
 <http://localhost:8787>
 
-![](images/docker/Docker%2015.png){width="300"}
+![](images/clipboard-3326316748.png)
 
 Sign in
 
 -   Name: `rstudio`
 -   Password: `spectre`
 
-![](images/docker/Docker%2016.png){width="300"}
+![](images/clipboard-1396526383.png)
 
-![](images/docker/Docker%2017.png){width="500"}
+![](images/clipboard-632536106.png)
 
 #### Running Spectre
 
 Open desired analysis script
 
-![](images/docker/Docker%2018.png){width="500"} ![](images/docker/Docker%2019.png){width="500"}
-![](images/docker/Docker%2020.png){width="500"} ![](images/docker/Docker%2021.png){width="500"}
-![](images/docker/Docker%2022.png){width="500"}
+![](images/clipboard-2021385283.png)
+
+![](images/clipboard-18088809.png)
+
+![](images/clipboard-4147688387.png)
+
+![](images/clipboard-510985867.png)
+
+![](images/clipboard-4224303551.png)
 
 Perform analysis
 
-![](images/docker/Docker%2023.png){width="500"}
+![](images/clipboard-2051505511.png)
 
 Close when finished
 
-![](images/docker/Docker%2024.png){width="500"}
+![](images/clipboard-2051505511.png)
 
-<br /> <br />
-
-## Basics guide
-
-------------------------------------------------------------------------
-
-Here provide a brief and high-level introduction to using R, RStudio,
-and Spectre. Additional educational material on using R and R Studio are
-available on many sites, including the [RStudio education
-site](https://education.rstudio.com/) or this [R Spatial
-page](https://rspatial.org/intr/index.html).
-
-<br />
-
-### R basics
-
-To interact with the R programming language, we recommend using RStudio.
-
-#### Open RStudio
-
-Open RStudio, and you should see something similar to the following:
-
-1.  Top left = R script. This is a text editor where lines or segments
-    of code can be 'run', which will send commands to R.
-2.  Bottom left = console. When commands are sent to R, the console will
-    show the progress/output/result. Code can also be entered and run
-    directly in the console.
-3.  Top right = workspace. Whenever you create an object in R (such as
-    saving a set of data) it will show up here.
-4.  Bottom right = various. This is mainly used for displaying plots
-    (under 'Plots'), investigating the packages ('Packages'), or using
-    the help section ('Help').
-
-![](images/Tutorial/Image%201.png){width="700"}
-
-<br />
-
-#### R code basics
-
-There are two important types of text commonly found in R scripts:
-
-**Comments** Any line in R code that starts with a `#` is considered a
-comment. These are not executed by RStudio as R code, but rather are
-used as notes to the user.
-
-This is a comment:
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-## Run the following line to find your current working directory
-```
-
-**Executable code** A line or segment of code can be run and will return
-some form of result. In the example below, the `getwd()` function will
-return the location of the current working directory.
-
-This is the code:
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-getwd()
-```
-
-When the code is run, the output may look something like this:
-
-```         
-[1] "/Users/Tom/Desktop"
-```
-
-<br />
-
-#### Create and save and R script
-
-To get started, create a new .R file and save it
-
--   Make a folder on your desktop called "Spectre demo"
--   In RStudio, create a new R Script file (.R) called "MyScript" and
-    save it in the folder you just created (Spectre demo).
-
-![](images/Tutorial/Image%202.png){width="400"}
-
-<br />
-
-#### Practice running code
-
-For this demo we will use the 'iris' dataset, which consists of
-measurements of 150 flowers. Each row represents one flower, and each
-column represents a different measurement of that flower.
-
-To run code in RStudio, we can either enter code into the script and
-selectively run elements of the code (preferred), or we can enter it
-directly into the console and run the code. For each of the code-blocks
-below, copy the code into your new script, press save, and then
-highlight and press CMD/CTRL return to execute the code
-
-<br />
-
-#### Read the dataset
-
-Copy the following into your script, save, then highlight the code and
-press CMD/CTRL return. The first command we will run is to load the
-'iris' dataset and save it as the object 'dat'. The lines starting with
-'\#' are only comments, and will not excute as commands (even if you
-select them and press CMD + return).
-
-```{r}
-## Part 1: read the dataset
-     
-# Use the 'iris' dataset (150 flowers one per row) with various measurement (each column is a different measurement)
-dat <- iris
-```
-
-After executing, you should should see a new object in the workspace
-(top right). This will be called 'dat', containing 150 observations, and
-5 variables.
-
-```{r}
-dat
-```
-
-Next we will review the dimensions of 'dat' (how many rows and columns)
-and preview data from the first 6 rows of dat.
-
-Copy the following into your script, save, then highlight the code and
-press CMD/CTRL return. You should now see the following in the console.
-Lines starting with '\>' denote the commands that were executed. Lines
-without '\>' are the output. As you can see below the request to show
-the dimensions of our dataset using dim(dat) has given us 150 rows and 5
-columns.
-
-```{r}
-# Determine the number of rows and columns in the dataset
-dim(dat)
-```
-
-Copy the following into your script, save, then highlight the code and
-press CMD/CTRL return. You should now see the following in the console.
-Lines starting with '\>' denote the commands that were executed. Lines
-without '\>' are the output. The request to preview the first 6 rows of
-our data using head(dat) has shown us the contents of the first 6 rows.
-
-```{r}
-# Examine the first few lines of dataset
-head(dat)
-```
-
-<br />
-
-#### Plot the dataset
-
-Next, we will plot some of the dataset. Copy the following into your
-script, save, then highlight the code and press CMD/CTRL return. After
-executing, your should see the following under 'Plots'.
-
-```{r}
-## Part 2: plot the dataset
-     
-# Plot iris dataset (all plots)
-plot(dat)
-```
-
-<br />
-
-To be a little more specific, let's try plotting one column of the
-dataset against another. Copy the following into your script, save, then
-highlight the code and press CMD/CTRL return. Now we should see a plot
-of the sepal width vs length.
-
-```{r}
-# Plot iris dataset (chosen X and Y parameters)
-plot(x = dat$Sepal.Length, y = dat$Sepal.Width)
-```
-
-<br />
-
-#### Save the dataset
-
-Now, let's save the dataset as a .csv file. A .csv file is kind of like
-an .xlsx file, without the bells and whistles. Data in a table format is
-saved, using commas to indicate the separation of new columns. When this
-is read by excel or RStudio, it displays a table. Run the following
-lines to determine the current working directory (where you will read
-files from and write files to).
-
-Copy the following into your script, save, then highlight the code and
-press CMD/CTRL return.
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-## Part 3: save the dataset
- 
-# Determine the current working directory
-getwd()      
-```
-
-This will return the location of your current working directory. In my
-case:
-
-```         
-[1] "/Users/thomasa"
-```
-
-Let's aim to save the CSV to our desktop. To do this we would have to a)
-change the 'working directory' to the desktop (on a mac, it would look
-something like "/Users/Tom/Desktop"). When we set a working directory,
-we are telling R a) where to look for files when we ask it to, and b)
-where to create files when we ask it to.
-
-To set the working directory, type setwd() into the script but don't run
-it yet.
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-setwd()
-```
-
-**Finding a specific directory (absolute path)**
-
--   On a mac, start by entering "/" between the (): setwd("/")
--   Click after the / and press TAB
--   You should see a list of options from your root directory. You can
-    press the UP or DOWN arrows, or use the mouse cursor, to select on
-    of the options, and press ENTER to select in.
-
-![](images/Tutorial/Image%206.png)
-
--   If you start typing the name of a directory, the list of options
-    will be filtered to options that match what you are typing.
-
-![](images/Tutorial/Image%207.png)
-
--   In this case, I will select 'Users' and press ENTER. I can then
-    repeat the process to navigate down my folders
-
-![](images/Tutorial/Image%208.png)
-
--   You can repeat this process to find your working directory until you
-    reach your desired location.
-
-![](images/Tutorial/Image%209.png)
-
-<br />
-
-If I now select this line, or highlight the code and press ENTER, R will
-set the working directory:
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-setwd("/Users/thomasa/Desktop/")
-```
-
-The following should be returned
-
-```         
-> setwd("/Users/thomasa/Desktop/")
-```
-
-Now I can check the working directory has been set correctly by running
-the following:
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-getwd()
-```
-
-If everything has gone correctly, the following (or equivalent) should
-be returned:
-
-```         
-[1] "/Users/thomasa/Desktop/"
-```
-
-Now we will write the dataset to a .csv file (which will be saved in the
-working directory). We will use the function 'write.csv'. The input
-variables here are what dataset we want to write (x = dat) and what we
-want to call the file (file = "iris_dataset.csv").
-
-Execute the following, and check the folder (set as your working
-directory) to see that the new file has been created.
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-# Write a .csv file of the dataset
-write.csv(x = dat, file = "iris_dataset.csv")
-```
-
-<br /> <br />
-
-### Spectre basics
-
-------------------------------------------------------------------------
-
-<br />
-
-#### Setup tutorial script and dataset
-
-To interact with the Spectre package in R, we will use RStudio.
-
-![](images/Tutorial/Spectre%201.png)
-
-<br />
-
-#### Load Spectre package
-
-To use Spectre, we first need to load the 'Spectre' package, as well as
-other relevant packages. To do this, follow the instructions below.
-
--   Copy the code on the right into your R script (MyScript.R). Make
-    sure to SAVE.
--   Run each line (one by one) by clicking on the line or highlighting
-    the text, and press CMD + return (Mac) or CTRL + Enter (Windows).
--   As above, nothing is returned if they are loaded successfully, or an
-    error message is returned if they are not.
--   If you have installed Spectre, but the package won't load, then you
-    can visit our installation troubleshooting page.
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-## Load the Spectre packages from library          
-library('Spectre')
-```
-
-If successful:
-
-```         
->
-```
-
-if unsuccessful:
-
-```         
-> Error in library("Spectre") : there is no package called ‘Spectre’
-```
-
-<br />
-
-#### Load other packages
-
-Rather than having to load each individual package required one-by-one
-(library('plyr'), library('data.table') etc), we have created two
-functions to simplify this process:
-
-1.  `packages.check()` will check if all the required packages are
-    installed
-2.  `package.load()` will load all the required packages
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-## Check if the other required packages are installed
-Spectre::package.check()
-## Load the required packages
-Spectre::package.load()
-```
-
-As each package is loaded, you will see the following:
-
-```         
-> Loading required package: PACKAGENAME
-```
-
-So far you should have the following code in your script:
-
-![](images/Tutorial/Spectre%202.png)
-
-<br />
-
-#### Set a working directory
-
-Normally this would be the location of the files you would like to
-analyse. For now, you can just this as your desktop or similar. If you
-aren't sure how to search for directories, please have a look at our
-basic R tutorial.
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-## Set working directory       
-setwd("/Users/thomasa/Desktop")
-         
-## Check that it has been set correctly
-getwd()
- 
-## Save the working directory as an object called 'Primary Directory'
-PrimaryDirectory <- getwd()
-```
-
-<br />
-
-#### Create an output directory
-
-Now we will create a directory where we can save the data and plots we
-will generate shortly.
-
-```{r, results = 'hide', message=FALSE, warning=FALSE, eval=FALSE, echo=TRUE}
-## Create an output directory      
-        dir.create("Spectre-demo-output")
- 
-## Go to that directory and save it as an object called 'Output Directory'
-        setwd("Spectre-demo-output")
-        getwd()    
-        OutputDirectory <- getwd()
- 
-## Finally, set the current working directory to 'PrimaryDirectory'
-        setwd(PrimaryDirectory)
-```
-
-```{r, echo=FALSE, eval = TRUE}
-       OutputDirectory <- getwd()
-       PrimaryDirectory <- getwd()
-```
-
-<br />
-
-#### Load data
-
-Normally, we load some CSV or FCS files from the disk, or a server into
-R for analysis. In this tutorial, we will skip this step, and use an
-included demo dataset called 'demo.start'. This is a dataset of 120,000
-cells, from 12 bone marrow samples: 6x from mock-infected mice, and 6x
-West Nile virus (WNV)-infected mice. This amounts to 10,000 cells per
-sample. The data set is structured as a large data.frame (a table) where
-each column is a cellular marker (e.g. FITC-CD4, etc), and each row is a
-cell.
-
-Assign the included demo.start dataset to a new object we will call
-cell.dat.
-
-```{r}
-cell.dat <- Spectre::demo.clustered
-cell.dat <- cell.dat[,1:19]
-cell.dat <- Spectre::do.subsample(dat = cell.dat, targets = 10000)
-```
-
-You can review the structure of cell.dat by using str(). You can see the
-cell.dat is both a 'data.table' and a 'data.frame'.
-
-```{r}
-str(cell.dat)
-```
-
-You can review the dimensionality of cell.dat by using dim(). The first
-entry returned is the number of rows, and the second is the number of
-columns.
-
-```{r}
-dim(cell.dat)
-```
-
-You can review the first 6 rows (out of the 10,000 rows) of cell.dat by
-using head(). Each column is a marker or cellular feature, and each row
-is a cell.
-
-```         
-head(cell.dat)
-```
-
-Now let's set some preferences.
-
-```{r}
-## Look at the names of the columns in the dataset, and take note of the number of each column
-as.matrix(names(cell.dat))
-```
-
-Now we can choose the number of each column that we want to use for
-clustering, rather than having to write out each column name. To do
-this, we can put the number of the columns in a vector (i.e. c(5,6,8)
-for columns 5, 6, and 8) within the function below. You can replace
-these with the column numbers you would prefer to use (if you leave it
-as c(5,6,8), then the columns used for clustering will be CD117,
-CD16/32, and CD115.
-
-```{r}
-## Save the column names that you wish to use for clustering as an object called 'cluster.cols'.
-cluster.cols <- names(cell.dat)[c(11:19)]
-```
-
-We can check to make sure the names have been saved by running
-'cluster.cols'.
-
-```{r}
-as.matrix(cluster.cols)
-```
-
-<br />
-
-#### Clustering
-
-Now we can perform out clustering and dimensionality reduction. First we
-are going to cluster the data using FlowSOM.
-
-We can use the function 'run.flowsom' to run FlowSOM on our 'cell.dat'
-dataset. For more information on performing clustering in Spectre, see
-this page. There are two key arguments we need to provide to the
-function. The first is 'dat', or the dataset to be used. The second is
-'use.cols', which is the columns to be used for clustering. In this
-case, we want to set dat to cell.dat, and use.cols to cluster.cols
-(which we just created).
-
-```{r, message=FALSE}
-## Run FlowSOM
-cell.dat <- Spectre::run.flowsom(dat = cell.dat, use.cols = cluster.cols) 
-```
-
-As the clustering is running, you will see the following red button show
-up on your RStudio window. That means that RStudio is in the middle of
-processing something, and it won't respond to other commands while it is
-working.
-
-![](images/Tutorial/Spectre%203.png)
-
-<br />
-
-While FlowSOM runs, you will progressively see the three following
-updates:
-
-```         
-Creating SOM
-Mapping data to SOM
-Creating MST
-```
-
-Once FlowSOM has finished (and the red button has gone away) you can
-check the data to ensure the FlowSOM columns have been added correctly.
-At the end of what's returned, your should see the FlowSOM metaclusters
-and clusters added to the dataset
-
-```{r}
-# Check cell.dat to ensure FlowSOM data correctly attached -- by looking at the last two columns
-cell.dat
-```
-
-<br />
-
-#### Run UMAP
-
-Now we can perform dimensionality reduction on our data for
-visualisation. For this we are going to use UMAP. For more information
-on dimensionality reduction and cytometry data, please see this page.
-There are two key arguments we need to provide to the function. The
-first is 'dat', or the dataset to be used. The second is 'use.cols',
-which is the columns to be used for clustering. In this case, we want to
-set dat to cell.dat, and use.cols to cluster.cols (which we just
-created). UMAP by default doesn't provide progress updates. It might
-take 1-2 minutes for UMAP to finish running.
-
-```{r}
-## Run UMAP
-cell.dat <- Spectre::run.umap(dat = cell.dat, use.cols = cluster.cols) 
-```
-
-Once UMAP has finished (and the red button has gone away) you can check
-the data to ensure the UMAP columns have been added correctly.
-
-```{r}
-## Check cell.dat to ensure the two new UMAP columns have been correctly attached.
-cell.dat
-```
-
-Now that we have run FlowSOM and UMAP, we want to do a quick visual
-check to make sure everything looks correct. To do this we are going to
-create a 'factor' plot – a dot plot with our two UMAP columns as the X
-and Y axis, and the FlowSOM_metacluster as the colour. We are going to
-add the labels of each cluster to the plot, and we will tell the
-function not to save the image to disk. Running this command should
-generate a plot in the viewer window in RStudio.
-
-```{r, message = FALSE}
-## Make a 'factor' plot
-Spectre::make.colour.plot(dat = cell.dat,
-                         x.axis = "UMAP_X",
-                         y.axis = "UMAP_Y",
-                         col.axis = "FlowSOM_metacluster",
-                         col.type = 'factor',
-                         add.label = TRUE,  
-                         save.to.disk = FALSE)
-```
-
-<br />
-
-#### Save data to disk
-
-Now that we have added the cluster and UMAP information to our data, we
-should save the files and capture our progress.
-
-First, let's set our working directory to 'OutputDirectory', so the data
-goes to the right place.
-
-```{r}
-## Set working directory to OutputDirectory
-setwd(OutputDirectory)
-getwd()
-```
-
-```{r, eval = FALSE}
-## Save CSV files
-Spectre::write.files(dat = cell.dat,
-                     file.prefix = "Sample_CSV_file",
-                     write.csv = TRUE,
-                     write.fcs = FALSE)
-```
-
-To further explore this data in FlowJo, let's also save some FCS files.
-
-```{r, eval = FALSE}
-## Save FCS files
-        Spectre::write.files(dat = cell.dat,
-                             file.prefix = "Sample_FCS_file",
-                             write.csv = FALSE,
-                             write.fcs = TRUE)
-```
-
-<br />
-
-#### Make some plots
-
-Now we should create some informative plots.
-
-First we will make another factor plot of the FlowSOM metaclusters, but
-this time we will set 'save.to.disk' to TRUE. Once this has been run,
-check your working directory for the image.
-
-```{r, echo=TRUE, eval=FALSE}
-## Make a 'factor' plot coloured by cluster
-Spectre::make.colour.plot(dat = cell.dat,
-                 x.axis = "UMAP_X",
-                 y.axis = "UMAP_Y",
-                 col.axis = "FlowSOM_metacluster",
-                 col.type = 'factor',
-                 add.label = TRUE)
-```
-
-```{r, echo=FALSE, eval=TRUE}
-## Make a 'factor' plot coloured by cluster
-Spectre::make.colour.plot(dat = cell.dat,
-                 x.axis = "UMAP_X",
-                 y.axis = "UMAP_Y",
-                 col.axis = "FlowSOM_metacluster",
-                 col.type = 'factor',
-                 add.label = TRUE, 
-                 save.to.disk = FALSE)
-```
-
-Next we'll make a colour plot showing the expression of a specific
-marker
-
-```{r, echo=FALSE}
-## Make a colour plot for the expression level of CD11b
-        Spectre::make.colour.plot(dat = cell.dat,
-                         x.axis = "UMAP_X",
-                         y.axis = "UMAP_Y",
-                         col.axis = "CD11b_asinh",
-                         add.label = TRUE,
-                         save.to.disk = FALSE)
-```
-
-<br /> <br />
-
-## Preparing data for Spectre
-
-------------------------------------------------------------------------
-
-### Exporting data from FlowJo
-
-This page explains the initial data analysis and preparation steps for
-different forms of cytometry data, and how to export data from FlowJo in
-preparation for analysis with Spectre. The overall objective is to
-export a population of interest (e.g. leukocytes), usually following the
-removal of doublets, debris, dead cells, and any irrelevant cells. 
-
-**Population of interest (POI) gating**
-
-Gate to your 'population of interest' (POI). Typically this will be
-'live cells', or potentially live CD45+ cells (live leukocytes).
-
-![](images/Tutorial/clipboard-1161121180.png)
-
-![](images/Tutorial/clipboard-582034683.png)
-
-Select the POI you wish to export, and then click '**Select Equivalent
-Nodes**' in the '**Edit**' space.
-
-![](images/Tutorial/clipboard-3423209639.png)
-
- ... this will select each POI gates in each samples.
-
-![](images/Tutorial/clipboard-1845509509.png)
-
-Right click on any of the POI populations (as long as all have been
-selected) and select '**Export / Concatenate Populations'**
-
-![](images/Tutorial/clipboard-1778792973.png)
-
-**Exporting data as an FCS or CSV file**
-
-Spectre can import data as FCS or CSV files.
-
-Choose a format for export:
-
--   By default we suggest exporting CSV (scale value) files
-
--   You can also export the data as FCS files
-
--   If you wish, you can export the 'channel values' as a CSV file
-    instead. 
-    *The channel-values are pre-transformed, which removes the
-    requirement for an arcsinh transformation in R. See [this
-    page](https://immunedynamics.io/spectre/tutorials/data_transformation/data_transformation.html)
-    for more information.*
-
-![](images/Tutorial/clipboard-1354783275.png)
-
-Under '**Parameters**', select '**Custom set of parameters**', and
-select the parameters you wish to export. In this case, select FSC-A and
-SSC-A, as well as the compensated (Comp-...) parameters.
-
-Make sure to select the compensated ('Comp-...') parameters.
-
-![](images/Tutorial/clipboard-2991153619.png)
-
-Choose a location for the export.
-
-![](images/Tutorial/clipboard-1619573742.png)
-
-Result:
-
-![](images/Tutorial/clipboard-3488255565.png)
-
-### Setup a sample metadata file
-
-To make the analysis a little easier, we usually create a file that
-contains relevant metadata for each file (e.g. sample name, group name,
-batch, etc). This allows us to add that sample information to each cell
-(row) in the data.table in R, making it easy to navigate, filter, and
-plot the data by any factor (group, batch, etc). If you have cell count
-for your files, this can be added here as well.
-
-For most of our workflows, within the folder you are using for your
-analysis there will be:
-
--   The R script
-
--   A 'data' folder, and
-
--   A 'metadata' folder
-
-![](images/Tutorial/clipboard-3923624177.png)
-
-Using Microsoft Excel (or similar), create a new file and save it as a
-CSV file in the metadata folder
-
-![](images/Tutorial/clipboard-1336915300.png)
-
-On a **Mac**, select the files, right click and select 'copy' (or press
-CMD + C).
-
-![](images/Tutorial/clipboard-2647124696.png)
-
-In the 'sample.details.csv' file, name the first column 'Filename' (A1),
-then in A2 right click and select 'paste' (or press CMD + V). This will
-paste the filenames into the CSV file.
-
-![](images/Tutorial/clipboard-800630277.png)
-
-***On Windows**: select files, press CTRL + A, then paste into excel.
-Use find and replace to remove the full file path (see [this
-video](https://www.youtube.com/watch?v=F7SE5h7AUBg) for a
-demonstration).*
-
-You can then add as much information relevant to each file that you
-like. Sample, Group, and Batch are 'required' for most of the Spectre
-workflows (they aren't actually required, but it makes it easier to use
-the default scripts). If all you samples are from one batch, just enter
-'1' or 'A' (or some other batch name) into each row under 'batch'. If
-you would like to add other information (time point, infection,
-treatment, etc) then feel free to.
-
--   "Sample" is a recommended column, as this can be a more simplified
-    name for each sample
-
--   "Group" is extremely useful for most analyses
-
--   "Batch" is helpful if you have prepared, stained, or run samples in
-    multiple batches. If all you samples are from one batch, just enter
-    '1' or 'A' (or some other batch name) into each row under 'batch'. 
-
--   "Cells per sample" is a useful column to add **if** you intend to
-    generate absolute counts of each population per sample during the
-    generation of summary data, but is not required otherwise.
-
--   If you would like to add other information (time point, infection,
-    treatment, etc) then feel free to.
-
-![](images/Tutorial/clipboard-2442827709.png)
-
-You are now ready to get started with Spectre. Check out our workflows
-on the [Spectre Home page](https://immunedynamics.github.io/spectre).
-The [Simple Discovery Workflow](https://immunedynamics.io/spectre/simple-discovery/)
-is a great place to get started.
-
-<br /> <br />
-
-## Using Spectre
-
-------------------------------------------------------------------------
-
-When you are ready to start analysis, check out our structured workflows
-and tutorials on the following pages:
-
--   Analysis of [high-dimensional
-    cytometry](https://immunedynamics.github.io/spectre/cytometry) data
--   Analysis of [high-dimensional
-    imaging/spatial](https://immunedynamics.github.io/spectre/spatial/)
-    data
--   Analysis of [single-cell
-    genomics](https://immunedynamics.github.io/spectre/single-cell/)
-    data
+![](images/clipboard-2998598351.png)
 
 <br /> <br />
 
@@ -1154,7 +368,7 @@ and tutorials on the following pages:
 If Spectre or any of the dependencies was not installed successfully,
 you may see some error messages like the following.
 
-![](Image%205.png)
+![](images/clipboard-2821007311.png)
 
 Alternatively, if Spectre was successfully installed, but when running
 `package.check()` some of the dependencies were not been installed
