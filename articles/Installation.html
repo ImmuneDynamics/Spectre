@@ -64,7 +64,7 @@ Ashhurst, Givanna Putri</h4>
             
             <h4 data-toc-skip class="date">2025-09-18</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/ImmuneDynamics/Spectre/blob/master/vignettes/Installation.Rmd" class="external-link"><code>vignettes/Installation.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ImmuneDynamics/Spectre/blob/v1.3.0/vignettes/Installation.Rmd" class="external-link"><code>vignettes/Installation.Rmd</code></a></small>
       <div class="d-none name"><code>Installation.Rmd</code></div>
     </div>
 
@@ -985,22 +985,22 @@ take 1-2 minutes for UMAP to finish running.</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Run UMAP</span></span>
 <span><span class="va">cell.dat</span> <span class="op">&lt;-</span> <span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/run.umap.html">run.umap</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>, use.cols <span class="op">=</span> <span class="va">cluster.cols</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## 03:56:30 UMAP embedding parameters a = 1.577 b = 0.8951</span></span></code></pre>
-<pre><code><span><span class="co">## 03:56:30 Converting dataframe to numerical matrix</span></span></code></pre>
-<pre><code><span><span class="co">## 03:56:30 Read 10000 rows and found 9 numeric columns</span></span></code></pre>
-<pre><code><span><span class="co">## 03:56:30 Using Annoy for neighbor search, n_neighbors = 15</span></span></code></pre>
-<pre><code><span><span class="co">## 03:56:31 Building Annoy index with metric = euclidean, n_trees = 50</span></span></code></pre>
+<pre><code><span><span class="co">## 04:03:26 UMAP embedding parameters a = 1.577 b = 0.8951</span></span></code></pre>
+<pre><code><span><span class="co">## 04:03:26 Converting dataframe to numerical matrix</span></span></code></pre>
+<pre><code><span><span class="co">## 04:03:26 Read 10000 rows and found 9 numeric columns</span></span></code></pre>
+<pre><code><span><span class="co">## 04:03:26 Using Annoy for neighbor search, n_neighbors = 15</span></span></code></pre>
+<pre><code><span><span class="co">## 04:03:27 Building Annoy index with metric = euclidean, n_trees = 50</span></span></code></pre>
 <pre><code><span><span class="co">## 0%   10   20   30   40   50   60   70   80   90   100%</span></span></code></pre>
 <pre><code><span><span class="co">## [----|----|----|----|----|----|----|----|----|----|</span></span></code></pre>
 <pre><code><span><span class="co">## **************************************************|</span></span>
-<span><span class="co">## 03:56:31 Writing NN index file to temp file /tmp/RtmpXZSg4E/file99be14f407d8</span></span>
-<span><span class="co">## 03:56:31 Searching Annoy index using 3 threads, search_k = 1500</span></span>
-<span><span class="co">## 03:56:32 Annoy recall = 100%</span></span>
-<span><span class="co">## 03:56:33 Commencing smooth kNN distance calibration using 3 threads with target n_neighbors = 15</span></span>
-<span><span class="co">## 03:56:33 Initializing from normalized Laplacian + noise (using irlba)</span></span>
-<span><span class="co">## 03:56:33 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span></span>
-<span><span class="co">## 03:56:33 Using rng type: pcg</span></span>
-<span><span class="co">## 03:56:35 Optimization finished</span></span></code></pre>
+<span><span class="co">## 04:03:27 Writing NN index file to temp file /tmp/RtmpLRx8cs/file29173a436533</span></span>
+<span><span class="co">## 04:03:27 Searching Annoy index using 3 threads, search_k = 1500</span></span>
+<span><span class="co">## 04:03:28 Annoy recall = 100%</span></span>
+<span><span class="co">## 04:03:28 Commencing smooth kNN distance calibration using 3 threads with target n_neighbors = 15</span></span>
+<span><span class="co">## 04:03:29 Initializing from normalized Laplacian + noise (using irlba)</span></span>
+<span><span class="co">## 04:03:29 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span></span>
+<span><span class="co">## 04:03:29 Using rng type: pcg</span></span>
+<span><span class="co">## 04:03:30 Optimization finished</span></span></code></pre>
 <p>Once UMAP has finished (and the red button has gone away) you can
 check the data to ensure the UMAP columns have been added correctly.</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
