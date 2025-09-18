@@ -34,6 +34,10 @@ blank.axis, save.each.plot)
 
 \item{global.col}{DEFAULT = TRUE. Defines the limits for the colour axis based on the whole dataset. If FALSE, then each plot colour limit scales individually.}
 
+\item{align.xy.by}{DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.}
+
+\item{align.col.by}{DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.}
+
 \item{colours}{DEFAULTS to 'spectral'. What colour scheme do you want to use. Only used if type = 'colour', ignored if type = 'factor'. Can be 'jet', 'spectral', 'viridis', 'inferno', 'magma', or "BuPu".}
 
 \item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}

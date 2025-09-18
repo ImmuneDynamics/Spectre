@@ -32,6 +32,8 @@
 #' This only works when \code{col.axis} is specified and when hex = FALSE.
 #' @param legend.loc Character. 
 #' Legend position: "right" (default), "bottom", "top", "left", or "none".
+#' @param align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
+#' @param align.col.by DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.
 #'
 #' @usage make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, 
 #' col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, 
@@ -58,8 +60,6 @@
 #' @import gridExtra
 #' @export
 
-# align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
-# align.col.by DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.
 
 make.multi.plot <- function(
     dat,
