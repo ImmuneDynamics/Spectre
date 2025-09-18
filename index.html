@@ -65,17 +65,18 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="spectre">Spectre<a class="anchor" aria-label="anchor" href="#spectre"></a>
+<div class="page-header"><h1 id="spectre-">Spectre <img src="image/SpectreFillWhite.png" align="right" width="250" style="margin-left: 10px;"><a class="anchor" aria-label="anchor" href="#spectre-"></a>
 </h1></div>
 <p>A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.</p>
-<p><img src="reference/figures/spectre_banner_v2.png"></p>
 <p><strong>Current version</strong>: <a href="https://github.com/ImmuneDynamics/Spectre/releases" class="external-link"><code>v1.3.0</code></a></p>
 <p><a href="https://github.com/ImmuneDynamics/Spectre/actions/workflows/check-standard.yaml" class="external-link"><img src="https://github.com/ImmuneDynamics/Spectre/actions/workflows/check-standard.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://ci.appveyor.com/project/tomashhurst/spectre" class="external-link"><img src="https://ci.appveyor.com/api/projects/status/akhvb8wub6d6xhtd?svg=true" alt="AppVeyor build status"></a></p>
 <p><br></p>
 <div class="section level2">
 <h2 id="about">About<a class="anchor" aria-label="anchor" href="#about"></a>
 </h2>
-<p>Spectre is an R package that enables comprehensive end-to-end integration and analysis of high-dimensional cytometry data from different batches or experiments. Spectre streamlines the analytical stages of raw data pre-processing, batch alignment, data integration, clustering, dimensionality reduction, visualisation and population labelling, as well as quantitative and statistical analysis. To manage large cytometry datasets, Spectre was built on the data.table framework – this simple table-like structure allows for fast and easy processing of large datasets in R. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. Recently we have extended the functionality of Spectre to support the analysis of Imaging Mass Cytometry (IMC) and scRNAseq data. For more information, please see our paper: <a href="https://doi.org/10.1002/cyto.a.24350" class="external-link">Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2022). Cytometry A. DOI: 10.1002/cyto.a.24350</a>.</p>
+<p>Spectre is an R package that enables comprehensive end-to-end integration and analysis of high-dimensional cytometry data from different batches or experiments. Spectre streamlines the analytical stages of raw data pre-processing, batch alignment, data integration, clustering, dimensionality reduction, visualisation and population labelling, as well as quantitative and statistical analysis.</p>
+<p><img src="image/Banner.png"></p>
+<p>To manage large cytometry datasets, Spectre was built on the data.table framework – this simple table-like structure allows for fast and easy processing of large datasets in R. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. Recently we have extended the functionality of Spectre to support the analysis of Imaging Mass Cytometry (IMC) and scRNAseq data. For more information, please see our paper: <a href="https://doi.org/10.1002/cyto.a.24350" class="external-link">Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2022). Cytometry A. DOI: 10.1002/cyto.a.24350</a>.</p>
 <p><br></p>
 </div>
 <div class="section level2">
@@ -85,7 +86,7 @@
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>We recommend using Spectre with <a href="https://cran.r-project.org/mirrors.html" class="external-link">R</a> and <a href="https://www.rstudio.com/products/rstudio/download/#download" class="external-link">RStudio</a>. If you are unfamiliar with using R and RStudio, check out our <a href="https://immunedynamics.io/Spectre/artciles/basics_guide.html" class="external-link">basics guide</a> for help getting started.</p>
+<p>We recommend using Spectre with <a href="https://cran.r-project.org/mirrors.html" class="external-link">R</a> and <a href="https://www.rstudio.com/products/rstudio/download/#download" class="external-link">RStudio</a>. If you are unfamiliar with using R and RStudio, check out our <a href="https://immunedynamics.io/Spectre/articles/basics_guide.html" class="external-link">basics guide</a> for help getting started.</p>
 <p>Once R and RStudio are installed, run the following code to install the Spectre package using the package <code>pak</code>.</p>
 <pre><code><span><span class="co"># Installs the package 'pak' if required</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"pak"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -93,17 +94,17 @@
 <span><span class="op">}</span></span>
 <span><span class="co"># Install the Spectre package</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"immunedynamics/Spectre"</span><span class="op">)</span></span></code></pre>
-<p>For detailed installation instructions and alternative installation pathways, see our <a href="https://immunedynamics.io/Spectre/artciles/install/" class="external-link">installation guide</a>.</p>
+<p>For detailed installation instructions and alternative installation pathways, see our <a href="https://immunedynamics.io/Spectre/articles/install/" class="external-link">installation guide</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="new-to-r-or-spectre">New to R or Spectre?<a class="anchor" aria-label="anchor" href="#new-to-r-or-spectre"></a>
 </h3>
-<p>New users can check out our <a href="https://immunedynamics.io/spectre/install/#Basics_guide" class="external-link">basics guides</a> to get acquainted with using R, RStudio, and Spectre.</p>
+<p>New users can check out our <a href="https://immunedynamics.io/Spectre/articles/basics_guide.html" class="external-link">basics guides</a> to get acquainted with using R, RStudio, and Spectre.</p>
 </div>
 <div class="section level3">
 <h3 id="workflows-and-protocols">Workflows and protocols<a class="anchor" aria-label="anchor" href="#workflows-and-protocols"></a>
 </h3>
-<p>When you are ready to start analysis, check out our structured workflows and tutorials for cytometry and spatial analysis by browsing the <code>Artciles</code> tab at the top of our <a href="https://immunedynamics.io/Spectre" class="external-link">home page</a>.</p>
+<p>When you are ready to start analysis, check out our structured workflows and tutorials for cytometry and spatial analysis by browsing the menu at the top of our <a href="https://immunedynamics.io/spectre" class="external-link">home page</a>.</p>
 <p><br></p>
 </div>
 </div>
