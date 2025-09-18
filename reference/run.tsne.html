@@ -25,15 +25,21 @@ Uses the R package "Rtsne" to calculate plots.'></head><body>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/install.html">Install</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/basics_guide.html">Spectre basics guide</a></li>
-    <li><a class="dropdown-item" href="../articles/data_prep.html">Preparing data for analysis with Spectre</a></li>
-    <li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
-    <li><a class="dropdown-item" href="../articles/Installation.html">Spectre installation and getting started guide</a></li>
-    <li><a class="dropdown-item" href="../articles/simple_discovery.html">Spectre - simple discovery workflow</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-workflows" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Workflows</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-workflows"><li><h6 class="dropdown-header" data-toc-skip>Getting started</h6></li>
+    <li><a class="dropdown-item" href="../articles/basics_guide.html">Basics guide</a></li>
+    <li><a class="dropdown-item" href="../articles/data_prep.html">Data preparation</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Core workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/simple_discovery.html">Simple Discovery</a></li>
   </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
+  </ul></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -178,29 +184,29 @@ Uses the R package "Rtsne" to calculate plots.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Computing input similarities...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Building tree...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - point 10000 of 10000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Done in 1.42 seconds (sparsity = 0.012680)!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Done in 1.45 seconds (sparsity = 0.012680)!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Learning embedding...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 50: error is 97.360072 (50 iterations in 1.46 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 100: error is 86.988747 (50 iterations in 1.46 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 150: error is 83.922629 (50 iterations in 1.21 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 200: error is 83.434722 (50 iterations in 1.27 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 250: error is 83.261604 (50 iterations in 1.30 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 300: error is 3.176013 (50 iterations in 1.15 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 350: error is 2.820719 (50 iterations in 1.11 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 400: error is 2.621339 (50 iterations in 1.11 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 450: error is 2.489056 (50 iterations in 1.12 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 500: error is 2.393128 (50 iterations in 1.12 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 550: error is 2.319920 (50 iterations in 1.13 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 600: error is 2.262865 (50 iterations in 1.13 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 650: error is 2.216526 (50 iterations in 1.13 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 700: error is 2.179152 (50 iterations in 1.14 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 750: error is 2.149116 (50 iterations in 1.14 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 800: error is 2.125685 (50 iterations in 1.14 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 850: error is 2.107875 (50 iterations in 1.15 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 900: error is 2.094636 (50 iterations in 1.15 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 950: error is 2.083936 (50 iterations in 1.15 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 1000: error is 2.074844 (50 iterations in 1.14 seconds)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fitting performed in 23.70 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 50: error is 97.360072 (50 iterations in 1.58 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 100: error is 86.988747 (50 iterations in 1.58 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 150: error is 83.922629 (50 iterations in 1.31 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 200: error is 83.434722 (50 iterations in 1.38 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 250: error is 83.261604 (50 iterations in 1.41 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 300: error is 3.176013 (50 iterations in 1.23 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 350: error is 2.820719 (50 iterations in 1.18 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 400: error is 2.621339 (50 iterations in 1.18 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 450: error is 2.489056 (50 iterations in 1.19 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 500: error is 2.393128 (50 iterations in 1.20 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 550: error is 2.319920 (50 iterations in 1.21 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 600: error is 2.262865 (50 iterations in 1.21 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 650: error is 2.216526 (50 iterations in 1.21 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 700: error is 2.179152 (50 iterations in 1.22 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 750: error is 2.149116 (50 iterations in 1.22 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 800: error is 2.125685 (50 iterations in 1.22 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 850: error is 2.107875 (50 iterations in 1.23 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 900: error is 2.094636 (50 iterations in 1.22 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 950: error is 2.083936 (50 iterations in 1.22 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration 1000: error is 2.074844 (50 iterations in 1.22 seconds)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fitting performed in 25.41 seconds.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

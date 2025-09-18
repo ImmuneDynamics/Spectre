@@ -29,15 +29,21 @@ Uses the R package "umap" to calculate plots and "data.table" to handle data.'><
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/install.html">Install</a></li>
 <li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/basics_guide.html">Spectre basics guide</a></li>
-    <li><a class="dropdown-item" href="../articles/data_prep.html">Preparing data for analysis with Spectre</a></li>
-    <li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
-    <li><a class="dropdown-item" href="../articles/Installation.html">Spectre installation and getting started guide</a></li>
-    <li><a class="dropdown-item" href="../articles/simple_discovery.html">Spectre - simple discovery workflow</a></li>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-workflows" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Workflows</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-workflows"><li><h6 class="dropdown-header" data-toc-skip>Getting started</h6></li>
+    <li><a class="dropdown-item" href="../articles/basics_guide.html">Basics guide</a></li>
+    <li><a class="dropdown-item" href="../articles/data_prep.html">Data preparation</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Core workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/simple_discovery.html">Simple Discovery</a></li>
   </ul></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
+  </ul></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -262,11 +268,11 @@ Felix Marsh-Wakefield, <a href="mailto:felix.marsh-wakefield@sydney.edu.au">feli
 <span class="r-in"><span>                              <span class="st">"CD45_asinh"</span>, <span class="st">"Ly6G_asinh"</span>, <span class="st">"CD11b_asinh"</span>, </span></span>
 <span class="r-in"><span>                              <span class="st">"B220_asinh"</span>, <span class="st">"CD8a_asinh"</span>, <span class="st">"Ly6C_asinh"</span>, </span></span>
 <span class="r-in"><span>                              <span class="st">"CD4_asinh"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:43 UMAP embedding parameters a = 1.577 b = 0.8951</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:43 Converting dataframe to numerical matrix</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:43 Read 10000 rows and found 9 numeric columns</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:43 Using Annoy for neighbor search, n_neighbors = 15</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:43 Building Annoy index with metric = euclidean, n_trees = 50</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:09 UMAP embedding parameters a = 1.577 b = 0.8951</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:09 Converting dataframe to numerical matrix</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:09 Read 10000 rows and found 9 numeric columns</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:09 Using Annoy for neighbor search, n_neighbors = 15</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:10 Building Annoy index with metric = euclidean, n_trees = 50</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
@@ -320,15 +326,15 @@ Felix Marsh-Wakefield, <a href="mailto:felix.marsh-wakefield@sydney.edu.au">feli
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> |</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:44 Writing NN index file to temp file /tmp/Rtmp3qSEiz/file22d02a092551</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:44 Searching Annoy index using 3 threads, search_k = 1500</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:45 Annoy recall = 100%</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:45 Commencing smooth kNN distance calibration using 3 threads</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:10 Writing NN index file to temp file /tmp/RtmpJyz7Xa/file222c6e797ecd</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:10 Searching Annoy index using 3 threads, search_k = 1500</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:11 Annoy recall = 100%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:12 Commencing smooth kNN distance calibration using 3 threads</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  with target n_neighbors = 15</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:46 Initializing from normalized Laplacian + noise (using RSpectra)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:46 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:46 Using rng type: pcg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:27:48 Optimization finished</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:13 Initializing from normalized Laplacian + noise (using RSpectra)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:13 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:13 Using rng type: pcg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:43:14 Optimization finished</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
