@@ -2,3 +2,27 @@ url: http://immunedynamics.io/Spectre/
 template:
   bootstrap: 5
 
+navbar:
+  title: "Spectre"
+  left:
+    - text: "Install"
+      href: articles/install.html
+    - text: "Workflows"
+      menu:
+        - text: Getting started
+        - text: "Basics guide"
+          href: articles/basics_guide.html
+        - text: "Data preparation"
+          href: articles/data_prep.html
+        - text: -------
+        - text: Core workflows
+        - text: "Simple Discovery"
+          href: articles/simple_discovery.html
+    - text: "Tutorials"
+      menu:
+        - text: "Data transformation"
+          href: articles/data_transformation.html
+    - text: "Reference"
+      href: reference/index.html
+    - text: "Changelog"
+      href: news/index.html

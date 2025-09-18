@@ -24,26 +24,28 @@ We provide a variety of workflows and tutorials on our main page here: [https://
 
 ### Installation
 
-We recommend using Spectre with [R](https://cran.r-project.org/mirrors.html) and [RStudio](https://www.rstudio.com/products/rstudio/download/#download). Once R and RStudio are installed, run the following to install the Spectre package.
+We recommend using Spectre with [R](https://cran.r-project.org/mirrors.html) and [RStudio](https://www.rstudio.com/products/rstudio/download/#download). If you are unfamiliar with using R and RStudio, check out our [basics guide](https://immunedynamics.io/Spectre/artciles/basics_guide.html) for help getting started.
+
+Once R and RStudio are installed, run the following code to install the Spectre package using the package `pak`.
 
 ```         
-if(!require('remotes')) {install.packages('remotes')} # Installs the package 'remotes'
-remotes::install_github(repo = "immunedynamics/spectre") # Install the Spectre package
+# Installs the package 'pak' if required
+if (!requireNamespace("pak", quietly = TRUE)) {
+    install.packages("pak")
+}
+# Install the Spectre package
+pak::pkg_install("immunedynamics/Spectre")
 ```
 
-If you are unfamiliar with using R and RStudio, check out our [R and Spectre basics guides](https://immunedynamics.io/spectre/install/#Basics_guide) for assistance. For detailed installation instructions, and instructions for installing Spectre via Docker, see our [installation guide](https://immunedynamics.io/spectre/install/).
+For detailed installation instructions and alternative installation pathways, see our [installation guide](https://immunedynamics.io/Spectre/artciles/install/).
 
 ### New to R or Spectre?
 
-New users can check out our [basics guides](https://immunedynamics.io/spectre/install/#Basics_guide) to get acquainted with using R and Spectre.
+New users can check out our [basics guides](https://immunedynamics.io/spectre/install/#Basics_guide) to get acquainted with using R, RStudio, and Spectre.
 
 ### Workflows and protocols
 
-When you are ready to start analysis, check out our structured workflows and tutorials on the following pages:
-
--   Analysis of [high-dimensional cytometry](https://immunedynamics.github.io/spectre/cytometry) data
--   Analysis of [high-dimensional imaging/spatial](https://immunedynamics.github.io/spectre/spatial/) data  
--   Analysis of [single-cell genomics](https://immunedynamics.github.io/spectre/single-cell/) data
+When you are ready to start analysis, check out our structured workflows and tutorials for cytometry and spatial analysis by browsing the `Artciles` tab at the top of our [home page](https://immunedynamics.io/Spectre).
 
 <br/>
 
