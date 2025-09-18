@@ -1,4 +1,4 @@
-# Spectre <img src="image/SpectreFillWhite.png" align="right" width=250 style="margin-left: 10px;">
+# Spectre <img src="man/figures/SpectreFillWhite.png" align="right" width=250 style="margin-left: 10px;">
 
 A computational toolkit in R for the integration, exploration, and analysis of high-dimensional single-cell cytometry and imaging data.
 
@@ -15,7 +15,7 @@ A computational toolkit in R for the integration, exploration, and analysis of h
 
 Spectre is an R package that enables comprehensive end-to-end integration and analysis of high-dimensional cytometry data from different batches or experiments. Spectre streamlines the analytical stages of raw data pre-processing, batch alignment, data integration, clustering, dimensionality reduction, visualisation and population labelling, as well as quantitative and statistical analysis. 
 
-<img src="image/Banner.png"/>
+<img src="man/figures/Banner.png"/>
 
 To manage large cytometry datasets, Spectre was built on the data.table framework -- this simple table-like structure allows for fast and easy processing of large datasets in R. Critically, the design of Spectre allows for a simple, clear, and modular design of analysis workflows, that can be utilised by data and laboratory scientists. Recently we have extended the functionality of Spectre to support the analysis of Imaging Mass Cytometry (IMC) and scRNAseq data. For more information, please see our paper: [Ashhurst TM, Marsh-Wakefield F, Putri GH et al. (2022). Cytometry A. DOI: 10.1002/cyto.a.24350](https://doi.org/10.1002/cyto.a.24350).
 
