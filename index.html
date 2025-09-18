@@ -77,26 +77,25 @@
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>We recommend using Spectre with <a href="https://cran.r-project.org/mirrors.html" class="external-link">R</a> and <a href="https://www.rstudio.com/products/rstudio/download/#download" class="external-link">RStudio</a>. Once R and RStudio are installed, run the following to install the Spectre package.</p>
-<pre><code><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">'remotes'</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'remotes'</span><span class="op">)</span><span class="op">}</span> <span class="co"># Installs the package 'remotes'</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"immunedynamics/spectre"</span><span class="op">)</span> <span class="co"># Install the Spectre package</span></span></code></pre>
-<p>If you are unfamiliar with using R and RStudio, check out our <a href="https://immunedynamics.io/spectre/install/#Basics_guide" class="external-link">R and Spectre basics guides</a> for assistance. For detailed installation instructions, and instructions for installing Spectre via Docker, see our <a href="https://immunedynamics.io/spectre/install/" class="external-link">installation guide</a>.</p>
+<p>We recommend using Spectre with <a href="https://cran.r-project.org/mirrors.html" class="external-link">R</a> and <a href="https://www.rstudio.com/products/rstudio/download/#download" class="external-link">RStudio</a>. If you are unfamiliar with using R and RStudio, check out our <a href="https://immunedynamics.io/Spectre/artciles/basics_guide.html" class="external-link">basics guide</a> for help getting started.</p>
+<p>Once R and RStudio are installed, run the following code to install the Spectre package using the package <code>pak</code>.</p>
+<pre><code><span><span class="co"># Installs the package 'pak' if required</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"pak"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co"># Install the Spectre package</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"immunedynamics/Spectre"</span><span class="op">)</span></span></code></pre>
+<p>For detailed installation instructions and alternative installation pathways, see our <a href="https://immunedynamics.io/Spectre/artciles/install/" class="external-link">installation guide</a>.</p>
 </div>
 <div class="section level3">
 <h3 id="new-to-r-or-spectre">New to R or Spectre?<a class="anchor" aria-label="anchor" href="#new-to-r-or-spectre"></a>
 </h3>
-<p>New users can check out our <a href="https://immunedynamics.io/spectre/install/#Basics_guide" class="external-link">basics guides</a> to get acquainted with using R and Spectre.</p>
+<p>New users can check out our <a href="https://immunedynamics.io/spectre/install/#Basics_guide" class="external-link">basics guides</a> to get acquainted with using R, RStudio, and Spectre.</p>
 </div>
 <div class="section level3">
 <h3 id="workflows-and-protocols">Workflows and protocols<a class="anchor" aria-label="anchor" href="#workflows-and-protocols"></a>
 </h3>
-<p>When you are ready to start analysis, check out our structured workflows and tutorials on the following pages:</p>
-<ul>
-<li>Analysis of <a href="https://immunedynamics.github.io/spectre/cytometry" class="external-link">high-dimensional cytometry</a> data</li>
-<li>Analysis of <a href="https://immunedynamics.github.io/spectre/spatial/" class="external-link">high-dimensional imaging/spatial</a> data<br>
-</li>
-<li>Analysis of <a href="https://immunedynamics.github.io/spectre/single-cell/" class="external-link">single-cell genomics</a> data</li>
-</ul>
+<p>When you are ready to start analysis, check out our structured workflows and tutorials for cytometry and spatial analysis by browsing the <code>Artciles</code> tab at the top of our <a href="https://immunedynamics.io/Spectre" class="external-link">home page</a>.</p>
 <p><br></p>
 </div>
 </div>
