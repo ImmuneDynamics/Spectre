@@ -2,10 +2,12 @@ pandoc: 3.1.11
 pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
+  basics_guide: basics_guide.html
+  data_prep: data_prep.html
   data_transformation: data_transformation.html
   Installation: Installation.html
   simple_discovery: simple_discovery.html
-last_built: 2025-09-18T04:37Z
+last_built: 2025-09-18T06:04Z
 urls:
   reference: http://immunedynamics.io/Spectre/reference
   article: http://immunedynamics.io/Spectre/articles

@@ -32,7 +32,9 @@ Uses the R package "umap" to calculate plots and "data.table" to handle data.'><
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/basics_guide.html">Spectre basics guide</a></li>
+    <li><a class="dropdown-item" href="../articles/data_prep.html">Preparing data for analysis with Spectre</a></li>
+    <li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
     <li><a class="dropdown-item" href="../articles/Installation.html">Spectre installation and getting started guide</a></li>
     <li><a class="dropdown-item" href="../articles/simple_discovery.html">Spectre - simple discovery workflow</a></li>
   </ul></li>
@@ -260,11 +262,11 @@ Felix Marsh-Wakefield, <a href="mailto:felix.marsh-wakefield@sydney.edu.au">feli
 <span class="r-in"><span>                              <span class="st">"CD45_asinh"</span>, <span class="st">"Ly6G_asinh"</span>, <span class="st">"CD11b_asinh"</span>, </span></span>
 <span class="r-in"><span>                              <span class="st">"B220_asinh"</span>, <span class="st">"CD8a_asinh"</span>, <span class="st">"Ly6C_asinh"</span>, </span></span>
 <span class="r-in"><span>                              <span class="st">"CD4_asinh"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:36 UMAP embedding parameters a = 1.577 b = 0.8951</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:36 Converting dataframe to numerical matrix</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:36 Read 10000 rows and found 9 numeric columns</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:36 Using Annoy for neighbor search, n_neighbors = 15</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:36 Building Annoy index with metric = euclidean, n_trees = 50</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:29 UMAP embedding parameters a = 1.577 b = 0.8951</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:29 Converting dataframe to numerical matrix</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:29 Read 10000 rows and found 9 numeric columns</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:29 Using Annoy for neighbor search, n_neighbors = 15</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:29 Building Annoy index with metric = euclidean, n_trees = 50</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> 0%   10   20   30   40   50   60   70   80   90   100%</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [----|----|----|----|----|----|----|----|----|----|</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
@@ -318,15 +320,15 @@ Felix Marsh-Wakefield, <a href="mailto:felix.marsh-wakefield@sydney.edu.au">feli
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> *</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> |</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:37 Writing NN index file to temp file /tmp/Rtmpk7BECO/file222e18d30b44</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:37 Searching Annoy index using 3 threads, search_k = 1500</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:38 Annoy recall = 100%</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:38 Commencing smooth kNN distance calibration using 3 threads</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:30 Writing NN index file to temp file /tmp/Rtmp7GKQoO/file2223a14b4d3</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:30 Searching Annoy index using 3 threads, search_k = 1500</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:31 Annoy recall = 100%</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:31 Commencing smooth kNN distance calibration using 3 threads</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>  with target n_neighbors = 15</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:39 Initializing from normalized Laplacian + noise (using RSpectra)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:39 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:39 Using rng type: pcg</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 04:39:41 Optimization finished</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:33 Initializing from normalized Laplacian + noise (using RSpectra)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:33 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:33 Using rng type: pcg</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 06:06:34 Optimization finished</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

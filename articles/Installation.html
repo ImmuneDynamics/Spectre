@@ -33,7 +33,9 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
+<li><a class="dropdown-item" href="../articles/basics_guide.html">Spectre basics guide</a></li>
+    <li><a class="dropdown-item" href="../articles/data_prep.html">Preparing data for analysis with Spectre</a></li>
+    <li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
     <li><a class="dropdown-item" href="../articles/Installation.html">Spectre installation and getting started guide</a></li>
     <li><a class="dropdown-item" href="../articles/simple_discovery.html">Spectre - simple discovery workflow</a></li>
   </ul>
@@ -104,8 +106,8 @@ Studio</a>.</p>
 <code>remotes</code> package. Instructions for both are available
 below.</p>
 <p><strong><em>Important: If you are unfamiliar with running R code
-using Rstudio, please visit our <a href="#basics-guide">Basics guide</a>
-section first.</em></strong></p>
+using Rstudio, please visit our [Basics guide] section
+first.</em></strong></p>
 <div class="section level4">
 <h4 id="using-the-pak-package">Using the pak package<a class="anchor" aria-label="anchor" href="#using-the-pak-package"></a>
 </h4>
@@ -261,12 +263,12 @@ page</a>.</p>
 </h4>
 <p>Go to the following address: <a href="https://www.docker.com/products/docker-desktop" class="external-link uri">https://www.docker.com/products/docker-desktop</a></p>
 <p>Download the correct version of Docker Desktop.</p>
-<p><img src="images/docker/Docker%201.png" width="300"></p>
+<p><img src="images/clipboard-3229987611.png"></p>
 <p>Go to your downloads folder and open the ‘.dmg’ file.</p>
-<p><img src="images/docker/Docker%202.png" width="300"></p>
+<p><img src="images/clipboard-2467909613.png"></p>
 <p>When the following window opens, drag and drop the ‘Docker.app’ icon
 into the ‘Applications’ shortcut.</p>
-<p><img src="images/docker/Docker%203.png" width="300"></p>
+<p><img src="images/clipboard-3081680616.png"></p>
 <p>You should now be able to find ‘Docker’ in your applications
 folder.</p>
 <p><br></p>
@@ -276,21 +278,21 @@ folder.</p>
 </h4>
 <p>Open Docker app from the applications folder or bar at the bottom of
 the screen.</p>
-<p><img src="images/docker/Docker%204.png" width="300"></p>
+<p><img src="images/clipboard-1205500608.png"></p>
 <p>Once you turn it on, you should see the following icon in the bar at
 the top of the screen.</p>
-<p><img src="images/docker/Docker%205.png" width="300"></p>
+<p><img src="images/clipboard-1529692579.png"></p>
 <p>Additionally the program itself should open. Wait a few moments while
 the ‘Docker Engine’ starts.</p>
-<p><img src="images/docker/Docker%206.png" width="300"></p>
+<p><img src="images/clipboard-543128652.png"></p>
 <p>The icon in the lower left will turn green when ready.</p>
-<p><img src="images/docker/Docker%207.png" width="300"></p>
+<p><img src="images/clipboard-4095703419.png"></p>
 <p>Click the gears icon to open ‘preferences’. Make sure you untick the
 options in General to mimic the screenshot below. This is to ensure
 Docker doesn’t start when you boot your computer, and it doesn’t share
 your usage data to Docker by default. Leave the automatic update checked
 if you prefer it to check for updates regularly.</p>
-<p><img src="images/docker/Docker%208.png" width="300"></p>
+<p><img src="images/clipboard-391766560.png"></p>
 <p>Press ‘Apply &amp; Restart’ when done. Close app until you would like
 to use it.</p>
 <p><br></p>
@@ -299,18 +301,18 @@ to use it.</p>
 <h4 id="launching-docker">Launching Docker<a class="anchor" aria-label="anchor" href="#launching-docker"></a>
 </h4>
 <p>Open the Docker app.</p>
-<p><img src="images/docker/Docker%209.png" width="300"></p>
+<p><img src="images/clipboard-1205500608.png"></p>
 <p>Wait a few moments while the ‘Docker Engine’ starts.</p>
-<p><img src="images/docker/Docker%2010.png" width="300"></p>
+<p><img src="images/clipboard-543128652.png"></p>
 <p>The icon in the lower left will turn green when ready.</p>
-<p><img src="images/docker/Docker%2011.png" width="300"></p>
+<p><img src="images/clipboard-4095703419.png"></p>
 <p>Open ‘Terminal’ (on Mac, can be found in the applications folder, or
 the bar at the bottom of your screen).</p>
-<p><img src="images/docker/Docker%2012.png" width="300"></p>
-<p><img src="images/docker/Docker%2013.png" width="300"></p>
+<p><img src="images/clipboard-2584547186.png"></p>
+<p><img src="images/clipboard-1375122379.png"></p>
 <p>Copy the following code into the terminal and press ENTER.</p>
 <pre><code>docker run --rm -e PASSWORD=spectre -p 8787:8787 -v ~:/home/rstudio/spectre_dir --name=spectre immunedynamics/spectre:master</code></pre>
-<p><img src="images/docker/Docker%2014.png" width="300"></p>
+<p><img src="images/clipboard-1681374938.png"></p>
 <p>By default, the RStudio session that Docker will launch will be able
 to see everything in your Home directory and below. This is achieved in
 the code above using the ‘~’ symbol. If you have data elsewhere (on a
@@ -330,7 +332,7 @@ drop the target directory/folder into terminal:</p>
 <p>Open your preferred web browser (chrome, safari, etc) and go to the
 following address</p>
 <p><a href="http://localhost:8787" class="external-link uri">http://localhost:8787</a></p>
-<p><img src="images/docker/Docker%2015.png" width="300"></p>
+<p><img src="images/clipboard-3326316748.png"></p>
 <p>Sign in</p>
 <ul>
 <li>Name: <code>rstudio</code>
@@ -338,870 +340,26 @@ following address</p>
 <li>Password: <code>spectre</code>
 </li>
 </ul>
-<p><img src="images/docker/Docker%2016.png" width="300"></p>
-<p><img src="images/docker/Docker%2017.png" width="500"></p>
+<p><img src="images/clipboard-1396526383.png"></p>
+<p><img src="images/clipboard-632536106.png"></p>
 </div>
 <div class="section level4">
 <h4 id="running-spectre">Running Spectre<a class="anchor" aria-label="anchor" href="#running-spectre"></a>
 </h4>
 <p>Open desired analysis script</p>
-<p><img src="images/docker/Docker%2018.png" width="500"><img src="images/docker/Docker%2019.png" width="500"><img src="images/docker/Docker%2020.png" width="500"><img src="images/docker/Docker%2021.png" width="500"><img src="images/docker/Docker%2022.png" width="500"></p>
+<p><img src="images/clipboard-2021385283.png"></p>
+<p><img src="images/clipboard-18088809.png"></p>
+<p><img src="images/clipboard-4147688387.png"></p>
+<p><img src="images/clipboard-510985867.png"></p>
+<p><img src="images/clipboard-4224303551.png"></p>
 <p>Perform analysis</p>
-<p><img src="images/docker/Docker%2023.png" width="500"></p>
+<p><img src="images/clipboard-2051505511.png"></p>
 <p>Close when finished</p>
-<p><img src="images/docker/Docker%2024.png" width="500"></p>
+<p><img src="images/clipboard-2051505511.png"></p>
+<p><img src="images/clipboard-2998598351.png"></p>
 <p><br><br></p>
 </div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="basics-guide">Basics guide<a class="anchor" aria-label="anchor" href="#basics-guide"></a>
-</h2>
-<hr>
-<p>Here provide a brief and high-level introduction to using R, RStudio,
-and Spectre. Additional educational material on using R and R Studio are
-available on many sites, including the <a href="https://education.rstudio.com/" class="external-link">RStudio education site</a> or this
-<a href="https://rspatial.org/intr/index.html" class="external-link">R Spatial page</a>.</p>
-<p><br></p>
-<div class="section level3">
-<h3 id="r-basics">R basics<a class="anchor" aria-label="anchor" href="#r-basics"></a>
-</h3>
-<p>To interact with the R programming language, we recommend using
-RStudio.</p>
-<div class="section level4">
-<h4 id="open-rstudio">Open RStudio<a class="anchor" aria-label="anchor" href="#open-rstudio"></a>
-</h4>
-<p>Open RStudio, and you should see something similar to the
-following:</p>
-<ol style="list-style-type: decimal">
-<li>Top left = R script. This is a text editor where lines or segments
-of code can be ‘run’, which will send commands to R.</li>
-<li>Bottom left = console. When commands are sent to R, the console will
-show the progress/output/result. Code can also be entered and run
-directly in the console.</li>
-<li>Top right = workspace. Whenever you create an object in R (such as
-saving a set of data) it will show up here.</li>
-<li>Bottom right = various. This is mainly used for displaying plots
-(under ‘Plots’), investigating the packages (‘Packages’), or using the
-help section (‘Help’).</li>
-</ol>
-<p><img src="images/Tutorial/Image%201.png" width="700"></p>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="r-code-basics">R code basics<a class="anchor" aria-label="anchor" href="#r-code-basics"></a>
-</h4>
-<p>There are two important types of text commonly found in R
-scripts:</p>
-<p><strong>Comments</strong> Any line in R code that starts with a
-<code>#</code> is considered a comment. These are not executed by
-RStudio as R code, but rather are used as notes to the user.</p>
-<p>This is a comment:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Run the following line to find your current working directory</span></span></code></pre></div>
-<p><strong>Executable code</strong> A line or segment of code can be run
-and will return some form of result. In the example below, the
-<code><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd()</a></code> function will return the location of the current
-working directory.</p>
-<p>This is the code:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>When the code is run, the output may look something like this:</p>
-<pre><code>[1] "/Users/Tom/Desktop"</code></pre>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="create-and-save-and-r-script">Create and save and R script<a class="anchor" aria-label="anchor" href="#create-and-save-and-r-script"></a>
-</h4>
-<p>To get started, create a new .R file and save it</p>
-<ul>
-<li>Make a folder on your desktop called “Spectre demo”</li>
-<li>In RStudio, create a new R Script file (.R) called “MyScript” and
-save it in the folder you just created (Spectre demo).</li>
-</ul>
-<p><img src="images/Tutorial/Image%202.png" width="400"></p>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="practice-running-code">Practice running code<a class="anchor" aria-label="anchor" href="#practice-running-code"></a>
-</h4>
-<p>For this demo we will use the ‘iris’ dataset, which consists of
-measurements of 150 flowers. Each row represents one flower, and each
-column represents a different measurement of that flower.</p>
-<p>To run code in RStudio, we can either enter code into the script and
-selectively run elements of the code (preferred), or we can enter it
-directly into the console and run the code. For each of the code-blocks
-below, copy the code into your new script, press save, and then
-highlight and press CMD/CTRL return to execute the code</p>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="read-the-dataset">Read the dataset<a class="anchor" aria-label="anchor" href="#read-the-dataset"></a>
-</h4>
-<p>Copy the following into your script, save, then highlight the code
-and press CMD/CTRL return. The first command we will run is to load the
-‘iris’ dataset and save it as the object ‘dat’. The lines starting with
-‘#’ are only comments, and will not excute as commands (even if you
-select them and press CMD + return).</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Part 1: read the dataset</span></span>
-<span>     </span>
-<span><span class="co"># Use the 'iris' dataset (150 flowers one per row) with various measurement (each column is a different measurement)</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">iris</span></span></code></pre></div>
-<p>After executing, you should should see a new object in the workspace
-(top right). This will be called ‘dat’, containing 150 observations, and
-5 variables.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span></span></code></pre></div>
-<pre><code><span><span class="co">##     Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span></span>
-<span><span class="co">## 1            5.1         3.5          1.4         0.2     setosa</span></span>
-<span><span class="co">## 2            4.9         3.0          1.4         0.2     setosa</span></span>
-<span><span class="co">## 3            4.7         3.2          1.3         0.2     setosa</span></span>
-<span><span class="co">## 4            4.6         3.1          1.5         0.2     setosa</span></span>
-<span><span class="co">## 5            5.0         3.6          1.4         0.2     setosa</span></span>
-<span><span class="co">## 6            5.4         3.9          1.7         0.4     setosa</span></span>
-<span><span class="co">## 7            4.6         3.4          1.4         0.3     setosa</span></span>
-<span><span class="co">## 8            5.0         3.4          1.5         0.2     setosa</span></span>
-<span><span class="co">## 9            4.4         2.9          1.4         0.2     setosa</span></span>
-<span><span class="co">## 10           4.9         3.1          1.5         0.1     setosa</span></span>
-<span><span class="co">## 11           5.4         3.7          1.5         0.2     setosa</span></span>
-<span><span class="co">## 12           4.8         3.4          1.6         0.2     setosa</span></span>
-<span><span class="co">## 13           4.8         3.0          1.4         0.1     setosa</span></span>
-<span><span class="co">## 14           4.3         3.0          1.1         0.1     setosa</span></span>
-<span><span class="co">## 15           5.8         4.0          1.2         0.2     setosa</span></span>
-<span><span class="co">## 16           5.7         4.4          1.5         0.4     setosa</span></span>
-<span><span class="co">## 17           5.4         3.9          1.3         0.4     setosa</span></span>
-<span><span class="co">## 18           5.1         3.5          1.4         0.3     setosa</span></span>
-<span><span class="co">## 19           5.7         3.8          1.7         0.3     setosa</span></span>
-<span><span class="co">## 20           5.1         3.8          1.5         0.3     setosa</span></span>
-<span><span class="co">## 21           5.4         3.4          1.7         0.2     setosa</span></span>
-<span><span class="co">## 22           5.1         3.7          1.5         0.4     setosa</span></span>
-<span><span class="co">## 23           4.6         3.6          1.0         0.2     setosa</span></span>
-<span><span class="co">## 24           5.1         3.3          1.7         0.5     setosa</span></span>
-<span><span class="co">## 25           4.8         3.4          1.9         0.2     setosa</span></span>
-<span><span class="co">## 26           5.0         3.0          1.6         0.2     setosa</span></span>
-<span><span class="co">## 27           5.0         3.4          1.6         0.4     setosa</span></span>
-<span><span class="co">## 28           5.2         3.5          1.5         0.2     setosa</span></span>
-<span><span class="co">## 29           5.2         3.4          1.4         0.2     setosa</span></span>
-<span><span class="co">## 30           4.7         3.2          1.6         0.2     setosa</span></span>
-<span><span class="co">## 31           4.8         3.1          1.6         0.2     setosa</span></span>
-<span><span class="co">## 32           5.4         3.4          1.5         0.4     setosa</span></span>
-<span><span class="co">## 33           5.2         4.1          1.5         0.1     setosa</span></span>
-<span><span class="co">## 34           5.5         4.2          1.4         0.2     setosa</span></span>
-<span><span class="co">## 35           4.9         3.1          1.5         0.2     setosa</span></span>
-<span><span class="co">## 36           5.0         3.2          1.2         0.2     setosa</span></span>
-<span><span class="co">## 37           5.5         3.5          1.3         0.2     setosa</span></span>
-<span><span class="co">## 38           4.9         3.6          1.4         0.1     setosa</span></span>
-<span><span class="co">## 39           4.4         3.0          1.3         0.2     setosa</span></span>
-<span><span class="co">## 40           5.1         3.4          1.5         0.2     setosa</span></span>
-<span><span class="co">## 41           5.0         3.5          1.3         0.3     setosa</span></span>
-<span><span class="co">## 42           4.5         2.3          1.3         0.3     setosa</span></span>
-<span><span class="co">## 43           4.4         3.2          1.3         0.2     setosa</span></span>
-<span><span class="co">## 44           5.0         3.5          1.6         0.6     setosa</span></span>
-<span><span class="co">## 45           5.1         3.8          1.9         0.4     setosa</span></span>
-<span><span class="co">## 46           4.8         3.0          1.4         0.3     setosa</span></span>
-<span><span class="co">## 47           5.1         3.8          1.6         0.2     setosa</span></span>
-<span><span class="co">## 48           4.6         3.2          1.4         0.2     setosa</span></span>
-<span><span class="co">## 49           5.3         3.7          1.5         0.2     setosa</span></span>
-<span><span class="co">## 50           5.0         3.3          1.4         0.2     setosa</span></span>
-<span><span class="co">## 51           7.0         3.2          4.7         1.4 versicolor</span></span>
-<span><span class="co">## 52           6.4         3.2          4.5         1.5 versicolor</span></span>
-<span><span class="co">## 53           6.9         3.1          4.9         1.5 versicolor</span></span>
-<span><span class="co">## 54           5.5         2.3          4.0         1.3 versicolor</span></span>
-<span><span class="co">## 55           6.5         2.8          4.6         1.5 versicolor</span></span>
-<span><span class="co">## 56           5.7         2.8          4.5         1.3 versicolor</span></span>
-<span><span class="co">## 57           6.3         3.3          4.7         1.6 versicolor</span></span>
-<span><span class="co">## 58           4.9         2.4          3.3         1.0 versicolor</span></span>
-<span><span class="co">## 59           6.6         2.9          4.6         1.3 versicolor</span></span>
-<span><span class="co">## 60           5.2         2.7          3.9         1.4 versicolor</span></span>
-<span><span class="co">## 61           5.0         2.0          3.5         1.0 versicolor</span></span>
-<span><span class="co">## 62           5.9         3.0          4.2         1.5 versicolor</span></span>
-<span><span class="co">## 63           6.0         2.2          4.0         1.0 versicolor</span></span>
-<span><span class="co">## 64           6.1         2.9          4.7         1.4 versicolor</span></span>
-<span><span class="co">## 65           5.6         2.9          3.6         1.3 versicolor</span></span>
-<span><span class="co">## 66           6.7         3.1          4.4         1.4 versicolor</span></span>
-<span><span class="co">## 67           5.6         3.0          4.5         1.5 versicolor</span></span>
-<span><span class="co">## 68           5.8         2.7          4.1         1.0 versicolor</span></span>
-<span><span class="co">## 69           6.2         2.2          4.5         1.5 versicolor</span></span>
-<span><span class="co">## 70           5.6         2.5          3.9         1.1 versicolor</span></span>
-<span><span class="co">## 71           5.9         3.2          4.8         1.8 versicolor</span></span>
-<span><span class="co">## 72           6.1         2.8          4.0         1.3 versicolor</span></span>
-<span><span class="co">## 73           6.3         2.5          4.9         1.5 versicolor</span></span>
-<span><span class="co">## 74           6.1         2.8          4.7         1.2 versicolor</span></span>
-<span><span class="co">## 75           6.4         2.9          4.3         1.3 versicolor</span></span>
-<span><span class="co">## 76           6.6         3.0          4.4         1.4 versicolor</span></span>
-<span><span class="co">## 77           6.8         2.8          4.8         1.4 versicolor</span></span>
-<span><span class="co">## 78           6.7         3.0          5.0         1.7 versicolor</span></span>
-<span><span class="co">## 79           6.0         2.9          4.5         1.5 versicolor</span></span>
-<span><span class="co">## 80           5.7         2.6          3.5         1.0 versicolor</span></span>
-<span><span class="co">## 81           5.5         2.4          3.8         1.1 versicolor</span></span>
-<span><span class="co">## 82           5.5         2.4          3.7         1.0 versicolor</span></span>
-<span><span class="co">## 83           5.8         2.7          3.9         1.2 versicolor</span></span>
-<span><span class="co">## 84           6.0         2.7          5.1         1.6 versicolor</span></span>
-<span><span class="co">## 85           5.4         3.0          4.5         1.5 versicolor</span></span>
-<span><span class="co">## 86           6.0         3.4          4.5         1.6 versicolor</span></span>
-<span><span class="co">## 87           6.7         3.1          4.7         1.5 versicolor</span></span>
-<span><span class="co">## 88           6.3         2.3          4.4         1.3 versicolor</span></span>
-<span><span class="co">## 89           5.6         3.0          4.1         1.3 versicolor</span></span>
-<span><span class="co">## 90           5.5         2.5          4.0         1.3 versicolor</span></span>
-<span><span class="co">## 91           5.5         2.6          4.4         1.2 versicolor</span></span>
-<span><span class="co">## 92           6.1         3.0          4.6         1.4 versicolor</span></span>
-<span><span class="co">## 93           5.8         2.6          4.0         1.2 versicolor</span></span>
-<span><span class="co">## 94           5.0         2.3          3.3         1.0 versicolor</span></span>
-<span><span class="co">## 95           5.6         2.7          4.2         1.3 versicolor</span></span>
-<span><span class="co">## 96           5.7         3.0          4.2         1.2 versicolor</span></span>
-<span><span class="co">## 97           5.7         2.9          4.2         1.3 versicolor</span></span>
-<span><span class="co">## 98           6.2         2.9          4.3         1.3 versicolor</span></span>
-<span><span class="co">## 99           5.1         2.5          3.0         1.1 versicolor</span></span>
-<span><span class="co">## 100          5.7         2.8          4.1         1.3 versicolor</span></span>
-<span><span class="co">## 101          6.3         3.3          6.0         2.5  virginica</span></span>
-<span><span class="co">## 102          5.8         2.7          5.1         1.9  virginica</span></span>
-<span><span class="co">## 103          7.1         3.0          5.9         2.1  virginica</span></span>
-<span><span class="co">## 104          6.3         2.9          5.6         1.8  virginica</span></span>
-<span><span class="co">## 105          6.5         3.0          5.8         2.2  virginica</span></span>
-<span><span class="co">## 106          7.6         3.0          6.6         2.1  virginica</span></span>
-<span><span class="co">## 107          4.9         2.5          4.5         1.7  virginica</span></span>
-<span><span class="co">## 108          7.3         2.9          6.3         1.8  virginica</span></span>
-<span><span class="co">## 109          6.7         2.5          5.8         1.8  virginica</span></span>
-<span><span class="co">## 110          7.2         3.6          6.1         2.5  virginica</span></span>
-<span><span class="co">## 111          6.5         3.2          5.1         2.0  virginica</span></span>
-<span><span class="co">## 112          6.4         2.7          5.3         1.9  virginica</span></span>
-<span><span class="co">## 113          6.8         3.0          5.5         2.1  virginica</span></span>
-<span><span class="co">## 114          5.7         2.5          5.0         2.0  virginica</span></span>
-<span><span class="co">## 115          5.8         2.8          5.1         2.4  virginica</span></span>
-<span><span class="co">## 116          6.4         3.2          5.3         2.3  virginica</span></span>
-<span><span class="co">## 117          6.5         3.0          5.5         1.8  virginica</span></span>
-<span><span class="co">## 118          7.7         3.8          6.7         2.2  virginica</span></span>
-<span><span class="co">## 119          7.7         2.6          6.9         2.3  virginica</span></span>
-<span><span class="co">## 120          6.0         2.2          5.0         1.5  virginica</span></span>
-<span><span class="co">## 121          6.9         3.2          5.7         2.3  virginica</span></span>
-<span><span class="co">## 122          5.6         2.8          4.9         2.0  virginica</span></span>
-<span><span class="co">## 123          7.7         2.8          6.7         2.0  virginica</span></span>
-<span><span class="co">## 124          6.3         2.7          4.9         1.8  virginica</span></span>
-<span><span class="co">## 125          6.7         3.3          5.7         2.1  virginica</span></span>
-<span><span class="co">## 126          7.2         3.2          6.0         1.8  virginica</span></span>
-<span><span class="co">## 127          6.2         2.8          4.8         1.8  virginica</span></span>
-<span><span class="co">## 128          6.1         3.0          4.9         1.8  virginica</span></span>
-<span><span class="co">## 129          6.4         2.8          5.6         2.1  virginica</span></span>
-<span><span class="co">## 130          7.2         3.0          5.8         1.6  virginica</span></span>
-<span><span class="co">## 131          7.4         2.8          6.1         1.9  virginica</span></span>
-<span><span class="co">## 132          7.9         3.8          6.4         2.0  virginica</span></span>
-<span><span class="co">## 133          6.4         2.8          5.6         2.2  virginica</span></span>
-<span><span class="co">## 134          6.3         2.8          5.1         1.5  virginica</span></span>
-<span><span class="co">## 135          6.1         2.6          5.6         1.4  virginica</span></span>
-<span><span class="co">## 136          7.7         3.0          6.1         2.3  virginica</span></span>
-<span><span class="co">## 137          6.3         3.4          5.6         2.4  virginica</span></span>
-<span><span class="co">## 138          6.4         3.1          5.5         1.8  virginica</span></span>
-<span><span class="co">## 139          6.0         3.0          4.8         1.8  virginica</span></span>
-<span><span class="co">## 140          6.9         3.1          5.4         2.1  virginica</span></span>
-<span><span class="co">## 141          6.7         3.1          5.6         2.4  virginica</span></span>
-<span><span class="co">## 142          6.9         3.1          5.1         2.3  virginica</span></span>
-<span><span class="co">## 143          5.8         2.7          5.1         1.9  virginica</span></span>
-<span><span class="co">## 144          6.8         3.2          5.9         2.3  virginica</span></span>
-<span><span class="co">## 145          6.7         3.3          5.7         2.5  virginica</span></span>
-<span><span class="co">## 146          6.7         3.0          5.2         2.3  virginica</span></span>
-<span><span class="co">## 147          6.3         2.5          5.0         1.9  virginica</span></span>
-<span><span class="co">## 148          6.5         3.0          5.2         2.0  virginica</span></span>
-<span><span class="co">## 149          6.2         3.4          5.4         2.3  virginica</span></span>
-<span><span class="co">## 150          5.9         3.0          5.1         1.8  virginica</span></span></code></pre>
-<p>Next we will review the dimensions of ‘dat’ (how many rows and
-columns) and preview data from the first 6 rows of dat.</p>
-<p>Copy the following into your script, save, then highlight the code
-and press CMD/CTRL return. You should now see the following in the
-console. Lines starting with ‘&gt;’ denote the commands that were
-executed. Lines without ‘&gt;’ are the output. As you can see below the
-request to show the dimensions of our dataset using dim(dat) has given
-us 150 rows and 5 columns.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Determine the number of rows and columns in the dataset</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 150   5</span></span></code></pre>
-<p>Copy the following into your script, save, then highlight the code
-and press CMD/CTRL return. You should now see the following in the
-console. Lines starting with ‘&gt;’ denote the commands that were
-executed. Lines without ‘&gt;’ are the output. The request to preview
-the first 6 rows of our data using head(dat) has shown us the contents
-of the first 6 rows.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Examine the first few lines of dataset</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span></span>
-<span><span class="co">## 1          5.1         3.5          1.4         0.2  setosa</span></span>
-<span><span class="co">## 2          4.9         3.0          1.4         0.2  setosa</span></span>
-<span><span class="co">## 3          4.7         3.2          1.3         0.2  setosa</span></span>
-<span><span class="co">## 4          4.6         3.1          1.5         0.2  setosa</span></span>
-<span><span class="co">## 5          5.0         3.6          1.4         0.2  setosa</span></span>
-<span><span class="co">## 6          5.4         3.9          1.7         0.4  setosa</span></span></code></pre>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="plot-the-dataset">Plot the dataset<a class="anchor" aria-label="anchor" href="#plot-the-dataset"></a>
-</h4>
-<p>Next, we will plot some of the dataset. Copy the following into your
-script, save, then highlight the code and press CMD/CTRL return. After
-executing, your should see the following under ‘Plots’.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Part 2: plot the dataset</span></span>
-<span>     </span>
-<span><span class="co"># Plot iris dataset (all plots)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Installation_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p><br></p>
-<p>To be a little more specific, let’s try plotting one column of the
-dataset against another. Copy the following into your script, save, then
-highlight the code and press CMD/CTRL return. Now we should see a plot
-of the sepal width vs length.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Plot iris dataset (chosen X and Y parameters)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Sepal.Length</span>, y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">Sepal.Width</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Installation_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="save-the-dataset">Save the dataset<a class="anchor" aria-label="anchor" href="#save-the-dataset"></a>
-</h4>
-<p>Now, let’s save the dataset as a .csv file. A .csv file is kind of
-like an .xlsx file, without the bells and whistles. Data in a table
-format is saved, using commas to indicate the separation of new columns.
-When this is read by excel or RStudio, it displays a table. Run the
-following lines to determine the current working directory (where you
-will read files from and write files to).</p>
-<p>Copy the following into your script, save, then highlight the code
-and press CMD/CTRL return.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Part 3: save the dataset</span></span>
-<span> </span>
-<span><span class="co"># Determine the current working directory</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>      </span></code></pre></div>
-<p>This will return the location of your current working directory. In
-my case:</p>
-<pre><code>[1] "/Users/thomasa"</code></pre>
-<p>Let’s aim to save the CSV to our desktop. To do this we would have to
-a) change the ‘working directory’ to the desktop (on a mac, it would
-look something like “/Users/Tom/Desktop”). When we set a working
-directory, we are telling R a) where to look for files when we ask it
-to, and b) where to create files when we ask it to.</p>
-<p>To set the working directory, type setwd() into the script but don’t
-run it yet.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Finding a specific directory (absolute path)</strong></p>
-<ul>
-<li>On a mac, start by entering “/” between the (): setwd(“/”)</li>
-<li>Click after the / and press TAB</li>
-<li>You should see a list of options from your root directory. You can
-press the UP or DOWN arrows, or use the mouse cursor, to select on of
-the options, and press ENTER to select in.</li>
-</ul>
-<p><img src="images/Tutorial/Image%206.png"></p>
-<ul>
-<li>If you start typing the name of a directory, the list of options
-will be filtered to options that match what you are typing.</li>
-</ul>
-<p><img src="images/Tutorial/Image%207.png"></p>
-<ul>
-<li>In this case, I will select ‘Users’ and press ENTER. I can then
-repeat the process to navigate down my folders</li>
-</ul>
-<p><img src="images/Tutorial/Image%208.png"></p>
-<ul>
-<li>You can repeat this process to find your working directory until you
-reach your desired location.</li>
-</ul>
-<p><img src="images/Tutorial/Image%209.png"></p>
-<p><br></p>
-<p>If I now select this line, or highlight the code and press ENTER, R
-will set the working directory:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"/Users/thomasa/Desktop/"</span><span class="op">)</span></span></code></pre></div>
-<p>The following should be returned</p>
-<pre><code>&gt; setwd("/Users/thomasa/Desktop/")</code></pre>
-<p>Now I can check the working directory has been set correctly by
-running the following:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>If everything has gone correctly, the following (or equivalent)
-should be returned:</p>
-<pre><code>[1] "/Users/thomasa/Desktop/"</code></pre>
-<p>Now we will write the dataset to a .csv file (which will be saved in
-the working directory). We will use the function ‘write.csv’. The input
-variables here are what dataset we want to write (x = dat) and what we
-want to call the file (file = “iris_dataset.csv”).</p>
-<p>Execute the following, and check the folder (set as your working
-directory) to see that the new file has been created.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Write a .csv file of the dataset</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.csv</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">dat</span>, file <span class="op">=</span> <span class="st">"iris_dataset.csv"</span><span class="op">)</span></span></code></pre></div>
-<p><br><br></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="spectre-basics">Spectre basics<a class="anchor" aria-label="anchor" href="#spectre-basics"></a>
-</h3>
-<hr>
-<p><br></p>
-<div class="section level4">
-<h4 id="setup-tutorial-script-and-dataset">Setup tutorial script and dataset<a class="anchor" aria-label="anchor" href="#setup-tutorial-script-and-dataset"></a>
-</h4>
-<p>To interact with the Spectre package in R, we will use RStudio.</p>
-<p><img src="images/Tutorial/Spectre%201.png"></p>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="load-spectre-package">Load Spectre package<a class="anchor" aria-label="anchor" href="#load-spectre-package"></a>
-</h4>
-<p>To use Spectre, we first need to load the ‘Spectre’ package, as well
-as other relevant packages. To do this, follow the instructions
-below.</p>
-<ul>
-<li>Copy the code on the right into your R script (MyScript.R). Make
-sure to SAVE.</li>
-<li>Run each line (one by one) by clicking on the line or highlighting
-the text, and press CMD + return (Mac) or CTRL + Enter (Windows).</li>
-<li>As above, nothing is returned if they are loaded successfully, or an
-error message is returned if they are not.</li>
-<li>If you have installed Spectre, but the package won’t load, then you
-can visit our installation troubleshooting page.</li>
-</ul>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Load the Spectre packages from library          </span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ImmuneDynamics/Spectre" class="external-link">'Spectre'</a></span><span class="op">)</span></span></code></pre></div>
-<p>If successful:</p>
-<pre><code>&gt;</code></pre>
-<p>if unsuccessful:</p>
-<pre><code>&gt; Error in library("Spectre") : there is no package called ‘Spectre’</code></pre>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="load-other-packages">Load other packages<a class="anchor" aria-label="anchor" href="#load-other-packages"></a>
-</h4>
-<p>Rather than having to load each individual package required
-one-by-one (library(‘plyr’), library(‘data.table’) etc), we have created
-two functions to simplify this process:</p>
-<ol style="list-style-type: decimal">
-<li>
-<code>packages.check()</code> will check if all the required
-packages are installed</li>
-<li>
-<code><a href="../reference/package.load.html">package.load()</a></code> will load all the required packages</li>
-</ol>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Check if the other required packages are installed</span></span>
-<span><span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/package.check.html">package.check</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">## Load the required packages</span></span>
-<span><span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/package.load.html">package.load</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>As each package is loaded, you will see the following:</p>
-<pre><code>&gt; Loading required package: PACKAGENAME</code></pre>
-<p>So far you should have the following code in your script:</p>
-<p><img src="images/Tutorial/Spectre%202.png"></p>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="set-a-working-directory">Set a working directory<a class="anchor" aria-label="anchor" href="#set-a-working-directory"></a>
-</h4>
-<p>Normally this would be the location of the files you would like to
-analyse. For now, you can just this as your desktop or similar. If you
-aren’t sure how to search for directories, please have a look at our
-basic R tutorial.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Set working directory       </span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"/Users/thomasa/Desktop"</span><span class="op">)</span></span>
-<span>         </span>
-<span><span class="co">## Check that it has been set correctly</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
-<span> </span>
-<span><span class="co">## Save the working directory as an object called 'Primary Directory'</span></span>
-<span><span class="va">PrimaryDirectory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="create-an-output-directory">Create an output directory<a class="anchor" aria-label="anchor" href="#create-an-output-directory"></a>
-</h4>
-<p>Now we will create a directory where we can save the data and plots
-we will generate shortly.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Create an output directory      </span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="st">"Spectre-demo-output"</span><span class="op">)</span></span>
-<span> </span>
-<span><span class="co">## Go to that directory and save it as an object called 'Output Directory'</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="st">"Spectre-demo-output"</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>    </span>
-<span>        <span class="va">OutputDirectory</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span>
-<span> </span>
-<span><span class="co">## Finally, set the current working directory to 'PrimaryDirectory'</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="va">PrimaryDirectory</span><span class="op">)</span></span></code></pre></div>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="load-data">Load data<a class="anchor" aria-label="anchor" href="#load-data"></a>
-</h4>
-<p>Normally, we load some CSV or FCS files from the disk, or a server
-into R for analysis. In this tutorial, we will skip this step, and use
-an included demo dataset called ‘demo.start’. This is a dataset of
-120,000 cells, from 12 bone marrow samples: 6x from mock-infected mice,
-and 6x West Nile virus (WNV)-infected mice. This amounts to 10,000 cells
-per sample. The data set is structured as a large data.frame (a table)
-where each column is a cellular marker (e.g. FITC-CD4, etc), and each
-row is a cell.</p>
-<p>Assign the included demo.start dataset to a new object we will call
-cell.dat.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cell.dat</span> <span class="op">&lt;-</span> <span class="fu">Spectre</span><span class="fu">::</span><span class="va"><a href="../reference/demo.clustered.html">demo.clustered</a></span></span>
-<span><span class="va">cell.dat</span> <span class="op">&lt;-</span> <span class="va">cell.dat</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">19</span><span class="op">]</span></span>
-<span><span class="va">cell.dat</span> <span class="op">&lt;-</span> <span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/do.subsample.html">do.subsample</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>, targets <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Loading required package: data.table</span></span></code></pre>
-<p>You can review the structure of cell.dat by using str(). You can see
-the cell.dat is both a ‘data.table’ and a ‘data.frame’.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">cell.dat</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Classes 'data.table' and 'data.frame':   10000 obs. of  19 variables:</span></span>
-<span><span class="co">##  $ FileName   : chr  "CNS_Mock_05.csv" "CNS_Mock_04.csv" "CNS_WNV_D7_02.csv" "CNS_WNV_D7_01.csv" ...</span></span>
-<span><span class="co">##  $ NK11       : num  106 133 -178 889 237 ...</span></span>
-<span><span class="co">##  $ CD3        : num  235.1 16.5 1603.4 441.9 143.3 ...</span></span>
-<span><span class="co">##  $ CD45       : num  13575 9534 131586 99332 7806 ...</span></span>
-<span><span class="co">##  $ Ly6G       : num  -179 -673 -6522 -3229 -605 ...</span></span>
-<span><span class="co">##  $ CD11b      : num  31386 22061 1163 40168 11658 ...</span></span>
-<span><span class="co">##  $ B220       : num  -169 185 893 -623 659 ...</span></span>
-<span><span class="co">##  $ CD8a       : num  -394.7 282.5 -40.3 -764.2 107.7 ...</span></span>
-<span><span class="co">##  $ Ly6C       : num  381 608 2727 64542 805 ...</span></span>
-<span><span class="co">##  $ CD4        : num  509.46 1095.47 -5.04 2345.11 1937.42 ...</span></span>
-<span><span class="co">##  $ NK11_asinh : num  0.106 0.132 -0.177 0.8 0.235 ...</span></span>
-<span><span class="co">##  $ CD3_asinh  : num  0.233 0.0165 1.2508 0.4287 0.1428 ...</span></span>
-<span><span class="co">##  $ CD45_asinh : num  3.3 2.95 5.57 5.29 2.75 ...</span></span>
-<span><span class="co">##  $ Ly6G_asinh : num  -0.178 -0.631 -2.574 -1.888 -0.573 ...</span></span>
-<span><span class="co">##  $ CD11b_asinh: num  4.14 3.787 0.992 4.386 3.151 ...</span></span>
-<span><span class="co">##  $ B220_asinh : num  -0.169 0.184 0.804 -0.588 0.619 ...</span></span>
-<span><span class="co">##  $ CD8a_asinh : num  -0.3851 0.2789 -0.0403 -0.7044 0.1075 ...</span></span>
-<span><span class="co">##  $ Ly6C_asinh : num  0.372 0.576 1.728 4.861 0.737 ...</span></span>
-<span><span class="co">##  $ CD4_asinh  : num  0.48966 0.9473 -0.00504 1.58812 1.41529 ...</span></span>
-<span><span class="co">##  - attr(*, ".internal.selfref")=&lt;externalptr&gt;</span></span></code></pre>
-<p>You can review the dimensionality of cell.dat by using dim(). The
-first entry returned is the number of rows, and the second is the number
-of columns.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">cell.dat</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 10000    19</span></span></code></pre>
-<p>You can review the first 6 rows (out of the 10,000 rows) of cell.dat
-by using head(). Each column is a marker or cellular feature, and each
-row is a cell.</p>
-<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">cell.dat</span><span class="op">)</span></span></code></pre>
-<p>Now let’s set some preferences.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Look at the names of the columns in the dataset, and take note of the number of each column</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cell.dat</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##       [,1]         </span></span>
-<span><span class="co">##  [1,] "FileName"   </span></span>
-<span><span class="co">##  [2,] "NK11"       </span></span>
-<span><span class="co">##  [3,] "CD3"        </span></span>
-<span><span class="co">##  [4,] "CD45"       </span></span>
-<span><span class="co">##  [5,] "Ly6G"       </span></span>
-<span><span class="co">##  [6,] "CD11b"      </span></span>
-<span><span class="co">##  [7,] "B220"       </span></span>
-<span><span class="co">##  [8,] "CD8a"       </span></span>
-<span><span class="co">##  [9,] "Ly6C"       </span></span>
-<span><span class="co">## [10,] "CD4"        </span></span>
-<span><span class="co">## [11,] "NK11_asinh" </span></span>
-<span><span class="co">## [12,] "CD3_asinh"  </span></span>
-<span><span class="co">## [13,] "CD45_asinh" </span></span>
-<span><span class="co">## [14,] "Ly6G_asinh" </span></span>
-<span><span class="co">## [15,] "CD11b_asinh"</span></span>
-<span><span class="co">## [16,] "B220_asinh" </span></span>
-<span><span class="co">## [17,] "CD8a_asinh" </span></span>
-<span><span class="co">## [18,] "Ly6C_asinh" </span></span>
-<span><span class="co">## [19,] "CD4_asinh"</span></span></code></pre>
-<p>Now we can choose the number of each column that we want to use for
-clustering, rather than having to write out each column name. To do
-this, we can put the number of the columns in a vector (i.e. c(5,6,8)
-for columns 5, 6, and 8) within the function below. You can replace
-these with the column numbers you would prefer to use (if you leave it
-as c(5,6,8), then the columns used for clustering will be CD117,
-CD16/32, and CD115.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Save the column names that you wish to use for clustering as an object called 'cluster.cols'.</span></span>
-<span><span class="va">cluster.cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">cell.dat</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11</span><span class="op">:</span><span class="fl">19</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<p>We can check to make sure the names have been saved by running
-‘cluster.cols’.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">cluster.cols</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##       [,1]         </span></span>
-<span><span class="co">##  [1,] "NK11_asinh" </span></span>
-<span><span class="co">##  [2,] "CD3_asinh"  </span></span>
-<span><span class="co">##  [3,] "CD45_asinh" </span></span>
-<span><span class="co">##  [4,] "Ly6G_asinh" </span></span>
-<span><span class="co">##  [5,] "CD11b_asinh"</span></span>
-<span><span class="co">##  [6,] "B220_asinh" </span></span>
-<span><span class="co">##  [7,] "CD8a_asinh" </span></span>
-<span><span class="co">##  [8,] "Ly6C_asinh" </span></span>
-<span><span class="co">##  [9,] "CD4_asinh"</span></span></code></pre>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="clustering">Clustering<a class="anchor" aria-label="anchor" href="#clustering"></a>
-</h4>
-<p>Now we can perform out clustering and dimensionality reduction. First
-we are going to cluster the data using FlowSOM.</p>
-<p>We can use the function ‘run.flowsom’ to run FlowSOM on our
-‘cell.dat’ dataset. For more information on performing clustering in
-Spectre, see this page. There are two key arguments we need to provide
-to the function. The first is ‘dat’, or the dataset to be used. The
-second is ‘use.cols’, which is the columns to be used for clustering. In
-this case, we want to set dat to cell.dat, and use.cols to cluster.cols
-(which we just created).</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Run FlowSOM</span></span>
-<span><span class="va">cell.dat</span> <span class="op">&lt;-</span> <span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/run.flowsom.html">run.flowsom</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>, use.cols <span class="op">=</span> <span class="va">cluster.cols</span><span class="op">)</span> </span></code></pre></div>
-<p>As the clustering is running, you will see the following red button
-show up on your RStudio window. That means that RStudio is in the middle
-of processing something, and it won’t respond to other commands while it
-is working.</p>
-<p><img src="images/Tutorial/Spectre%203.png"></p>
-<p><br></p>
-<p>While FlowSOM runs, you will progressively see the three following
-updates:</p>
-<pre><code>Creating SOM
-Mapping data to SOM
-Creating MST</code></pre>
-<p>Once FlowSOM has finished (and the red button has gone away) you can
-check the data to ensure the FlowSOM columns have been added correctly.
-At the end of what’s returned, your should see the FlowSOM metaclusters
-and clusters added to the dataset</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check cell.dat to ensure FlowSOM data correctly attached -- by looking at the last two columns</span></span>
-<span><span class="va">cell.dat</span></span></code></pre></div>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="run-umap">Run UMAP<a class="anchor" aria-label="anchor" href="#run-umap"></a>
-</h4>
-<p>Now we can perform dimensionality reduction on our data for
-visualisation. For this we are going to use UMAP. For more information
-on dimensionality reduction and cytometry data, please see this page.
-There are two key arguments we need to provide to the function. The
-first is ‘dat’, or the dataset to be used. The second is ‘use.cols’,
-which is the columns to be used for clustering. In this case, we want to
-set dat to cell.dat, and use.cols to cluster.cols (which we just
-created). UMAP by default doesn’t provide progress updates. It might
-take 1-2 minutes for UMAP to finish running.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Run UMAP</span></span>
-<span><span class="va">cell.dat</span> <span class="op">&lt;-</span> <span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/run.umap.html">run.umap</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>, use.cols <span class="op">=</span> <span class="va">cluster.cols</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## 04:39:57 UMAP embedding parameters a = 1.577 b = 0.8951</span></span></code></pre>
-<pre><code><span><span class="co">## 04:39:57 Converting dataframe to numerical matrix</span></span></code></pre>
-<pre><code><span><span class="co">## 04:39:57 Read 10000 rows and found 9 numeric columns</span></span></code></pre>
-<pre><code><span><span class="co">## 04:39:57 Using Annoy for neighbor search, n_neighbors = 15</span></span></code></pre>
-<pre><code><span><span class="co">## 04:39:57 Building Annoy index with metric = euclidean, n_trees = 50</span></span></code></pre>
-<pre><code><span><span class="co">## 0%   10   20   30   40   50   60   70   80   90   100%</span></span></code></pre>
-<pre><code><span><span class="co">## [----|----|----|----|----|----|----|----|----|----|</span></span></code></pre>
-<pre><code><span><span class="co">## **************************************************|</span></span>
-<span><span class="co">## 04:39:58 Writing NN index file to temp file /tmp/RtmpyelKwB/file2997e4fbee7</span></span>
-<span><span class="co">## 04:39:58 Searching Annoy index using 3 threads, search_k = 1500</span></span>
-<span><span class="co">## 04:39:59 Annoy recall = 100%</span></span>
-<span><span class="co">## 04:39:59 Commencing smooth kNN distance calibration using 3 threads with target n_neighbors = 15</span></span>
-<span><span class="co">## 04:39:59 Initializing from normalized Laplacian + noise (using irlba)</span></span>
-<span><span class="co">## 04:40:00 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span></span>
-<span><span class="co">## 04:40:00 Using rng type: pcg</span></span>
-<span><span class="co">## 04:40:01 Optimization finished</span></span></code></pre>
-<p>Once UMAP has finished (and the red button has gone away) you can
-check the data to ensure the UMAP columns have been added correctly.</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Check cell.dat to ensure the two new UMAP columns have been correctly attached.</span></span>
-<span><span class="va">cell.dat</span></span></code></pre></div>
-<p>Now that we have run FlowSOM and UMAP, we want to do a quick visual
-check to make sure everything looks correct. To do this we are going to
-create a ‘factor’ plot – a dot plot with our two UMAP columns as the X
-and Y axis, and the FlowSOM_metacluster as the colour. We are going to
-add the labels of each cluster to the plot, and we will tell the
-function not to save the image to disk. Running this command should
-generate a plot in the viewer window in RStudio.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Make a 'factor' plot</span></span>
-<span><span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/make.colour.plot.html">make.colour.plot</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>,</span>
-<span>                         x.axis <span class="op">=</span> <span class="st">"UMAP_X"</span>,</span>
-<span>                         y.axis <span class="op">=</span> <span class="st">"UMAP_Y"</span>,</span>
-<span>                         col.axis <span class="op">=</span> <span class="st">"FlowSOM_metacluster"</span>,</span>
-<span>                         col.type <span class="op">=</span> <span class="st">'factor'</span>,</span>
-<span>                         add.label <span class="op">=</span> <span class="cn">TRUE</span>,  </span>
-<span>                         save.to.disk <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Installation_files/figure-html/unnamed-chunk-32-1.png" width="700"><img src="Installation_files/figure-html/unnamed-chunk-32-2.png" width="700"></p>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="save-data-to-disk">Save data to disk<a class="anchor" aria-label="anchor" href="#save-data-to-disk"></a>
-</h4>
-<p>Now that we have added the cluster and UMAP information to our data,
-we should save the files and capture our progress.</p>
-<p>First, let’s set our working directory to ‘OutputDirectory’, so the
-data goes to the right place.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Set working directory to OutputDirectory</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">setwd</a></span><span class="op">(</span><span class="va">OutputDirectory</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "/home/runner/work/Spectre/Spectre/vignettes"</span></span></code></pre>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Save CSV files</span></span>
-<span><span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/write.files.html">write.files</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>,</span>
-<span>                     file.prefix <span class="op">=</span> <span class="st">"Sample_CSV_file"</span>,</span>
-<span>                     write.csv <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                     write.fcs <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p>To further explore this data in FlowJo, let’s also save some FCS
-files.</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Save FCS files</span></span>
-<span>        <span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/write.files.html">write.files</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>,</span>
-<span>                             file.prefix <span class="op">=</span> <span class="st">"Sample_FCS_file"</span>,</span>
-<span>                             write.csv <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>                             write.fcs <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><br></p>
-</div>
-<div class="section level4">
-<h4 id="make-some-plots">Make some plots<a class="anchor" aria-label="anchor" href="#make-some-plots"></a>
-</h4>
-<p>Now we should create some informative plots.</p>
-<p>First we will make another factor plot of the FlowSOM metaclusters,
-but this time we will set ‘save.to.disk’ to TRUE. Once this has been
-run, check your working directory for the image.</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Make a 'factor' plot coloured by cluster</span></span>
-<span><span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/make.colour.plot.html">make.colour.plot</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>,</span>
-<span>                 x.axis <span class="op">=</span> <span class="st">"UMAP_X"</span>,</span>
-<span>                 y.axis <span class="op">=</span> <span class="st">"UMAP_Y"</span>,</span>
-<span>                 col.axis <span class="op">=</span> <span class="st">"FlowSOM_metacluster"</span>,</span>
-<span>                 col.type <span class="op">=</span> <span class="st">'factor'</span>,</span>
-<span>                 add.label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Installation_files/figure-html/unnamed-chunk-37-1.png" width="700"><img src="Installation_files/figure-html/unnamed-chunk-37-2.png" width="700"></p>
-<p>Next we’ll make a colour plot showing the expression of a specific
-marker</p>
-<p><img src="Installation_files/figure-html/unnamed-chunk-38-1.png" width="700"><img src="Installation_files/figure-html/unnamed-chunk-38-2.png" width="700"></p>
-<p><br><br></p>
-</div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="preparing-data-for-spectre">Preparing data for Spectre<a class="anchor" aria-label="anchor" href="#preparing-data-for-spectre"></a>
-</h2>
-<hr>
-<div class="section level3">
-<h3 id="exporting-data-from-flowjo">Exporting data from FlowJo<a class="anchor" aria-label="anchor" href="#exporting-data-from-flowjo"></a>
-</h3>
-<p>This page explains the initial data analysis and preparation steps
-for different forms of cytometry data, and how to export data from
-FlowJo in preparation for analysis with Spectre. The overall objective
-is to export a population of interest (e.g. leukocytes), usually
-following the removal of doublets, debris, dead cells, and any
-irrelevant cells. </p>
-<p><strong>Population of interest (POI) gating</strong></p>
-<p>Gate to your ‘population of interest’ (POI). Typically this will be
-‘live cells’, or potentially live CD45+ cells (live leukocytes).</p>
-<p><img src="images/Tutorial/clipboard-1161121180.png"></p>
-<p><img src="images/Tutorial/clipboard-582034683.png"></p>
-<p>Select the POI you wish to export, and then click ‘<strong>Select
-Equivalent Nodes</strong>’ in the ‘<strong>Edit</strong>’ space.</p>
-<p><img src="images/Tutorial/clipboard-3423209639.png"></p>
-<p> … this will select each POI gates in each samples.</p>
-<p><img src="images/Tutorial/clipboard-1845509509.png"></p>
-<p>Right click on any of the POI populations (as long as all have been
-selected) and select ’<strong>Export / Concatenate
-Populations’</strong></p>
-<p><img src="images/Tutorial/clipboard-1778792973.png"></p>
-<p><strong>Exporting data as an FCS or CSV file</strong></p>
-<p>Spectre can import data as FCS or CSV files.</p>
-<p>Choose a format for export:</p>
-<ul>
-<li><p>By default we suggest exporting CSV (scale value) files</p></li>
-<li><p>You can also export the data as FCS files</p></li>
-<li><p>If you wish, you can export the ‘channel values’ as a CSV file
-instead. <em>The channel-values are pre-transformed, which removes the
-requirement for an arcsinh transformation in R. See <a href="https://immunedynamics.io/spectre/tutorials/data_transformation/data_transformation.html" class="external-link">this
-page</a> for more information.</em></p></li>
-</ul>
-<p><img src="images/Tutorial/clipboard-1354783275.png"></p>
-<p>Under ‘<strong>Parameters</strong>’, select ‘<strong>Custom set of
-parameters</strong>’, and select the parameters you wish to export. In
-this case, select FSC-A and SSC-A, as well as the compensated (Comp-…)
-parameters.</p>
-<p>Make sure to select the compensated (‘Comp-…’) parameters.</p>
-<p><img src="images/Tutorial/clipboard-2991153619.png"></p>
-<p>Choose a location for the export.</p>
-<p><img src="images/Tutorial/clipboard-1619573742.png"></p>
-<p>Result:</p>
-<p><img src="images/Tutorial/clipboard-3488255565.png"></p>
-</div>
-<div class="section level3">
-<h3 id="setup-a-sample-metadata-file">Setup a sample metadata file<a class="anchor" aria-label="anchor" href="#setup-a-sample-metadata-file"></a>
-</h3>
-<p>To make the analysis a little easier, we usually create a file that
-contains relevant metadata for each file (e.g. sample name, group name,
-batch, etc). This allows us to add that sample information to each cell
-(row) in the data.table in R, making it easy to navigate, filter, and
-plot the data by any factor (group, batch, etc). If you have cell count
-for your files, this can be added here as well.</p>
-<p>For most of our workflows, within the folder you are using for your
-analysis there will be:</p>
-<ul>
-<li><p>The R script</p></li>
-<li><p>A ‘data’ folder, and</p></li>
-<li><p>A ‘metadata’ folder</p></li>
-</ul>
-<p><img src="images/Tutorial/clipboard-3923624177.png"></p>
-<p>Using Microsoft Excel (or similar), create a new file and save it as
-a CSV file in the metadata folder</p>
-<p><img src="images/Tutorial/clipboard-1336915300.png"></p>
-<p>On a <strong>Mac</strong>, select the files, right click and select
-‘copy’ (or press CMD + C).</p>
-<p><img src="images/Tutorial/clipboard-2647124696.png"></p>
-<p>In the ‘sample.details.csv’ file, name the first column ‘Filename’
-(A1), then in A2 right click and select ‘paste’ (or press CMD + V). This
-will paste the filenames into the CSV file.</p>
-<p><img src="images/Tutorial/clipboard-800630277.png"></p>
-<p><em><strong>On Windows</strong>: select files, press CTRL + A, then
-paste into excel. Use find and replace to remove the full file path (see
-<a href="https://www.youtube.com/watch?v=F7SE5h7AUBg" class="external-link">this video</a> for
-a demonstration).</em></p>
-<p>You can then add as much information relevant to each file that you
-like. Sample, Group, and Batch are ‘required’ for most of the Spectre
-workflows (they aren’t actually required, but it makes it easier to use
-the default scripts). If all you samples are from one batch, just enter
-‘1’ or ‘A’ (or some other batch name) into each row under ‘batch’. If
-you would like to add other information (time point, infection,
-treatment, etc) then feel free to.</p>
-<ul>
-<li><p>“Sample” is a recommended column, as this can be a more
-simplified name for each sample</p></li>
-<li><p>“Group” is extremely useful for most analyses</p></li>
-<li><p>“Batch” is helpful if you have prepared, stained, or run samples
-in multiple batches. If all you samples are from one batch, just enter
-‘1’ or ‘A’ (or some other batch name) into each row under
-‘batch’. </p></li>
-<li><p>“Cells per sample” is a useful column to add <strong>if</strong>
-you intend to generate absolute counts of each population per sample
-during the generation of summary data, but is not required
-otherwise.</p></li>
-<li><p>If you would like to add other information (time point,
-infection, treatment, etc) then feel free to.</p></li>
-</ul>
-<p><img src="images/Tutorial/clipboard-2442827709.png"></p>
-<p>You are now ready to get started with Spectre. Check out our
-workflows on the <a href="https://immunedynamics.github.io/spectre" class="external-link">Spectre Home page</a>.
-The <a href="https://immunedynamics.io/spectre/simple-discovery/" class="external-link">Simple
-Discovery Workflow</a> is a great place to get started.</p>
-<p><br><br></p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="using-spectre">Using Spectre<a class="anchor" aria-label="anchor" href="#using-spectre"></a>
-</h2>
-<hr>
-<p>When you are ready to start analysis, check out our structured
-workflows and tutorials on the following pages:</p>
-<ul>
-<li>Analysis of <a href="https://immunedynamics.github.io/spectre/cytometry" class="external-link">high-dimensional
-cytometry</a> data</li>
-<li>Analysis of <a href="https://immunedynamics.github.io/spectre/spatial/" class="external-link">high-dimensional
-imaging/spatial</a> data</li>
-<li>Analysis of <a href="https://immunedynamics.github.io/spectre/single-cell/" class="external-link">single-cell
-genomics</a> data</li>
-</ul>
-<p><br><br></p>
 </div>
 <div class="section level2">
 <h2 id="troubleshooting">Troubleshooting<a class="anchor" aria-label="anchor" href="#troubleshooting"></a>
@@ -1209,7 +367,7 @@ genomics</a> data</li>
 <hr>
 <p>If Spectre or any of the dependencies was not installed successfully,
 you may see some error messages like the following.</p>
-<p><img src="Image%205.png"></p>
+<p><img src="images/clipboard-2821007311.png"></p>
 <p>Alternatively, if Spectre was successfully installed, but when
 running <code><a href="../reference/package.check.html">package.check()</a></code> some of the dependencies were not
 been installed correctly, you will see something like the following:</p>
