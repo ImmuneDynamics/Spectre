@@ -5,3 +5,5 @@
 Spectre.Rproj
 **/.DS_Store
 .DS_Store
+docs
+inst/doc

@@ -34,6 +34,10 @@ blank.axis, save.each.plot)
 
 \item{global.col}{DEFAULT = TRUE. Defines the limits for the colour axis based on the whole dataset. If FALSE, then each plot colour limit scales individually.}
 
+\item{align.xy.by}{DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.}
+
+\item{align.col.by}{DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.}
+
 \item{colours}{DEFAULTS to 'spectral'. What colour scheme do you want to use. Only used if type = 'colour', ignored if type = 'factor'. Can be 'jet', 'spectral', 'viridis', 'inferno', 'magma', or "BuPu".}
 
 \item{dot.size}{DEFAULT = 1. Numeric. Size of the dots.}
@@ -51,6 +55,16 @@ blank.axis, save.each.plot)
 \item{blank.axis}{DEFAULT = FALSE. Logical. Do you want a minimalist graph?}
 
 \item{save.each.plot}{DEFAULT = FALSE. Logical. Do you want to save each plot?}
+
+\item{add.label}{Logical. If TRUE and \code{col.type = "factor"},
+adds labels at the centroid of each group.}
+
+\item{fast}{Logical. If TRUE, uses scattermore for faster plotting of large datasets.
+Note, this will reduce the resolution of the plot.
+This only works when \code{col.axis} is specified and when hex = FALSE.}
+
+\item{legend.loc}{Character.
+Legend position: "right" (default), "bottom", "top", "left", or "none".}
 }
 \description{
 Method to create multiple plots for each marker.
@@ -67,4 +81,5 @@ Spectre::make.multi.plot(dat = Spectre::demo.clustered,
 \author{
 Thomas Ashhurst, \email{thomas.ashhurst@sydney.edu.au}
 Felix Marsh-Wakefield, \email{felix.marsh-wakefield@sydney.edu.au}
+Givanna Putri
 }

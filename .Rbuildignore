@@ -1,3 +1,12 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^vignettes$
+^workflows$
+^scripts$
+^other$
+^docker$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
 ^\.github$
+^LICENSE\.md$

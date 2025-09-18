@@ -119,10 +119,12 @@ Implementation of FIt-SNE is available from https://github.com/KlugerLab/FIt-SNE
 This function uses \code{\link{fftRtsne}} to run FIt-SNE.
 }
 \examples{
+\dontrun{
 dat <- Spectre::demo.clustered
 dat.sub <- Spectre::do.subsample(dat, 30000)
 use.cols <- names(dat)[12:19]
 dat.reduced <- run.fitsne(dat = dat.sub, use.cols = use.cols)
+}
 
 }
 \author{

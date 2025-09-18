@@ -80,10 +80,12 @@
 #'   nthreads = 0, perplexity_list = NULL, get_costs = FALSE,  df = 1.0)
 #'   
 #' @examples
+#' \dontrun{
 #' dat <- Spectre::demo.clustered
 #' dat.sub <- Spectre::do.subsample(dat, 30000)
 #' use.cols <- names(dat)[12:19]
 #' dat.reduced <- run.fitsne(dat = dat.sub, use.cols = use.cols)
+#' }
 #' 
 #' @author
 #' Givanna Putri

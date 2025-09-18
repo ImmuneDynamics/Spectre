@@ -2,7 +2,7 @@
 % Please edit documentation in R/fast.multi.plot.R
 \name{fast.multi.plot}
 \alias{fast.multi.plot}
-\title{Make FAST multiple plots for multiple columns and/or multiple sample/group/clusters}
+\title{DEPRECATED fast multi plot}
 \usage{
 fast.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, col.min.threshold, col.max.threshold, path, plot.width, plot.height, blank.axis, save.each.plot)
 }
@@ -50,6 +50,9 @@ fast.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, col.type, 
 \item{save.each.plot}{DEFAULT = FALSE. Logical. Do you want to save each plot?}
 }
 \description{
+Please use \code{make.multi.plot(fast = TRUE)} instead.
+}
+\details{
 Method to create multiple plots for each marker.
 This function allows you to create a grid of plots, where the cells are plotted by a series of columns, and/or subsetted by a certain factor (e.g. one sample per plot).
 Makes use of Spectre functions fast.colour.plot and make.density.plot.

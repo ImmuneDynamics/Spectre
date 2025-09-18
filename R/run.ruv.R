@@ -2,7 +2,6 @@
 #'
 #' This function allows you to run the CytofRUV alignment method.
 #' 
-#' @usage run.align()
 #'
 #' @param dat NO DEFAULT.A data.table consisting of the data (both reference and taret) you wish to align
 #' @param sample.col NO DEFAULT. Column name of the data.table that contains sample names
@@ -20,11 +19,11 @@
 #'
 #' @references Ashhurst, T. M., et al. (2019). \url{https://www.ncbi.nlm.nih.gov/pubmed/31077106}
 #'
-#'
+#' @import lifecycle
 #' @import data.table
 #'
-#' @export
-
+#' @noRd 
+#' 
 run.ruv <- function(dat,
                     sample.col,
                     batch.col,
@@ -39,6 +38,11 @@ run.ruv <- function(dat,
                     append.name = '_ruv'){
   
   ### Packages
+      lifecycle::deprecate_warn(
+        when = "1.3.0", 
+        what = "Spectre::run.ruv()",
+        details = "run.ruv() is currently not working, and may not be supported in the next version."
+    )
   
       if(!is.element('data.table', installed.packages()[,1])) stop('data.table is required but not installed')
       if(!is.element('CytofRUV', installed.packages()[,1])) stop('CytofRUV is required but not installed')

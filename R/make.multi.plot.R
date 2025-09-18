@@ -8,10 +8,8 @@
 #' @param x.axis NO DEFAULT. X axis
 #' @param y.axis NO DEFAULT. Y axis
 #' @param plot.by NO DEFAULT. A vector of character names for the columns you wish to plot.
-#'
 #' @param divide.by DEFAULT = NULL. Here you can specify a character name of a column you wish to use to divide up the dataset.
 #' @param add.density DEFAULT = FALSE. Can specify to add a density plot at the end the series of colour plots
-#'
 #' @param col.type DEFAULT = "continuous". Can also be "factor".
 #' @param hex DEFAULT = FALSE. Whether to split the data into bins and show the average expression of the bin. Currently does not work with density plots, only for those features in the plot.by.
 #' @param hex.bins DEFAULT = 30. Number of bins to split into. Only used if hex is TRUE.
@@ -27,6 +25,15 @@
 #' @param plot.height DEFAULT = 7.
 #' @param blank.axis DEFAULT = FALSE. Logical. Do you want a minimalist graph?
 #' @param save.each.plot DEFAULT = FALSE. Logical. Do you want to save each plot?
+#' @param add.label Logical. If TRUE and \code{col.type = "factor"}, 
+#' adds labels at the centroid of each group.
+#' @param fast Logical. If TRUE, uses scattermore for faster plotting of large datasets.
+#' Note, this will reduce the resolution of the plot.
+#' This only works when \code{col.axis} is specified and when hex = FALSE.
+#' @param legend.loc Character. 
+#' Legend position: "right" (default), "bottom", "top", "left", or "none".
+#' @param align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
+#' @param align.col.by DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.
 #'
 #' @usage make.multi.plot(dat, x.axis, y.axis, plot.by, divide.by, add.density, 
 #' col.type, figure.title, align.xy.by, align.col.by, colours, dot.size, 
@@ -42,60 +49,57 @@
 #' @author
 #' Thomas Ashhurst, \email{thomas.ashhurst@@sydney.edu.au}
 #' Felix Marsh-Wakefield, \email{felix.marsh-wakefield@@sydney.edu.au}
-#'
+#' Givanna Putri
+#' 
+#' @import ggplot2
+#' @import scales
+#' @import colorRamps
+#' @import ggthemes
+#' @import RColorBrewer
+#' @import ggpointdensity
+#' @import gridExtra
 #' @export
 
-# align.xy.by DEFAULT = dat. Align X and Y to a dataset. By default it will be based on the total dataset.
-# align.col.by DEFAULT = dat. Align colour to a dataset. By default it will be based on the total dataset.
 
-make.multi.plot <- function(dat,
-                            x.axis,
-                            y.axis,
-                            plot.by, # vector of column names -- one colour plot will be created for each
-
-                            divide.by = NULL,
-                            add.density = FALSE,
-                            
-                            hex = FALSE,
-                            hex.bins = 30,
-
-                            col.type = "continuous",
-                            figure.title = 'Multi plot',
-
-                            global.xy = TRUE,
-                            global.col = TRUE,
-
-                            align.xy.by = dat, # alignment for X and Y
-                            align.col.by = dat, # alignment for colours
-
-                            colours = 'spectral',
-                            dot.size = 1,
-                            col.min.threshold = 0.01,
-                            col.max.threshold = 0.995,
-                            path = getwd(),
-                            plot.width = 9, # each plot
-                            plot.height = 7, # each plot
-                            blank.axis = FALSE,
-                            save.each.plot = FALSE){
-
-  ### Check packages
-  if(!is.element('ggplot2', installed.packages()[,1])) stop('ggplot2 is required but not installed')
-  if(!is.element('scales', installed.packages()[,1])) stop('scales is required but not installed')
-  if(!is.element('colorRamps', installed.packages()[,1])) stop('colorRamps is required but not installed')
-  if(!is.element('ggthemes', installed.packages()[,1])) stop('ggthemes is required but not installed')
-  if(!is.element('RColorBrewer', installed.packages()[,1])) stop('RColorBrewer is required but not installed')
-  if(!is.element('ggpointdensity', installed.packages()[,1])) stop('ggpointdensity is required but not installed')
-
-  ### Load packages
-  require(ggplot2)
-  require(scales)
-  require(colorRamps)
-  require(ggthemes)
-  require(RColorBrewer)
-  require(ggpointdensity)
+make.multi.plot <- function(
+    dat,
+    x.axis,
+    y.axis,
+    plot.by, # vector of column names -- one colour plot will be created for each
+    divide.by = NULL,
+    add.density = FALSE,   
+    hex = FALSE,
+    hex.bins = 30,
+    col.type = "continuous",
+    figure.title = 'Multi plot',
+    global.xy = TRUE,
+    global.col = TRUE,
+    align.xy.by = dat, # alignment for X and Y
+    align.col.by = dat, # alignment for colours
+    colours = 'spectral',
+    dot.size = 1,
+    col.min.threshold = 0.01,
+    col.max.threshold = 0.995,
+    path = getwd(),
+    plot.width = 9, # each plot
+    plot.height = 7, # each plot
+    blank.axis = FALSE,
+    save.each.plot = FALSE,
+    add.label = FALSE,
+    fast = FALSE,
+    legend.loc = c("right", "bottom", "top", "left", "none")
+) {
 
   ### Overall plot settings
   #title <- figure.title
+
+  ### Setup legend
+  legend.loc <- tryCatch(
+      match.arg(legend.loc),
+      error = function(e) {
+          stop("Invalid value for 'legend.loc': must be either 'top', 'bottom', 'left', 'right', or 'none'.", call. = FALSE)
+      }
+  )
 
   plots <- list()
   to.plot <- plot.by
@@ -162,7 +166,11 @@ make.multi.plot <- function(dat,
                                             plot.width = plot.width,
                                             plot.height = plot.height,
                                             blank.axis = blank.axis,
-                                            save.to.disk = save.each.plot)
+                                            save.to.disk = save.each.plot,
+                                            add.label = add.label,
+                                            fast = fast,
+                                            legend.loc = legend.loc
+                                            )
     }
 
     ## Add density plot (if desired)
