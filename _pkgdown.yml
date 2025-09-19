@@ -28,9 +28,7 @@ navbar:
       menu:
         - text: "Data transformation"
           href: articles/data_transformation.html
-    - text: "Report an issue"
-      href: "https://github.com/ImmuneDynamics/Spectre/issues"
-    - text: "Discussion & FAQ"
+    - text: "Discussion"
       href: "https://github.com/ImmuneDynamics/Spectre/discussions"
     - text: "Reference"
       href: reference/index.html
