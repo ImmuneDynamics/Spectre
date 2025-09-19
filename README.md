@@ -49,7 +49,7 @@ New users can check out our [basics guides](https://immunedynamics.io/Spectre/ar
 
 ### Workflows and protocols
 
-When you are ready to start analysis, check out our structured workflows and tutorials for cytometry and spatial analysis by browsing the menu at the top of our [home page](https://immunedynamics.io/spectre).
+When you are ready to start analysis, check out our structured workflows and tutorials for cytometry and spatial analysis by browsing the menu at the top of our [home page](https://immunedynamics.io/spectre). Not sure where to get started? Try out our [Simple Discovery](https://immunedynamics.io/Spectre/articles/simple_discovery.html) workflow for basics clustering analysis of cytometry data.
 
 <br/>
 
