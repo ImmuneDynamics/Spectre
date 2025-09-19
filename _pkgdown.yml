@@ -5,23 +5,33 @@ template:
 navbar:
   title: "Spectre"
   left:
-    - text: "Install"
-      href: articles/install.html
-    - text: "Workflows"
+    - text: "Getting started"
       menu:
-        - text: Getting started
+        - text: "Install Spectre"
+          href: articles/install.html
         - text: "Basics guide"
           href: articles/basics_guide.html
-        - text: "Data preparation"
+        - text: "Preparing your data"
           href: articles/data_prep.html
-        - text: -------
+    - text: "Workflows"
+      menu:
         - text: Core workflows
-        - text: "Simple Discovery"
+        - text: "Simple Discovery analysis"
           href: articles/simple_discovery.html
+        - text: -------
+        - text: Batch alignment workflows
+        - text: "Batch alignment and analysis with CytoNorm"
+          href: "https://immunedynamics.io/spectre/cytonorm/" 
+        - text: "Batch alignment and analysis with rPCA"
+          href: "https://github.com/ImmuneDynamics/Spectre/blob/master/workflows/Spectre%20rPCA/Spectre%20rPCA.R" 
     - text: "Tutorials"
       menu:
         - text: "Data transformation"
           href: articles/data_transformation.html
+    - text: "Report an issue"
+      href: "https://github.com/ImmuneDynamics/Spectre/issues"
+    - text: "Discussion & FAQ"
+      href: "https://github.com/ImmuneDynamics/Spectre/discussions"
     - text: "Reference"
       href: reference/index.html
     - text: "Changelog"
