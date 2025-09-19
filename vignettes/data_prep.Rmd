@@ -16,10 +16,6 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Preparing data for Spectre
-
-------------------------------------------------------------------------
-
 ### Exporting data from FlowJo
 
 This page explains the initial data analysis and preparation steps for

@@ -1,5 +1,5 @@
 ---
-title: "Spectre installation and getting started guide"
+title: "Installing Spectre"
 author: "Thomas Ashhurst, Givanna Putri"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -15,10 +15,6 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## Installing Spectre
-
-------------------------------------------------------------------------
 
 There two options for using Spectre:
 

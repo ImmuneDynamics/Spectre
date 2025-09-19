@@ -16,10 +16,6 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Spectre basics guide
-
-------------------------------------------------------------------------
-
 Here provide a brief and high-level introduction to using R, RStudio,
 and Spectre. Additional educational material on using R and R Studio are
 available on many sites, including the [RStudio education
