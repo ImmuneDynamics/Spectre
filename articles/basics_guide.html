@@ -29,16 +29,23 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../articles/install.html">Install</a></li>
 <li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-getting-started" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Getting started</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-getting-started">
+<li><a class="dropdown-item" href="../articles/install.html">Install Spectre</a></li>
+    <li><a class="dropdown-item" href="../articles/basics_guide.html">Basics guide</a></li>
+    <li><a class="dropdown-item" href="../articles/data_prep.html">Preparing your data</a></li>
+  </ul>
+</li>
+<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-workflows" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Workflows</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-workflows">
-<li><h6 class="dropdown-header" data-toc-skip>Getting started</h6></li>
-    <li><a class="dropdown-item" href="../articles/basics_guide.html">Basics guide</a></li>
-    <li><a class="dropdown-item" href="../articles/data_prep.html">Data preparation</a></li>
+<li><h6 class="dropdown-header" data-toc-skip>Core workflows</h6></li>
+    <li><a class="dropdown-item" href="../articles/simple_discovery.html">Simple Discovery analysis</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Core workflows</h6></li>
-    <li><a class="dropdown-item" href="../articles/simple_discovery.html">Simple Discovery</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Batch alignment workflows</h6></li>
+    <li><a class="external-link dropdown-item" href="https://immunedynamics.io/spectre/cytonorm/">Batch alignment and analysis with CytoNorm</a></li>
+    <li><a class="external-link dropdown-item" href="https://github.com/ImmuneDynamics/Spectre/blob/master/workflows/Spectre%20rPCA/Spectre%20rPCA.R">Batch alignment and analysis with rPCA</a></li>
   </ul>
 </li>
 <li class="nav-item dropdown">
@@ -47,6 +54,8 @@
 <li><a class="dropdown-item" href="../articles/data_transformation.html">Data transformation</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ImmuneDynamics/Spectre/issues">Report an issue</a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ImmuneDynamics/Spectre/discussions">Discussion &amp; FAQ</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
@@ -72,7 +81,7 @@
                         <h4 data-toc-skip class="author">Thomas
 Ashhurst, Givanna Putri</h4>
             
-            <h4 data-toc-skip class="date">2025-09-18</h4>
+            <h4 data-toc-skip class="date">2025-09-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ImmuneDynamics/Spectre/blob/master/vignettes/basics_guide.Rmd" class="external-link"><code>vignettes/basics_guide.Rmd</code></a></small>
       <div class="d-none name"><code>basics_guide.Rmd</code></div>
@@ -714,22 +723,22 @@ take 1-2 minutes for UMAP to finish running.</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Run UMAP</span></span>
 <span><span class="va">cell.dat</span> <span class="op">&lt;-</span> <span class="fu">Spectre</span><span class="fu">::</span><span class="fu"><a href="../reference/run.umap.html">run.umap</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">cell.dat</span>, use.cols <span class="op">=</span> <span class="va">cluster.cols</span><span class="op">)</span> </span></code></pre></div>
-<pre><code><span><span class="co">## 13:18:42 UMAP embedding parameters a = 1.577 b = 0.8951</span></span></code></pre>
-<pre><code><span><span class="co">## 13:18:42 Converting dataframe to numerical matrix</span></span></code></pre>
-<pre><code><span><span class="co">## 13:18:42 Read 10000 rows and found 9 numeric columns</span></span></code></pre>
-<pre><code><span><span class="co">## 13:18:42 Using Annoy for neighbor search, n_neighbors = 15</span></span></code></pre>
-<pre><code><span><span class="co">## 13:18:43 Building Annoy index with metric = euclidean, n_trees = 50</span></span></code></pre>
+<pre><code><span><span class="co">## 00:10:32 UMAP embedding parameters a = 1.577 b = 0.8951</span></span></code></pre>
+<pre><code><span><span class="co">## 00:10:32 Converting dataframe to numerical matrix</span></span></code></pre>
+<pre><code><span><span class="co">## 00:10:32 Read 10000 rows and found 9 numeric columns</span></span></code></pre>
+<pre><code><span><span class="co">## 00:10:32 Using Annoy for neighbor search, n_neighbors = 15</span></span></code></pre>
+<pre><code><span><span class="co">## 00:10:33 Building Annoy index with metric = euclidean, n_trees = 50</span></span></code></pre>
 <pre><code><span><span class="co">## 0%   10   20   30   40   50   60   70   80   90   100%</span></span></code></pre>
 <pre><code><span><span class="co">## [----|----|----|----|----|----|----|----|----|----|</span></span></code></pre>
 <pre><code><span><span class="co">## **************************************************|</span></span>
-<span><span class="co">## 13:18:43 Writing NN index file to temp file /tmp/RtmpK2jjjS/file296a5d5698a8</span></span>
-<span><span class="co">## 13:18:43 Searching Annoy index using 3 threads, search_k = 1500</span></span>
-<span><span class="co">## 13:18:44 Annoy recall = 100%</span></span>
-<span><span class="co">## 13:18:44 Commencing smooth kNN distance calibration using 3 threads with target n_neighbors = 15</span></span>
-<span><span class="co">## 13:18:45 Initializing from normalized Laplacian + noise (using irlba)</span></span>
-<span><span class="co">## 13:18:45 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span></span>
-<span><span class="co">## 13:18:45 Using rng type: pcg</span></span>
-<span><span class="co">## 13:18:46 Optimization finished</span></span></code></pre>
+<span><span class="co">## 00:10:33 Writing NN index file to temp file /tmp/RtmpktI972/file293f2bc6f801</span></span>
+<span><span class="co">## 00:10:33 Searching Annoy index using 3 threads, search_k = 1500</span></span>
+<span><span class="co">## 00:10:34 Annoy recall = 100%</span></span>
+<span><span class="co">## 00:10:35 Commencing smooth kNN distance calibration using 3 threads with target n_neighbors = 15</span></span>
+<span><span class="co">## 00:10:35 Initializing from normalized Laplacian + noise (using irlba)</span></span>
+<span><span class="co">## 00:10:35 Commencing optimization for 200 epochs, with 200182 positive edges using 3 threads</span></span>
+<span><span class="co">## 00:10:35 Using rng type: pcg</span></span>
+<span><span class="co">## 00:10:37 Optimization finished</span></span></code></pre>
 <p>Once UMAP has finished (and the red button has gone away) you can
 check the data to ensure the UMAP columns have been added correctly.</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
